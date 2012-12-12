@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2012-12-12T11:04:00+01:00</updated>
+  <updated>2012-12-12T21:13:23+01:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,48 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
+    <updated>2012-12-12T20:32:00+01:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
+    <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
+
+<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat"</a></p>
+
+<p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
+
+<p>1.4.2 is a maintenance release. When there are more than 24 hours in a day I'll start with the long waited utf-8 support ;-)</p>
+
+<h3>ChangeLog</h3>
+
+<h5>Lookat / Bekijk 1.4.2     ( 11 Dec 2012 )</h5>
+
+<blockquote><ul>
+<li>Lookat 1.4.2rc2 has been released as 1.4.2</li></li>
+</ul>
+</blockquote>
+
+<h5>Lookat / Bekijk 1.4.2rc2  ( 2 Sep 2012 )</h5>
+
+<blockquote><ul>
+<li>Added FreeBSD patch</li>
+<li>Added redhat specfile</li>
+<li>Added debian package dir</li>
+<li>Corrected mirror manpage errors</li>
+<li>xmalloc.c updated for non compatible GNU malloc for systems like AIX</li>
+</ul>
+</blockquote>
+
+<h5>Lookat / Bekijk 1.4.2rc1  ( 2 Nov 2011 )</h5>
+
+<blockquote><ul>
+<li>Lookat 1.4.2rc1 is a maintenance release that resolves compile issues on some 64bits systems.</li>
+</ul>
+</blockquote>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RIP: pluto]]></title>
