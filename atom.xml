@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2012-12-14T02:49:12+01:00</updated>
+  <updated>2012-12-16T15:49:48+01:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,13 +14,30 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Running Freebsd 9 on Asus C60M1-l motherboard]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard/"/>
+    <updated>2012-12-16T12:06:00+01:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard</id>
+    <content type="html"><![CDATA[<p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i&#8217;m building a new one.</p>
+
+<p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
+
+<p>The motherbord will be a <a href="http://www.asus.com/Motherboards/AMD_CPU_on_Board/C60M1I/">Asus C60M1-l</a>. The cpu may not have not enough horsepower to for deplucation at full speed but it has 6 sata ports which is not common on a mini ITX motherbord. I will reuse my lost harddrives and add or replace them when I need more storage.</p>
+
+<p>The freebsd 9.0 installation with <a href="http://wiki.freebsd.org/RootOnZFS/GPTZFSBoot/9.0-RELEASE">ZFS root</a> went well but the network adapter a Realtek 8111F isn&#8217;t supported by Freebsd 9.0. After checking google I found <a href="http://markmail.org/message/2w67d2nnx65bprqc#query:+page:1+mid:4h3efjpkq6bzxoyo+state:results">this</a> on the freebsd-net mailinglist.</p>
+
+<p>The realtek f8111F is supported in the latest driver code, after rebuilding my kernel the network adapter works fine. Very useful on a NAS ;-)</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
     <link href="http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
     <updated>2012-12-12T20:32:00+01:00</updated>
     <id>http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
     <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
 
-<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat&#8221;</a></p>
+<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
 
 <p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
 

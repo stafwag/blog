@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: git - stafwag Blog</title>
+  <title>Running Freebsd 9 on Asus C60M1-l motherboard - stafwag Blog</title>
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Category: git">
+  <meta name="description" content="As my file and backup system pluto died i&#8217;m building a new one. This system will run Freebsd mainly for the ZFS filesystem. The motherbord will &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://stafwag.github.com/blogblog/categories/git/">
+  <link rel="canonical" href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard/">
   <link href="/blog/favicon.png" rel="icon">
   <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/javascripts/modernizr-2.0.js"></script>
@@ -63,50 +63,103 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Git</h1>
+    
+      <h1 class="entry-title">Running Freebsd 9 on Asus C60M1-l Motherboard</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-16T12:06:00+01:00" pubdate data-updated="true">Dec 16<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i&#8217;m building a new one.</p>
 
-  
-  <h2>2012</h2>
+<p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
 
-<article>
-  
-<h1><a href="/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/">Lookat/Bekijk 1.4.2 released</a></h1>
-<time datetime="2012-12-12T20:32:00+01:00" pubdate><span class='month'>Dec</span> <span class='day'>12</span> <span class='year'>2012</span></time>
+<p>The motherbord will be a <a href="http://www.asus.com/Motherboards/AMD_CPU_on_Board/C60M1I/">Asus C60M1-l</a>. The cpu may not have not enough horsepower to for deplucation at full speed but it has 6 sata ports which is not common on a mini ITX motherbord. I will reuse my lost harddrives and add or replace them when I need more storage.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/blog/categories/git/'>git</a>, <a class='category' href='/blog/blog/categories/lookat/'>lookat</a></span>
-</footer>
+<p>The freebsd 9.0 installation with <a href="http://wiki.freebsd.org/RootOnZFS/GPTZFSBoot/9.0-RELEASE">ZFS root</a> went well but the network adapter a Realtek 8111F isn&#8217;t supported by Freebsd 9.0. After checking google I found <a href="http://markmail.org/message/2w67d2nnx65bprqc#query:+page:1+mid:4h3efjpkq6bzxoyo+state:results">this</a> on the freebsd-net mailinglist.</p>
 
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/blog/2012/12/11/rip-pluto/">RIP: pluto</a></h1>
-<time datetime="2012-12-11T23:19:00+01:00" pubdate><span class='month'>Dec</span> <span class='day'>11</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/blog/categories/blog/'>blog</a>, <a class='category' href='/blog/blog/categories/cvs/'>cvs</a>, <a class='category' href='/blog/blog/categories/git/'>git</a>, <a class='category' href='/blog/blog/categories/nas/'>nas</a></span>
-</footer>
-
-
-</article>
-
+<p>The realtek f8111F is supported in the latest driver code, after rebuilding my kernel the network adapter works fine. Very useful on a NAS ;-)</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">staf wagemakers</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-16T12:06:00+01:00" pubdate data-updated="true">Dec 16<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/blog/categories/freebsd/'>freebsd</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard/" data-via="" data-counturl="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/" title="Previous Post: Lookat/Bekijk 1.4.2 released">&laquo; Lookat/Bekijk 1.4.2 released</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -203,7 +256,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
       var disqus_shortname = 'stafwag';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard/';
+        var disqus_url = 'http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9-on-asus-c60m1-l-motherboard/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

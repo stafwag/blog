@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2012-12-14T02:49:12+01:00</updated>
+  <updated>2012-12-16T15:49:48+01:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -20,7 +20,7 @@
     <id>http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
     <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
 
-<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat"</a></p>
+<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
 
 <p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
 
