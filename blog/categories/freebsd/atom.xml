@@ -4,7 +4,7 @@
   <title><![CDATA[Category: freebsd | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/freebsd/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2012-12-16T16:51:24+01:00</updated>
+  <updated>2012-12-16T16:59:47+01:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -18,7 +18,9 @@
     <link href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/"/>
     <updated>2012-12-16T12:06:00+01:00</updated>
     <id>http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard</id>
-    <content type="html"><![CDATA[<p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.</p>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
+
+<p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.</p>
 
 <p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
 
