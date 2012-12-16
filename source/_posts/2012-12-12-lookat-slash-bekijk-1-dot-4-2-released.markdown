@@ -7,7 +7,7 @@ categories: [lookat, git]
 ---
 Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.
 
-The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat"</a> 
+The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a> 
 
 Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a>
 
