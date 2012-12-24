@@ -97,3 +97,7 @@ google_analytics_tracking_id:
 
 # Facebook Like
 facebook_like: true
+
+# Linkin share
+
+linkedin_share: true
