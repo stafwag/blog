@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-02-23T16:51:09+01:00</updated>
+  <updated>2013-03-16T12:15:25+01:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,56 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
+    <updated>2013-03-16T11:57:00+01:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
+    <content type="html"><![CDATA[<p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
+
+<p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
+It took a bit longer than expected.</p>
+
+<p>My first attempt didn't had the release tags right.</p>
+
+<p>Adding <code>--retain-conflicting-attic-files</code> to cvs2git resolved this issue.</p>
+
+<p>You'll find how I did it it below.</p>
+
+<h3>cvs2git.sh:</h3>
+
+<p>```
+cvs2git \</p>
+
+<pre><code>--blobfile=cvs2git-tmp/git-blob.dat \
+--dumpfile=cvs2git-tmp/git-dump.dat \
+/var/lib/cvs/cgipaf \
+--username=staf \
+--retain-conflicting-attic-files
+</code></pre>
+
+<p>```</p>
+
+<h3>import.sh:</h3>
+
+<p>```</p>
+
+<h1>!/bin/bash</h1>
+
+<p>git fast-import --export-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-blob.dat
+git fast-import --import-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-dump.dat
+```</p>
+
+<h3>push to github:</h3>
+
+<p>```
+git remote add origin git@github.com:stafwag/cgipaf.git
+git push origin --mirror</p>
+
+<p>```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
