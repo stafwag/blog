@@ -4,7 +4,7 @@
   <title><![CDATA[Category: freebsd | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/freebsd/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-04-08T02:26:53+02:00</updated>
+  <updated>2013-04-11T15:15:31+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -18,7 +18,22 @@
     <link href="http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
     <updated>2013-02-16T12:35:00+01:00</updated>
     <id>http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
-    <content type="html"><![CDATA[<p>I'm adding more services to my <a href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
+    <content type="html"><![CDATA[<hr />
+
+
+<p><strong></p>
+
+<p>I'm using <em>ezjail</em> <a href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+
+<p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
+Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
+
+<p></strong></p>
+
+<hr />
+
+
+<p>I'm adding more services to my <a href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
 
 <p>I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
 

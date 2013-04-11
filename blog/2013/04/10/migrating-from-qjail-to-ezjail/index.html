@@ -1,24 +1,123 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-04-11T15:15:31+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
-  <author>
-    <name><![CDATA[staf wagemakers]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Migrating from Qjail to ezjail - stafwag Blog</title>
+  <meta name="author" content="staf wagemakers">
 
   
-  <entry>
-    <title type="html"><![CDATA[Migrating from Qjail to ezjail]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/"/>
-    <updated>2013-04-10T12:36:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail</id>
-    <content type="html"><![CDATA[<p>I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I&#8217;m migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.</p>
+  <meta name="description" content="I was using qjail on my freebsd system but I&#8217;m migrating to ezjail. The reason for this is that the port is marked as RESTRICTED.
+Since it &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">
+  <link href="/blog/favicon.png" rel="icon">
+  <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/blog/javascripts/modernizr-2.0.js"></script>
+  <script src="/blog/javascripts/ender.js"></script>
+  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/blog/atom.xml" rel="alternate" title="stafwag Blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37258385-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+
+<div style="position:absolute; right:0px; width:300px;vertical-align:text-top;">
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4659298941528586";
+/* blog header small */
+google_ad_slot = "3241922943";
+google_ad_width = 234;
+google_ad_height = 60;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+</div>
+  <h1><a href="/blog/">stafwag Blog</a></h1>
+  
+    <h2>staf wagemakers blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:stafwag.github.com/blog" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/blog/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Migrating From Qjail to Ezjail</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T12:36:00+02:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I&#8217;m migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
 Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
@@ -658,531 +757,225 @@ Lucky you can install the basejail without a &#8220;make world&#8221;.</p>
 
 
 
-]]></content>
-  </entry>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
   
-  <entry>
-    <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
-    <updated>2013-03-16T11:57:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
-    <content type="html"><![CDATA[<p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
 
-<p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
-It took a bit longer than expected.</p>
+<span class="byline author vcard">Posted by <span class="fn">staf wagemakers</span></span>
 
-<p>My first attempt didn&#8217;t had the release tags right.</p>
-
-<p>Adding <code>--retain-conflicting-attic-files</code> to cvs2git resolved this issue.</p>
-
-<p>You&#8217;ll find how I did it it below.</p>
-
-<h3>cvs2git.sh:</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>cvs2git \
-</span><span class='line'>    --blobfile=cvs2git-tmp/git-blob.dat \
-</span><span class='line'>    --dumpfile=cvs2git-tmp/git-dump.dat \
-</span><span class='line'>    /var/lib/cvs/cgipaf \
-</span><span class='line'>    --username=staf \
-</span><span class='line'>    --retain-conflicting-attic-files</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>create local git:</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ~/newgit
-</span><span class='line'>$ cd ~/newgit
-</span><span class='line'>$ mkdir cgipaf
-</span><span class='line'>$ cd cgipaf
-</span><span class='line'>$ git init
-</span><span class='line'>Initialized empty Git repository in /home/staf/newgit/cgipaf/
-</span><span class='line'>$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>import.sh:</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
-</span><span class='line'>
-</span><span class='line'>git fast-import --export-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-blob.dat
-</span><span class='line'>git fast-import --import-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-dump.dat</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>push to github:</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git remote add origin git@github.com:stafwag/cgipaf.git
-</span><span class='line'>git push origin --mirror
-</span></code></pre></td></tr></table></div></figure>
+      
 
 
 
-]]></content>
-  </entry>
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[Freebsd 9.1 jails with Qjail]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
-    <updated>2013-02-16T12:35:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
-    <content type="html"><![CDATA[<hr />
 
 
-<p><strong></p>
+<time datetime="2013-04-10T12:36:00+02:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+      
 
-<p>I&#8217;m using <em>ezjail</em> <a href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+<span class="categories">
+  
+    <a class='category' href='/blog/blog/categories/ezjail/'>ezjail</a>, <a class='category' href='/blog/blog/categories/freebsd-/'>freebsd,</a>, <a class='category' href='/blog/blog/categories/jails-/'>jails,</a>, <a class='category' href='/blog/blog/categories/qjail-/'>qjail,</a>
+  
+</span>
 
-<p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
-Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
 
-<p></strong></p>
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/" data-via="" data-counturl="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+<div id="linkedin_share" style="height: 90px; width: 120px; display: inline-block; text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline;">
+<script src="http://platform.linkedin.com/in.js" type="text/javascript"></script>
+<script type="IN/Share" data-counter="right"></script>
+</div>
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blog/2013/03/16/cgipaf-uploaded-to-github/" title="Previous Post: CGIpaf uploaded to github">&laquo; CGIpaf uploaded to github</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><a href="http://www.wagemakers.be">http://www.wagemakers.be</a></p>
+  <p><a href="http://www.linkedin.com/in/stafwagemakers">LinkedIn profile</a></p>
+  <p><a href="https://plus.google.com/105784473736050085476">Google Plus profile</a></p>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">Migrating from Qjail to ezjail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2013/03/16/cgipaf-uploaded-to-github/">CGIpaf uploaded to github</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/">Freebsd 9.1 jails with Qjail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">Running Freebsd 9.0 on Asus C60M1-i motherboard</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/">Lookat/Bekijk 1.4.2 released</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/stafwag">@stafwag</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'stafwag',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
 
 <hr />
-
-
-<p>I&#8217;m adding more services to my <a href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
-
-<p>I&#8217;m coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it&#8217;s a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
-
-<p>On FreeBSD there are <a href="http://en.wikipedia.org/wiki/FreeBSD_jail">jails</a> to isolate services and improve security.</p>
-
-<p>At first I didn&#8217;t like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.</p>
-
-<p>Lucky <a href="http://sourceforge.net/projects/qjail/">Qjail</a> makes the deployment a lot easier.</p>
-
-<h3>Installing Qjail</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
-</span><span class='line'>[root@rataplan /usr/ports/sysutils/qjail]# make install clean
-</span><span class='line'>===&gt;  License BSD accepted by the user
-</span><span class='line'>=&gt; qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
-</span><span class='line'>=&gt; Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
-</span><span class='line'>qjail-1.7.tar.bz2                             100% of   39 kB  139 kBps
-</span><span class='line'>===&gt;  Extracting for qjail-1.7
-</span><span class='line'>=&gt; SHA256 Checksum OK for qjail-1.7.tar.bz2.
-</span><span class='line'>===&gt;  Patching for qjail-1.7
-</span><span class='line'>===&gt;  Configuring for qjail-1.7
-</span><span class='line'>===&gt;  Installing for qjail-1.7
-</span><span class='line'>===&gt;   Generating temporary packing list
-</span><span class='line'>===&gt;  Checking if sysutils/qjail already installed
-</span><span class='line'>#
-</span><span class='line'>Use the qjail utility to deploy small or large numbers of jails quickly.
-</span><span class='line'>
-</span><span class='line'>First issue "rehash" command to enable the qjail command (if using csh).
-</span><span class='line'>Then issue "man qjail-intro" to read the qjail introduction.
-</span><span class='line'>After reading that do "man qjail" for the usage details.
-</span><span class='line'>#
-</span><span class='line'>===&gt;   Compressing manual pages for qjail-1.7
-</span><span class='line'>===&gt;   Registering installation for qjail-1.7
-</span><span class='line'>===&gt;  Cleaning for qjail-1.7
-</span><span class='line'>[root@rataplan /usr/ports/sysutils/qjail]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Create /usr/jails</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# zfs create zroot/usr/jails</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>mount the freebsd 9.1 dvd</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>qjail install</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/
-</span><span class='line'>
-</span><span class='line'>The base RELEASE distribution files are populating the fulljail.
-</span><span class='line'>Est LT 1 minute elapse time for this to complete.
-</span><span class='line'>
-</span><span class='line'>The lib32 RELEASE distribution files are populating the fulljail.
-</span><span class='line'>Est LT 1 minute elapse time for this to complete.
-</span><span class='line'> 
-</span><span class='line'>Basejail & newjail are being populated.
-</span><span class='line'>Est LT 1 minute elapse time for this to complete.
-</span><span class='line'> 
-</span><span class='line'>Successfully installed qjail system.
-</span><span class='line'> 
-</span><span class='line'>root@rataplan:/root # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Creating a zfs filesystem for the jail</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
-</span><span class='line'>root@rataplan:/usr/local/etc # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Creating a jail with Qjail</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
-</span><span class='line'>Successfully created  stafdb
-</span><span class='line'>[root@rataplan ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Start the jail</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail start stafdb
-</span><span class='line'>Jail started successfully. stafdb
-</span><span class='line'>root@rataplan:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>List the jails</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail list
-</span><span class='line'> 
-</span><span class='line'>
-</span><span class='line'>STA JID  NIC IP              Jailname
-</span><span class='line'>--- ---- --- --------------- ---------------------------------------------------
-</span><span class='line'>DR  4    re0 192.168.1.42    stafmail
-</span><span class='line'>DR  3    re0 192.168.1.41    staffs
-</span><span class='line'>DR  6    re0 192.168.1.43    stafdb
-</span><span class='line'> 
-</span><span class='line'> 
-</span><span class='line'>root@rataplan:/usr/local/etc # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>console access</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail console stafdb
-</span><span class='line'>Last login: Sat Feb 23 16:19:32 on pts/0
-</span><span class='line'>FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013
-</span><span class='line'>
-</span><span class='line'>Welcome to your FreeBSD jail
-</span><span class='line'>stafdb /root &gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>install the freebsd ports to the jail</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail update -p stafdb
-</span><span class='line'> 
-</span><span class='line'>Sat Feb 23 16:21:55 CET 2013
-</span><span class='line'> 
-</span><span class='line'>The elapse download time of the portsnap compressed ports file
-</span><span class='line'>is estimated at 25 minutes for the initial fetch.
-</span><span class='line'>Subsequent fetches will generally take less than a minute.
-</span><span class='line'> 
-</span><span class='line'>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
-</span><span class='line'>Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
-</span><span class='line'>Fetching snapshot metadata... done.
-</span><span class='line'>Updating from Sat Feb 16 11:47:49 CET 2013 to Sat Feb 23 15:58:32 CET 2013.
-</span><span class='line'>Fetching 4 metadata patches... done.
-</span><span class='line'>Applying metadata patches... done.
-</span><span class='line'>Fetching 0 metadata files... done.
-</span><span class='line'>Fetching 524 patches.....10....20....30....40....50....60....70....80....90....100....110....120....130....140....150....160....170....180....190....200....210....220....230....240....250....260....270....280....290....300....310....320....330....340....350....360....370....380....390....400....410....420....430....440....450....460....470....480....490....500....510....520.. done.
-</span><span class='line'>Applying patches... done.
-</span><span class='line'>Fetching 42 new ports or files... done.
-</span><span class='line'>Portsnap fetch completed successfully
-</span><span class='line'> 
-</span><span class='line'>Sat Feb 23 16:22:40 CET 2013
-</span><span class='line'> 
-</span><span class='line'>The ports basejail/usr/ports directory tree is being updated.
-</span><span class='line'>The elapse time for this to complete is estimated at 1 minute
-</span><span class='line'>to 10 minutes depending on how current your ports system is.
-</span><span class='line'> 
-</span><span class='line'>Portsnap update completed successfully
-</span><span class='line'>root@rataplan:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>update the base jail</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail stop
-</span><span class='line'>Jail stopped successfully. stafmail
-</span><span class='line'>Jail stopped successfully. staffs
-</span><span class='line'>Jail already stopped.      stafdb
-</span><span class='line'>root@rataplan:/usr/local/etc # 
-</span><span class='line'>
-</span><span class='line'>root@rataplan:/usr/local/etc # qjail update -b 
-</span><span class='line'> 
-</span><span class='line'>Deletion of basejail binaries successful for bin.
-</span><span class='line'>Deletion of basejail binaries successful for lib.
-</span><span class='line'>Deletion of basejail binaries successful for libexec.
-</span><span class='line'>Deletion of basejail binaries successful for sbin.
-</span><span class='line'>Deletion of basejail binaries successful for usr/bin.
-</span><span class='line'>Deletion of basejail binaries successful for usr/include.
-</span><span class='line'>Deletion of basejail binaries successful for usr/lib.
-</span><span class='line'>Deletion of basejail binaries successful for usr/libdata.
-</span><span class='line'>Deletion of basejail binaries successful for usr/libexec.
-</span><span class='line'>Deletion of basejail binaries successful for usr/sbin.
-</span><span class='line'>Deletion of basejail binaries successful for usr/lib32.
-</span><span class='line'> 
-</span><span class='line'>Copied host's binaries to basejail successfully for bin.
-</span><span class='line'>Copied host's binaries to basejail successfully for lib.
-</span><span class='line'>Copied host's binaries to basejail successfully for libexec.
-</span><span class='line'>Copied host's binaries to basejail successfully for sbin.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/bin.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/include.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/lib.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/libdata.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/libexec.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/sbin.
-</span><span class='line'>Copied host's binaries to basejail successfully for usr/lib32.
-</span><span class='line'> 
-</span><span class='line'>Host to basejail binaries update completed successfully.
-</span><span class='line'>root@rataplan:/usr/local/etc # 
-</span><span class='line'>
-</span><span class='line'>root@rataplan:/usr/local/etc # qjail start
-</span><span class='line'>Jail started successfully. stafmail
-</span><span class='line'>Jail started successfully. staffs
-</span><span class='line'>Jail started successfully. stafdb
-</span><span class='line'>root@rataplan:/usr/local/etc # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>update /etc/rc.conf</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#
-</span><span class='line'># qjails
-</span><span class='line'>#
-</span><span class='line'>
-</span><span class='line'>qjail_enable="YES"
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Running Freebsd 9.0 on Asus C60M1-i motherboard]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/"/>
-    <updated>2012-12-16T12:06:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.com/blog/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
-
-<p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i&#8217;m building a new one.</p>
-
-<p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
-
-<p>The motherbord will be a <a href="http://www.asus.com/Motherboards/AMD_CPU_on_Board/C60M1I/">Asus C60M1-I</a>. The cpu may not have not enough horsepower for deplucation at full speed but it has 6 sata ports which is not common on a mini ITX motherbord. I will reuse my old harddrives and add or replace them when I need more storage.</p>
-
-<p>The freebsd 9.0 installation with <a href="http://wiki.freebsd.org/RootOnZFS/GPTZFSBoot/9.0-RELEASE">ZFS root</a> went well but the network adapter a Realtek 8111F isn&#8217;t supported by Freebsd 9.0. After checking google I found <a href="http://markmail.org/message/2w67d2nnx65bprqc#query:+page:1+mid:4h3efjpkq6bzxoyo+state:results">this</a> on the freebsd-net mailinglist.</p>
-
-<p>The realtek f8111F is supported in the latest driver code, after rebuilding my kernel the network adapter works fine. Very useful on a NAS ;-)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
-    <updated>2012-12-12T20:32:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
-    <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
-
-<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
-
-<p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
-
-<p>1.4.2 is a maintenance release. When there are more than 24 hours in a day I&#8217;ll start with the long waited utf-8 support ;-)</p>
-
-<h3>ChangeLog</h3>
-
-<h5>Lookat / Bekijk 1.4.2     ( 11 Dec 2012 )</h5>
-
-<blockquote><ul>
-<li>Lookat 1.4.2rc2 has been released as 1.4.2</li></li>
-</ul>
-</blockquote>
-
-<h5>Lookat / Bekijk 1.4.2rc2  ( 2 Sep 2012 )</h5>
-
-<blockquote><ul>
-<li>Added FreeBSD patch</li>
-<li>Added redhat specfile</li>
-<li>Added debian package dir</li>
-<li>Corrected mirror manpage errors</li>
-<li>xmalloc.c updated for non compatible GNU malloc for systems like AIX</li>
-</ul>
-</blockquote>
-
-<h5>Lookat / Bekijk 1.4.2rc1  ( 2 Nov 2011 )</h5>
-
-<blockquote><ul>
-<li>Lookat 1.4.2rc1 is a maintenance release that resolves compile issues on some 64bits systems.</li>
-</ul>
-</blockquote>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RIP: pluto]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/"/>
-    <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.com/blog/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
-After 10 year, my fileserver pluto died.
-Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>
-
-<p>( 1 minute silence &#8230;. )</p>
-
 <br />
-
-
 <br />
+<br />
+<br />
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4659298941528586";
+/* blogads_right */
+google_ad_slot = "8839948148";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
 
-
-<p>I take backups of course ;-)
-I already ordered the parts to build a new pluto.</p>
-
-<p>Pluto still hosted some <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">CSV</a> repositorties like <a href="http://www.wagemakers.be/english/programs/cgipaf">CGIpaf</a>.
-But it&#8217;s time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.</p>
-
-<p>I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It&#8217;s written in ruby which is a nice bonus.</p>
-]]></content>
-  </entry>
   
-</feed>
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - staf wagemakers -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'stafwag';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/';
+        var disqus_url = 'http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
