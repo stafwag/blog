@@ -93,7 +93,7 @@ disqus_short_name: stafwag
 disqus_show_comment_count: 3
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-37258385-2
 
 # Facebook Like
 facebook_like: true
