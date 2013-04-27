@@ -4,7 +4,7 @@
   <title><![CDATA[Category: git | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-04-11T15:15:31+02:00</updated>
+  <updated>2013-04-27T10:13:43+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 released]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
+    <updated>2013-04-27T09:21:00+02:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
+    <content type="html"><![CDATA[<p>Trying to release more often...</p>
+
+<p>The first release candicate of the lookat 1.4.3 has been released.</p>
+
+<h3>ChangeLog</h3>
+
+<h5>Lookat / Bekijk 1.4.3rc1  ( 27 Apr 2013 )</h5>
+
+<blockquote><ul>
+<li>Fixed compile issue with llvm clang</li>
+</ul>
+</blockquote>
+
+<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+, download it directly <a href="http://stafwag.github.com/blog/downloads/lookat/lookat_bekijk-1.4.3rc3.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
+
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>

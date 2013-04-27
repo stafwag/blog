@@ -4,7 +4,7 @@
   <title><![CDATA[Category: jails, | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/jails-/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-04-11T15:15:31+02:00</updated>
+  <updated>2013-04-27T10:13:43+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -177,10 +177,10 @@ root@rataplan:/usr/jails #
 
 <p><code>
 ifconfig_re0="inet 192.168.1.40/24"
-ifconfig_re0_alias1="inet 192.168.1.41/32"
-ifconfig_re0_alias2="inet 192.168.1.42/32"
-ifconfig_re0_alias3="inet 192.168.1.43/32"
-ifconfig_re0_alias4="inet 192.168.1.44/32"
+ifconfig_re0_alias0="inet 192.168.1.41/32"
+ifconfig_re0_alias1="inet 192.168.1.42/32"
+ifconfig_re0_alias2="inet 192.168.1.43/32"
+ifconfig_re0_alias3="inet 192.168.1.44/32"
 </code></p>
 
 <p>And create them by running netif restart</p>
