@@ -4,7 +4,7 @@
   <title><![CDATA[Category: clang | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/clang/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-04-27T10:13:43+02:00</updated>
+  <updated>2013-05-12T12:49:45+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -20,7 +20,7 @@
     <id>http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
     <content type="html"><![CDATA[<p>Trying to release more often...</p>
 
-<p>The first release candicate of the lookat 1.4.3 has been released.</p>
+<p>The first release candicate of lookat 1.4.3 has been released.</p>
 
 <h3>ChangeLog</h3>
 

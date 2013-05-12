@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: fedora | stafwag Blog]]></title>
+  <link href="http://stafwag.github.com/blog/blog/categories/fedora/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.com/blog/"/>
+  <updated>2013-05-12T12:49:45+02:00</updated>
+  <id>http://stafwag.github.com/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[lookat/bekijk has landed in fedora]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/"/>
+    <updated>2013-05-12T12:37:00+02:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora</id>
+    <content type="html"><![CDATA[<p>Thanks to <a href="http://cicku.me/">Christopher Meng</a></p>
+
+<p><a href="http://www.wagemakers.be/english/programs/lookat">Lookat</a> has landed in <a href="http://www.fedoraproject.org">Fedora</a>.</p>
+
+<p><a href="https://admin.fedoraproject.org/pkgdb/acls/name/lookat">https://admin.fedoraproject.org/pkgdb/acls/name/lookat</a></p>
+]]></content>
+  </entry>
+  
+</feed>
