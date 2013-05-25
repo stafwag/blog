@@ -4,7 +4,7 @@
   <title><![CDATA[Category: lookat | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/lookat/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-05-12T12:49:45+02:00</updated>
+  <updated>2013-05-25T20:19:38+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,59 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[yum install lookat]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat/"/>
+    <updated>2013-05-25T20:09:00+02:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat</id>
+    <content type="html"><![CDATA[<p>"yum install lookat" works on Fedora now  ;-)</p>
+
+<p>Thanks <a href="http://cicku.me/">Christopher</a>!</p>
+
+<p>```
+[staf@vicky ~]$ sudo yum install lookat
+[sudo] password for staf:
+Loaded plugins: langpacks, presto, refresh-packagekit, security
+Repository google-chrome is listed more than once in the configuration
+Resolving Dependencies
+--> Running transaction check
+---> Package lookat.x86_64 0:1.4.2-1.fc18 will be installed
+--> Finished Dependency Resolution</p>
+
+<p>Dependencies Resolved</p>
+
+<p>================================================================================================================================================================================</p>
+
+<h1> Package                                 Arch                                    Version                                         Repository                                Size</h1>
+
+<p>Installing:
+ lookat                                  x86_64                                  1.4.2-1.fc18                                    updates                                   55 k</p>
+
+<h1>Transaction Summary</h1>
+
+<p>Install  1 Package</p>
+
+<p>Total download size: 55 k
+Installed size: 118 k
+Is this ok [y/N]: y
+Downloading Packages:
+lookat-1.4.2-1.fc18.x86_64.rpm                                                                                                                           |  55 kB  00:00:00   <br/>
+Running Transaction Check
+Running Transaction Test
+Transaction Test Succeeded
+Running Transaction
+  Installing : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1
+  Verifying  : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1</p>
+
+<p>Installed:
+  lookat.x86_64 0:1.4.2-1.fc18</p>
+
+<p>Complete!
+[staf@vicky ~]$
+```</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[lookat/bekijk has landed in fedora]]></title>
