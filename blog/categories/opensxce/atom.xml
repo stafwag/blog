@@ -4,7 +4,7 @@
   <title><![CDATA[Category: opensxce | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/opensxce/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-08-10T14:40:22+02:00</updated>
+  <updated>2013-08-18T14:43:12+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -29,7 +29,7 @@ The dvd drive in my <a href="http://en.wikipedia.org/wiki/Sun_Blade_(workstation
 <img class="left" src="/images/sata_dvd_0.jpg" width="326" height="245" title="&#34;dvd rom&#34;" alt="&#34;dvd rom&#34;"></p>
 
 <p>
-I found a <a href="http://www.conrad.be/ce/nl/product/974497/IDE-naar-SATA-converter/SHOP_AREA_37572">ide to sta convertor</a> and a <a href="http://www.conrad.be/ce/nl/product/417054/Samsung-DVD-ROM-SATA-SH-118ABBEBE-bulk/SHOP_AREA_17682">new dvd drive</a> with a <a href="http://en.wikipedia.org/wiki/Serial_ATA">sata interface</a> at <a href="http://www.conrad.be">conrad</a>. This should convert the sata interface to an ide interface without any driver and works with any operating system.<br /><br />Well let's put this to a test on a <a href="http://en.wikipedia.org/wiki/SPARC">sparc</a> system with <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system">solaris</a> :-)<br /><br />
+I found a <a href="http://www.conrad.be/ce/nl/product/974497/IDE-naar-SATA-converter/SHOP_AREA_37572">ide to sata convertor</a> and a <a href="http://www.conrad.be/ce/nl/product/417054/Samsung-DVD-ROM-SATA-SH-118ABBEBE-bulk/SHOP_AREA_17682">new dvd drive</a> with a <a href="http://en.wikipedia.org/wiki/Serial_ATA">sata interface</a> at <a href="http://www.conrad.be">conrad</a>. This should convert the sata interface to an ide interface without any driver and works with any operating system.<br /><br />Well let's put this to a test on a <a href="http://en.wikipedia.org/wiki/SPARC">sparc</a> system with <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system">solaris</a> :-)<br /><br />
 </p>
 
 
