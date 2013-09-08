@@ -4,7 +4,7 @@
   <title><![CDATA[Category: wine | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/wine/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-08T14:26:26+02:00</updated>
+  <updated>2013-09-08T14:32:27+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -32,9 +32,9 @@
 <a href="http://en.wikipedia.org/wiki/Proprietary_format">Proprietary_formats</a> should be avoid, lesson learned (again).
 </strong></p>
 
-<p>To read my book at home I decided to try <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"</a> the windows version of kindle</a> on <a href="http://www.winehq.org/">wine</a> a try.</p>
+<p>To read my book at home I decided to give <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"</a> the windows version of kindle</a> on <a href="http://www.winehq.org/">wine</a> a try</p>
 
-<p>The installation was pretty straightforward.</p>
+<p>The installation was pretty straightforward on <a href="http://fedoraproject.org/">Fedora 19</a>.</p>
 
 <ul>
 <li>Install wine</li>
