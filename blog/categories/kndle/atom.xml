@@ -4,7 +4,7 @@
   <title><![CDATA[Category: kndle | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/kndle/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-08T14:32:27+02:00</updated>
+  <updated>2013-09-08T14:35:13+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -69,7 +69,7 @@ Loaded plugins: langpacks, refresh-packagekit</p>
 
 
 <p><code>
-wine $HOME/staf/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &amp;
+wine $HOME/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &amp;
 </code></p>
 
 <blockquote><p>Happy reading</p>
