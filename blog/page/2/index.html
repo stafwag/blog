@@ -9,7 +9,8 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="As my file and backup system pluto died i&#8217;m building a new one. This system will run Freebsd mainly for the ZFS filesystem. The motherbord &hellip;">
+  <meta name="description" content="I&#8217;m using ezjail now. The reason for this is that the port is marked as RESTRICTED.
+Since it seems to be a fork from ezjail without respecting &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -90,6 +91,394 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/">Freebsd 9.1 Jails With Qjail</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-16T12:35:00+01:00" pubdate data-updated="true">Feb 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><hr />
+
+
+<p><strong></p>
+
+<p>I&#8217;m using <em>ezjail</em> <a href="/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+
+<p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
+Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
+
+<p></strong></p>
+
+<hr />
+
+
+<p>I&#8217;m adding more services to my <a href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
+
+<p>I&#8217;m coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it&#8217;s a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
+
+<p>On FreeBSD there are <a href="http://en.wikipedia.org/wiki/FreeBSD_jail">jails</a> to isolate services and improve security.</p>
+
+<p>At first I didn&#8217;t like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.</p>
+
+<p>Lucky <a href="http://sourceforge.net/projects/qjail/">Qjail</a> makes the deployment a lot easier.</p>
+
+<h3>Installing Qjail</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
+</span><span class='line'>[root@rataplan /usr/ports/sysutils/qjail]# make install clean
+</span><span class='line'>===&gt;  License BSD accepted by the user
+</span><span class='line'>=&gt; qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
+</span><span class='line'>=&gt; Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
+</span><span class='line'>qjail-1.7.tar.bz2                             100% of   39 kB  139 kBps
+</span><span class='line'>===&gt;  Extracting for qjail-1.7
+</span><span class='line'>=&gt; SHA256 Checksum OK for qjail-1.7.tar.bz2.
+</span><span class='line'>===&gt;  Patching for qjail-1.7
+</span><span class='line'>===&gt;  Configuring for qjail-1.7
+</span><span class='line'>===&gt;  Installing for qjail-1.7
+</span><span class='line'>===&gt;   Generating temporary packing list
+</span><span class='line'>===&gt;  Checking if sysutils/qjail already installed
+</span><span class='line'>#
+</span><span class='line'>Use the qjail utility to deploy small or large numbers of jails quickly.
+</span><span class='line'>
+</span><span class='line'>First issue "rehash" command to enable the qjail command (if using csh).
+</span><span class='line'>Then issue "man qjail-intro" to read the qjail introduction.
+</span><span class='line'>After reading that do "man qjail" for the usage details.
+</span><span class='line'>#
+</span><span class='line'>===&gt;   Compressing manual pages for qjail-1.7
+</span><span class='line'>===&gt;   Registering installation for qjail-1.7
+</span><span class='line'>===&gt;  Cleaning for qjail-1.7
+</span><span class='line'>[root@rataplan /usr/ports/sysutils/qjail]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Create /usr/jails</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# zfs create zroot/usr/jails</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mount the freebsd 9.1 dvd</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>qjail install</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/
+</span><span class='line'>
+</span><span class='line'>The base RELEASE distribution files are populating the fulljail.
+</span><span class='line'>Est LT 1 minute elapse time for this to complete.
+</span><span class='line'>
+</span><span class='line'>The lib32 RELEASE distribution files are populating the fulljail.
+</span><span class='line'>Est LT 1 minute elapse time for this to complete.
+</span><span class='line'> 
+</span><span class='line'>Basejail & newjail are being populated.
+</span><span class='line'>Est LT 1 minute elapse time for this to complete.
+</span><span class='line'> 
+</span><span class='line'>Successfully installed qjail system.
+</span><span class='line'> 
+</span><span class='line'>root@rataplan:/root # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Creating a zfs filesystem for the jail</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
+</span><span class='line'>root@rataplan:/usr/local/etc # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Creating a jail with Qjail</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
+</span><span class='line'>Successfully created  stafdb
+</span><span class='line'>[root@rataplan ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Start the jail</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail start stafdb
+</span><span class='line'>Jail started successfully. stafdb
+</span><span class='line'>root@rataplan:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>List the jails</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail list
+</span><span class='line'> 
+</span><span class='line'>
+</span><span class='line'>STA JID  NIC IP              Jailname
+</span><span class='line'>--- ---- --- --------------- ---------------------------------------------------
+</span><span class='line'>DR  4    re0 192.168.1.42    stafmail
+</span><span class='line'>DR  3    re0 192.168.1.41    staffs
+</span><span class='line'>DR  6    re0 192.168.1.43    stafdb
+</span><span class='line'> 
+</span><span class='line'> 
+</span><span class='line'>root@rataplan:/usr/local/etc # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>console access</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail console stafdb
+</span><span class='line'>Last login: Sat Feb 23 16:19:32 on pts/0
+</span><span class='line'>FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013
+</span><span class='line'>
+</span><span class='line'>Welcome to your FreeBSD jail
+</span><span class='line'>stafdb /root &gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>install the freebsd ports to the jail</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail update -p stafdb
+</span><span class='line'> 
+</span><span class='line'>Sat Feb 23 16:21:55 CET 2013
+</span><span class='line'> 
+</span><span class='line'>The elapse download time of the portsnap compressed ports file
+</span><span class='line'>is estimated at 25 minutes for the initial fetch.
+</span><span class='line'>Subsequent fetches will generally take less than a minute.
+</span><span class='line'> 
+</span><span class='line'>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+</span><span class='line'>Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+</span><span class='line'>Fetching snapshot metadata... done.
+</span><span class='line'>Updating from Sat Feb 16 11:47:49 CET 2013 to Sat Feb 23 15:58:32 CET 2013.
+</span><span class='line'>Fetching 4 metadata patches... done.
+</span><span class='line'>Applying metadata patches... done.
+</span><span class='line'>Fetching 0 metadata files... done.
+</span><span class='line'>Fetching 524 patches.....10....20....30....40....50....60....70....80....90....100....110....120....130....140....150....160....170....180....190....200....210....220....230....240....250....260....270....280....290....300....310....320....330....340....350....360....370....380....390....400....410....420....430....440....450....460....470....480....490....500....510....520.. done.
+</span><span class='line'>Applying patches... done.
+</span><span class='line'>Fetching 42 new ports or files... done.
+</span><span class='line'>Portsnap fetch completed successfully
+</span><span class='line'> 
+</span><span class='line'>Sat Feb 23 16:22:40 CET 2013
+</span><span class='line'> 
+</span><span class='line'>The ports basejail/usr/ports directory tree is being updated.
+</span><span class='line'>The elapse time for this to complete is estimated at 1 minute
+</span><span class='line'>to 10 minutes depending on how current your ports system is.
+</span><span class='line'> 
+</span><span class='line'>Portsnap update completed successfully
+</span><span class='line'>root@rataplan:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>update the base jail</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail stop
+</span><span class='line'>Jail stopped successfully. stafmail
+</span><span class='line'>Jail stopped successfully. staffs
+</span><span class='line'>Jail already stopped.      stafdb
+</span><span class='line'>root@rataplan:/usr/local/etc # 
+</span><span class='line'>
+</span><span class='line'>root@rataplan:/usr/local/etc # qjail update -b 
+</span><span class='line'> 
+</span><span class='line'>Deletion of basejail binaries successful for bin.
+</span><span class='line'>Deletion of basejail binaries successful for lib.
+</span><span class='line'>Deletion of basejail binaries successful for libexec.
+</span><span class='line'>Deletion of basejail binaries successful for sbin.
+</span><span class='line'>Deletion of basejail binaries successful for usr/bin.
+</span><span class='line'>Deletion of basejail binaries successful for usr/include.
+</span><span class='line'>Deletion of basejail binaries successful for usr/lib.
+</span><span class='line'>Deletion of basejail binaries successful for usr/libdata.
+</span><span class='line'>Deletion of basejail binaries successful for usr/libexec.
+</span><span class='line'>Deletion of basejail binaries successful for usr/sbin.
+</span><span class='line'>Deletion of basejail binaries successful for usr/lib32.
+</span><span class='line'> 
+</span><span class='line'>Copied host's binaries to basejail successfully for bin.
+</span><span class='line'>Copied host's binaries to basejail successfully for lib.
+</span><span class='line'>Copied host's binaries to basejail successfully for libexec.
+</span><span class='line'>Copied host's binaries to basejail successfully for sbin.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/bin.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/include.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/lib.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/libdata.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/libexec.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/sbin.
+</span><span class='line'>Copied host's binaries to basejail successfully for usr/lib32.
+</span><span class='line'> 
+</span><span class='line'>Host to basejail binaries update completed successfully.
+</span><span class='line'>root@rataplan:/usr/local/etc # 
+</span><span class='line'>
+</span><span class='line'>root@rataplan:/usr/local/etc # qjail start
+</span><span class='line'>Jail started successfully. stafmail
+</span><span class='line'>Jail started successfully. staffs
+</span><span class='line'>Jail started successfully. stafdb
+</span><span class='line'>root@rataplan:/usr/local/etc # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>update /etc/rc.conf</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#
+</span><span class='line'># qjails
+</span><span class='line'>#
+</span><span class='line'>
+</span><span class='line'>qjail_enable="YES"
+</span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -292,6 +681,10 @@ But it&#8217;s time to move the source to a safer place. This will be <a href="h
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/">Running kindle on GNU/Linux with wine</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/">fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd</a>
       </li>
     
@@ -305,10 +698,6 @@ But it&#8217;s time to move the source to a safer place. This will be <a href="h
     
       <li class="post">
         <a href="/blog/blog/2013/08/10/ide-is-still-alive/">Ide is still alive&#8230;</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2013/05/25/yum-install-lookat/">yum install lookat</a>
       </li>
     
   </ul>

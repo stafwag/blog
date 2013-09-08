@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: intel i7 - stafwag Blog</title>
+  <title>Running kindle on GNU/Linux with wine - stafwag Blog</title>
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Category: intel i7">
+  <meta name="description" content="I enjoy reading ebooks during my train trip to work on my nexus 7. At home I prefer to read on my monitor since this is bigger. Most of the time I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://stafwag.github.com/blogblog/categories/intel-i7/">
+  <link rel="canonical" href="http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/">
   <link href="/blog/favicon.png" rel="icon">
   <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/blog/javascripts/modernizr-2.0.js"></script>
@@ -89,36 +89,160 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: Intel I7</h1>
+    
+      <h1 class="entry-title">Running Kindle on GNU/Linux With Wine</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-08T11:57:00+02:00" pubdate data-updated="true">Sep 8<span>th</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p><img class="left" src="/blog/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
 
-  
-  <h2>2013</h2>
+<p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>
 
-<article>
-  
-<h1><a href="/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/">fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd</a></h1>
-<time datetime="2013-09-01T12:21:00+02:00" pubdate><span class='month'>Sep</span> <span class='day'>01</span> <span class='year'>2013</span></time>
+<p>At home I prefer to read on my monitor since this is bigger.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/blog/categories/boottime/'>boottime</a>, <a class='category' href='/blog/blog/categories/debian/'>debian</a>, <a class='category' href='/blog/blog/categories/fedora/'>fedora</a>, <a class='category' href='/blog/blog/categories/intel-i7/'>intel i7</a>, <a class='category' href='/blog/blog/categories/ovirt/'>ovirt</a>, <a class='category' href='/blog/blog/categories/ssd/'>ssd</a></span>
-</footer>
+<p>Most of the time I use <a href="http://en.wikipedia.org/wiki/EPUB">epub</a> or <a href="http://en.wikipedia.org/wiki/Pdf">pdf</a> for reading, I bought a <a href="https://kindle.amazon.com/">kindle</a> version of a book from <a href="http://www.amazon.com">amazon</a> assuming that I could read with <a href="https://read.amazon.com/">amazon cloud reader</a> at home.</p>
+
+<p>Unfortunately this books is not compatible with cloud reader.</p>
+
+<p><strong>
+<a href="http://en.wikipedia.org/wiki/Proprietary_format">Proprietary_formats</a> should be avoid, lesson learned (again).
+</strong></p>
+
+<p>To read my book at home I decided to try <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"</a> the windows version of kindle</a> on <a href="http://www.winehq.org/">wine</a> a try.</p>
+
+<p>The installation was pretty straightforward.</p>
+
+<ul>
+<li>Install wine</li>
+</ul>
 
 
-</article>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# yum install wine
+</span><span class='line'>Loaded plugins: langpacks, refresh-packagekit
+</span></code></pre></td></tr></table></div></figure>
 
+
+<ul>
+<li>Download Kindle for Window xp</li>
+</ul>
+
+
+<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></p>
+
+<ul>
+<li>Download Kindle for Window xp</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[swagemakers@vicky ~]$ wine ~/Downloads/KindleForPC-installer.exe </span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>Create kindle startup script</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>wine $HOME/staf/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>Happy reading</p>
+
+<p>but</p></blockquote>
+
+<p><strong>
+It&#8217;s better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
+</strong></p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">staf wagemakers</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-08T11:57:00+02:00" pubdate data-updated="true">Sep 8<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/blog/categories/kndle/'>kndle</a>, <a class='category' href='/blog/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/blog/categories/wine/'>wine</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/" data-via="" data-counturl="http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+<div id="linkedin_share" style="height: 90px; width: 120px; display: inline-block; text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline;">
+<script src="http://platform.linkedin.com/in.js" type="text/javascript"></script>
+<script type="IN/Share" data-counter="right"></script>
+</div>
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/" title="Previous Post: fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd">&laquo; fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -236,7 +360,10 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
       var disqus_shortname = 'stafwag';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/';
+        var disqus_url = 'http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
