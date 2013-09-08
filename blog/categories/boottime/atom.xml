@@ -4,7 +4,7 @@
   <title><![CDATA[Category: boottime | stafwag Blog]]></title>
   <link href="http://stafwag.github.com/blog/blog/categories/boottime/atom.xml" rel="self"/>
   <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-08T14:35:13+02:00</updated>
+  <updated>2013-09-08T15:45:26+02:00</updated>
   <id>http://stafwag.github.com/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -25,6 +25,97 @@
 <p>The boot time on a ssd is fast:</p>
 
 <p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/V99FyD1qmzg "></iframe></div></p>
+
+<h5>Sun Sep  8 15:30:18 CEST 2013 update;</h5>
+
+<p>I did some tweaking to get a better bootime;</p>
+
+<p>disabled plymouth;</p>
+
+<p>```</p>
+
+<h1>systemctl mask plymouth-.</h1>
+
+<h1>dracut -f -H -o plymouth</h1>
+
+<p><code>
+replaced firewalld by "static" iptables;
+</code></p>
+
+<h1>yum install iptables-services</h1>
+
+<h1>systemctl mask firewalld.service</h1>
+
+<h1>systemctl enable iptables.service</h1>
+
+<h1>systemctl enable ip6tables.service</h1>
+
+<p>``
+My /home was still on a  regular harddisk I move it to the ssd</p>
+
+<p>```
+[staf@vicky~]$ systemd-analyze
+Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
+[staf@vicky~]$ systemd-analyze blame</p>
+
+<pre><code>       546ms postfix.service
+       537ms NetworkManager.service
+       508ms accounts-daemon.service
+       102ms nfs-lock.service
+        62ms proc-fs-nfsd.mount
+        59ms polkit.service
+        55ms lvm2-monitor.service
+        54ms NetworkManager-dispatcher.service
+        54ms abrt-ccpp.service
+        54ms jexec.service
+        53ms udisks2.service
+        52ms autofs.service
+        49ms var-lib-nfs-rpc_pipefs.mount
+        45ms avahi-daemon.service
+        43ms colord.service
+        41ms systemd-logind.service
+        41ms rtkit-daemon.service
+        40ms gdm.service
+        37ms systemd-fsck-root.service
+        33ms systemd-vconsole-setup.service
+        32ms fedora-loadmodules.service
+        28ms chronyd.service
+        28ms systemd-udev-trigger.service
+        26ms dev-hugepages.mount
+        26ms dev-mqueue.mount
+        26ms sys-kernel-debug.mount
+        25ms lm_sensors.service
+        24ms systemd-fsck@dev-disk-by\x2duuid-16608012\x2d1711\x2d42d7\x2d8652\x2d900e2d22ed40.service
+        23ms tmp.mount
+        22ms sys-kernel-config.mount
+        19ms systemd-user-sessions.service
+        16ms systemd-journal-flush.service
+        16ms mcelog.service
+        15ms proc-sys-fs-binfmt_misc.mount
+        14ms bluetooth.service
+        12ms systemd-sysctl.service
+        12ms systemd-tmpfiles-setup-dev.service
+        12ms rpcbind.service
+        12ms xinetd.service
+         8ms systemd-udevd.service
+         7ms fedora-readonly.service
+         7ms lvm2-lvmetad.service
+         6ms sshd.service
+         5ms systemd-readahead-collect.service
+         5ms boot.mount
+         5ms upower.service
+         4ms dev-mapper-fedora_vicky\x2dswap.swap
+         4ms systemd-remount-fs.service
+         3ms systemd-tmpfiles-setup.service
+         3ms systemd-update-utmp-runlevel.service
+         2ms auditd.service
+         1ms systemd-random-seed-load.service
+         1ms systemd-readahead-done.service
+         1ms sys-fs-fuse-connections.mount
+</code></pre>
+
+<p>Result:
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM  "></iframe></div></p>
 ]]></content>
   </entry>
   
