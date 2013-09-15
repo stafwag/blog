@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-15T17:59:04+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
+  <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2013-09-15T18:22:28+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[CGIpaf 1.3.4pre1 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/"/>
     <updated>2013-09-15T16:23:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released</id>
+    <id>http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released</id>
     <content type="html"><![CDATA[<p>This is first pre-release of CGIpaf 1.3.4.</p>
 
 <h3>ChangeLog</h3>
@@ -41,10 +41,10 @@
   
   <entry>
     <title type="html"><![CDATA[Running kindle on GNU/Linux with wine]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
     <updated>2013-09-08T11:57:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.com/blog/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
+    <id>http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
 
 <p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>
 
@@ -111,9 +111,9 @@ It&#8217;s better to only read ebooks in an <a href="http://en.wikipedia.org/wik
   
   <entry>
     <title type="html"><![CDATA[fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
     <updated>2013-09-01T12:21:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
+    <id>http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
     <content type="html"><![CDATA[<p>I installed <a href="http://fedoraproject.org/">fedora 19</a> on <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my new pc</a> mainly to play with <a href="http://www.ovirt.org/">ovirt</a> which seems to be easier to install on  <a href="http://fedoraproject.org/">fedora</a> than on <a href="http://www.debian.org">Debian</a>.</p>
 
 <p>Don&#8217;t worry I still have a debian system at hand&#8230;</p>
@@ -221,10 +221,10 @@ Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721
   
   <entry>
     <title type="html"><![CDATA[The Benefits of Stopping Smoking...]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/"/>
     <updated>2013-08-25T12:32:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.com/blog/images/i7_internals.jpg" width="500" height="384" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
+    <id>http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/i7_internals.jpg" width="500" height="384" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
 Besides the health benefits you save a lot of money.</p>
 
 <p>My &#8220;no smoking&#8221; <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.</p>
@@ -245,10 +245,10 @@ Besides the health benefits you save a lot of money.</p>
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.3 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
     <updated>2013-08-18T20:07:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.com/blog/images/lookat_143.png" width="360" height="217" title="&#34;lookat&#34;" alt="&#34;lookat&#34;">
+    <id>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/lookat_143.png" width="360" height="217" title="&#34;lookat&#34;" alt="&#34;lookat&#34;">
 I&#8217;m pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
 
 <p>This new stable version will compile correctly with <a href="http://clang.llvm.org/">LLVM/clang</a>.<br /><br /></p>
@@ -269,10 +269,10 @@ Have fun&#8230;
   
   <entry>
     <title type="html"><![CDATA[Ide is still alive...]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.com/blog/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
+    <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
 
 <p>
 The dvd drive in my <a href="http://en.wikipedia.org/wiki/Sun_Blade_(workstation)">sun blade 1500 workstation</a> broke down. I use this system acausally for some development, it&#8217;s always handy to have a <a href="http://en.wikipedia.org/wiki/Endianness">big endian</a> system at hand.<br /><br />
@@ -280,21 +280,21 @@ The dvd drive in my <a href="http://en.wikipedia.org/wiki/Sun_Blade_(workstation
 
 
 <p>The dvd drive was still handy to load another operating system on it.<br />The dvd drive has an <a href="http://en.wikipedia.org/wiki/Integrated_Drive_Electronics">ide interface</a> which are hard to get these days&#8230;<br /><br />
-<img class="left" src="http://stafwag.github.com/blog/images/sata_dvd_0.jpg" width="326" height="245" title="&#34;dvd rom&#34;" alt="&#34;dvd rom&#34;"></p>
+<img class="left" src="http://stafwag.github.io/blog/images/sata_dvd_0.jpg" width="326" height="245" title="&#34;dvd rom&#34;" alt="&#34;dvd rom&#34;"></p>
 
 <p>
 I found a <a href="http://www.conrad.be/ce/nl/product/974497/IDE-naar-SATA-converter/SHOP_AREA_37572">ide to sata convertor</a> and a <a href="http://www.conrad.be/ce/nl/product/417054/Samsung-DVD-ROM-SATA-SH-118ABBEBE-bulk/SHOP_AREA_17682">new dvd drive</a> with a <a href="http://en.wikipedia.org/wiki/Serial_ATA">sata interface</a> at <a href="http://www.conrad.be">conrad</a>. This should convert the sata interface to an ide interface without any driver and works with any operating system.<br /><br />Well let&#8217;s put this to a test on a <a href="http://en.wikipedia.org/wiki/SPARC">sparc</a> system with <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system">solaris</a> :-)<br /><br />
 </p>
 
 
-<p><img class="right" src="http://stafwag.github.com/blog/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&#34;on dvd&#34;" alt="&#34;on dvd&#34;"></p>
+<p><img class="right" src="http://stafwag.github.io/blog/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&#34;on dvd&#34;" alt="&#34;on dvd&#34;"></p>
 
 <p>
 The installation was pretty straightforward, luckily the dvd rom drive has a plastic back since the converter touches the back of the dvd rom drive.<br /><br />  
 </p>
 
 
-<p><img class="right" src="http://stafwag.github.com/blog/images/sun1500_alive_0.jpg" width="326" height="244" title="&#34;sun 1500 alive&#34;" alt="&#34;sun 1500 alive&#34;"></p>
+<p><img class="right" src="http://stafwag.github.io/blog/images/sun1500_alive_0.jpg" width="326" height="244" title="&#34;sun 1500 alive&#34;" alt="&#34;sun 1500 alive&#34;"></p>
 
 <p>
 After a quick test it seems to work like a charm. I might install <a href="http://www.opensxce.org">opensxce</a> on it.<br /><br />It seems to be the only option to run an <a href="http://en.wikipedia.org/wiki/OpenSolaris">opensolaris</a> ancestor on sparc hardware.</p>
@@ -304,9 +304,9 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[yum install lookat]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat/"/>
     <updated>2013-05-25T20:09:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat</id>
+    <id>http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat</id>
     <content type="html"><![CDATA[<p>&#8220;yum install lookat&#8221; works on Fedora now  ;-)</p>
 
 <p>Thanks <a href="http://cicku.me/">Christopher</a>!</p>
@@ -393,9 +393,9 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[lookat/bekijk has landed in fedora]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/"/>
     <updated>2013-05-12T12:37:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora</id>
+    <id>http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora</id>
     <content type="html"><![CDATA[<p>Thanks to <a href="http://cicku.me/">Christopher Meng</a></p>
 
 <p><a href="http://www.wagemakers.be/english/programs/lookat">Lookat</a> has landed in <a href="http://www.fedoraproject.org">Fedora</a>.</p>
@@ -406,9 +406,9 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
+    <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
     <content type="html"><![CDATA[<p>Trying to release more often&#8230;</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>
@@ -431,9 +431,9 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[Migrating from Qjail to ezjail]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/"/>
     <updated>2013-04-10T12:36:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail</id>
+    <id>http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail</id>
     <content type="html"><![CDATA[<p>I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I&#8217;m migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
@@ -1079,9 +1079,9 @@ Lucky you can install the basejail without a &#8220;make world&#8221;.</p>
   
   <entry>
     <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
     <updated>2013-03-16T11:57:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
+    <id>http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
     <content type="html"><![CDATA[<p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
 
 <p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
@@ -1154,15 +1154,15 @@ It took a bit longer than expected.</p>
   
   <entry>
     <title type="html"><![CDATA[Freebsd 9.1 jails with Qjail]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
     <updated>2013-02-16T12:35:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
+    <id>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
     <content type="html"><![CDATA[<hr />
 
 
 <p><strong></p>
 
-<p>I&#8217;m using <em>ezjail</em> <a href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+<p>I&#8217;m using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
 Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
@@ -1515,10 +1515,10 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
   
   <entry>
     <title type="html"><![CDATA[Running Freebsd 9.0 on Asus C60M1-i motherboard]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/"/>
+    <link href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/"/>
     <updated>2012-12-16T12:06:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.com/blog/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
+    <id>http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
 
 <p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i&#8217;m building a new one.</p>
 
@@ -1534,9 +1534,9 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
+    <link href="http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
     <updated>2012-12-12T20:32:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
+    <id>http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
     <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
 
 <p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
@@ -1576,10 +1576,10 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
   
   <entry>
     <title type="html"><![CDATA[RIP: pluto]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/"/>
+    <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.com/blog/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
+    <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>
 

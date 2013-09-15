@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: git | stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/blog/categories/git/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-15T17:59:04+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
+  <link href="http://stafwag.github.io/blog/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2013-09-15T18:22:28+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
+    <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
     <content type="html"><![CDATA[<p>Trying to release more often...</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>
@@ -40,9 +40,9 @@
   
   <entry>
     <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
     <updated>2013-03-16T11:57:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
+    <id>http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
     <content type="html"><![CDATA[<p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
 
 <p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
@@ -102,9 +102,9 @@ git push origin --mirror</p>
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
+    <link href="http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
     <updated>2012-12-12T20:32:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
+    <id>http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
     <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
 
 <p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
@@ -144,9 +144,9 @@ git push origin --mirror</p>
   
   <entry>
     <title type="html"><![CDATA[RIP: pluto]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/"/>
+    <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto</id>
+    <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>

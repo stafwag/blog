@@ -1,85 +1,85 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/</loc>
         <lastmod>2012-12-24T23:49:38+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/
+            http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/
         </loc>
         <lastmod>2012-12-24T23:49:38+01:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/
+            http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/
         </loc>
         <lastmod>2012-12-24T23:49:38+01:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/</loc>
         <lastmod>2013-04-11T15:15:28+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/</loc>
         <lastmod>2013-03-17T14:59:47+01:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/</loc>
         <lastmod>2013-04-11T15:37:29+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/
+            http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/
         </loc>
         <lastmod>2013-08-18T14:42:35+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/
+            http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/
         </loc>
         <lastmod>2013-05-12T12:49:40+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat/</loc>
         <lastmod>2013-05-25T20:19:37+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/</loc>
         <lastmod>2013-08-18T14:37:13+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/08/18/lookat-1-dot-4-3-released/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/</loc>
         <lastmod>2013-08-18T20:31:43+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/
+            http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/
         </loc>
         <lastmod>2013-08-25T14:38:08+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/
+            http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/
         </loc>
         <lastmod>2013-09-08T15:44:55+02:00</lastmod>
     </url>
     <url>
         <loc>
-            http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/
+            http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/
         </loc>
         <lastmod>2013-09-08T22:11:53+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/</loc>
+        <loc>http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/</loc>
         <lastmod>2013-09-15T17:59:03+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/</loc>
+        <loc>http://stafwag.github.io/blog/</loc>
         <lastmod>2013-09-15T17:59:03+02:00</lastmod>
     </url>
     <url>
-        <loc>http://stafwag.github.com/blog/blog/archives/</loc>
+        <loc>http://stafwag.github.io/blog/blog/archives/</loc>
         <lastmod>2013-09-15T17:59:03+02:00</lastmod>
     </url>
 </urlset>

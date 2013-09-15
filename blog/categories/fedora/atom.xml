@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: fedora | stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/blog/categories/fedora/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-15T17:59:04+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
+  <link href="http://stafwag.github.io/blog/blog/categories/fedora/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2013-09-15T18:22:28+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Running kindle on GNU/Linux with wine]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
     <updated>2013-09-08T11:57:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
+    <id>http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
 
 <p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>
@@ -84,9 +84,9 @@ It's better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open
   
   <entry>
     <title type="html"><![CDATA[fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
     <updated>2013-09-01T12:21:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
+    <id>http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
     <content type="html"><![CDATA[<p>I installed <a href="http://fedoraproject.org/">fedora 19</a> on <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my new pc</a> mainly to play with <a href="http://www.ovirt.org/">ovirt</a> which seems to be easier to install on  <a href="http://fedoraproject.org/">fedora</a> than on <a href="http://www.debian.org">Debian</a>.</p>
 
 <p>Don't worry I still have a debian system at hand...</p>
@@ -190,9 +190,9 @@ Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721
   
   <entry>
     <title type="html"><![CDATA[yum install lookat]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat/"/>
     <updated>2013-05-25T20:09:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/05/25/yum-install-lookat</id>
+    <id>http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat</id>
     <content type="html"><![CDATA[<p>"yum install lookat" works on Fedora now  ;-)</p>
 
 <p>Thanks <a href="http://cicku.me/">Christopher</a>!</p>
@@ -243,9 +243,9 @@ Running Transaction
   
   <entry>
     <title type="html"><![CDATA[lookat/bekijk has landed in fedora]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/"/>
     <updated>2013-05-12T12:37:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora</id>
+    <id>http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora</id>
     <content type="html"><![CDATA[<p>Thanks to <a href="http://cicku.me/">Christopher Meng</a></p>
 
 <p><a href="http://www.wagemakers.be/english/programs/lookat">Lookat</a> has landed in <a href="http://www.fedoraproject.org">Fedora</a>.</p>

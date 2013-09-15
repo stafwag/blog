@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: cvs | stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/blog/categories/cvs/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-15T17:59:04+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
+  <link href="http://stafwag.github.io/blog/blog/categories/cvs/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2013-09-15T18:22:28+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
     <updated>2013-03-16T11:57:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
+    <id>http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
     <content type="html"><![CDATA[<p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
 
 <p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
@@ -77,9 +77,9 @@ git push origin --mirror</p>
   
   <entry>
     <title type="html"><![CDATA[RIP: pluto]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/"/>
+    <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto</id>
+    <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>

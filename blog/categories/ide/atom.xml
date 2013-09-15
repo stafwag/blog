@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: ide | stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/blog/categories/ide/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-15T17:59:04+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
+  <link href="http://stafwag.github.io/blog/blog/categories/ide/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2013-09-15T18:22:28+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Ide is still alive...]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive</id>
+    <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
 
 <p>

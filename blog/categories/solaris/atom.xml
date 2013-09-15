@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: solaris | stafwag Blog]]></title>
-  <link href="http://stafwag.github.com/blog/blog/categories/solaris/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.com/blog/"/>
-  <updated>2013-09-15T17:59:04+02:00</updated>
-  <id>http://stafwag.github.com/blog/</id>
+  <link href="http://stafwag.github.io/blog/blog/categories/solaris/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2013-09-15T18:22:28+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Ide is still alive...]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive</id>
+    <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
 
 <p>
@@ -50,9 +50,9 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[Ide is still alive...]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/08/10/ide-is-still-alive</id>
+    <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
 
 <p>
@@ -85,15 +85,15 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[Freebsd 9.1 jails with Qjail]]></title>
-    <link href="http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
+    <link href="http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
     <updated>2013-02-16T12:35:00+01:00</updated>
-    <id>http://stafwag.github.com/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
+    <id>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
     <content type="html"><![CDATA[<hr />
 
 
 <p><strong></p>
 
-<p>I'm using <em>ezjail</em> <a href="http://stafwag.github.com/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+<p>I'm using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
 Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
