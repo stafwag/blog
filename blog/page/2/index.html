@@ -9,8 +9,8 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="I&#8217;m using ezjail now. The reason for this is that the port is marked as RESTRICTED.
-Since it seems to be a fork from ezjail without respecting &hellip;">
+  <meta name="description" content="I finally converted the cgipaf cvs repository to github. I used cvs2git
+It took a bit longer than expected. My first attempt didn&#8217;t had the &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +91,108 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/03/16/cgipaf-uploaded-to-github/">CGIpaf Uploaded to Github</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-03-16T11:57:00+01:00" pubdate data-updated="true">Mar 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
+
+<p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
+It took a bit longer than expected.</p>
+
+<p>My first attempt didn&#8217;t had the release tags right.</p>
+
+<p>Adding <code>--retain-conflicting-attic-files</code> to cvs2git resolved this issue.</p>
+
+<p>You&#8217;ll find how I did it it below.</p>
+
+<h3>cvs2git.sh:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>cvs2git \
+</span><span class='line'>    --blobfile=cvs2git-tmp/git-blob.dat \
+</span><span class='line'>    --dumpfile=cvs2git-tmp/git-dump.dat \
+</span><span class='line'>    /var/lib/cvs/cgipaf \
+</span><span class='line'>    --username=staf \
+</span><span class='line'>    --retain-conflicting-attic-files</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>create local git:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ mkdir ~/newgit
+</span><span class='line'>$ cd ~/newgit
+</span><span class='line'>$ mkdir cgipaf
+</span><span class='line'>$ cd cgipaf
+</span><span class='line'>$ git init
+</span><span class='line'>Initialized empty Git repository in /home/staf/newgit/cgipaf/
+</span><span class='line'>$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>import.sh:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash
+</span><span class='line'>
+</span><span class='line'>git fast-import --export-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-blob.dat
+</span><span class='line'>git fast-import --import-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-dump.dat</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>push to github:</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git remote add origin git@github.com:stafwag/cgipaf.git
+</span><span class='line'>git push origin --mirror
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -681,6 +783,10 @@ But it&#8217;s time to move the source to a safer place. This will be <a href="h
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/">CGIpaf 1.3.4pre1 released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/">Running kindle on GNU/Linux with wine</a>
       </li>
     
@@ -694,10 +800,6 @@ But it&#8217;s time to move the source to a safer place. This will be <a href="h
     
       <li class="post">
         <a href="/blog/blog/2013/08/18/lookat-1-dot-4-3-released/">Lookat 1.4.3 released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2013/08/10/ide-is-still-alive/">Ide is still alive&#8230;</a>
       </li>
     
   </ul>

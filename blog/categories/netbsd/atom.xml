@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: netbsd | stafwag Blog]]></title>
+  <link href="http://stafwag.github.com/blog/blog/categories/netbsd/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.com/blog/"/>
+  <updated>2013-09-15T17:59:04+02:00</updated>
+  <id>http://stafwag.github.com/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[CGIpaf 1.3.4pre1 released]]></title>
+    <link href="http://stafwag.github.com/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/"/>
+    <updated>2013-09-15T16:23:00+02:00</updated>
+    <id>http://stafwag.github.com/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released</id>
+    <content type="html"><![CDATA[<p>This is first pre-release of CGIpaf 1.3.4.</p>
+
+<h3>ChangeLog</h3>
+
+<h5>CGIpaf 1.3.4pre1 (15 Sep 2013)</h5>
+
+<blockquote><ul>
+<li>PAM is enabled on FreeBSD 7.3 or above</li>
+<li>PAM is enabled on NetBSD 6.0 or above</li>
+<li>xmalloc is updated to support systems with non GNU compatible malloc</li>
+</ul>
+</blockquote>
+
+<p>CGIpaf 1.3.4pre1 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
+
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz">http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz</a></p>
+
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
+]]></content>
+  </entry>
+  
+</feed>
