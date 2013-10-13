@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2013-10-13T20:25:31+02:00</updated>
+  <updated>2013-10-13T20:30:42+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -127,7 +127,7 @@
 </span><span class='line'>[root@vicky etc]# </span></code></pre></td></tr></table></div></figure>
 
 
-<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&#8217;t installed on my box. After installing <code>yum-plugin-priorities1</code></p>
+<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&#8217;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
