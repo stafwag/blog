@@ -9,8 +9,8 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="I finally converted the cgipaf cvs repository to github. I used cvs2git
-It took a bit longer than expected. My first attempt didn&#8217;t had the &hellip;">
+  <meta name="description" content="I was using qjail on my freebsd system but I&#8217;m migrating to ezjail. The reason for this is that the port is marked as RESTRICTED.
+Since it &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,6 +91,681 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">Migrating From Qjail to Ezjail</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T12:36:00+02:00" pubdate data-updated="true">Apr 10<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I&#8217;m migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.</p>
+
+<p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
+Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
+
+<h3>Backup</h3>
+
+<h4>Move the existing jails to old_jails</h4>
+
+<p>Move the existing jails zfs filesystem aside just in case we need to migrate back</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails zroot/usr/jails
+</span><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails/staffs zroot/usr/jails/staffs
+</span><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails/stafmail zroot/usr/jails/stafmail
+</span><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails/stafdb zroot/usr/jails/stafdb
+</span><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # zfs rename zroot/usr/jails zroot/usr/old_jails</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Stop the running jails</h4>
+
+<p>Stop the jails that are still running.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # qjail stop
+</span><span class='line'>Jail stopped successfully. stafmail
+</span><span class='line'>Jail stopped successfully. staffs
+</span><span class='line'>Jail already stopped.      stafdb</span></code></pre></td></tr></table></div></figure>
+
+
+<h3><em>ezjail</em> setup</h3>
+
+<h4>Installing ezjail</h4>
+
+<p>The installation of <em>ezjail</em> is pretty straightforward&#8230;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # cd /usr/ports/sysutils/ezjail/
+</span><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # make install clean
+</span><span class='line'>===&gt;  Installing for ezjail-3.2.3
+</span><span class='line'>===&gt;   Generating temporary packing list
+</span><span class='line'>===&gt;  Checking if sysutils/ezjail already installed
+</span><span class='line'>mkdir -p /usr/local/etc/ezjail/ /usr/local/man/man1/ /usr/local/man/man5/ /usr/local/man/man7 /usr/local/man/man8 /usr/local/etc/rc.d/ /usr/local/bin/ /usr/local/share/examples/ezjail /usr/local/share/zsh/site-functions
+</span><span class='line'>cp -p ezjail.conf.sample /usr/local/etc/
+</span><span class='line'>cp -R -p examples/example /usr/local/share/examples/ezjail/
+</span><span class='line'>cp -R -p examples/nullmailer-example /usr/local/share/examples/ezjail/
+</span><span class='line'>cp -R -p share/zsh/site-functions/ /usr/local/share/zsh/site-functions/
+</span><span class='line'>sed s:EZJAIL_PREFIX:/usr/local: ezjail.sh &gt; /usr/local/etc/rc.d/ezjail
+</span><span class='line'>sed s:EZJAIL_PREFIX:/usr/local: ezjail-admin &gt; /usr/local/bin/ezjail-admin
+</span><span class='line'>sed s:EZJAIL_PREFIX:/usr/local: man8/ezjail-admin.8 &gt; /usr/local/man/man8/ezjail-admin.8
+</span><span class='line'>sed s:EZJAIL_PREFIX:/usr/local: man5/ezjail.conf.5 &gt; /usr/local/man/man5/ezjail.conf.5
+</span><span class='line'>sed s:EZJAIL_PREFIX:/usr/local: man7/ezjail.7 &gt; /usr/local/man/man7/ezjail.7
+</span><span class='line'>chmod 755 /usr/local/etc/rc.d/ezjail /usr/local/bin/ezjail-admin
+</span><span class='line'>chown -R root:wheel /usr/local/man/man8/ezjail-admin.8 /usr/local/man/man5/ezjail.conf.5 /usr/local/man/man7/ezjail.7 /usr/local/share/examples/ezjail/
+</span><span class='line'>chmod 0440 /usr/local/share/examples/ezjail/example/usr/local/etc/sudoers
+</span><span class='line'>[ -f /usr/local/etc/ezjail.conf ] ||  /bin/cp -p /usr/local/etc/ezjail.conf.sample  /usr/local/etc/ezjail.conf
+</span><span class='line'>===&gt;   Compressing manual pages for ezjail-3.2.3
+</span><span class='line'>===&gt;   Registering installation for ezjail-3.2.3
+</span><span class='line'>===&gt;  Cleaning for ezjail-3.2.3
+</span><span class='line'>root@rataplan:/usr/ports/sysutils/ezjail # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create /usr/jails</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # zfs create zroot/usr/jails
+</span><span class='line'>root@rataplan:/root # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Copy the sample config</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # cd /usr/local/etc/
+</span><span class='line'>root@rataplan:/usr/local/etc # cp ezjail.conf.sample ezjail.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Update ezjail.conf to use zfs</h4>
+
+<p>This will create a zfs filesystem for each jail automatically. Cool ;-)</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Setting this to YES will start to manage the basejail and newjail in ZFS
+</span><span class='line'>ezjail_use_zfs="YES"
+</span><span class='line'># Setting this to YES will manage ALL new jails in their own zfs
+</span><span class='line'>ezjail_use_zfs_for_jails="YES"
+</span><span class='line'># The name of the ZFS ezjail should create jails on, it will be mounted at the ezjail_jaildir
+</span><span class='line'>ezjail_jailzfs="zroot/usr/jails"</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Installing the base jail without a make world</h4>
+
+<p>Most ezjail howto&#8217;s that I found assume that you already ran a &#8220;make world&#8221;. I want to setup the base jail without a &#8220;make world&#8221; because this takes too much time on my system.
+Lucky you can install the basejail without a &#8220;make world&#8221;.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # ezjail-admin install
+</span><span class='line'>Trying 193.162.146.4:21 ...
+</span><span class='line'>Connected to ftp.freebsd.org.
+</span><span class='line'>220 beastie.tdk.net FTP server (Version 6.00LS) ready.
+</span><span class='line'>331 Guest login ok, send your email address as password.
+</span><span class='line'>230 Guest login ok, access restrictions apply.
+</span><span class='line'>Remote system type is UNIX.
+</span><span class='line'>Using binary mode to transfer files.
+</span><span class='line'>200 Type set to I.
+</span><span class='line'>250 CWD command successful.
+</span><span class='line'>local: base.txz remote: base.txz
+</span><span class='line'>229 Entering Extended Passive Mode (|||65080|)
+</span><span class='line'>150 Opening BINARY mode data connection for 'base.txz' (59854248 bytes).
+</span><span class='line'>100% |***********************************************************************************************************************************| 58451 KiB  451.20 KiB/s    00:00 ETA
+</span><span class='line'>226 Transfer complete.
+</span><span class='line'>59854248 bytes received in 02:09 (451.20 KiB/s)
+</span><span class='line'>221 Goodbye.
+</span><span class='line'>Trying 193.162.146.4:21 ...
+</span><span class='line'>Connected to ftp.freebsd.org.
+</span><span class='line'>220 beastie.tdk.net FTP server (Version 6.00LS) ready.
+</span><span class='line'>331 Guest login ok, send your email address as password.
+</span><span class='line'>230 Guest login ok, access restrictions apply.
+</span><span class='line'>Remote system type is UNIX.
+</span><span class='line'>Using binary mode to transfer files.
+</span><span class='line'>200 Type set to I.
+</span><span class='line'>250 CWD command successful.
+</span><span class='line'>local: lib32.txz remote: lib32.txz
+</span><span class='line'>229 Entering Extended Passive Mode (|||55936|)
+</span><span class='line'>150 Opening BINARY mode data connection for 'lib32.txz' (9743636 bytes).
+</span><span class='line'> 37% |************************************************                                                                                   |  3576 KiB  447.04 KiB/s    00:13 ETA</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&lt;snip&gt;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/usr/jails/basejail/usr/lib32/libbsnmp.so.6
+</span><span class='line'>/usr/jails/basejail/usr/lib32/libcam.a
+</span><span class='line'>/usr/jails/basejail/usr/lib32/libsupc++.a
+</span><span class='line'>/usr/jails/basejail/usr/lib32/libarchive.a
+</span><span class='line'>/usr/jails/basejail/usr/lib32/libpcap.so.8
+</span><span class='line'>/usr/jails/basejail/usr/lib32/libbsdxml.so.4
+</span><span class='line'>108748 blocks
+</span><span class='line'>Note: a non-standard /etc/make.conf was copied to the template jail in order to get the ports collection running inside jails.
+</span><span class='line'>root@rataplan:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # cd /usr/jails/
+</span><span class='line'>root@rataplan:/usr/jails # ls
+</span><span class='line'>basejail  flavours    newjail
+</span><span class='line'>root@rataplan:/usr/jails # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Add the jails ip addresses to the system.</h4>
+
+<p>This is different from qjail, by ezjail it&#8217;s required to setup the ip addresses for each jail.</p>
+
+<p>Open /etc/rc.conf and create interface aliases for each jail.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ifconfig_re0="inet 192.168.1.40/24"
+</span><span class='line'>ifconfig_re0_alias0="inet 192.168.1.41/32"
+</span><span class='line'>ifconfig_re0_alias1="inet 192.168.1.42/32"
+</span><span class='line'>ifconfig_re0_alias2="inet 192.168.1.43/32"
+</span><span class='line'>ifconfig_re0_alias3="inet 192.168.1.44/32"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And create them by running netif restart</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/etc/rc.d # ./netif restart
+</span><span class='line'>Stopping Network: lo0 re0.
+</span><span class='line'>lo0: flags=8048&lt;LOOPBACK,RUNNING,MULTICAST&gt; metric 0 mtu 16384
+</span><span class='line'>  options=600003&lt;RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6&gt;
+</span><span class='line'>  nd6 options=21&lt;PERFORMNUD,AUTO_LINKLOCAL&gt;
+</span><span class='line'>re0: flags=8802&lt;BROADCAST,SIMPLEX,MULTICAST&gt; metric 0 mtu 1500
+</span><span class='line'>  options=8209b&lt;RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM,WOL_MAGIC,LINKSTATE&gt;
+</span><span class='line'>  ether 30:85:a9:40:58:ba
+</span><span class='line'>  inet6 fe80::3285:a9ff:fe40:58ba%re0 prefixlen 64 scopeid 0x6 
+</span><span class='line'>  nd6 options=29&lt;PERFORMNUD,IFDISABLED,AUTO_LINKLOCAL&gt;
+</span><span class='line'>  media: Ethernet autoselect (1000baseT &lt;full-duplex&gt;)
+</span><span class='line'>  status: active
+</span><span class='line'>Starting Network: lo0 re0.
+</span><span class='line'>lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; metric 0 mtu 16384
+</span><span class='line'>  options=600003&lt;RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6&gt;
+</span><span class='line'>  inet6 ::1 prefixlen 128 
+</span><span class='line'>  inet6 fe80::1%lo0 prefixlen 64 scopeid 0x9 
+</span><span class='line'>  inet 127.0.0.1 netmask 0xff000000 
+</span><span class='line'>  nd6 options=21&lt;PERFORMNUD,AUTO_LINKLOCAL&gt;
+</span><span class='line'>re0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; metric 0 mtu 1500
+</span><span class='line'>  options=8209b&lt;RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM,WOL_MAGIC,LINKSTATE&gt;
+</span><span class='line'>  ether 30:85:a9:40:58:ba
+</span><span class='line'>  inet6 fe80::3285:a9ff:fe40:58ba%re0 prefixlen 64 scopeid 0x6 
+</span><span class='line'>  inet 192.168.1.40 netmask 0xffffff00 broadcast 192.168.1.255
+</span><span class='line'>  inet 192.168.1.41 netmask 0xffffffff broadcast 192.168.1.41
+</span><span class='line'>  inet 192.168.1.42 netmask 0xffffffff broadcast 192.168.1.42
+</span><span class='line'>  inet 192.168.1.43 netmask 0xffffffff broadcast 192.168.1.43
+</span><span class='line'>  inet 192.168.1.44 netmask 0xffffffff broadcast 192.168.1.44
+</span><span class='line'>  nd6 options=29&lt;PERFORMNUD,IFDISABLED,AUTO_LINKLOCAL&gt;
+</span><span class='line'>  media: Ethernet autoselect (none)
+</span><span class='line'>  status: no carrier
+</span><span class='line'>root@rataplan:/etc/rc.d # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Creating the first jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/etc/rc.d # ezjail-admin create stafpuppet 192.168.1.44
+</span><span class='line'>Warning: Some services already seem to be listening on IP 192.168.1.44
+</span><span class='line'>  This may cause some confusion, here they are:
+</span><span class='line'>root     ntpd       29764 31 udp4   192.168.1.44:123      *:*
+</span><span class='line'>Warning: Some services already seem to be listening on all IP, (including 192.168.1.44)
+</span><span class='line'>  This may cause some confusion, here they are:
+</span><span class='line'>root     ntpd       29764 20 udp4   *:123                 *:*
+</span><span class='line'>root     ntpd       29764 21 udp6   *:123                 *:*
+</span><span class='line'>root     rpc.statd  1161  4  udp6   *:1021                *:*
+</span><span class='line'>root     rpc.statd  1161  5  tcp6   *:1021                *:*
+</span><span class='line'>root     rpc.statd  1161  6  udp4   *:1021                *:*
+</span><span class='line'>root     rpc.statd  1161  7  tcp4   *:1021                *:*
+</span><span class='line'>root     nfsd       1157  5  tcp4   *:2049                *:*
+</span><span class='line'>root     nfsd       1157  6  tcp6   *:2049                *:*
+</span><span class='line'>root     mountd     1151  6  udp6   *:942                 *:*
+</span><span class='line'>root     mountd     1151  7  tcp6   *:942                 *:*
+</span><span class='line'>root     mountd     1151  8  udp4   *:942                 *:*
+</span><span class='line'>root     mountd     1151  9  tcp4   *:942                 *:*
+</span><span class='line'>root     rpcbind    1120  6  udp6   *:111                 *:*
+</span><span class='line'>root     rpcbind    1120  7  udp6   *:960                 *:*
+</span><span class='line'>root     rpcbind    1120  8  tcp6   *:111                 *:*
+</span><span class='line'>root     rpcbind    1120  9  udp4   *:111                 *:*
+</span><span class='line'>root     rpcbind    1120  10 udp4   *:777                 *:*
+</span><span class='line'>root     rpcbind    1120  11 tcp4   *:111                 *:*
+</span><span class='line'>root     syslogd    1099  6  udp6   *:514                 *:*
+</span><span class='line'>root     syslogd    1099  7  udp4   *:514                 *:*
+</span><span class='line'>root@rataplan:/etc/rc.d # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Starting the jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/etc/rc.d # /usr/local/etc/rc.d/ezjail 
+</span><span class='line'>Usage: /usr/local/etc/rc.d/ezjail [fast|force|one|quiet](start|stop|restart|rcvar|startcrypto|stopcrypto)
+</span><span class='line'>root@rataplan:/etc/rc.d # /usr/local/etc/rc.d/ezjail start
+</span><span class='line'> ezjailConfiguring jails:.
+</span><span class='line'>Starting jails: stafpuppet.</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Listing the jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/etc/rc.d # jls
+</span><span class='line'>   JID  IP Address      Hostname                      Path
+</span><span class='line'>     3  192.168.1.44    stafpuppet                    /usr/jails/stafpuppet
+</span><span class='line'>root@rataplan:/etc/rc.d # ping 192.168.1.44
+</span><span class='line'>PING 192.168.1.44 (192.168.1.44): 56 data bytes
+</span><span class='line'>64 bytes from 192.168.1.44: icmp_seq=0 ttl=64 time=0.053 ms
+</span><span class='line'>^C
+</span><span class='line'>--- 192.168.1.44 ping statistics ---
+</span><span class='line'>1 packets transmitted, 1 packets received, 0.0% packet loss
+</span><span class='line'>round-trip min/avg/max/stddev = 0.053/0.053/0.053/0.000 ms
+</span><span class='line'>root@rataplan:/etc/rc.d # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Console access</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/etc/rc.d # jexec 3 csh
+</span><span class='line'>root@stafpuppet:/ # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Install the freebsd ports into the base jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# ezjail-admin update -P   
+</span><span class='line'>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+</span><span class='line'>Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+</span><span class='line'>Fetching snapshot metadata... done.
+</span><span class='line'>Updating from Wed Apr 10 14:55:36 CEST 2013 to Thu Apr 11 14:00:20 CEST 2013.
+</span><span class='line'>Fetching 3 metadata patches.. done.
+</span><span class='line'>Applying metadata patches... done.
+</span><span class='line'>Fetching 0 metadata files... done.
+</span><span class='line'>Fetching 17 patches.....10... done.
+</span><span class='line'>Applying patches... done.
+</span><span class='line'>Fetching 0 new ports or files... done.
+</span><span class='line'>/usr/jails/basejail/usr/ports/CHANGES
+</span><span class='line'>/usr/jails/basejail/usr/ports/COPYRIGHT
+</span><span class='line'>/usr/jails/basejail/usr/ports/GIDs
+</span><span class='line'>/usr/jails/basejail/usr/ports/KNOBS
+</span><span class='line'>/usr/jails/basejail/usr/ports/Keywords/info.yaml
+</span><span class='line'>/usr/jails/basejail/usr/ports/LEGAL
+</span><span class='line'>/usr/jails/basejail/usr/ports/MOVED
+</span><span class='line'>/usr/jails/basejail/usr/ports/Makefile
+</span><span class='line'>/usr/jails/basejail/usr/ports/Mk/Uses/
+</span><span class='line'>/usr/jails/basejail/usr/ports/Mk/bsd.apache.mk
+</span><span class='line'>/usr/jails/basejail/usr/ports/Mk/bsd.autotools.mk
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>&lt;snip&gt;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/usr/jails/basejail/usr/ports/x11/xzoom/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yad/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yakuake-kde4/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yakuake/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yalias/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yeahconsole/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yelp/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/zenity/
+</span><span class='line'>Building new INDEX files... done.
+</span><span class='line'>[root@rataplan ~]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Verify</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# jls 
+</span><span class='line'>   JID  IP Address      Hostname                      Path
+</span><span class='line'>     3  192.168.1.44    stafpuppet                    /usr/jails/stafpuppet
+</span><span class='line'>[root@rataplan ~]# jexec 3 csh
+</span><span class='line'>root@stafpuppet:/ # cd /usr/ports/
+</span><span class='line'>root@stafpuppet:/usr/ports # ls
+</span><span class='line'>.portsnap.INDEX   KNOBS       Templates   astro       converters  finance     hungarian   math        news        science     www     x11-themes
+</span><span class='line'>CHANGES       Keywords    Tools       audio       databases   french      irc     misc        palm        security    x11     x11-toolkits
+</span><span class='line'>COPYRIGHT LEGAL       UIDs        benchmarks  deskutils   ftp     japanese    multimedia  polish      shells      x11-clocks  x11-wm
+</span><span class='line'>GIDs      MOVED       UPDATING    biology     devel       games       java        net     ports-mgmt  sysutils    x11-drivers
+</span><span class='line'>INDEX-7       Makefile    accessibility   cad     dns     german      korean      net-im      portuguese  textproc    x11-fm
+</span><span class='line'>INDEX-8       Mk      arabic      chinese     editors     graphics    lang        net-mgmt    print       ukrainian   x11-fonts
+</span><span class='line'>INDEX-9       README      archivers   comms       emulators   hebrew      mail        net-p2p     russian     vietnamese  x11-servers
+</span><span class='line'>root@stafpuppet:/usr/ports # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Update the base jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan /usr]# ezjail-admin update -u
+</span><span class='line'>Looking up update.FreeBSD.org mirrors... 3 mirrors found.
+</span><span class='line'>Fetching metadata signature for 9.1-RELEASE from update4.freebsd.org... done.
+</span><span class='line'>Fetching metadata index... done.
+</span><span class='line'>Inspecting system... </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>update /etc/rc.conf</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#
+</span><span class='line'># ezjails
+</span><span class='line'>#
+</span><span class='line'>
+</span><span class='line'>ezjail_enable="YES"</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Migrate the jails to <em>ezjail</em></h3>
+
+<h4>Recreate the jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan /etc]# ezjail-admin create staffs 192.168.1.41
+</span><span class='line'>Warning: Some services already seem to be listening on IP 192.168.1.41
+</span><span class='line'>  This may cause some confusion, here they are:
+</span><span class='line'>root     ntpd       29764 24 udp4   192.168.1.41:123      *:*
+</span><span class='line'>Warning: Some services already seem to be listening on all IP, (including 192.168.1.41)
+</span><span class='line'>  This may cause some confusion, here they are:
+</span><span class='line'>root     ntpd       29764 20 udp4   *:123                 *:*
+</span><span class='line'>root     ntpd       29764 21 udp6   *:123                 *:*
+</span><span class='line'>root     rpc.statd  1161  4  udp6   *:1021                *:*
+</span><span class='line'>root     rpc.statd  1161  5  tcp6   *:1021                *:*
+</span><span class='line'>root     rpc.statd  1161  6  udp4   *:1021                *:*
+</span><span class='line'>root     rpc.statd  1161  7  tcp4   *:1021                *:*
+</span><span class='line'>root     nfsd       1157  5  tcp4   *:2049                *:*
+</span><span class='line'>root     nfsd       1157  6  tcp6   *:2049                *:*
+</span><span class='line'>root     mountd     1151  6  udp6   *:942                 *:*
+</span><span class='line'>root     mountd     1151  7  tcp6   *:942                 *:*
+</span><span class='line'>root     mountd     1151  8  udp4   *:942                 *:*
+</span><span class='line'>root     mountd     1151  9  tcp4   *:942                 *:*
+</span><span class='line'>root     rpcbind    1120  6  udp6   *:111                 *:*
+</span><span class='line'>root     rpcbind    1120  7  udp6   *:960                 *:*
+</span><span class='line'>root     rpcbind    1120  8  tcp6   *:111                 *:*
+</span><span class='line'>root     rpcbind    1120  9  udp4   *:111                 *:*
+</span><span class='line'>root     rpcbind    1120  10 udp4   *:777                 *:*
+</span><span class='line'>root     rpcbind    1120  11 tcp4   *:111                 *:*
+</span><span class='line'>root     syslogd    1099  6  udp6   *:514                 *:*
+</span><span class='line'>root     syslogd    1099  7  udp4   *:514                 *:*
+</span><span class='line'>[root@rataplan /etc]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Clone the zfs filesystem</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan /etc]# zfs destroy zroot/usr/jails/staffs
+</span><span class='line'>[root@rataplan /etc]# zfs snapshot zroot/usr/old_jails/staffs@org
+</span><span class='line'>[root@rataplan /etc]# zfs clone zroot/usr/old_jails/staffs@org zroot/usr/jails/staffs
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Start the jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan /etc]# /usr/local/etc/rc.d/ezjail start staffs
+</span><span class='line'>Configuring jails:.
+</span><span class='line'>Starting jails: staffs.
+</span><span class='line'>[root@rataplan /etc]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -783,6 +1458,10 @@ But it&#8217;s time to move the source to a safer place. This will be <a href="h
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/">yum update on fedora 19 and zfs on linux</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/">CGIpaf 1.3.4pre1 released</a>
       </li>
     
@@ -796,10 +1475,6 @@ But it&#8217;s time to move the source to a safer place. This will be <a href="h
     
       <li class="post">
         <a href="/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">The Benefits of Stopping Smoking&#8230;</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2013/08/18/lookat-1-dot-4-3-released/">Lookat 1.4.3 released</a>
       </li>
     
   </ul>
