@@ -4,7 +4,7 @@
   <title><![CDATA[Category: squid | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/squid/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2013-10-20T10:30:20+02:00</updated>
+  <updated>2013-10-20T14:39:57+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -25,7 +25,7 @@
 <p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> save my day!</p>
 
 <p><code>
-$ ./create_cache_entries.sh  &gt;&gt; create_cache_entries.sh
+$ ./create_cache_entries.sh  &gt; create_cache_entries.sh
 -bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
 $ vi create_cache_entries.sh
 </code></p>
