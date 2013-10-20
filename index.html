@@ -9,15 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="I use zfs on linux on fedora now. The installation was pretty straightforward but after the installation of zfs yum update failed. 1
-2
-3
-4
-5
-6
-7
-8
-9 &hellip;">
+  <meta name="description" content="I was creating an ugly quick-and-dirty script to setup the squid cache_dir automatically with puppet based on the diskspace and memory available. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -98,6 +90,54 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/10/20/bash-saved-my-day/">Bash Saved My Day</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-20T10:04:00+02:00" pubdate data-updated="true">Oct 20<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
+
+<p>When you are developing you sometimes forget to create backups and push it git, and mistakes are around the corner.</p>
+
+<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> save my day!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./create_cache_entries.sh  &gt;&gt; create_cache_entries.sh 
+</span><span class='line'>-bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
+</span><span class='line'>$ vi create_cache_entries.sh </span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -987,58 +1027,6 @@ After a quick test it seems to work like a charm. I might install <a href="http:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/">Lookat/Bekijk 1.4.3rc1 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-27T09:21:00+02:00" pubdate data-updated="true">Apr 27<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Trying to release more often&#8230;</p>
-
-<p>The first release candicate of lookat 1.4.3 has been released.</p>
-
-<h3>ChangeLog</h3>
-
-<h5>Lookat / Bekijk 1.4.3rc1  ( 27 Apr 2013 )</h5>
-
-<blockquote><ul>
-<li>Fixed compile issue with llvm clang</li>
-</ul>
-</blockquote>
-
-<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
-, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.3rc1.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
-
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/blog/page/2/">&larr; Older</a>
@@ -1071,6 +1059,10 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2013/10/20/bash-saved-my-day/">bash saved my day</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/">yum update on fedora 19 and zfs on linux</a>
       </li>
     
@@ -1084,10 +1076,6 @@ After a quick test it seems to work like a charm. I might install <a href="http:
     
       <li class="post">
         <a href="/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/">fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">The Benefits of Stopping Smoking&#8230;</a>
       </li>
     
   </ul>
