@@ -4,7 +4,7 @@
   <title><![CDATA[Category: bash | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/bash/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2013-10-20T10:25:26+02:00</updated>
+  <updated>2013-10-20T10:30:20+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -20,7 +20,7 @@
     <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
     <content type="html"><![CDATA[<p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
 
-<p>When you are developing you sometimes forget to create backups and push it git, and mistakes are around the corner.</p>
+<p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
 
 <p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> save my day!</p>
 
