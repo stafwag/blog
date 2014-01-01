@@ -4,7 +4,7 @@
   <title><![CDATA[Category: freebsd | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/freebsd/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2013-10-20T14:39:57+02:00</updated>
+  <updated>2014-01-01T22:12:22+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -59,7 +59,7 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
 <hr />
 
 
-<p>I'm adding more services to my <a href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
+<p>I'm adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
 
 <p>I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
 
@@ -283,7 +283,7 @@ root@rataplan:/usr/local/etc #</p>
     <id>http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
 
-<p>As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.</p>
+<p>As my file and backup system pluto <a href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.</p>
 
 <p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: qjail | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/qjail/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2013-10-20T14:39:57+02:00</updated>
+  <updated>2014-01-01T22:12:22+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -33,7 +33,7 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
 <hr />
 
 
-<p>I'm adding more services to my <a href="http://stafwag.github.com/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
+<p>I'm adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
 
 <p>I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
 

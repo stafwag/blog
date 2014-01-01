@@ -4,7 +4,7 @@
   <title><![CDATA[Category: puppet | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/puppet/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2013-10-20T14:39:57+02:00</updated>
+  <updated>2014-01-01T22:12:22+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -22,7 +22,7 @@
 
 <p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
 
-<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> save my day!</p>
+<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
 
 <p><code>
 $ ./create_cache_entries.sh  &gt; create_cache_entries.sh
