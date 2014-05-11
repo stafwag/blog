@@ -4,7 +4,7 @@
   <title><![CDATA[Category: mkv | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/mkv/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2014-05-11T11:41:44+02:00</updated>
+  <updated>2014-05-11T12:13:31+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -18,7 +18,25 @@
     <link href="http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles/"/>
     <updated>2014-05-11T11:24:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/wdlive.jpg" width="500" height="333" title="&#34;wdlive&#34;" alt="&#34;wdlive&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/wdlive.jpg" width="300" height="200" title="&#34;wdlive&#34;" alt="&#34;wdlive&#34;"></p>
+
+<p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it's still a nice media player.</p>
+
+<p>Unfortunately it's unable to display PGS (blu-ray) subtitles.</p>
+
+<br />&nbsp;<br />
+
+
+<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it's possible to play it my 5 year old wdlive.</p>
+
+<p>convertPgsSub 1.0.0stable1 is available github:</p>
+
+<p><a href="https://github.com/stafwag/convertPgsSub">https://github.com/stafwag/convertPgsSub</a></p>
+
+<p style="font-style: italic;">
+Have fun...
+</p>
+
 ]]></content>
   </entry>
   
