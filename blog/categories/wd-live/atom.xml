@@ -4,7 +4,7 @@
   <title><![CDATA[Category: wd live | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/wd-live/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2014-05-11T12:13:31+02:00</updated>
+  <updated>2014-05-25T10:14:20+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -27,7 +27,7 @@
 <br />&nbsp;<br />
 
 
-<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it's possible to play it my 5 year old wdlive.</p>
+<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it's possible to play it on my 5 year old wdlive.</p>
 
 <p>convertPgsSub 1.0.0stable1 is available github:</p>
 

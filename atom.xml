@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2014-05-11T12:13:31+02:00</updated>
+  <updated>2014-05-25T10:14:20+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,24 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Size matters, but ...]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2014/05/25/size-matters/"/>
+    <updated>2014-05-25T09:11:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2014/05/25/size-matters</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/dell2713.jpg" width="400" height="266" title="&#34;dell2713&#34;" alt="&#34;dell2713&#34;">
+Size matters, but &#8230; resolution and image quality are as import.</p>
+
+<p>Since I was diagnosed with diabetes I have eyes issues things are getting better recently but I still needs glasses for reading etc.</p>
+
+<p>My &#8220;no smoking&#8221; <a href="https://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough for some &#8220;eye candy&#8221;. I bought a <a href="http://accessories.ap.dell.com/sna/productdetail.aspx?c=au&cs=audhs1&l=en&redirect=1&s=dhs&sku=210-40773">Dell UltraSharp U2713HM</a> a 27 inch WQHD (2560x1440) IPS display.</p>
+
+<p>Compared to the others screens I used to work with the image quality is amazing and the higher resolution give so much more space.</p>
+
+<p><a href="https://plus.google.com/photos/+StafWagemakers/albums/6017268505479487345">Dell 2713HM images</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Convert PGS subtitles]]></title>
@@ -27,7 +45,7 @@
 <br />&nbsp;<br />
 
 
-<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it&#8217;s possible to play it my 5 year old wdlive.</p>
+<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it&#8217;s possible to play it on my 5 year old wdlive.</p>
 
 <p>convertPgsSub 1.0.0stable1 is available github:</p>
 
@@ -2581,33 +2599,6 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
 <li>Lookat 1.4.2rc1 is a maintenance release that resolves compile issues on some 64bits systems.</li>
 </ul>
 </blockquote>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[RIP: pluto]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
-    <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
-After 10 year, my fileserver pluto died.
-Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>
-
-<p>( 1 minute silence &#8230;. )</p>
-
-<br />
-
-
-<br />
-
-
-<p>I take backups of course ;-)
-I already ordered the parts to build a new pluto.</p>
-
-<p>Pluto still hosted some <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">CSV</a> repositorties like <a href="http://www.wagemakers.be/english/programs/cgipaf">CGIpaf</a>.
-But it&#8217;s time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.</p>
-
-<p>I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It&#8217;s written in ruby which is a nice bonus.</p>
 ]]></content>
   </entry>
   
