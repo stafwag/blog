@@ -8,7 +8,7 @@ categories: freebsd
 
 {% img left /images/P_500.jpg 250 250 "RIP pluto" %} 
 
-As my file and backup system pluto <a href="http://stafwag.github.com/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.
+As my file and backup system pluto <a href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.
 
 This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.
 
