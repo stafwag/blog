@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: chromecast | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/chromecast/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2014-06-07T22:43:08+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[pfsense: too secure for chromecast]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast/"/>
+    <updated>2014-06-07T21:05:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/too_secure2cast.png" width="885" height="469" title="&#34;toosecure2cast&#34;" alt="&#34;toosecure2cast&#34;"></p>
+
+<p>My internet firewall is a <a href="http://www.pcengines.ch/">pcengines</a> <a href="http://www.pcengines.ch/alix.htm">alix system</a> powered by <a href="https://www.pfsense.org/">pfsense</a>.</p>
+
+<p>I purchased a <a href="http://www.google.be/intl/en/chrome/devices/chromecast/">chromecast</a> at <a href="http://www.amazon.de">amazon.de</a>. The installation didn't work, after debugging the issue it seems that "Allow intra-BSS communication" needs to be enabled for chromecast.</p>
+]]></content>
+  </entry>
+  
+</feed>
