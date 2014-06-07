@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2014-05-25T10:24:12+02:00</updated>
+  <updated>2014-06-07T21:33:00+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,19 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[pfsense: too secure for chromecast]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast/"/>
+    <updated>2014-06-07T21:05:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/too_secure2cast.png" width="885" height="469" title="&#34;toosecure2cast&#34;" alt="&#34;toosecure2cast&#34;"></p>
+
+<p>My internet firewall is a <a href="http://www.pcengines.ch/">pcengines</a> <a href="http://www.pcengines.ch/alix.htm">alix system</a> powered by <a href="https://www.pfsense.org/">pfsense</a>.</p>
+
+<p>I purchased a <a href="http://www.google.be/intl/en/chrome/devices/chromecast/">chromecast</a> at <a href="http://www.amazon.de">amazon.de</a>. The installation didn&#8217;t work, after debugging the issue it seems that &#8220;Allow intra-BSS communication&#8221; needs to be enabled for chromecast.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Size matters, but ...]]></title>
@@ -2557,48 +2570,6 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
 <p>The freebsd 9.0 installation with <a href="http://wiki.freebsd.org/RootOnZFS/GPTZFSBoot/9.0-RELEASE">ZFS root</a> went well but the network adapter a Realtek 8111F isn&#8217;t supported by Freebsd 9.0. After checking google I found <a href="http://markmail.org/message/2w67d2nnx65bprqc#query:+page:1+mid:4h3efjpkq6bzxoyo+state:results">this</a> on the freebsd-net mailinglist.</p>
 
 <p>The realtek f8111F is supported in the latest driver code, after rebuilding my kernel the network adapter works fine. Very useful on a NAS ;-)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
-    <updated>2012-12-12T20:32:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
-    <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
-
-<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
-
-<p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
-
-<p>1.4.2 is a maintenance release. When there are more than 24 hours in a day I&#8217;ll start with the long waited utf-8 support ;-)</p>
-
-<h3>ChangeLog</h3>
-
-<h5>Lookat / Bekijk 1.4.2     ( 11 Dec 2012 )</h5>
-
-<blockquote><ul>
-<li>Lookat 1.4.2rc2 has been released as 1.4.2</li></li>
-</ul>
-</blockquote>
-
-<h5>Lookat / Bekijk 1.4.2rc2  ( 2 Sep 2012 )</h5>
-
-<blockquote><ul>
-<li>Added FreeBSD patch</li>
-<li>Added redhat specfile</li>
-<li>Added debian package dir</li>
-<li>Corrected mirror manpage errors</li>
-<li>xmalloc.c updated for non compatible GNU malloc for systems like AIX</li>
-</ul>
-</blockquote>
-
-<h5>Lookat / Bekijk 1.4.2rc1  ( 2 Nov 2011 )</h5>
-
-<blockquote><ul>
-<li>Lookat 1.4.2rc1 is a maintenance release that resolves compile issues on some 64bits systems.</li>
-</ul>
-</blockquote>
 ]]></content>
   </entry>
   
