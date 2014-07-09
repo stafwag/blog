@@ -4,7 +4,7 @@
   <title><![CDATA[Category: lxc | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/lxc/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2014-06-21T12:01:20+02:00</updated>
+  <updated>2014-07-04T13:16:28+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,11 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[lxc debian template in Fedora 20]]></title>
+    <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I'm a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way the spinup an new system and the easiest way isolate services.</p>
+    <content type="html"><![CDATA[<p>I'm a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
 <p>As always with virtualization you've to careful with sharing systems or containers that doesn't below to the same customer or service on the same physical machine since you're never sure which traces are left behind in the memory etc.</p>
 
