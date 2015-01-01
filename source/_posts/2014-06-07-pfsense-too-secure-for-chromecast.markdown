@@ -3,7 +3,7 @@ layout: post
 title: "pfsense: too secure for chromecast"
 date: 2014-06-07 21:05
 comments: true
-categories: 
+categories: [ chromecast, pfsense ] 
 ---
 {% img right /images/too_secure2cast.png 885 469 "toosecure2cast" %} 
 
