@@ -4,7 +4,7 @@
   <title><![CDATA[Category: docker | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-01-01T12:26:15+01:00</updated>
+  <updated>2015-05-12T15:09:16+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,64 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Run google chrome inside a fedora docker container over ssh]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
+    <updated>2015-05-12T14:55:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
+    <content type="html"><![CDATA[<p>Created a docker image to start a docker container with chrome.
+Destroying the container each time that you start a browser is easy way to get rid of your cookies and browser history.</p>
+
+<h2>Run google chrome inside a fedora docker container over ssh</h2>
+
+<h3>Installation instructions</h3>
+
+<p>1/ Clone the git repo</p>
+
+<p><code>
+$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
+</code></p>
+
+<p>2/ Copy your public ssh to id_rsa.pub</p>
+
+<p><code>
+$ cd docker-fedora-chrome-ssh
+$ cp ~/.ssh/id_rsa.pub .
+</code></p>
+
+<p>3/ Build the docker image</p>
+
+<p><code>
+$ docker build -t stafwag/docker-fedora-chrome-ssh .
+</code></p>
+
+<p>4/ Update your ssh config</p>
+
+<p><code>
+$ vi ~/.ssh/config
+</code></p>
+
+<p>```
+Host mychrome</p>
+
+<pre><code>      User      chrome
+      Port      8022
+      HostName  127.0.0.1
+      StrictHostKeyChecking no
+      UserKnownHostsFile=/dev/null
+      ForwardX11 yes
+</code></pre>
+
+<p>```</p>
+
+<p>5/ Start chrome</p>
+
+<p><code>
+$ ./startchrome.sh
+</code></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
