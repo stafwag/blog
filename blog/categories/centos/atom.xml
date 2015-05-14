@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: centos | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/centos/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2015-05-14T18:08:27+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Openvas 7: adding credentials failed]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/"/>
+    <updated>2015-05-14T16:56:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed</id>
+    <content type="html"><![CDATA[<p>I'm creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
+
+<p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
+
+<p>I had a similar issue with my openvas 6 installation, this was resolved by creating the  <code>/etc/openvas/gnupg</code> directory and creating the key  <code>openvasmd --create-credentials-encryption-key</code></p>
+
+<p>But on my openvas 7 installation a creation of the encryption key was slooooow.
+As always Good Randomness is important for creating keys. So I decided to install haveged to get more randomness and hopefully this would speed up key creation.</p>
+
+<p>```
+[root@localhost ~]# yum install haveged</p>
+
+<p>Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * atomic: www6.atomicorp.com
+ * base: centos.cu.be
+ * extras: centos.cu.be
+ * updates: centos.cu.be
+Package haveged-1.9.1-2.el7.art.x86_64 already installed and latest version
+Nothing to do
+[root@localhost ~]#
+[root@localhost ~]# systemct list-unit-files --type=service | grep haveged
+-bash: systemct: command not found
+[root@localhost ~]# systemctl list-unit-files --type=service | grep haveged
+haveged.service                             disabled
+[root@localhost ~]# systemctl enable haveged
+ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.target.wants/haveged.service'
+[root@localhost ~]# systemctl start haveged
+[root@localhost ~]#
+```</p>
+
+<p>The key creation took only sec.</p>
+
+<p><code>
+[root@localhost ~]# openvasmd --create-credentials-encryption-key
+Key creation succeeded.
+[root@localhost ~]#
+</code></p>
+
+<p>Adding new credentials works like a charm now.</p>
+
+<p style="font-style: italic;">
+Happy hacking!
+</p>
+
+
+
+]]></content>
+  </entry>
+  
+</feed>
