@@ -38,7 +38,7 @@ ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.
 [root@localhost ~]# 
 ```
 
-The key creation took only sec.
+The key creation took a only sec.
 
 ```
 [root@localhost ~]# openvasmd --create-credentials-encryption-key
