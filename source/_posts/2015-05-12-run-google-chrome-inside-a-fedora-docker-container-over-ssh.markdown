@@ -6,6 +6,20 @@ comments: true
 categories: [ linux, containers, docker, fedora, chrome ] 
 ---
 
+<strong>
+<hr />
+
+Update (Mon Jun  8 2015): 
+
+Running google-chrome inside a docker container isn't stable for me.
+I switched back to LXC to run google-chrome which seems to be more stable.
+
+<hr />
+</strong>
+
+
+
+
 Created a docker image to start a docker container with chrome.
 Destroying the container each time that you start a browser is a easy way to get rid of your cookies and browser history.
 
