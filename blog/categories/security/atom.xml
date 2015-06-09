@@ -4,7 +4,7 @@
   <title><![CDATA[Category: security | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-05-14T18:08:27+02:00</updated>
+  <updated>2015-06-09T09:28:47+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -49,7 +49,7 @@ ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.
 [root@localhost ~]#
 ```</p>
 
-<p>The key creation took only sec.</p>
+<p>The key creation took a only sec.</p>
 
 <p><code>
 [root@localhost ~]# openvasmd --create-credentials-encryption-key

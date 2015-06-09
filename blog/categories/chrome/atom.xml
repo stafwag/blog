@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chrome | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/chrome/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-05-14T18:08:27+02:00</updated>
+  <updated>2015-06-09T09:28:47+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -18,7 +18,22 @@
     <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
-    <content type="html"><![CDATA[<p>Created a docker image to start a docker container with chrome.
+    <content type="html"><![CDATA[<p><strong></p>
+
+<hr />
+
+
+<p>Update (Mon Jun  8 2015):</p>
+
+<p>Running google-chrome inside a docker container isn't stable for me.
+I switched back to LXC to run google-chrome which seems to be more stable.</p>
+
+<hr />
+
+
+<p></strong></p>
+
+<p>Created a docker image to start a docker container with chrome.
 Destroying the container each time that you start a browser is a easy way to get rid of your cookies and browser history.</p>
 
 <h2>Run google chrome inside a fedora docker container over ssh</h2>
