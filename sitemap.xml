@@ -131,11 +131,17 @@
         <lastmod>2015-05-18T14:56:08+02:00</lastmod>
     </url>
     <url>
+        <loc>
+            http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/
+        </loc>
+        <lastmod>2015-06-16T10:51:22+02:00</lastmod>
+    </url>
+    <url>
         <loc>http://stafwag.github.io/blog/</loc>
-        <lastmod>2015-06-08T15:10:53+02:00</lastmod>
+        <lastmod>2015-06-16T10:51:22+02:00</lastmod>
     </url>
     <url>
         <loc>http://stafwag.github.io/blog/blog/archives/</loc>
-        <lastmod>2015-06-08T15:10:53+02:00</lastmod>
+        <lastmod>2015-06-16T10:51:22+02:00</lastmod>
     </url>
 </urlset>
