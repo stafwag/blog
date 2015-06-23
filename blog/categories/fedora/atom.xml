@@ -4,7 +4,7 @@
   <title><![CDATA[Category: fedora | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/fedora/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-06-16T10:56:10+02:00</updated>
+  <updated>2015-06-23T13:06:55+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -366,7 +366,7 @@ pcscd.service                               static
 <p>```
 [staf@vicky ~]$ pcsc_scan
 PC/SC device scanner
-V 1.4.23 (c) 2001-2011, Ludovic Rousseau <a href="&#x6d;&#x61;&#105;&#108;&#x74;&#111;&#x3a;&#x6c;&#117;&#x64;&#x6f;&#x76;&#x69;&#x63;&#x2e;&#114;&#x6f;&#x75;&#x73;&#x73;&#x65;&#x61;&#x75;&#x40;&#x66;&#114;&#101;&#101;&#46;&#x66;&#114;">&#x6c;&#x75;&#100;&#x6f;&#118;&#105;&#x63;&#x2e;&#x72;&#111;&#117;&#115;&#x73;&#x65;&#x61;&#x75;&#x40;&#102;&#114;&#101;&#101;&#x2e;&#x66;&#x72;</a>
+V 1.4.23 (c) 2001-2011, Ludovic Rousseau <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#108;&#117;&#x64;&#111;&#118;&#105;&#x63;&#46;&#114;&#111;&#117;&#x73;&#115;&#101;&#x61;&#117;&#x40;&#102;&#114;&#101;&#x65;&#46;&#102;&#x72;">&#x6c;&#x75;&#100;&#111;&#x76;&#105;&#x63;&#46;&#x72;&#111;&#117;&#x73;&#115;&#x65;&#x61;&#117;&#64;&#x66;&#x72;&#101;&#x65;&#46;&#102;&#114;</a>
 Compiled with PC/SC lite version: 1.8.13
 Using reader plug'n play mechanism
 Scanning present readers...
@@ -644,7 +644,7 @@ pub   2048R/C15CE3D7 2015-06-15</p>
 <pre><code>  Key fingerprint = B702 663D 833B DC19 0EEF  663A 54FA 0B1E C15C E3D7
 </code></pre>
 
-<p>uid                  staf wagemakers <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#115;&#116;&#97;&#x66;&#64;&#x77;&#97;&#103;&#101;&#109;&#97;&#107;&#x65;&#114;&#x73;&#x2e;&#x62;&#101;">&#x73;&#x74;&#97;&#x66;&#x40;&#x77;&#97;&#x67;&#x65;&#x6d;&#x61;&#x6b;&#x65;&#x72;&#x73;&#46;&#x62;&#101;</a>
+<p>uid                  staf wagemakers <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#x73;&#116;&#x61;&#x66;&#x40;&#119;&#97;&#x67;&#x65;&#109;&#97;&#107;&#101;&#x72;&#x73;&#x2e;&#x62;&#101;">&#115;&#x74;&#x61;&#x66;&#x40;&#x77;&#x61;&#x67;&#x65;&#x6d;&#x61;&#107;&#101;&#114;&#115;&#x2e;&#98;&#x65;</a>
 sub   2048R/D2AEBBA3 2015-06-15
 sub   2048R/6C2C699A 2015-06-15</p>
 
@@ -687,7 +687,7 @@ Signature key ....: AED7 C79B 574D 45CC 7C1B  CC35 BDDE E66F 0C2C CF82</p>
 <pre><code>  created ....: 2015-06-16 06:32:02
 </code></pre>
 
-<p>General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#x73;&#116;&#97;&#102;&#x40;&#119;&#97;&#x67;&#101;&#x6d;&#97;&#107;&#x65;&#x72;&#x73;&#46;&#98;&#101;">&#115;&#116;&#97;&#102;&#x40;&#119;&#x61;&#103;&#101;&#109;&#97;&#107;&#x65;&#114;&#x73;&#x2e;&#98;&#101;</a>
+<p>General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#x73;&#116;&#x61;&#102;&#64;&#x77;&#x61;&#x67;&#101;&#109;&#x61;&#x6b;&#x65;&#114;&#x73;&#46;&#98;&#x65;">&#115;&#116;&#x61;&#102;&#64;&#119;&#x61;&#x67;&#x65;&#109;&#97;&#107;&#101;&#x72;&#x73;&#46;&#98;&#x65;</a>
 sec>  2048R/0C2CCF82  created: 2015-06-16  expires: never</p>
 
 <pre><code>                  card-no: 0006 03506225

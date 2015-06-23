@@ -4,7 +4,7 @@
   <title><![CDATA[Category: squid | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/squid/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-06-16T10:56:10+02:00</updated>
+  <updated>2015-06-23T13:06:55+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,304 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Using squid to cache FreeBSD packages]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/"/>
+    <updated>2015-06-23T08:43:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages</id>
+    <content type="html"><![CDATA[<h2>PKGNG config</h2>
+
+<p>I manage a few <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a> behind a <a href="http://www.squid-cache.org/">squid proxy</a>. <a href="https://wiki.freebsd.org/pkgng">pkgng</a> is configured to use the proxy:</p>
+
+<p>```
+root@rataplan:/root # cat /etc/pkg/FreeBSD.conf</p>
+
+<h1>$FreeBSD: releng/10.1/etc/pkg/FreeBSD.conf 263938 2014-03-30 15:29:54Z bdrewery $</h1>
+
+<p>#</p>
+
+<h1>To disable this repository, instead of modifying or removing this file,</h1>
+
+<h1>create a /usr/local/etc/pkg/repos/FreeBSD.conf file:</h1>
+
+<p>#</p>
+
+<h1>mkdir -p /usr/local/etc/pkg/repos</h1>
+
+<h1>echo "FreeBSD: { enabled: no }" > /usr/local/etc/pkg/repos/FreeBSD.conf</h1>
+
+<p>#</p>
+
+<p>pkg_env: {</p>
+
+<pre><code>    http_proxy: "http://xxx.xxx.xxx.xxx:3128"
+</code></pre>
+
+<p>}</p>
+
+<p>FreeBSD: {
+  url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest",
+  mirror_type: "srv",
+  signature_type: "fingerprints",
+  fingerprints: "/usr/share/keys/pkg",
+  enabled: yes
+}
+root@rataplan:/root #</p>
+
+<p>```</p>
+
+<h2>SQUID config</h2>
+
+<h3>Recompile</h3>
+
+<p>The squid proxy doesn't cache to the FreeBSD packages. The squid pkgng package  is compiled with
+"LAX_HTTP  Do not enforce strict HTTP compliance" option disabled. which doesn't allow you to override the cache headers sent by the remote site.</p>
+
+<p>In order to cache the FreeBSD packages we need to recompile squid with "LAX_HTTPD" enabled.</p>
+
+<h4>Updating the ports</h4>
+
+<h5>Physical system</h5>
+
+<p>If you use a physical FreeBSD system as your proxy run the "portsnap fetch" command.</p>
+
+<p><code>
+[root@rataplan ~]# portsnap fetch
+Looking up portsnap.FreeBSD.org mirrors... 7 mirrors found.
+Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+Fetching snapshot metadata... done.
+Updating from Mon Jun 22 14:30:21 CEST 2015 to Tue Jun 23 08:39:41 CEST 2015.
+Fetching 4 metadata patches... done.
+Applying metadata patches... done.
+Fetching 0 metadata files... done.
+Fetching 417 patches.
+(417/417) 100.00%  done.                                       
+done.
+Applying patches...
+done.
+Fetching 3 new ports or files... done.
+[root@rataplan ~]#
+</code></p>
+
+<p>```
+[root@rataplan ~]# portsnap extract
+/usr/ports/.arcconfig
+/usr/ports/.gitignore
+/usr/ports/CHANGES
+/usr/ports/CONTRIBUTING.md
+/usr/ports/COPYRIGHT
+/usr/ports/GIDs</p>
+
+<p><snip></p>
+
+<p>/usr/ports/x11/zenity/
+Building new INDEX files... done.
+[root@rataplan ~]#</p>
+
+<p>```</p>
+
+<h5>Jail</h5>
+
+<p>If you use an <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> as your proxy run the "ezjail-admin update -P" command.</p>
+
+<h4>Build</h4>
+
+<h5>Stop SQUID</h5>
+
+<p><code>
+root@stafproxy:/usr/ports/www/squid # /usr/local/etc/rc.d/squid stop
+squid not running? (check /var/run/squid/squid.pid).
+root@stafproxy:/usr/ports/www/squid #
+</code></p>
+
+<h5>Make config</h5>
+
+<p><code>
+root@stafproxy:/usr/ports/www/squid # cd
+root@stafproxy:/root # cd /usr/ports/www/squid
+root@stafproxy:/usr/ports/www/squid # make config
+</code></p>
+
+<p>```</p>
+
+<pre><code>   ┌─────────────────────────────── squid-3.5.5 ──────────────────────────────────┐
+   │ ┌──────────────────────────────────────────────────────────────────────────┐ │  
+   │ │ [ ] ARP_ACL         ARP/MAC/EUI based authentification                   │ │  
+   │ │ [ ] AUTH_LDAP       Install LDAP authentication helpers                  │ │  
+   │ │ [x] AUTH_NIS        Install NIS/YP authentication helpers                │ │  
+   │ │ [ ] AUTH_SASL       Install SASL authentication helpers                  │ │  
+   │ │ [ ] AUTH_SMB        Install SMB auth. helpers (req. Samba)               │ │  
+   │ │ [ ] AUTH_SQL        Install SQL based auth (uses MySQL)                  │ │  
+   │ │ [ ] CACHE_DIGESTS   Use cache digests                                    │ │  
+   │ │ [ ] DEBUG           Build with extended debugging support                │ │  
+   │ │ [ ] DELAY_POOLS     Delay pools (bandwidth limiting)                     │ │  
+   │ │ [x] DOCS            Build and/or install documentation                   │ │  
+   │ │ [ ] ECAP            Loadable content adaptation modules                  │ │  
+   │ │ [ ] ESI             ESI support                                          │ │  
+   │ │ [x] EXAMPLES        Build and/or install examples                        │ │  
+   │ │ [ ] FOLLOW_XFF      Support for the X-Following-For header               │ │  
+   │ │ [x] FS_AUFS         AUFS (threaded-io) support                           │ │  
+   │ │ [x] FS_DISKD        DISKD storage engine controlled by separate service  │ │  
+   │ │ [ ] FS_ROCK         ROCK storage engine                                  │ │  
+   │ │ [x] HTCP            HTCP support                                         │ │  
+   │ │ [ ] ICAP            the ICAP client                                      │ │  
+   │ │ [ ] ICMP            ICMP pinging and network measurement                 │ │  
+   │ │ [x] IDENT           Ident lookups (RFC 931)                              │ │  
+   │ │ [x] IPV6            IPv6 protocol support                                │ │  
+   │ │ [x] KQUEUE          Kqueue(2) support                                    │ │  
+   │ │ [ ] LARGEFILE       Support large (&gt;2GB) cache and log files             │ │  
+   │ │ [x] LAX_HTTP        Do not enforce strict HTTP compliance                │ │  
+   │ │ [ ] NETTLE          Nettle MD5 algorithm support                         │ │  
+   │ │ [x] SNMP            SNMP support                                         │ │  
+   │ │ [ ] SSL             SSL gatewaying support                               │ │  
+   │ │ [ ] SSL_CRTD        Use ssl_crtd to handle SSL cert requests             │ │  
+   │ │ [ ] STACKTRACES     Enable automatic backtraces on fatal errors          │ │  
+   │ │ [ ] TP_IPF          Transparent proxying with IPFilter                   │ │  
+   │ │ [ ] TP_IPFW         Transparent proxying with IPFW                       │ │  
+   │ │ [ ] TP_PF           Transparent proxying with PF                         │ │  
+   │ │ [ ] VIA_DB          Forward/Via database                                 │ │  
+   │ └─────v(+)─────────────────────────────────────────────────────────82%─────┘ │  
+   ├──────────────────────────────────────────────────────────────────────────────┤  
+   │                       &lt;  OK  &gt;            &lt;Cancel&gt;                           │  
+   └──────────────────────────────────────────────────────────────────────────────┘  
+</code></pre>
+
+<p>```</p>
+
+<h5>Make install</h5>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # make
+===>  License GPLv2 accepted by the user
+===>  Found saved configuration for squid-3.5.5
+===>   squid-3.5.5 depends on file: /usr/local/sbin/pkg - found
+===> Fetching all distfiles required by squid-3.5.5 for building
+===>  Extracting for squid-3.5.5
+=> SHA256 Checksum OK for squid3.5/squid-3.5.5.tar.xz.</p>
+
+<p><snip></p>
+
+<p>Making install in test-suite
+install  -m 0644 /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5/helpers/basic_auth/DB/passwd.sql  /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/examples/squid
+(cd /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5 &amp;&amp; install  -m 0644 QUICKSTART README RELEASENOTES.html doc/debug-sections.txt /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/doc/squid)
+/bin/mkdir -p /var/ports/basejail/usr/ports/www/squid/work/stage/var/squid/logs
+/bin/rmdir /var/ports/basejail/usr/ports/www/squid/work/stage/var/run/squid
+====> Compressing man pages (compress-man)
+===> Staging rc.d startup script(s)
+```</p>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # make install clean
+===>  Installing for squid-3.5.5                                                                                                                                                                                                           <br/>
+===>   squid-3.5.5 depends on file: /usr/local/bin/perl5.20.2 - found                                                                                                                                                                      <br/>
+===>  Checking if squid already installed                                                                                                                                                                                                  <br/>
+===>   Registering installation for squid-3.5.5</p>
+
+<p><snip></p>
+
+<p>===> SECURITY REPORT:</p>
+
+<pre><code>  This port has installed the following files which may act as network
+  servers and may therefore pose a remote security risk to the system.
+</code></pre>
+
+<p>/usr/local/libexec/squid/basic_radius_auth
+/usr/local/sbin/squid</p>
+
+<pre><code>  This port has installed the following startup scripts which may cause
+  these network services to be started at boot time.
+</code></pre>
+
+<p>/usr/local/etc/rc.d/squid</p>
+
+<pre><code>  If there are vulnerabilities in these programs there may be a security
+  risk to the system. FreeBSD makes no guarantee about the security of
+  ports included in the Ports Collection. Please type 'make deinstall'
+  to deinstall the port if this is a concern.
+
+  For more information, and contact details about the security
+  status of this software, see the following webpage: 
+</code></pre>
+
+<p>http://www.squid-cache.org/</p>
+
+<p>```</p>
+
+<h5>pkg lock</h5>
+
+<p>Lock the squid package to prevent the upgrade from pkgng tree.</p>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # pkg lock squid
+squid-3.5.5: lock this package? [y/N]: y
+Locking squid-3.5.5
+root@stafproxy:/usr/ports/www/squid #</p>
+
+<p>```</p>
+
+<p>View the locked pkgng packages</p>
+
+<p><code>
+root@stafproxy:/usr/ports/www/squid # pkg lock -l
+Currently locked packages:
+squid-3.5.5
+root@stafproxy:/usr/ports/www/squid #
+</code></p>
+
+<h3>SQUID config</h3>
+
+<h4>Update squid.conf</h4>
+
+<p>Edit the squid config:</p>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # cd /usr/local/etc/squid/
+root@stafproxy:/usr/local/etc/squid # vi squid.conf</p>
+
+<p>```</p>
+
+<p>Add a "refresh_pattern" for "pkgmir.pkg.freebsd.org":</p>
+
+<p><code>
+refresh_pattern ^ftp:           1440    20%     10080
+refresh_pattern ^http://pkgmir.pkg.freebsd.org/.*\.txz          1440    100%    10080 ignore-private ignore-must-revalidate override-expire ignore-no-cache
+refresh_pattern ^gopher:        1440    0%      1440
+refresh_pattern -i (/cgi-bin/|\?) 0     0%      0
+refresh_pattern .               0       20%     4320
+</code></p>
+
+<h4>Start squid</h4>
+
+<p>```
+root@stafproxy:/usr/local/etc/squid # ../rc.d/squid start
+Starting squid.
+root@stafproxy:/usr/local/etc/squid #</p>
+
+<p>```</p>
+
+<h4>rc.conf</h4>
+
+<p>Make sure that the system is configured to start squid during the system startup.</p>
+
+<p>```
+root@stafproxy:/usr/local/etc/squid # cat /etc/rc.conf
+#</p>
+
+<h1>squid</h1>
+
+<p>#</p>
+
+<p>squid_enable="YES"</p>
+
+<p>root@stafproxy:/usr/local/etc/squid #
+```</p>
+
+<p>SQUID should cache the pkgng downloads now.</p>
+
+<p><em>Have fun</em></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[bash saved my day]]></title>

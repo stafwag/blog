@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: freebsd | stafwag Blog]]></title>
+  <title><![CDATA[Category: FreeBSD | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/freebsd/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-06-16T10:56:10+02:00</updated>
+  <updated>2015-06-23T13:06:55+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,785 +14,300 @@
 
   
   <entry>
-    <title type="html"><![CDATA[CGIpaf 1.3.4 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/11/23/cgipaf-1-dot-3-4-released/"/>
-    <updated>2014-11-23T10:16:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/11/23/cgipaf-1-dot-3-4-released</id>
-    <content type="html"><![CDATA[<p>CGIpaf 1.3.4 has been released</p>
+    <title type="html"><![CDATA[Using squid to cache FreeBSD packages]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/"/>
+    <updated>2015-06-23T08:43:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages</id>
+    <content type="html"><![CDATA[<h2>PKGNG config</h2>
 
-<h3>ChangeLog</h3>
-
-<h5>version 1.3.4         ( 23 Nov 2014 )</h5>
-
-<blockquote><ul>
-<li>Cracklib configuration checking has been improved</li>
-<li>LDFLAGS is passed to the linker correctly</li>
-</ul>
-</blockquote>
-
-<h5>CGIpaf 1.3.4pre1 (15 Sep 2013)</h5>
-
-<blockquote><ul>
-<li>PAM is enabled on FreeBSD 7.3 or above</li>
-<li>PAM is enabled on NetBSD 6.0 or above</li>
-<li>xmalloc is updated to support systems with non GNU compatible malloc</li>
-</ul>
-</blockquote>
-
-<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
-
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></p>
-
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
-
-<p style="font-style: italic;">
-Have fun...
-</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
-    <updated>2014-06-09T14:28:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I'm a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
-
-<p>As always with virtualization you've to careful with sharing systems or containers that doesn't below to the same customer or service on the same physical machine since you're never sure which traces are left behind in the memory etc.</p>
-
-<p><a href="https://linuxcontainers.org/">Linux containers</a> are getting more popular since the release of <a href="http://www.docker.com/">docker</a></p>
-
-<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn't an success.</p>
-
-<p>On a newly create debian container networking didn't work.</p>
-
-<h3>First debian container</h3>
-
-<h4>Creating the container</h4>
+<p>I manage a few <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a> behind a <a href="http://www.squid-cache.org/">squid proxy</a>. <a href="https://wiki.freebsd.org/pkgng">pkgng</a> is configured to use the proxy:</p>
 
 <p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+root@rataplan:/root # cat /etc/pkg/FreeBSD.conf</p>
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
-debootstrap is /sbin/debootstrap
-Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ...
-Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might
-&lt; snip &gt;
-'debian' template installed
-'mydebian' created
-```</p>
-
-<h4>Booting</h4>
-
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
-INIT: version 2.88 booting
-Using makefile-style concurrent boot in runlevel S.
-Cleaning up ifupdown....
-Setting up networking....
-Activating lvm and md swap...done.
-Checking file systems...fsck from util-linux-ng 2.17.2
-done.
-Mounting local filesystems...done.
-Activating swapfile swap...done.
-Cleaning up temporary files....
-Configuring network interfaces...ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-failed.
-Setting kernel variables ...done.
-Cleaning up temporary files....
-INIT: Entering runlevel: 3
-Using makefile-style concurrent boot in runlevel 3.
-Starting OpenBSD Secure Shell server: sshd.</p>
-
-<p>Debian GNU/Linux 6.0 mydebian console</p>
-
-<p>mydebian login: root
-Password:
-Last login: Tue Jun 21 08:05:41 UTC 2014 on console
-Linux mydebian 3.14.5-200.fc20.i686 #1 SMP Mon Jun 21 08:13:19 UTC 2014 i686
-```</p>
-
-<h3>Network isn't working...</h3>
-
-<p>```
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
-
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-root@mydebian:~# ifconfig -a
-eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3</p>
-
-<pre><code>      inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:13 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
-</code></pre>
-
-<p>lo        Link encap:Local Loopback</p>
-
-<pre><code>      inet addr:127.0.0.1  Mask:255.0.0.0
-      inet6 addr: ::1/128 Scope:Host
-      UP LOOPBACK RUNNING  MTU:65536  Metric:1
-      RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:0 
-      RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-</code></pre>
-
-<p>root@mydebian:~# ifup eth0
-ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-root@mydebian:~#
-root@mydebian:~# cat /etc/network/interfaces
-auto lo
-iface lo inet loopback</p>
-
-<p>auto eth0
-iface eth0 inet dhcp
-root@mydebian:~#
-```</p>
-
-<h3>Fedora container</h3>
-
-<p>A Fedora container worked better.</p>
-
-<h4>Creating the fedora container</h4>
-
-<p>```
-root@vicky ~]# lxc-create -n myfedora -t fedora</p>
-
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
-Host CPE ID from /etc/os-release: cpe:/o:fedoraproject:fedora:20
-Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ...
-Downloading fedora minimal ...
-Fetching rpm name from http://be.mirror.eurid.eu/fedora/linux/releases/20/Everything/i386/os//Packages/f...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</p>
-
-<pre><code>                             Dload  Upload   Total   Spent    Left  Speed
-</code></pre>
-
-<p>100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
-  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525</p>
-
-<p><snip>
-Updated:
-  fedora-release.noarch 0:20-3</p>
-
-<p>Complete!
-Download complete.
-Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ...
-Copying rootfs to /var/lib/lxc/myfedora/rootfs ...setting root passwd to root
-installing fedora-release package
-Package fedora-release-20-3.noarch already installed and latest version
-Nothing to do
-unlink: cannot unlink ‘/var/lib/lxc/myfedora/rootfs/etc/systemd/system/default.target’: No such file or directory
-container rootfs and config created
-'fedora' template installed
-'myfedora' created
-[root@vicky ~]#
-```</p>
-
-<h4>Booting</h4>
-
-<p>```
-[root@vicky ~]# lxc-start -n myfedora
-systemd 208 running in system mode. (+PAM +LIBWRAP +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT +ACL +XZ)
-Detected virtualization 'lxc'.</p>
-
-<p>Welcome to Fedora 20 (Heisenbug)!</p>
-
-<p>Set hostname to <myfedora>.
-[  OK  ] Reached target Remote File Systems.
-[  OK  ] Listening on Delayed Shutdown Socket.
-[  OK  ] Created slice Root Slice.
-[  OK  ] Created slice User and Session Slice.
-[  OK  ] Started Login Service.
-&lt; snip &gt;
-[  OK  ] Reached target Multi-User System.</p>
-
-<p>Fedora release 20 (Heisenbug)
-Kernel 3.14.5-200.fc20.i686 on an i686 (console)</p>
-
-<p>myfedora login: root
-Password:
-Last login: Wed Jun 21 09:12:42 on console
-```</p>
-
-<h4>Networking</h4>
-
-<p>```
-[root@myfedora ~]# ping 8.8.8.8
-connect: Network is unreachable
-[root@myfedora ~]# ip addr
-1: lo: &lt;LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default</p>
-
-<pre><code>link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-inet 127.0.0.1/8 scope host lo
-   valid_lft forever preferred_lft forever
-inet6 ::1/128 scope host 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</p>
-
-<pre><code>link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
-inet6 fe80::5889:44ff:fe04:992b/64 scope link 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>[root@myfedora ~]# ifup eth0</p>
-
-<p>Determining IP information for eth0... done.
-[root@myfedora ~]# ping 8.8.8.8
-PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=113 ms
-64 bytes from 8.8.8.8: icmp_seq=2 ttl=49 time=123 ms
-64 bytes from 8.8.8.8: icmp_seq=3 ttl=49 time=123 ms
-^C
---- 8.8.8.8 ping statistics ---
-3 packets transmitted, 3 received, 0% packet loss, time 2002ms
-rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
-[root@myfedora ~]#
-```</p>
-
-<h3>New templates</h3>
-
-<p>Since I wanted a Debian container I clone the lxc git on github and copied the templates.</p>
-
-<h4>Getting the templates</h4>
-
-<p><code>
-[staf@vicky github]$ git clone https://github.com/lxc/lxc
-Cloning into 'lxc'...
-remote: Reusing existing pack: 17997, done.
-remote: Counting objects: 17, done.
-remote: Compressing objects: 100% (17/17), done.
-remote: Total 18014 (delta 9), reused 0 (delta 0)
-Receiving objects: 100% (18014/18014), 9.14 MiB | 77.00 KiB/s, done.
-Resolving deltas: 100% (11555/11555), done.
-Checking connectivity... done.
-[staf@vicky github]$
-</code></p>
-
-<h4>Configure</h4>
-
-<p>Create the configure script and it dependencies</p>
-
-<p><code>
-[staf@vicky lxc]$ autoreconf -i
-configure.ac:31: installing 'config/compile'
-configure.ac:30: installing 'config/config.guess'
-configure.ac:30: installing 'config/config.sub'
-configure.ac:29: installing 'config/install-sh'
-configure.ac:29: installing 'config/missing'
-src/lua-lxc/Makefile.am: installing 'config/depcomp'
-[staf@vicky lxc]$
-</code></p>
-
-<p>Run configure</p>
-
-<p>```
-[staf@vicky lxc]$ ./configure
-checking for pkg-config... /usr/bin/pkg-config
-checking pkg-config is at least version 0.9.0... yes
-checking for a BSD-compatible install... /usr/bin/install -c
-checking whether build environment is sane... yes
-checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
-checking for gawk... gawk
-checking whether make sets $(MAKE)... yes
-checking whether make supports nested variables... yes
-checking build system type... i686-pc-linux-gnu
-checking host system type... i686-pc-linux-gnu
-checking for style of include used by make... GNU
-checking for gcc... gcc
-checking whether the C compiler works... yes
-checking for C compiler default output file name... a.out
-<snip>
-Documentation:
- - examples: yes
- - API documentation: no
- - user documentation: no</p>
-
-<p>Debugging:
- - tests: no
- - mutex debugging: no</p>
-
-<p>Paths:
- - Logs in configpath: no
-[staf@vicky lxc]$
-```</p>
-
-<h4>Copy the templates</h4>
-
-<p>Copy the newly created templates
-<code>
-[staf@vicky templates]$ shopt -s extglob
-[staf@vicky templates]$
-[staf@vicky templates]$ ls !(*\.in|Makefile*)
-lxc-alpine     lxc-centos    lxc-fedora        lxc-oracle  lxc-ubuntu-cloud
-lxc-altlinux   lxc-cirros    lxc-gentoo        lxc-plamo
-lxc-archlinux  lxc-debian    lxc-openmandriva  lxc-sshd
-lxc-busybox    lxc-download  lxc-opensuse      lxc-ubuntu
-[staf@vicky templates]$ sudo cp !(*\.in|Makefile*)  /usr/share/lxc/templates[sudo] password for staf:
-[staf@vicky templates]$
-</code></p>
-
-<h3>Debian container second try...</h3>
-
-<p>And tried to create the debian container again.</p>
-
-<p>```
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>mydebian  STOPPED  -     -   <br/>
-myfedora  STOPPED  -     -   <br/>
-[root@vicky ~]# lxc-destroy -n mydebian
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>myfedora  STOPPED  -     -   <br/>
-[root@vicky ~]#
-```</p>
-
-<h4>Creating the container</h4>
-
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
-
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
-debootstrap is /sbin/debootstrap
-Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ...
-Downloading debian minimal ...
-W: Cannot check Release signature; keyring file not available /usr/share/keyrings/debian-archive-keyring.gpg
-I: Retrieving Release
-I: Validating Packages
-I: Resolving dependencies of required packages...
-I: Resolving dependencies of base packages...
-I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1
-I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common
-I: Checking component main on http://cdn.debian.net/debian...
-I: Validating libacl1 2.2.51-8
-I: Validating adduser 3.113+nmu3
-<snip>
-I: Unpacking debconf...
-I: Unpacking debconf-i18n...
-I: Unpacking debianutils...
-I: Unpacking diffutils...
-I: Unpacking dpkg...
-I: Unpacking e2fslibs:i386...
-<snip>
-I: Configuring apt...
-I: Configuring openssh-client...
-I: Configuring openssh-server...
-I: Configuring perl-modules...
-I: Configuring libswitch-perl...
-I: Configuring perl...
-I: Configuring libui-dialog-perl...
-I: Base system installed successfully.
-Download complete.
-Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might take a while)...
-  en_US.UTF-8... done
-Generation complete.
-update-rc.d: using dependency based boot sequencing
-update-rc.d: using dependency based boot sequencing
-update-rc.d: using dependency based boot sequencing
-update-rc.d: using dependency based boot sequencing
-Creating SSH2 RSA key; this may take some time ...
-Creating SSH2 DSA key; this may take some time ...
-Creating SSH2 ECDSA key; this may take some time ...
-invoke-rc.d: policy-rc.d denied execution of restart.
-Timezone in container is not configured. Adjust it manually.
-Root password is 'root', please change !
-'debian' template installed
-'mydebian' created
-[root@vicky ~]#
-```</p>
-
-<h4>Booting</h4>
-
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
-INIT: version 2.88 booting
-Using makefile-style concurrent boot in runlevel S.
-Cleaning up temporary files... /tmp /run /run/lock /run/shm.
-Mount point '/dev/mqueue' does not exist. Skipping mount. ... (warning).
-Mount point '/dev/hugepages' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/systemd' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/cpuset' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/cpu,cpuacct' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/memory' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/devices' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/freezer' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/net_cls' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/blkio' does not exist. Skipping mount. ... (warning).
-Mount point '/sys/fs/cgroup/perf_event' does not exist. Skipping mount. ... (warning).
-Filesystem type 'fuse.gvfsd-fuse' is not supported. Skipping mount. ... (warning).
-Mount point '/run/media/staf/VBOXADDITIONS_4.3.12_93733' does not exist. Skipping mount. ... (warning).
-Mount point '/var/lib/nfs/rpc_pipefs' does not exist. Skipping mount. ... (warning).
-Mount point '/usr/lib/lxc/rootfs' does not exist. Skipping mount. ... (warning).
-Mount point '/usr/lib/lxc/rootfs' does not exist. Skipping mount. ... (warning).
-Mount point '/dev/console' does not exist. Skipping mount. ... (warning).
-Activating lvm and md swap...done.
-Checking file systems...fsck from util-linux 2.20.1
-done.
-Mounting local filesystems...done.</p>
-
-<p>Debian GNU/Linux 7 mydebian console</p>
-
-<p>mydebian login: root
-Password:
-Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686</p>
-
-<p>The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
-
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-```</p>
-
-<h4>Networking....</h4>
-
-<p>```
-root@mydebian:~# ifconfig eth0
-eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02</p>
-
-<pre><code>      inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
-      inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:32 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
-</code></pre>
-
-<p>root@mydebian:~# ping 8.8.8.8
--bash: ping: command not found
-root@mydebian:~# apt-cache search ping | grep util
-2ping - Ping utility to determine directional packet loss
-galax-extra - XQuery implementation with static typing - utilities
-inetutils-ping - ICMP echo tool
-iputils-arping - Tool to send ICMP echo requests to an ARP address
-iputils-ping - Tools to test the reachability of network hosts
-libescape-ruby - HTML/URI/shell escaping utilities for Ruby
-mapnik-utils - C++/Python toolkit for developing GIS applications (utilities)
-ruby-escape-utils - Faster string escaping routines for your web apps
-root@mydebian:~# apt-get install inetutils-ping
-Reading package lists... Done
-Building dependency tree... Done
-The following NEW packages will be installed:
-  inetutils-ping
-0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
-Need to get 169 kB of archives.
-After this operation, 273 kB of additional disk space will be used.
-WARNING: The following packages cannot be authenticated!
-  inetutils-ping
-Install these packages without verification [y/N]? y
-Get:1 http://cdn.debian.net/debian/ wheezy/main inetutils-ping i386 2:1.9-2 [169 kB]
-Fetched 169 kB in 6s (26.4 kB/s)                                             <br/>
-debconf: delaying package configuration, since apt-utils is not installed
-Selecting previously unselected package inetutils-ping.
-(Reading database ... 9387 files and directories currently installed.)
-Unpacking inetutils-ping (from .../inetutils-ping_2%3a1.9-2_i386.deb) ...
-Setting up inetutils-ping (2:1.9-2) ...
-root@mydebian:~# ping 8.8.8.8
-PING 8.8.8.8 (8.8.8.8): 56 data bytes
-64 bytes from 8.8.8.8: icmp_seq=0 ttl=49 time=172.105 ms
-64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=111.011 ms
-^C--- 8.8.8.8 ping statistics ---
-2 packets transmitted, 2 packets received, 0% packet loss
-round-trip min/avg/max/stddev = 111.011/141.558/172.105/30.547 ms
-root@mydebian:~#
-```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[CGIpaf 1.3.4pre1 released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/"/>
-    <updated>2013-09-15T16:23:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released</id>
-    <content type="html"><![CDATA[<p>This is the first pre-release of CGIpaf 1.3.4.</p>
-
-<h3>ChangeLog</h3>
-
-<h5>CGIpaf 1.3.4pre1 (15 Sep 2013)</h5>
-
-<blockquote><ul>
-<li>PAM is enabled on FreeBSD 7.3 or above</li>
-<li>PAM is enabled on NetBSD 6.0 or above</li>
-<li>xmalloc is updated to support systems with non GNU compatible malloc</li>
-</ul>
-</blockquote>
-
-<p>CGIpaf 1.3.4pre1 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
-
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz">http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz</a></p>
-
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Freebsd 9.1 jails with Qjail]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
-    <updated>2013-02-16T12:35:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
-    <content type="html"><![CDATA[<hr />
-
-
-<p><strong></p>
-
-<p>I'm using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
-
-<p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
-Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
-
-<p></strong></p>
-
-<hr />
-
-
-<p>I'm adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
-
-<p>I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
-
-<p>On FreeBSD there are <a href="http://en.wikipedia.org/wiki/FreeBSD_jail">jails</a> to isolate services and improve security.</p>
-
-<p>At first I didn't like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.</p>
-
-<p>Lucky <a href="http://sourceforge.net/projects/qjail/">Qjail</a> makes the deployment a lot easier.</p>
-
-<h3>Installing Qjail</h3>
-
-<p>```
-[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
-[root@rataplan /usr/ports/sysutils/qjail]# make install clean
-===>  License BSD accepted by the user
-=> qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
-=> Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
-qjail-1.7.tar.bz2                             100% of   39 kB  139 kBps
-===>  Extracting for qjail-1.7
-=> SHA256 Checksum OK for qjail-1.7.tar.bz2.
-===>  Patching for qjail-1.7
-===>  Configuring for qjail-1.7
-===>  Installing for qjail-1.7
-===>   Generating temporary packing list
-===>  Checking if sysutils/qjail already installed
-#
-Use the qjail utility to deploy small or large numbers of jails quickly.</p>
-
-<p>First issue "rehash" command to enable the qjail command (if using csh).
-Then issue "man qjail-intro" to read the qjail introduction.
-After reading that do "man qjail" for the usage details.
-#
-===>   Compressing manual pages for qjail-1.7
-===>   Registering installation for qjail-1.7
-===>  Cleaning for qjail-1.7
-[root@rataplan /usr/ports/sysutils/qjail]#
-```</p>
-
-<h3>Create /usr/jails</h3>
-
-<p><code>
-[root@rataplan ~]# zfs create zroot/usr/jails
-</code></p>
-
-<h3>mount the freebsd 9.1 dvd</h3>
-
-<p><code>
-root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/
-</code></p>
-
-<h3>qjail install</h3>
-
-<p>```
-root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/</p>
-
-<p>The base RELEASE distribution files are populating the fulljail.
-Est LT 1 minute elapse time for this to complete.</p>
-
-<p>The lib32 RELEASE distribution files are populating the fulljail.
-Est LT 1 minute elapse time for this to complete.</p>
-
-<p>Basejail &amp; newjail are being populated.
-Est LT 1 minute elapse time for this to complete.</p>
-
-<p>Successfully installed qjail system.</p>
-
-<p>root@rataplan:/root #</p>
-
-<p>```</p>
-
-<h3>Creating a zfs filesystem for the jail</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
-root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
-
-<h3>Creating a jail with Qjail</h3>
-
-<p><code>
-[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
-Successfully created  stafdb
-[root@rataplan ~]#
-</code></p>
-
-<h3>Start the jail</h3>
-
-<p><code>
-root@rataplan:/usr/local/etc # qjail start stafdb
-Jail started successfully. stafdb
-root@rataplan:/usr/local/etc #
-</code></p>
-
-<h3>List the jails</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail list</p>
-
-<p>STA JID  NIC IP              Jailname</p>
-
-<hr />
-
-<p>DR  4    re0 192.168.1.42    stafmail
-DR  3    re0 192.168.1.41    staffs
-DR  6    re0 192.168.1.43    stafdb</p>
-
-<p>root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
-
-<h3>console access</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail console stafdb
-Last login: Sat Feb 23 16:19:32 on pts/0
-FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013</p>
-
-<p>Welcome to your FreeBSD jail
-stafdb /root >
-```</p>
-
-<h3>install the freebsd ports to the jail</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail update -p stafdb</p>
-
-<p>Sat Feb 23 16:21:55 CET 2013</p>
-
-<p>The elapse download time of the portsnap compressed ports file
-is estimated at 25 minutes for the initial fetch.
-Subsequent fetches will generally take less than a minute.</p>
-
-<p>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
-Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
-Fetching snapshot metadata... done.
-Updating from Sat Feb 16 11:47:49 CET 2013 to Sat Feb 23 15:58:32 CET 2013.
-Fetching 4 metadata patches... done.
-Applying metadata patches... done.
-Fetching 0 metadata files... done.
-Fetching 524 patches.....10....20....30....40....50....60....70....80....90....100....110....120....130....140....150....160....170....180....190....200....210....220....230....240....250....260....270....280....290....300....310....320....330....340....350....360....370....380....390....400....410....420....430....440....450....460....470....480....490....500....510....520.. done.
-Applying patches... done.
-Fetching 42 new ports or files... done.
-Portsnap fetch completed successfully</p>
-
-<p>Sat Feb 23 16:22:40 CET 2013</p>
-
-<p>The ports basejail/usr/ports directory tree is being updated.
-The elapse time for this to complete is estimated at 1 minute
-to 10 minutes depending on how current your ports system is.</p>
-
-<p>Portsnap update completed successfully
-root@rataplan:/usr/local/etc #
-```</p>
-
-<h3>update the base jail</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail stop
-Jail stopped successfully. stafmail
-Jail stopped successfully. staffs
-Jail already stopped.      stafdb
-root@rataplan:/usr/local/etc #</p>
-
-<p>root@rataplan:/usr/local/etc # qjail update -b</p>
-
-<p>Deletion of basejail binaries successful for bin.
-Deletion of basejail binaries successful for lib.
-Deletion of basejail binaries successful for libexec.
-Deletion of basejail binaries successful for sbin.
-Deletion of basejail binaries successful for usr/bin.
-Deletion of basejail binaries successful for usr/include.
-Deletion of basejail binaries successful for usr/lib.
-Deletion of basejail binaries successful for usr/libdata.
-Deletion of basejail binaries successful for usr/libexec.
-Deletion of basejail binaries successful for usr/sbin.
-Deletion of basejail binaries successful for usr/lib32.</p>
-
-<p>Copied host's binaries to basejail successfully for bin.
-Copied host's binaries to basejail successfully for lib.
-Copied host's binaries to basejail successfully for libexec.
-Copied host's binaries to basejail successfully for sbin.
-Copied host's binaries to basejail successfully for usr/bin.
-Copied host's binaries to basejail successfully for usr/include.
-Copied host's binaries to basejail successfully for usr/lib.
-Copied host's binaries to basejail successfully for usr/libdata.
-Copied host's binaries to basejail successfully for usr/libexec.
-Copied host's binaries to basejail successfully for usr/sbin.
-Copied host's binaries to basejail successfully for usr/lib32.</p>
-
-<p>Host to basejail binaries update completed successfully.
-root@rataplan:/usr/local/etc #</p>
-
-<p>root@rataplan:/usr/local/etc # qjail start
-Jail started successfully. stafmail
-Jail started successfully. staffs
-Jail started successfully. stafdb
-root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
-
-<h3>update /etc/rc.conf</h3>
-
-<p>```
-#</p>
-
-<h1>qjails</h1>
+<h1>$FreeBSD: releng/10.1/etc/pkg/FreeBSD.conf 263938 2014-03-30 15:29:54Z bdrewery $</h1>
 
 <p>#</p>
 
-<p>qjail_enable="YES"</p>
+<h1>To disable this repository, instead of modifying or removing this file,</h1>
+
+<h1>create a /usr/local/etc/pkg/repos/FreeBSD.conf file:</h1>
+
+<p>#</p>
+
+<h1>mkdir -p /usr/local/etc/pkg/repos</h1>
+
+<h1>echo "FreeBSD: { enabled: no }" > /usr/local/etc/pkg/repos/FreeBSD.conf</h1>
+
+<p>#</p>
+
+<p>pkg_env: {</p>
+
+<pre><code>    http_proxy: "http://xxx.xxx.xxx.xxx:3128"
+</code></pre>
+
+<p>}</p>
+
+<p>FreeBSD: {
+  url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest",
+  mirror_type: "srv",
+  signature_type: "fingerprints",
+  fingerprints: "/usr/share/keys/pkg",
+  enabled: yes
+}
+root@rataplan:/root #</p>
 
 <p>```</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Running Freebsd 9.0 on Asus C60M1-i motherboard]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/"/>
-    <updated>2012-12-16T12:06:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
 
-<p>As my file and backup system pluto <a href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.</p>
+<h2>SQUID config</h2>
 
-<p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
+<h3>Recompile</h3>
 
-<p>The motherbord will be a <a href="http://www.asus.com/Motherboards/AMD_CPU_on_Board/C60M1I/">Asus C60M1-I</a>. The cpu may not have not enough horsepower for deplucation at full speed but it has 6 sata ports which is not common on a mini ITX motherbord. I will reuse my old harddrives and add or replace them when I need more storage.</p>
+<p>The squid proxy doesn't cache to the FreeBSD packages. The squid pkgng package  is compiled with
+"LAX_HTTP  Do not enforce strict HTTP compliance" option disabled. which doesn't allow you to override the cache headers sent by the remote site.</p>
 
-<p>The freebsd 9.0 installation with <a href="http://wiki.freebsd.org/RootOnZFS/GPTZFSBoot/9.0-RELEASE">ZFS root</a> went well but the network adapter a Realtek 8111F isn't supported by Freebsd 9.0. After checking google I found <a href="http://markmail.org/message/2w67d2nnx65bprqc#query:+page:1+mid:4h3efjpkq6bzxoyo+state:results">this</a> on the freebsd-net mailinglist.</p>
+<p>In order to cache the FreeBSD packages we need to recompile squid with "LAX_HTTPD" enabled.</p>
 
-<p>The realtek f8111F is supported in the latest driver code, after rebuilding my kernel the network adapter works fine. Very useful on a NAS ;-)</p>
+<h4>Updating the ports</h4>
+
+<h5>Physical system</h5>
+
+<p>If you use a physical FreeBSD system as your proxy run the "portsnap fetch" command.</p>
+
+<p><code>
+[root@rataplan ~]# portsnap fetch
+Looking up portsnap.FreeBSD.org mirrors... 7 mirrors found.
+Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+Fetching snapshot metadata... done.
+Updating from Mon Jun 22 14:30:21 CEST 2015 to Tue Jun 23 08:39:41 CEST 2015.
+Fetching 4 metadata patches... done.
+Applying metadata patches... done.
+Fetching 0 metadata files... done.
+Fetching 417 patches.
+(417/417) 100.00%  done.                                       
+done.
+Applying patches...
+done.
+Fetching 3 new ports or files... done.
+[root@rataplan ~]#
+</code></p>
+
+<p>```
+[root@rataplan ~]# portsnap extract
+/usr/ports/.arcconfig
+/usr/ports/.gitignore
+/usr/ports/CHANGES
+/usr/ports/CONTRIBUTING.md
+/usr/ports/COPYRIGHT
+/usr/ports/GIDs</p>
+
+<p><snip></p>
+
+<p>/usr/ports/x11/zenity/
+Building new INDEX files... done.
+[root@rataplan ~]#</p>
+
+<p>```</p>
+
+<h5>Jail</h5>
+
+<p>If you use an <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> as your proxy run the "ezjail-admin update -P" command.</p>
+
+<h4>Build</h4>
+
+<h5>Stop SQUID</h5>
+
+<p><code>
+root@stafproxy:/usr/ports/www/squid # /usr/local/etc/rc.d/squid stop
+squid not running? (check /var/run/squid/squid.pid).
+root@stafproxy:/usr/ports/www/squid #
+</code></p>
+
+<h5>Make config</h5>
+
+<p><code>
+root@stafproxy:/usr/ports/www/squid # cd
+root@stafproxy:/root # cd /usr/ports/www/squid
+root@stafproxy:/usr/ports/www/squid # make config
+</code></p>
+
+<p>```</p>
+
+<pre><code>   ┌─────────────────────────────── squid-3.5.5 ──────────────────────────────────┐
+   │ ┌──────────────────────────────────────────────────────────────────────────┐ │  
+   │ │ [ ] ARP_ACL         ARP/MAC/EUI based authentification                   │ │  
+   │ │ [ ] AUTH_LDAP       Install LDAP authentication helpers                  │ │  
+   │ │ [x] AUTH_NIS        Install NIS/YP authentication helpers                │ │  
+   │ │ [ ] AUTH_SASL       Install SASL authentication helpers                  │ │  
+   │ │ [ ] AUTH_SMB        Install SMB auth. helpers (req. Samba)               │ │  
+   │ │ [ ] AUTH_SQL        Install SQL based auth (uses MySQL)                  │ │  
+   │ │ [ ] CACHE_DIGESTS   Use cache digests                                    │ │  
+   │ │ [ ] DEBUG           Build with extended debugging support                │ │  
+   │ │ [ ] DELAY_POOLS     Delay pools (bandwidth limiting)                     │ │  
+   │ │ [x] DOCS            Build and/or install documentation                   │ │  
+   │ │ [ ] ECAP            Loadable content adaptation modules                  │ │  
+   │ │ [ ] ESI             ESI support                                          │ │  
+   │ │ [x] EXAMPLES        Build and/or install examples                        │ │  
+   │ │ [ ] FOLLOW_XFF      Support for the X-Following-For header               │ │  
+   │ │ [x] FS_AUFS         AUFS (threaded-io) support                           │ │  
+   │ │ [x] FS_DISKD        DISKD storage engine controlled by separate service  │ │  
+   │ │ [ ] FS_ROCK         ROCK storage engine                                  │ │  
+   │ │ [x] HTCP            HTCP support                                         │ │  
+   │ │ [ ] ICAP            the ICAP client                                      │ │  
+   │ │ [ ] ICMP            ICMP pinging and network measurement                 │ │  
+   │ │ [x] IDENT           Ident lookups (RFC 931)                              │ │  
+   │ │ [x] IPV6            IPv6 protocol support                                │ │  
+   │ │ [x] KQUEUE          Kqueue(2) support                                    │ │  
+   │ │ [ ] LARGEFILE       Support large (&gt;2GB) cache and log files             │ │  
+   │ │ [x] LAX_HTTP        Do not enforce strict HTTP compliance                │ │  
+   │ │ [ ] NETTLE          Nettle MD5 algorithm support                         │ │  
+   │ │ [x] SNMP            SNMP support                                         │ │  
+   │ │ [ ] SSL             SSL gatewaying support                               │ │  
+   │ │ [ ] SSL_CRTD        Use ssl_crtd to handle SSL cert requests             │ │  
+   │ │ [ ] STACKTRACES     Enable automatic backtraces on fatal errors          │ │  
+   │ │ [ ] TP_IPF          Transparent proxying with IPFilter                   │ │  
+   │ │ [ ] TP_IPFW         Transparent proxying with IPFW                       │ │  
+   │ │ [ ] TP_PF           Transparent proxying with PF                         │ │  
+   │ │ [ ] VIA_DB          Forward/Via database                                 │ │  
+   │ └─────v(+)─────────────────────────────────────────────────────────82%─────┘ │  
+   ├──────────────────────────────────────────────────────────────────────────────┤  
+   │                       &lt;  OK  &gt;            &lt;Cancel&gt;                           │  
+   └──────────────────────────────────────────────────────────────────────────────┘  
+</code></pre>
+
+<p>```</p>
+
+<h5>Make install</h5>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # make
+===>  License GPLv2 accepted by the user
+===>  Found saved configuration for squid-3.5.5
+===>   squid-3.5.5 depends on file: /usr/local/sbin/pkg - found
+===> Fetching all distfiles required by squid-3.5.5 for building
+===>  Extracting for squid-3.5.5
+=> SHA256 Checksum OK for squid3.5/squid-3.5.5.tar.xz.</p>
+
+<p><snip></p>
+
+<p>Making install in test-suite
+install  -m 0644 /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5/helpers/basic_auth/DB/passwd.sql  /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/examples/squid
+(cd /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5 &amp;&amp; install  -m 0644 QUICKSTART README RELEASENOTES.html doc/debug-sections.txt /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/doc/squid)
+/bin/mkdir -p /var/ports/basejail/usr/ports/www/squid/work/stage/var/squid/logs
+/bin/rmdir /var/ports/basejail/usr/ports/www/squid/work/stage/var/run/squid
+====> Compressing man pages (compress-man)
+===> Staging rc.d startup script(s)
+```</p>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # make install clean
+===>  Installing for squid-3.5.5                                                                                                                                                                                                           <br/>
+===>   squid-3.5.5 depends on file: /usr/local/bin/perl5.20.2 - found                                                                                                                                                                      <br/>
+===>  Checking if squid already installed                                                                                                                                                                                                  <br/>
+===>   Registering installation for squid-3.5.5</p>
+
+<p><snip></p>
+
+<p>===> SECURITY REPORT:</p>
+
+<pre><code>  This port has installed the following files which may act as network
+  servers and may therefore pose a remote security risk to the system.
+</code></pre>
+
+<p>/usr/local/libexec/squid/basic_radius_auth
+/usr/local/sbin/squid</p>
+
+<pre><code>  This port has installed the following startup scripts which may cause
+  these network services to be started at boot time.
+</code></pre>
+
+<p>/usr/local/etc/rc.d/squid</p>
+
+<pre><code>  If there are vulnerabilities in these programs there may be a security
+  risk to the system. FreeBSD makes no guarantee about the security of
+  ports included in the Ports Collection. Please type 'make deinstall'
+  to deinstall the port if this is a concern.
+
+  For more information, and contact details about the security
+  status of this software, see the following webpage: 
+</code></pre>
+
+<p>http://www.squid-cache.org/</p>
+
+<p>```</p>
+
+<h5>pkg lock</h5>
+
+<p>Lock the squid package to prevent the upgrade from pkgng tree.</p>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # pkg lock squid
+squid-3.5.5: lock this package? [y/N]: y
+Locking squid-3.5.5
+root@stafproxy:/usr/ports/www/squid #</p>
+
+<p>```</p>
+
+<p>View the locked pkgng packages</p>
+
+<p><code>
+root@stafproxy:/usr/ports/www/squid # pkg lock -l
+Currently locked packages:
+squid-3.5.5
+root@stafproxy:/usr/ports/www/squid #
+</code></p>
+
+<h3>SQUID config</h3>
+
+<h4>Update squid.conf</h4>
+
+<p>Edit the squid config:</p>
+
+<p>```
+root@stafproxy:/usr/ports/www/squid # cd /usr/local/etc/squid/
+root@stafproxy:/usr/local/etc/squid # vi squid.conf</p>
+
+<p>```</p>
+
+<p>Add a "refresh_pattern" for "pkgmir.pkg.freebsd.org":</p>
+
+<p><code>
+refresh_pattern ^ftp:           1440    20%     10080
+refresh_pattern ^http://pkgmir.pkg.freebsd.org/.*\.txz          1440    100%    10080 ignore-private ignore-must-revalidate override-expire ignore-no-cache
+refresh_pattern ^gopher:        1440    0%      1440
+refresh_pattern -i (/cgi-bin/|\?) 0     0%      0
+refresh_pattern .               0       20%     4320
+</code></p>
+
+<h4>Start squid</h4>
+
+<p>```
+root@stafproxy:/usr/local/etc/squid # ../rc.d/squid start
+Starting squid.
+root@stafproxy:/usr/local/etc/squid #</p>
+
+<p>```</p>
+
+<h4>rc.conf</h4>
+
+<p>Make sure that the system is configured to start squid during the system startup.</p>
+
+<p>```
+root@stafproxy:/usr/local/etc/squid # cat /etc/rc.conf
+#</p>
+
+<h1>squid</h1>
+
+<p>#</p>
+
+<p>squid_enable="YES"</p>
+
+<p>root@stafproxy:/usr/local/etc/squid #
+```</p>
+
+<p>SQUID should cache the pkgng downloads now.</p>
+
+<p><em>Have fun</em></p>
 ]]></content>
   </entry>
   
