@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: openbsd | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/openbsd/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2015-07-21T12:42:17+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[lookat 1.4.4rc1 released]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
+    <updated>2015-07-21T12:24:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
+    <content type="html"><![CDATA[<p>It is a <a href="https://en.wikipedia.org/wiki/July_21">national holiday in Belgium</a> so I have some time to code again.</p>
+
+<p>Lookat 1.4.4rc1 is the first release candicate of Lookat 1.4.4</p>
+
+<h3>ChangeLog</h3>
+
+<ul>
+<li>openBSD support</li>
+<li>English translation issues corrected</li>
+<li>autoconf updated to 2.69</li>
+<li>Corrected mirror compile warnings</li>
+</ul>
+
+
+<h3>Lookat 1.4.4rc1 is available at:</h3>
+
+<p><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc1.tar.gz">Download latest development release (1.4.4rc1)</a>.</p>
+
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
+
+<h3>OpenBSD</h3>
+
+<p>I forgot to mention it but Lookat has landed in <a href="http://www.openbsd.org">OpenBSD</a>>
+Thanks to Brian Callahan for the port!</p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
+  
+</feed>
