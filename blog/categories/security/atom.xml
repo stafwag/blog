@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: security | stafwag Blog]]></title>
+  <title><![CDATA[Category: Security | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,193 +14,170 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Using YubiKey Neo as gpg smartcard for SSH authentication]]></title>
+    <title type="html"><![CDATA[Using YubiKey Neo as Gpg Smartcard for SSH Authentication]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
     <updated>2015-06-16T10:32:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
-    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I'll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
+    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
 
-<p>You'll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
+<p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
 
 <h2>Install the yubiclient and smartcard software</h2>
 
 <h3>Install the ykclient</h3>
 
-<p>```
-ykclient.x86_64 : Yubikey management library and client
+<pre><code>ykclient.x86_64 : Yubikey management library and client
 [root@vicky ~]# dnf install ykclient
-Last metadata expiration check performed 1:00:07 ago on Sun Jun 14 09:14:34 2015.</p>
+Last metadata expiration check performed 1:00:07 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                    Arch                     Version                         Repository                Size
+====================================================================================================================
+Installing:
+ ykclient                   x86_64                   2.13-1.fc22                     fedora                    35 k
 
-<h1>Dependencies resolved.</h1>
+Transaction Summary
+====================================================================================================================
+Install  1 Package
 
-<h1> Package                    Arch                     Version                         Repository                Size</h1>
-
-<p>Installing:
- ykclient                   x86_64                   2.13-1.fc22                     fedora                    35 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 35 k
+Total download size: 35 k
 Installed size: 58 k
 Is this ok [y/N]: y
-Downloading Packages:</p>
-
-<h2>ykclient-2.13-1.fc22.x86_64.rpm                                                      48 kB/s |  35 kB     00:00    </h2>
-
-<p>Total                                                                                11 kB/s |  35 kB     00:03   <br/>
+Downloading Packages:
+ykclient-2.13-1.fc22.x86_64.rpm                                                      48 kB/s |  35 kB     00:00    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                                11 kB/s |  35 kB     00:03     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : ykclient-2.13-1.fc22.x86_64                                                                     1/1
-  Verifying   : ykclient-2.13-1.fc22.x86_64                                                                     1/1</p>
+  Installing  : ykclient-2.13-1.fc22.x86_64                                                                     1/1 
+  Verifying   : ykclient-2.13-1.fc22.x86_64                                                                     1/1 
 
-<p>Installed:
-  ykclient.x86_64 2.13-1.fc22</p>
+Installed:
+  ykclient.x86_64 2.13-1.fc22                                                                                       
 
-<p>Complete!
-[root@vicky ~]#
-```</p>
+Complete!
+[root@vicky ~]# 
+</code></pre>
 
-<p>```
-root@vicky ~]# ykinfo
+<pre><code>root@vicky ~]# ykinfo
 bash: ykinfo: command not found...
-Install package 'ykpers' to provide command 'ykinfo'? [N/y] ^C</p>
+Install package 'ykpers' to provide command 'ykinfo'? [N/y] ^C
 
-<p>[root@vicky ~]# dnf install ykpers
-Last metadata expiration check performed 1:01:23 ago on Sun Jun 14 09:14:34 2015.</p>
-
-<h1>Dependencies resolved.</h1>
-
-<h1> Package                     Arch                    Version                          Repository               Size</h1>
-
-<p>Installing:
+[root@vicky ~]# dnf install ykpers
+Last metadata expiration check performed 1:01:23 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                     Arch                    Version                          Repository               Size
+====================================================================================================================
+Installing:
  libyubikey                  x86_64                  1.11-3.fc22                      fedora                   33 k
- ykpers                      x86_64                  1.17.1-1.fc22                    fedora                  101 k</p>
+ ykpers                      x86_64                  1.17.1-1.fc22                    fedora                  101 k
 
-<h1>Transaction Summary</h1>
+Transaction Summary
+====================================================================================================================
+Install  2 Packages
 
-<p>Install  2 Packages</p>
-
-<p>Total download size: 135 k
+Total download size: 135 k
 Installed size: 372 k
 Is this ok [y/N]: y
 Downloading Packages:
-(1/2): libyubikey-1.11-3.fc22.x86_64.rpm                                             13 kB/s |  33 kB     00:02</p>
-
-<h2>(2/2): ykpers-1.17.1-1.fc22.x86_64.rpm                                               38 kB/s | 101 kB     00:02    </h2>
-
-<p>Total                                                                                22 kB/s | 135 kB     00:06   <br/>
+(1/2): libyubikey-1.11-3.fc22.x86_64.rpm                                             13 kB/s |  33 kB     00:02    
+(2/2): ykpers-1.17.1-1.fc22.x86_64.rpm                                               38 kB/s | 101 kB     00:02    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                                22 kB/s | 135 kB     00:06     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : libyubikey-1.11-3.fc22.x86_64                                                                   1/2
-  Installing  : ykpers-1.17.1-1.fc22.x86_64                                                                     2/2
-  Verifying   : ykpers-1.17.1-1.fc22.x86_64                                                                     1/2
-  Verifying   : libyubikey-1.11-3.fc22.x86_64                                                                   2/2</p>
+  Installing  : libyubikey-1.11-3.fc22.x86_64                                                                   1/2 
+  Installing  : ykpers-1.17.1-1.fc22.x86_64                                                                     2/2 
+  Verifying   : ykpers-1.17.1-1.fc22.x86_64                                                                     1/2 
+  Verifying   : libyubikey-1.11-3.fc22.x86_64                                                                   2/2 
 
-<p>Installed:
-  libyubikey.x86_64 1.11-3.fc22                             ykpers.x86_64 1.17.1-1.fc22</p>
+Installed:
+  libyubikey.x86_64 1.11-3.fc22                             ykpers.x86_64 1.17.1-1.fc22                            
 
-<p>Complete!</p>
+Complete!
+</code></pre>
 
-<p>```</p>
+<h3>Verify that you&rsquo;ve access to the yubikey</h3>
 
-<h3>Verify that you've access to the yubikey</h3>
+<p>&ldquo;ykinfo -v&rdquo; shows you the version on the yubikey.</p>
 
-<p>"ykinfo -v" shows you the version on the yubikey.</p>
-
-<p>```
-[root@vicky ~]# ykinfo -v
+<pre><code>[root@vicky ~]# ykinfo -v
 version: 3.4.0
-[root@vicky ~]#</p>
+[root@vicky ~]# 
+</code></pre>
 
-<p>```</p>
+<p>If you try with the user that you&rsquo;ll for the yubi authentication you might get a permission denied:</p>
 
-<p>If you try with the user that you'll for the yubi authentication you might get a permission denied:</p>
-
-<p><code>
-staf@vicky ~]$ ykinfo -v
+<pre><code>staf@vicky ~]$ ykinfo -v
 USB error: Access denied (insufficient permissions)
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h4>Update the udev permissions</h4>
 
 <h5>Update rule file</h5>
 
-<p>On a fedora 22 system to udev rules for the yubi key are defined in "/usr/lib/udev/rules.d/69-yubikey.rules"</p>
+<p>On a fedora 22 system to udev rules for the yubi key are defined in &ldquo;/usr/lib/udev/rules.d/69-yubikey.rules&rdquo;</p>
 
 <p>It is a good practice to only grant access to user that will use the yubikey.</p>
 
-<p><code>
-[root@vicky ~]# cd /usr/lib/udev/rules.d/
-[root@vicky rules.d]# vi 69-yubikey.rules
-</code></p>
+<pre><code>[root@vicky ~]# cd /usr/lib/udev/rules.d/
+[root@vicky rules.d]# vi 69-yubikey.rules 
+</code></pre>
 
-<p>```
-ACTION!="add|change", GOTO="yubico_end"</p>
+<pre><code>ACTION!="add|change", GOTO="yubico_end"
 
-<h1>Udev rules for letting the console user access the Yubikey USB</h1>
+# Udev rules for letting the console user access the Yubikey USB
+# device node, needed for challenge/response to work correctly.
 
-<h1>device node, needed for challenge/response to work correctly.</h1>
+# Yubico Yubikey II
+ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="staf", MODE="0600"
 
-<h1>Yubico Yubikey II</h1>
-
-<p>ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="staf", MODE="0600"</p>
-
-<p>LABEL="yubico_end"
-```</p>
+LABEL="yubico_end"
+</code></pre>
 
 <h5>Update udev rules</h5>
 
-<p>```</p>
-
-<h1>udevadm control --reload</h1>
-
-<h1>udevadm trigger</h1>
-
-<p>```</p>
+<pre><code># udevadm control --reload
+# udevadm trigger
+</code></pre>
 
 <h5>Test it again</h5>
 
-<p><code>
-[staf@vicky ~]$ ykinfo -v
+<pre><code>[staf@vicky ~]$ ykinfo -v
 version: 3.4.0
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h3>Enable the smartcard interface</h3>
 
-<p>```
-staf@vicky yubi]$ ykpersonalize -m82
-Firmware version 3.4.0 Touch level 1551 Program sequence 3</p>
+<pre><code>staf@vicky yubi]$ ykpersonalize -m82
+Firmware version 3.4.0 Touch level 1551 Program sequence 3
 
-<p>The USB mode will be set to: 0x82</p>
+The USB mode will be set to: 0x82
 
-<p>Commit? (y/n) [n]: y
-[staf@vicky yubi]$</p>
-
-<p>```</p>
+Commit? (y/n) [n]: y
+[staf@vicky yubi]$ 
+</code></pre>
 
 <p>Remove the yubi key from your system and plug it back to activate the new interface.</p>
 
 <h3>Install the required smartcard software</h3>
 
-<p>```
-[root@vicky ~]# dnf install pcsc-tools <br/>
-Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015.</p>
-
-<h1>Dependencies resolved.                                       </h1>
-
-<h1> Package                         Arch                  Version                          Repository             Size</h1>
-
-<p>Installing:                                               <br/>
+<pre><code>[root@vicky ~]# dnf install pcsc-tools   
+Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.                                       
+====================================================================================================================
+ Package                         Arch                  Version                          Repository             Size
+====================================================================================================================
+Installing:                                                 
  pcsc-lite                       x86_64                1.8.13-1.fc22                    fedora                101 k
  pcsc-lite-asekey                x86_64                3.7-1.fc22                       fedora                 34 k
  pcsc-perl                       x86_64                1.4.12-11.fc22                   fedora                 61 k
@@ -209,313 +186,278 @@ Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015
  perl-Glib                       x86_64                1.310-1.fc22                     fedora                362 k
  perl-Gtk2                       x86_64                1.2495-1.fc22                    fedora                1.8 M
  perl-HTML-Tree                  noarch                1:5.03-8.fc22                    fedora                223 k
- perl-Pango                      x86_64                1.226-3.fc22                     fedora                220 k</p>
+ perl-Pango                      x86_64                1.226-3.fc22                     fedora                220 k
 
-<h1>Transaction Summary                                        </h1>
+Transaction Summary                                        
+====================================================================================================================
+Install  9 Packages                                        
 
-<p>Install  9 Packages</p>
+Total download size: 3.0 M                                  
+Installed size: 8.4 M                                       
+Is this ok [y/N]: y                                          
+Downloading Packages:                                        
+(1/9): pcsc-tools-1.4.23-1.fc22.x86_64.rpm                                           38 kB/s | 116 kB     00:03    
+(2/9): pcsc-perl-1.4.12-11.fc22.x86_64.rpm                                           20 kB/s |  61 kB     00:03    
+(3/9): pcsc-lite-1.8.13-1.fc22.x86_64.rpm                                            23 kB/s | 101 kB     00:04    
+(4/9): perl-Glib-1.310-1.fc22.x86_64.rpm                                            159 kB/s | 362 kB     00:02    
+(5/9): perl-Cairo-1.105-1.fc22.x86_64.rpm                                            56 kB/s | 126 kB     00:02    
+(6/9): perl-HTML-Tree-5.03-8.fc22.noarch.rpm                                         99 kB/s | 223 kB     00:02    
+(7/9): perl-Gtk2-1.2495-1.fc22.x86_64.rpm                                           342 kB/s | 1.8 MB     00:05    
+(8/9): perl-Pango-1.226-3.fc22.x86_64.rpm                                            89 kB/s | 220 kB     00:02    
+(9/9): pcsc-lite-asekey-3.7-1.fc22.x86_64.rpm                                        21 kB/s |  34 kB     00:01    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                               257 kB/s | 3.0 MB     00:11     
+Running transaction check                                   
+Transaction check succeeded.                                
+Running transaction test                                     
+Transaction test succeeded.                                   
+Running transaction                                             
+  Installing  : perl-Glib-1.310-1.fc22.x86_64                                                                   1/9 
+  Installing  : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              2/9 
+  Installing  : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  3/9 
+  Installing  : perl-Cairo-1.105-1.fc22.x86_64                                                                  4/9 
+  Installing  : perl-Pango-1.226-3.fc22.x86_64                                                                  5/9 
+  Installing  : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             6/9 
+  Installing  : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  7/9 
+  Installing  : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 8/9 
+  Installing  : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 9/9 
+  Verifying   : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 1/9 
+  Verifying   : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  2/9 
+  Verifying   : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 3/9 
+  Verifying   : perl-Glib-1.310-1.fc22.x86_64                                                                   4/9 
+  Verifying   : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  5/9 
+  Verifying   : perl-Cairo-1.105-1.fc22.x86_64                                                                  6/9 
+  Verifying   : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             7/9 
+  Verifying   : perl-Pango-1.226-3.fc22.x86_64                                                                  8/9 
+  Verifying   : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              9/9 
 
-<p>Total download size: 3.0 M                                <br/>
-Installed size: 8.4 M                                     <br/>
-Is this ok [y/N]: y                                        <br/>
-Downloading Packages:                                      <br/>
-(1/9): pcsc-tools-1.4.23-1.fc22.x86_64.rpm                                           38 kB/s | 116 kB     00:03  <br/>
-(2/9): pcsc-perl-1.4.12-11.fc22.x86_64.rpm                                           20 kB/s |  61 kB     00:03  <br/>
-(3/9): pcsc-lite-1.8.13-1.fc22.x86_64.rpm                                            23 kB/s | 101 kB     00:04  <br/>
-(4/9): perl-Glib-1.310-1.fc22.x86_64.rpm                                            159 kB/s | 362 kB     00:02  <br/>
-(5/9): perl-Cairo-1.105-1.fc22.x86_64.rpm                                            56 kB/s | 126 kB     00:02  <br/>
-(6/9): perl-HTML-Tree-5.03-8.fc22.noarch.rpm                                         99 kB/s | 223 kB     00:02  <br/>
-(7/9): perl-Gtk2-1.2495-1.fc22.x86_64.rpm                                           342 kB/s | 1.8 MB     00:05  <br/>
-(8/9): perl-Pango-1.226-3.fc22.x86_64.rpm                                            89 kB/s | 220 kB     00:02</p>
+Installed:
+  pcsc-lite.x86_64 1.8.13-1.fc22       pcsc-lite-asekey.x86_64 3.7-1.fc22       pcsc-perl.x86_64 1.4.12-11.fc22     
+  pcsc-tools.x86_64 1.4.23-1.fc22      perl-Cairo.x86_64 1.105-1.fc22           perl-Glib.x86_64 1.310-1.fc22       
+  perl-Gtk2.x86_64 1.2495-1.fc22       perl-HTML-Tree.noarch 1:5.03-8.fc22      perl-Pango.x86_64 1.226-3.fc22      
 
-<h2>(9/9): pcsc-lite-asekey-3.7-1.fc22.x86_64.rpm                                        21 kB/s |  34 kB     00:01    </h2>
+Complete!
+[root@vicky ~]# 
+</code></pre>
 
-<p>Total                                                                               257 kB/s | 3.0 MB     00:11   <br/>
-Running transaction check                                 <br/>
-Transaction check succeeded.                              <br/>
-Running transaction test                                   <br/>
-Transaction test succeeded.                                 <br/>
-Running transaction                                           <br/>
-  Installing  : perl-Glib-1.310-1.fc22.x86_64                                                                   1/9
-  Installing  : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              2/9
-  Installing  : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  3/9
-  Installing  : perl-Cairo-1.105-1.fc22.x86_64                                                                  4/9
-  Installing  : perl-Pango-1.226-3.fc22.x86_64                                                                  5/9
-  Installing  : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             6/9
-  Installing  : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  7/9
-  Installing  : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 8/9
-  Installing  : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 9/9
-  Verifying   : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 1/9
-  Verifying   : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  2/9
-  Verifying   : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 3/9
-  Verifying   : perl-Glib-1.310-1.fc22.x86_64                                                                   4/9
-  Verifying   : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  5/9
-  Verifying   : perl-Cairo-1.105-1.fc22.x86_64                                                                  6/9
-  Verifying   : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             7/9
-  Verifying   : perl-Pango-1.226-3.fc22.x86_64                                                                  8/9
-  Verifying   : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              9/9</p>
+<pre><code>root@vicky ~]# dnf install opensc
+Last metadata expiration check performed 0:37:38 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                  Arch                     Version                           Repository                Size
+====================================================================================================================
+Installing:
+ opensc                   x86_64                   0.14.0-2.fc22                     fedora                   976 k
 
-<p>Installed:
-  pcsc-lite.x86_64 1.8.13-1.fc22       pcsc-lite-asekey.x86_64 3.7-1.fc22       pcsc-perl.x86_64 1.4.12-11.fc22   <br/>
-  pcsc-tools.x86_64 1.4.23-1.fc22      perl-Cairo.x86_64 1.105-1.fc22           perl-Glib.x86_64 1.310-1.fc22     <br/>
-  perl-Gtk2.x86_64 1.2495-1.fc22       perl-HTML-Tree.noarch 1:5.03-8.fc22      perl-Pango.x86_64 1.226-3.fc22</p>
+Transaction Summary
+====================================================================================================================
+Install  1 Package
 
-<p>Complete!
-[root@vicky ~]#</p>
-
-<p>```</p>
-
-<p>```
-root@vicky ~]# dnf install opensc
-Last metadata expiration check performed 0:37:38 ago on Sun Jun 14 09:14:34 2015.</p>
-
-<h1>Dependencies resolved.</h1>
-
-<h1> Package                  Arch                     Version                           Repository                Size</h1>
-
-<p>Installing:
- opensc                   x86_64                   0.14.0-2.fc22                     fedora                   976 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 976 k
+Total download size: 976 k
 Installed size: 2.8 M
 Is this ok [y/N]: y
-Downloading Packages:</p>
-
-<h2>opensc-0.14.0-2.fc22.x86_64.rpm                                                     277 kB/s | 976 kB     00:03    </h2>
-
-<p>Total                                                                               203 kB/s | 976 kB     00:04   <br/>
+Downloading Packages:
+opensc-0.14.0-2.fc22.x86_64.rpm                                                     277 kB/s | 976 kB     00:03    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                               203 kB/s | 976 kB     00:04     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : opensc-0.14.0-2.fc22.x86_64                                                                     1/1
-  Verifying   : opensc-0.14.0-2.fc22.x86_64                                                                     1/1</p>
+  Installing  : opensc-0.14.0-2.fc22.x86_64                                                                     1/1 
+  Verifying   : opensc-0.14.0-2.fc22.x86_64                                                                     1/1 
 
-<p>Installed:
-  opensc.x86_64 0.14.0-2.fc22</p>
+Installed:
+  opensc.x86_64 0.14.0-2.fc22                                                                                       
 
-<p>Complete!
+Complete!
 [root@vicky ~]# dnf search opensc
-```</p>
+</code></pre>
 
-<p>```
-[root@vicky ~]# dnf search ccid
+<pre><code>[root@vicky ~]# dnf search ccid
 Last metadata expiration check performed 0:39:03 ago on Sun Jun 14 09:14:34 2015.
 ================================================ N/S Matched: ccid =================================================
 pcsc-lite-ccid.x86_64 : Generic USB CCID smart card reader driver
 libykneomgr.i686 : YubiKey NEO CCID Manager C Library
 libykneomgr.x86_64 : YubiKey NEO CCID Manager C Library
 [root@vicky ~]# dnf install pcsc-lite-ccid
-Last metadata expiration check performed 0:39:34 ago on Sun Jun 14 09:14:34 2015.</p>
+Last metadata expiration check performed 0:39:34 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                        Arch                   Version                         Repository              Size
+====================================================================================================================
+Installing:
+ pcsc-lite-ccid                 x86_64                 1.4.18-1.fc22                   fedora                 177 k
 
-<h1>Dependencies resolved.</h1>
+Transaction Summary
+====================================================================================================================
+Install  1 Package
 
-<h1> Package                        Arch                   Version                         Repository              Size</h1>
-
-<p>Installing:
- pcsc-lite-ccid                 x86_64                 1.4.18-1.fc22                   fedora                 177 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 177 k
+Total download size: 177 k
 Installed size: 599 k
 Is this ok [y/N]: y
-Downloading Packages:</p>
-
-<h2>pcsc-lite-ccid-1.4.18-1.fc22.x86_64.rpm                                              47 kB/s | 177 kB     00:03    </h2>
-
-<p>Total                                                                                27 kB/s | 177 kB     00:06   <br/>
+Downloading Packages:
+pcsc-lite-ccid-1.4.18-1.fc22.x86_64.rpm                                              47 kB/s | 177 kB     00:03    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                                27 kB/s | 177 kB     00:06     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1
-  Verifying   : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1</p>
+  Installing  : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1 
+  Verifying   : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1 
 
-<p>Installed:
-  pcsc-lite-ccid.x86_64 1.4.18-1.fc22</p>
+Installed:
+  pcsc-lite-ccid.x86_64 1.4.18-1.fc22                                                                               
 
-<p>Complete!
-[root@vicky ~]#
-```</p>
+Complete!
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Start the pcscd service</h4>
 
-<p><code>
-root@vicky ~]# systemctl list-unit-files -t service | grep pcscd
+<pre><code>root@vicky ~]# systemctl list-unit-files -t service | grep pcscd
 pcscd.service                               static  
 [root@vicky ~]# systemctl start pcscd
 [root@vicky ~]# systemctl enable pcscd
-[root@vicky ~]#
-</code></p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Verify that you are able to see the yubi smartcard</h4>
 
 <h5>Run pcsc_scan</h5>
 
-<p>Execute "pcsc_scan" to verify that you see the smartcard</p>
+<p>Execute &ldquo;pcsc_scan&rdquo; to verify that you see the smartcard</p>
 
-<p>```
-[staf@vicky ~]$ pcsc_scan
+<pre><code>[staf@vicky ~]$ pcsc_scan 
 PC/SC device scanner
-V 1.4.23 (c) 2001-2011, Ludovic Rousseau <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x6c;&#x75;&#x64;&#x6f;&#118;&#x69;&#99;&#46;&#114;&#111;&#117;&#115;&#115;&#101;&#x61;&#x75;&#x40;&#102;&#x72;&#101;&#x65;&#46;&#x66;&#x72;">&#x6c;&#x75;&#x64;&#x6f;&#118;&#105;&#x63;&#x2e;&#x72;&#x6f;&#117;&#x73;&#115;&#101;&#x61;&#117;&#64;&#102;&#114;&#101;&#101;&#46;&#102;&#114;</a>
+V 1.4.23 (c) 2001-2011, Ludovic Rousseau &lt;ludovic.rousseau@free.fr&gt;
 Compiled with PC/SC lite version: 1.8.13
 Using reader plug'n play mechanism
 Scanning present readers...
 0: Gemalto Gemplus USB SmartCard Reader 433-Swap [CCID Interface] (1-0000:00:06.7-1) 00 00
-1: Yubico Yubikey NEO OTP+CCID 01 00</p>
+1: Yubico Yubikey NEO OTP+CCID 01 00
 
-<p>Mon Jun 15 11:36:44 2015
+Mon Jun 15 11:36:44 2015
 Reader 0: Gemalto Gemplus USB SmartCard Reader 433-Swap [CCID Interface] (1-0000:00:06.7-1) 00 00
-  Card state: Card removed,
+  Card state: Card removed, 
 Reader 1: Yubico Yubikey NEO OTP+CCID 01 00
-  Card state: Card inserted,
-  ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1</p>
+  Card state: Card inserted, 
+  ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
 
-<p>defined(@array) is deprecated at /usr/lib64/perl5/vendor_perl/Chipcard/PCSC.pm line 69.</p>
-
-<pre><code>    (Maybe you should just omit the defined()?)
-</code></pre>
-
-<p>ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
-+ TS = 3B --> Direct Convention
+defined(@array) is deprecated at /usr/lib64/perl5/vendor_perl/Chipcard/PCSC.pm line 69.
+        (Maybe you should just omit the defined()?)
+ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
++ TS = 3B --&gt; Direct Convention
 + T0 = FC, Y(1): 1111, K: 12 (historical bytes)
-  TA(1) = 13 --> Fi=372, Di=4, 93 cycles/ETU</p>
-
-<pre><code>43010 bits/s at 4 MHz, fMax for Fi = 5 MHz =&gt; 53763 bits/s
-</code></pre>
-
-<p>  TB(1) = 00 --> VPP is not electrically connected
-  TC(1) = 00 --> Extra guard time: 0</p>
-
-<h2>  TD(1) = 81 --> Y(i+1) = 1000, Protocol T = 1 </h2>
-
-<h2>  TD(2) = 31 --> Y(i+1) = 0011, Protocol T = 1 </h2>
-
-<p>  TA(3) = FE --> IFSC: 254
-  TB(3) = 15 --> Block Waiting Integer: 1 - Character Waiting Integer: 5
+  TA(1) = 13 --&gt; Fi=372, Di=4, 93 cycles/ETU
+    43010 bits/s at 4 MHz, fMax for Fi = 5 MHz =&gt; 53763 bits/s
+  TB(1) = 00 --&gt; VPP is not electrically connected
+  TC(1) = 00 --&gt; Extra guard time: 0
+  TD(1) = 81 --&gt; Y(i+1) = 1000, Protocol T = 1 
+-----
+  TD(2) = 31 --&gt; Y(i+1) = 0011, Protocol T = 1 
+-----
+  TA(3) = FE --&gt; IFSC: 254
+  TB(3) = 15 --&gt; Block Waiting Integer: 1 - Character Waiting Integer: 5
 + Historical bytes: 59 75 62 69 6B 65 79 4E 45 4F 72 33
   Category indicator byte: 59 (proprietary format)
-+ TCK = E1 (correct checksum)</p>
++ TCK = E1 (correct checksum)
 
-<p>Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
-3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1</p>
-
-<pre><code>    YubiKey NEO (PKI)
-    http://www.yubico.com/
+Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
+3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
+        YubiKey NEO (PKI)
+        http://www.yubico.com/
 </code></pre>
-
-<p>```</p>
 
 <h4>Remote smartcard access</h4>
 
 <p>By default only console logins have access to the smartcard if you want to grant access to remote logins (e.g. ssh)
 create a polkit rule for the user that will use the smartcard.</p>
 
-<p><code>
-[root@vicky ~]# cd /usr/share/polkit-1/rules.d/                                    
-[root@vicky rules.d]# vi 30_smartcard_access.rules
-</code></p>
-
-<p>```
-polkit.addRule(function(action, subject) {</p>
-
-<pre><code>if (action.id == "org.debian.pcsc-lite.access_pcsc" &amp;&amp;
-    subject.user == "staf") {
-        return polkit.Result.YES;
-}
+<pre><code>[root@vicky ~]# cd /usr/share/polkit-1/rules.d/                                    
+[root@vicky rules.d]# vi 30_smartcard_access.rules 
 </code></pre>
 
-<p>});</p>
+<pre><code>polkit.addRule(function(action, subject) {
+    if (action.id == "org.debian.pcsc-lite.access_pcsc" &amp;&amp;
+        subject.user == "staf") {
+            return polkit.Result.YES;
+    }
+});
 
-<p>polkit.addRule(function(action, subject) {</p>
-
-<pre><code>if (action.id == "org.debian.pcsc-lite.access_card" &amp;&amp;
-    action.lookup("reader") == 'name_of_reader' &amp;&amp;
-    subject.user == "staf") {
-        return polkit.Result.YES;    }
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.debian.pcsc-lite.access_card" &amp;&amp;
+        action.lookup("reader") == 'name_of_reader' &amp;&amp;
+        subject.user == "staf") {
+            return polkit.Result.YES;    }
+});
 </code></pre>
-
-<p>});</p>
-
-<p>```</p>
 
 <h3>Reset smartcard PIN codes</h3>
 
-<p>The default user PIN code is "123456" the default admin PIN code is "12345678"</p>
+<p>The default user PIN code is &ldquo;123456&rdquo; the default admin PIN code is &ldquo;12345678&rdquo;</p>
 
-<p>```
-[staf@vicky ~]$ gpg --change-pin
-gpg: OpenPGP card no. D2760001240102000006035062250000 detected</p>
+<pre><code>[staf@vicky ~]$ gpg --change-pin 
+gpg: OpenPGP card no. D2760001240102000006035062250000 detected
 
-<p>1 - change PIN
+1 - change PIN
 2 - unblock PIN
 3 - change Admin PIN
 4 - set the Reset Code
-Q - quit</p>
+Q - quit
 
-<h4>Change user PIN</h4>
+#### Change user PIN
 
-<p>Your selection?
-```</p>
+Your selection? 
+</code></pre>
 
-<p>```
-Your selection? 1</p>
+<pre><code>Your selection? 1
 
-<p>Please enter the PIN</p>
+Please enter the PIN
 
-<p>New PIN</p>
+New PIN
 
-<p>New PIN
-PIN changed.</p>
-
-<p>```</p>
+New PIN
+PIN changed.     
+</code></pre>
 
 <h4>Change admin PIN</h4>
 
-<p>```
- - change PIN
+<pre><code> - change PIN
 2 - unblock PIN
 3 - change Admin PIN
 4 - set the Reset Code
-Q - quit</p>
+Q - quit
 
-<p>Your selection? 3
-gpg: 3 Admin PIN attempts remaining before card is permanently locked</p>
+Your selection? 3
+gpg: 3 Admin PIN attempts remaining before card is permanently locked
 
-<p>Please enter the Admin PIN</p>
+Please enter the Admin PIN
 
-<p>New Admin PIN</p>
+New Admin PIN
 
-<p>New Admin PIN
-PIN changed.</p>
+New Admin PIN
+PIN changed.     
 
-<p>1 - change PIN
+1 - change PIN
 2 - unblock PIN
 3 - change Admin PIN
 4 - set the Reset Code
-Q - quit</p>
+Q - quit
 
-<p>Your selection?</p>
-
-<p>```</p>
+Your selection? 
+</code></pre>
 
 <h3>Generate a new key pair</h3>
 
-<h4>Execute "gpg --card-edit"</h4>
+<h4>Execute &ldquo;gpg &ndash;card-edit&rdquo;</h4>
 
-<p>```
-[staf@vicky ~]$ gpg --card-edit</p>
+<pre><code>[staf@vicky ~]$ gpg --card-edit 
 
-<p>Application ID ...: D2760001240102000006035062250000
+Application ID ...: D2760001240102000006035062250000
 Version ..........: 2.0
 Manufacturer .....: unknown
 Serial number ....: 03506225
@@ -529,97 +471,72 @@ Key attributes ...: 2048R 2048R 2048R
 Max. PIN lengths .: 127 127 127
 PIN retry counter : 3 3 3
 Signature counter : 5
-Signature key ....: 1E41 4C61 B1CE F02A F431  85BF 46B9 3657 54DF 802E</p>
+Signature key ....: 1E41 4C61 B1CE F02A F431  85BF 46B9 3657 54DF 802E
+      created ....: 2015-06-15 11:47:23
+Encryption key....: BB75 75F4 404A 2681 4331  4B46 34E7 EE51 4199 C702
+      created ....: 2015-06-15 11:47:23
+Authentication key: A7F8 A844 4762 C44D 20C7  A2AF E06D 602C 069D 7EFF
+      created ....: 2015-06-15 11:47:23
+General key info..: 
+pub  2048R/54DF802E 2015-06-15 qwerty &lt;qwert@qwert&gt;
+sec&gt;  2048R/54DF802E  created: 2015-06-15  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/069D7EFF  created: 2015-06-15  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/4199C702  created: 2015-06-15  expires: never     
+                      card-no: 0006 03506225
 
-<pre><code>  created ....: 2015-06-15 11:47:23
+gpg/card&gt; 
 </code></pre>
-
-<p>Encryption key....: BB75 75F4 404A 2681 4331  4B46 34E7 EE51 4199 C702</p>
-
-<pre><code>  created ....: 2015-06-15 11:47:23
-</code></pre>
-
-<p>Authentication key: A7F8 A844 4762 C44D 20C7  A2AF E06D 602C 069D 7EFF</p>
-
-<pre><code>  created ....: 2015-06-15 11:47:23
-</code></pre>
-
-<p>General key info..:
-pub  2048R/54DF802E 2015-06-15 qwerty &lt;qwert@qwert>
-sec>  2048R/54DF802E  created: 2015-06-15  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/069D7EFF  created: 2015-06-15  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/4199C702  created: 2015-06-15  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>gpg/card>
-```</p>
 
 <h4>Enable admin commands</h4>
 
-<p>```
-gpg/card> admin
-Admin commands are allowed</p>
+<pre><code>gpg/card&gt; admin
+Admin commands are allowed                                                      
 
-<p>gpg/card>                                                                      <br/>
-```</p>
+gpg/card&gt;                                                                        
+</code></pre>
 
 <h4>Generate key</h4>
 
-<p>```
-gpg/card> generate
-Make off-card backup of encryption key? (Y/n) n</p>
+<pre><code>gpg/card&gt; generate 
+Make off-card backup of encryption key? (Y/n) n
 
-<p>gpg: NOTE: keys are already stored on the card!</p>
+gpg: NOTE: keys are already stored on the card!
 
-<p>Replace existing keys? (y/N) y</p>
+Replace existing keys? (y/N) y
 
-<p>Please note that the factory settings of the PINs are
-   PIN = <code>123456'     Admin PIN =</code>12345678'
-You should change them using the command --change-pin</p>
+Please note that the factory settings of the PINs are
+   PIN = `123456'     Admin PIN = `12345678'
+You should change them using the command --change-pin
 
-<p>Please enter the PIN
-Please specify how long the key should be valid.</p>
 
-<pre><code>     0 = key does not expire
-  &lt;n&gt;  = key expires in n days
-  &lt;n&gt;w = key expires in n weeks
-  &lt;n&gt;m = key expires in n months
-  &lt;n&gt;y = key expires in n years
-</code></pre>
-
-<p>Key is valid for? (0)
+Please enter the PIN
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 
 Key does not expire at all
-Is this correct? (y/N) y</p>
+Is this correct? (y/N) y
 
-<p>You need a user ID to identify your key; the software constructs the user ID
-from the Real Name, Comment and Email Address in this form:</p>
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
 
-<pre><code>"Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
-</code></pre>
-
-<p>Real name: staf wagemakers
+Real name: staf wagemakers
 Email address: staf@wagemakers.be
-Comment:
-You selected this USER-ID:</p>
+Comment: 
+You selected this USER-ID:
+    "staf wagemakers &lt;staf@wagemakers.be&gt;"
 
-<pre><code>"staf wagemakers &lt;staf@wagemakers.be&gt;"
-</code></pre>
-
-<p>Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
 gpg: existing key will be replaced
-gpg: 3 Admin PIN attempts remaining before card is permanently locked</p>
+gpg: 3 Admin PIN attempts remaining before card is permanently locked
 
-<p>Please enter the Admin PIN
+Please enter the Admin PIN
 gpg: please wait while key is being generated ...
 gpg: key generation completed (5 seconds)
 gpg: signatures created so far: 0
@@ -634,30 +551,26 @@ gpg: key generation completed (9 seconds)
 gpg: signatures created so far: 3
 gpg: signatures created so far: 4
 gpg: key C15CE3D7 marked as ultimately trusted
-public and secret key created and signed.</p>
+public and secret key created and signed.
 
-<p>gpg: checking the trustdb
+gpg: checking the trustdb
 gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
 gpg: depth: 0  valid:   2  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 2u
-pub   2048R/C15CE3D7 2015-06-15</p>
-
-<pre><code>  Key fingerprint = B702 663D 833B DC19 0EEF  663A 54FA 0B1E C15C E3D7
-</code></pre>
-
-<p>uid                  staf wagemakers <a href="&#109;&#x61;&#105;&#x6c;&#116;&#x6f;&#x3a;&#x73;&#116;&#97;&#102;&#64;&#119;&#97;&#x67;&#101;&#x6d;&#x61;&#x6b;&#x65;&#114;&#x73;&#x2e;&#98;&#x65;">&#x73;&#x74;&#x61;&#x66;&#x40;&#x77;&#x61;&#103;&#x65;&#x6d;&#97;&#x6b;&#101;&#114;&#x73;&#46;&#98;&#101;</a>
+pub   2048R/C15CE3D7 2015-06-15
+      Key fingerprint = B702 663D 833B DC19 0EEF  663A 54FA 0B1E C15C E3D7
+uid                  staf wagemakers &lt;staf@wagemakers.be&gt;
 sub   2048R/D2AEBBA3 2015-06-15
-sub   2048R/6C2C699A 2015-06-15</p>
+sub   2048R/6C2C699A 2015-06-15
 
-<p>gpg/card></p>
 
-<p>```</p>
+gpg/card&gt; 
+</code></pre>
 
 <h3>Extract the public key</h3>
 
-<h4>Execute gpg --card-status</h4>
+<h4>Execute gpg &ndash;card-status</h4>
 
-<p>```
-staf@vicky ~]$ gpg --card-status
+<pre><code>staf@vicky ~]$ gpg --card-status
 Application ID ...: D2760001240102000006035062250000
 Version ..........: 2.0
 Manufacturer .....: unknown
@@ -672,47 +585,28 @@ Key attributes ...: 2048R 2048R 2048R
 Max. PIN lengths .: 127 127 127
 PIN retry counter : 3 3 3
 Signature counter : 5
-Signature key ....: AED7 C79B 574D 45CC 7C1B  CC35 BDDE E66F 0C2C CF82</p>
-
-<pre><code>  created ....: 2015-06-16 06:32:02
+Signature key ....: AED7 C79B 574D 45CC 7C1B  CC35 BDDE E66F 0C2C CF82
+      created ....: 2015-06-16 06:32:02
+Encryption key....: 6650 AB0A 5F31 059F 3221  3F29 C9F3 2031 01B3 1F53
+      created ....: 2015-06-16 06:32:02
+Authentication key: A387 A45A 446E DC9C D78E  F173 7C19 5D7D A1D9 9813
+      created ....: 2015-06-16 06:32:02
+General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers &lt;staf@wagemakers.be&gt;
+sec&gt;  2048R/0C2CCF82  created: 2015-06-16  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/A1D99813  created: 2015-06-16  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/01B31F53  created: 2015-06-16  expires: never     
+                      card-no: 0006 03506225
+[staf@vicky ~]$ 
 </code></pre>
-
-<p>Encryption key....: 6650 AB0A 5F31 059F 3221  3F29 C9F3 2031 01B3 1F53</p>
-
-<pre><code>  created ....: 2015-06-16 06:32:02
-</code></pre>
-
-<p>Authentication key: A387 A45A 446E DC9C D78E  F173 7C19 5D7D A1D9 9813</p>
-
-<pre><code>  created ....: 2015-06-16 06:32:02
-</code></pre>
-
-<p>General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers <a href="&#109;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#115;&#x74;&#x61;&#x66;&#x40;&#119;&#x61;&#103;&#x65;&#109;&#x61;&#x6b;&#101;&#114;&#115;&#x2e;&#98;&#x65;">&#x73;&#116;&#x61;&#x66;&#x40;&#x77;&#x61;&#x67;&#101;&#109;&#x61;&#x6b;&#101;&#x72;&#115;&#x2e;&#x62;&#101;</a>
-sec>  2048R/0C2CCF82  created: 2015-06-16  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/A1D99813  created: 2015-06-16  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/01B31F53  created: 2015-06-16  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>[staf@vicky ~]$
-```</p>
 
 <h4>Run gpgkey2ssh on the authentication key</h4>
 
-<p><code>
-[staf@vicky ~]$ gpgkey2ssh A1D99813
+<pre><code>[staf@vicky ~]$ gpgkey2ssh A1D99813
 ssh-rsa qwertyqwertyqwerty COMMENT
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h3>Test ssh access</h3>
 
@@ -724,44 +618,38 @@ ssh-rsa qwertyqwertyqwerty COMMENT
 
 <p>Create your gpg-agent.conf file</p>
 
-<p><code>
-[staf@vicky ~]$ vi .gnupg/gpg-agent.conf
-</code></p>
+<pre><code>[staf@vicky ~]$ vi .gnupg/gpg-agent.conf
+</code></pre>
 
-<p><code>
-pinentry-program  /usr/bin/pinentry
+<pre><code>pinentry-program  /usr/bin/pinentry
 enable-ssh-support
-</code></p>
+</code></pre>
 
 <h4>Start the gpg-agent</h4>
 
-<p><code>
-staf@vicky ~]$ gpg-agent --daemon --verbose
+<pre><code>staf@vicky ~]$ gpg-agent --daemon --verbose
 gpg-agent[1395]: listening on socket '/home/staf/.gnupg/S.gpg-agent'
 gpg-agent[1395]: listening on socket '/home/staf/.gnupg/S.gpg-agent.ssh'
 gpg-agent[1396]: gpg-agent (GnuPG) 2.1.4 started
 SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h4>Export the SSH_AUTH_SOCK variable</h4>
 
-<p>```
-SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;</p>
-
-<p>```</p>
+<pre><code>SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
+</code></pre>
 
 <h4>Verify the agent</h4>
 
 <p>Run ssh-add -L</p>
 
-<p><code>
-[staf@vicky ~]$ ssh-add -L
+<pre><code>[staf@vicky ~]$ ssh-add -L
 error fetching identities for protocol 1: agent refused operation
 ssh-rsa qwertyqwertyqwerty cardno:xxxx
-</code></p>
+</code></pre>
 
-<p>The public key must be the same as extracted with "gpgkey2ssh"</p>
+<p>The public key must be the same as extracted with &ldquo;gpgkey2ssh&rdquo;</p>
 
 <h4>Add the public key to the remote system</h4>
 
@@ -771,52 +659,52 @@ ssh-rsa qwertyqwertyqwerty cardno:xxxx
 
 <p>Try to logon to your remote system</p>
 
-<p><code>
-staf@vicky ~]$ ssh -v xxx.xxx.xxx.xxx
-</code></p>
+<pre><code>staf@vicky ~]$ ssh -v xxx.xxx.xxx.xxx
+</code></pre>
 
 <p>You should get a window that asks for user PIN code.</p>
 
-<p>```</p>
+<pre><code>
 
-<pre><code>           ┌──────────────────────────────────────────────┐
-           │ Please enter the PIN                         │
-           │                                              │
-           │ PIN ________________________________________ │
-           │                                              │
-           │      &lt;OK&gt;                        &lt;Cancel&gt;    │
-           └──────────────────────────────────────────────┘
+
+
+
+
+
+               ┌──────────────────────────────────────────────┐
+               │ Please enter the PIN                         │
+               │                                              │
+               │ PIN ________________________________________ │
+               │                                              │
+               │      &lt;OK&gt;                        &lt;Cancel&gt;    │
+               └──────────────────────────────────────────────┘
 </code></pre>
 
-<p>```</p>
+<pre><code>FreeBSD 10.1-RELEASE-p10 (GENERIC) #0: Wed May 13 06:54:13 UTC 2015
 
-<p>```
-FreeBSD 10.1-RELEASE-p10 (GENERIC) #0: Wed May 13 06:54:13 UTC 2015</p>
+Welcome to FreeBSD!
 
-<p>Welcome to FreeBSD!</p>
-
-<p>Release Notes, Errata: https://www.FreeBSD.org/releases/
+Release Notes, Errata: https://www.FreeBSD.org/releases/
 Security Advisories:   https://www.FreeBSD.org/security/
 FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
 FreeBSD FAQ:           https://www.FreeBSD.org/faq/
 Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
-FreeBSD Forums:        https://forums.FreeBSD.org/</p>
+FreeBSD Forums:        https://forums.FreeBSD.org/
 
-<p>Documents installed with the system are in the /usr/local/share/doc/freebsd/
+Documents installed with the system are in the /usr/local/share/doc/freebsd/
 directory, or can be installed later with:  pkg install en-freebsd-doc
-For other languages, replace "en" with a language code like de or fr.</p>
+For other languages, replace "en" with a language code like de or fr.
 
-<p>Show the version of FreeBSD installed:  freebsd-version ; uname -a
+Show the version of FreeBSD installed:  freebsd-version ; uname -a
 Please include that output and any error messages when posting questions.
 Introduction to manual pages:  man man
-FreeBSD directory layout:      man hier</p>
+FreeBSD directory layout:      man hier
 
-<p>Edit /etc/motd to change this login announcement.
+Edit /etc/motd to change this login announcement.
 Want to run the same command again?
 In tcsh you can type "!!"
-$</p>
-
-<p>```</p>
+$ 
+</code></pre>
 
 <h2>CleanUp</h2>
 
@@ -824,10 +712,9 @@ $</p>
 
 <p>Add</p>
 
-<p><code>
-gpg-agent --daemon
+<pre><code>gpg-agent --daemon
 SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-</code></p>
+</code></pre>
 
 <p>To your .bash_profile or setup a generic script for all users in /etc/profile.d/</p>
 
@@ -838,31 +725,31 @@ SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
 <h2>Links</h2>
 
 <ul>
-<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></li>
-<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></li>
-<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></li>
-<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></li>
-<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></li>
-<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></li>
-<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></li>
-<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></li>
+<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/"><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></a></li>
+<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO"><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></a></li>
+<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html"><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></a></li>
+<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171"><a href="http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></a></li>
+<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/"><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html"><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></a></li>
+<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/"><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst"><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></a></li>
+<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/"><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card"><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Udev"><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></a></li>
+<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/"><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></a></li>
 </ul>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Openvas 7: adding credentials failed]]></title>
+    <title type="html"><![CDATA[Openvas 7: Adding Credentials Failed]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/"/>
     <updated>2015-05-14T16:56:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed</id>
-    <content type="html"><![CDATA[<p>I'm creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
 
 <p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
 
@@ -871,10 +758,9 @@ SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
 <p>But on my openvas 7 installation a creation of the encryption key was slooooow.
 As always Good Randomness is important for creating keys. So I decided to install haveged to get more randomness and hopefully this would speed up key creation.</p>
 
-<p>```
-[root@localhost ~]# yum install haveged</p>
+<pre><code>[root@localhost ~]# yum install haveged
 
-<p>Loaded plugins: fastestmirror
+Loaded plugins: fastestmirror
 Loading mirror speeds from cached hostfile
  * atomic: www6.atomicorp.com
  * base: centos.cu.be
@@ -882,7 +768,7 @@ Loading mirror speeds from cached hostfile
  * updates: centos.cu.be
 Package haveged-1.9.1-2.el7.art.x86_64 already installed and latest version
 Nothing to do
-[root@localhost ~]#
+[root@localhost ~]# 
 [root@localhost ~]# systemct list-unit-files --type=service | grep haveged
 -bash: systemct: command not found
 [root@localhost ~]# systemctl list-unit-files --type=service | grep haveged
@@ -890,16 +776,15 @@ haveged.service                             disabled
 [root@localhost ~]# systemctl enable haveged
 ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.target.wants/haveged.service'
 [root@localhost ~]# systemctl start haveged
-[root@localhost ~]#
-```</p>
+[root@localhost ~]# 
+</code></pre>
 
 <p>The key creation took a only sec.</p>
 
-<p><code>
-[root@localhost ~]# openvasmd --create-credentials-encryption-key
+<pre><code>[root@localhost ~]# openvasmd --create-credentials-encryption-key
 Key creation succeeded.
-[root@localhost ~]#
-</code></p>
+[root@localhost ~]# 
+</code></pre>
 
 <p>Adding new credentials works like a charm now.</p>
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: jails | stafwag Blog]]></title>
+  <title><![CDATA[Category: Jails, | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/jails/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,537 +14,421 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Using squid to cache FreeBSD packages]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/"/>
-    <updated>2015-06-23T08:43:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages</id>
-    <content type="html"><![CDATA[<h2>PKGNG config</h2>
-
-<p>I manage a few <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a> behind a <a href="http://www.squid-cache.org/">squid proxy</a>. <a href="https://wiki.freebsd.org/pkgng">pkgng</a> is configured to use the proxy:</p>
-
-<p>```
-root@rataplan:/root # cat /etc/pkg/FreeBSD.conf</p>
-
-<h1>$FreeBSD: releng/10.1/etc/pkg/FreeBSD.conf 263938 2014-03-30 15:29:54Z bdrewery $</h1>
-
-<p>#</p>
-
-<h1>To disable this repository, instead of modifying or removing this file,</h1>
-
-<h1>create a /usr/local/etc/pkg/repos/FreeBSD.conf file:</h1>
-
-<p>#</p>
-
-<h1>mkdir -p /usr/local/etc/pkg/repos</h1>
-
-<h1>echo "FreeBSD: { enabled: no }" > /usr/local/etc/pkg/repos/FreeBSD.conf</h1>
-
-<p>#</p>
-
-<p>pkg_env: {</p>
-
-<pre><code>    http_proxy: "http://xxx.xxx.xxx.xxx:3128"
-</code></pre>
-
-<p>}</p>
-
-<p>FreeBSD: {
-  url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest",
-  mirror_type: "srv",
-  signature_type: "fingerprints",
-  fingerprints: "/usr/share/keys/pkg",
-  enabled: yes
-}
-root@rataplan:/root #</p>
-
-<p>```</p>
-
-<h2>SQUID config</h2>
-
-<h3>Recompile</h3>
-
-<p>The squid proxy doesn't cache to the FreeBSD packages. The squid pkgng package  is compiled with
-"LAX_HTTP  Do not enforce strict HTTP compliance" option disabled. which doesn't allow you to override the cache headers sent by the remote site.</p>
-
-<p>In order to cache the FreeBSD packages we need to recompile squid with "LAX_HTTPD" enabled.</p>
-
-<h4>Updating the ports</h4>
-
-<h5>Physical system</h5>
-
-<p>If you use a physical FreeBSD system as your proxy run the "portsnap fetch" command.</p>
-
-<p><code>
-[root@rataplan ~]# portsnap fetch
-Looking up portsnap.FreeBSD.org mirrors... 7 mirrors found.
-Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
-Fetching snapshot metadata... done.
-Updating from Mon Jun 22 14:30:21 CEST 2015 to Tue Jun 23 08:39:41 CEST 2015.
-Fetching 4 metadata patches... done.
-Applying metadata patches... done.
-Fetching 0 metadata files... done.
-Fetching 417 patches.
-(417/417) 100.00%  done.                                       
-done.
-Applying patches...
-done.
-Fetching 3 new ports or files... done.
-[root@rataplan ~]#
-</code></p>
-
-<p>```
-[root@rataplan ~]# portsnap extract
-/usr/ports/.arcconfig
-/usr/ports/.gitignore
-/usr/ports/CHANGES
-/usr/ports/CONTRIBUTING.md
-/usr/ports/COPYRIGHT
-/usr/ports/GIDs</p>
-
-<p><snip></p>
-
-<p>/usr/ports/x11/zenity/
-Building new INDEX files... done.
-[root@rataplan ~]#</p>
-
-<p>```</p>
-
-<h5>Jail</h5>
-
-<p>If you use an <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> as your proxy run the "ezjail-admin update -P" command.</p>
-
-<h4>Build</h4>
-
-<h5>Stop SQUID</h5>
-
-<p><code>
-root@stafproxy:/usr/ports/www/squid # /usr/local/etc/rc.d/squid stop
-squid not running? (check /var/run/squid/squid.pid).
-root@stafproxy:/usr/ports/www/squid #
-</code></p>
-
-<h5>Make config</h5>
-
-<p><code>
-root@stafproxy:/usr/ports/www/squid # cd
-root@stafproxy:/root # cd /usr/ports/www/squid
-root@stafproxy:/usr/ports/www/squid # make config
-</code></p>
-
-<p>```</p>
-
-<pre><code>   ┌─────────────────────────────── squid-3.5.5 ──────────────────────────────────┐
-   │ ┌──────────────────────────────────────────────────────────────────────────┐ │  
-   │ │ [ ] ARP_ACL         ARP/MAC/EUI based authentification                   │ │  
-   │ │ [ ] AUTH_LDAP       Install LDAP authentication helpers                  │ │  
-   │ │ [x] AUTH_NIS        Install NIS/YP authentication helpers                │ │  
-   │ │ [ ] AUTH_SASL       Install SASL authentication helpers                  │ │  
-   │ │ [ ] AUTH_SMB        Install SMB auth. helpers (req. Samba)               │ │  
-   │ │ [ ] AUTH_SQL        Install SQL based auth (uses MySQL)                  │ │  
-   │ │ [ ] CACHE_DIGESTS   Use cache digests                                    │ │  
-   │ │ [ ] DEBUG           Build with extended debugging support                │ │  
-   │ │ [ ] DELAY_POOLS     Delay pools (bandwidth limiting)                     │ │  
-   │ │ [x] DOCS            Build and/or install documentation                   │ │  
-   │ │ [ ] ECAP            Loadable content adaptation modules                  │ │  
-   │ │ [ ] ESI             ESI support                                          │ │  
-   │ │ [x] EXAMPLES        Build and/or install examples                        │ │  
-   │ │ [ ] FOLLOW_XFF      Support for the X-Following-For header               │ │  
-   │ │ [x] FS_AUFS         AUFS (threaded-io) support                           │ │  
-   │ │ [x] FS_DISKD        DISKD storage engine controlled by separate service  │ │  
-   │ │ [ ] FS_ROCK         ROCK storage engine                                  │ │  
-   │ │ [x] HTCP            HTCP support                                         │ │  
-   │ │ [ ] ICAP            the ICAP client                                      │ │  
-   │ │ [ ] ICMP            ICMP pinging and network measurement                 │ │  
-   │ │ [x] IDENT           Ident lookups (RFC 931)                              │ │  
-   │ │ [x] IPV6            IPv6 protocol support                                │ │  
-   │ │ [x] KQUEUE          Kqueue(2) support                                    │ │  
-   │ │ [ ] LARGEFILE       Support large (&gt;2GB) cache and log files             │ │  
-   │ │ [x] LAX_HTTP        Do not enforce strict HTTP compliance                │ │  
-   │ │ [ ] NETTLE          Nettle MD5 algorithm support                         │ │  
-   │ │ [x] SNMP            SNMP support                                         │ │  
-   │ │ [ ] SSL             SSL gatewaying support                               │ │  
-   │ │ [ ] SSL_CRTD        Use ssl_crtd to handle SSL cert requests             │ │  
-   │ │ [ ] STACKTRACES     Enable automatic backtraces on fatal errors          │ │  
-   │ │ [ ] TP_IPF          Transparent proxying with IPFilter                   │ │  
-   │ │ [ ] TP_IPFW         Transparent proxying with IPFW                       │ │  
-   │ │ [ ] TP_PF           Transparent proxying with PF                         │ │  
-   │ │ [ ] VIA_DB          Forward/Via database                                 │ │  
-   │ └─────v(+)─────────────────────────────────────────────────────────82%─────┘ │  
-   ├──────────────────────────────────────────────────────────────────────────────┤  
-   │                       &lt;  OK  &gt;            &lt;Cancel&gt;                           │  
-   └──────────────────────────────────────────────────────────────────────────────┘  
-</code></pre>
-
-<p>```</p>
-
-<h5>Make install</h5>
-
-<p>```
-root@stafproxy:/usr/ports/www/squid # make
-===>  License GPLv2 accepted by the user
-===>  Found saved configuration for squid-3.5.5
-===>   squid-3.5.5 depends on file: /usr/local/sbin/pkg - found
-===> Fetching all distfiles required by squid-3.5.5 for building
-===>  Extracting for squid-3.5.5
-=> SHA256 Checksum OK for squid3.5/squid-3.5.5.tar.xz.</p>
-
-<p><snip></p>
-
-<p>Making install in test-suite
-install  -m 0644 /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5/helpers/basic_auth/DB/passwd.sql  /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/examples/squid
-(cd /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5 &amp;&amp; install  -m 0644 QUICKSTART README RELEASENOTES.html doc/debug-sections.txt /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/doc/squid)
-/bin/mkdir -p /var/ports/basejail/usr/ports/www/squid/work/stage/var/squid/logs
-/bin/rmdir /var/ports/basejail/usr/ports/www/squid/work/stage/var/run/squid
-====> Compressing man pages (compress-man)
-===> Staging rc.d startup script(s)
-```</p>
-
-<p>```
-root@stafproxy:/usr/ports/www/squid # make install clean
-===>  Installing for squid-3.5.5                                                                                                                                                                                                           <br/>
-===>   squid-3.5.5 depends on file: /usr/local/bin/perl5.20.2 - found                                                                                                                                                                      <br/>
-===>  Checking if squid already installed                                                                                                                                                                                                  <br/>
-===>   Registering installation for squid-3.5.5</p>
-
-<p><snip></p>
-
-<p>===> SECURITY REPORT:</p>
-
-<pre><code>  This port has installed the following files which may act as network
-  servers and may therefore pose a remote security risk to the system.
-</code></pre>
-
-<p>/usr/local/libexec/squid/basic_radius_auth
-/usr/local/sbin/squid</p>
-
-<pre><code>  This port has installed the following startup scripts which may cause
-  these network services to be started at boot time.
-</code></pre>
-
-<p>/usr/local/etc/rc.d/squid</p>
-
-<pre><code>  If there are vulnerabilities in these programs there may be a security
-  risk to the system. FreeBSD makes no guarantee about the security of
-  ports included in the Ports Collection. Please type 'make deinstall'
-  to deinstall the port if this is a concern.
-
-  For more information, and contact details about the security
-  status of this software, see the following webpage: 
-</code></pre>
-
-<p>http://www.squid-cache.org/</p>
-
-<p>```</p>
-
-<h5>pkg lock</h5>
-
-<p>Lock the squid package to prevent the upgrade from pkgng tree.</p>
-
-<p>```
-root@stafproxy:/usr/ports/www/squid # pkg lock squid
-squid-3.5.5: lock this package? [y/N]: y
-Locking squid-3.5.5
-root@stafproxy:/usr/ports/www/squid #</p>
-
-<p>```</p>
-
-<p>View the locked pkgng packages</p>
-
-<p><code>
-root@stafproxy:/usr/ports/www/squid # pkg lock -l
-Currently locked packages:
-squid-3.5.5
-root@stafproxy:/usr/ports/www/squid #
-</code></p>
-
-<h3>SQUID config</h3>
-
-<h4>Update squid.conf</h4>
-
-<p>Edit the squid config:</p>
-
-<p>```
-root@stafproxy:/usr/ports/www/squid # cd /usr/local/etc/squid/
-root@stafproxy:/usr/local/etc/squid # vi squid.conf</p>
-
-<p>```</p>
-
-<p>Add a "refresh_pattern" for "pkgmir.pkg.freebsd.org":</p>
-
-<p><code>
-refresh_pattern ^ftp:           1440    20%     10080
-refresh_pattern ^http://pkgmir.pkg.freebsd.org/.*\.txz          1440    100%    10080 ignore-private ignore-must-revalidate override-expire ignore-no-cache
-refresh_pattern ^gopher:        1440    0%      1440
-refresh_pattern -i (/cgi-bin/|\?) 0     0%      0
-refresh_pattern .               0       20%     4320
-</code></p>
-
-<h4>Start squid</h4>
-
-<p>```
-root@stafproxy:/usr/local/etc/squid # ../rc.d/squid start
-Starting squid.
-root@stafproxy:/usr/local/etc/squid #</p>
-
-<p>```</p>
-
-<h4>rc.conf</h4>
-
-<p>Make sure that the system is configured to start squid during the system startup.</p>
-
-<p>```
-root@stafproxy:/usr/local/etc/squid # cat /etc/rc.conf
-#</p>
-
-<h1>squid</h1>
-
-<p>#</p>
-
-<p>squid_enable="YES"</p>
-
-<p>root@stafproxy:/usr/local/etc/squid #
-```</p>
-
-<p>SQUID should cache the pkgng downloads now.</p>
-
-<p><em>Have fun</em></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Freebsd 9.1 jails with Qjail]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
-    <updated>2013-02-16T12:35:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
-    <content type="html"><![CDATA[<hr />
-
-
-<p><strong></p>
-
-<p>I'm using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+    <title type="html"><![CDATA[Migrating From Qjail to Ezjail]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/"/>
+    <updated>2013-04-10T12:36:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail</id>
+    <content type="html"><![CDATA[<p>I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I&rsquo;m migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
-Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
+Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html"><a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a></a>.</p>
 
-<p></strong></p>
+<h3>Backup</h3>
 
-<hr />
+<h4>Move the existing jails to old_jails</h4>
 
+<p>Move the existing jails zfs filesystem aside just in case we need to migrate back</p>
 
-<p>I'm adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
+<pre><code>root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails zroot/usr/jails
+root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails/staffs zroot/usr/jails/staffs
+root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails/stafmail zroot/usr/jails/stafmail
+root@rataplan:/usr/ports/sysutils/ezjail # zfs set mountpoint=/usr/old_jails/stafdb zroot/usr/jails/stafdb
+root@rataplan:/usr/ports/sysutils/ezjail # zfs rename zroot/usr/jails zroot/usr/old_jails
+</code></pre>
 
-<p>I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
+<h4>Stop the running jails</h4>
 
-<p>On FreeBSD there are <a href="http://en.wikipedia.org/wiki/FreeBSD_jail">jails</a> to isolate services and improve security.</p>
+<p>Stop the jails that are still running.</p>
 
-<p>At first I didn't like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.</p>
-
-<p>Lucky <a href="http://sourceforge.net/projects/qjail/">Qjail</a> makes the deployment a lot easier.</p>
-
-<h3>Installing Qjail</h3>
-
-<p>```
-[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
-[root@rataplan /usr/ports/sysutils/qjail]# make install clean
-===>  License BSD accepted by the user
-=> qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
-=> Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
-qjail-1.7.tar.bz2                             100% of   39 kB  139 kBps
-===>  Extracting for qjail-1.7
-=> SHA256 Checksum OK for qjail-1.7.tar.bz2.
-===>  Patching for qjail-1.7
-===>  Configuring for qjail-1.7
-===>  Installing for qjail-1.7
-===>   Generating temporary packing list
-===>  Checking if sysutils/qjail already installed
-#
-Use the qjail utility to deploy small or large numbers of jails quickly.</p>
-
-<p>First issue "rehash" command to enable the qjail command (if using csh).
-Then issue "man qjail-intro" to read the qjail introduction.
-After reading that do "man qjail" for the usage details.
-#
-===>   Compressing manual pages for qjail-1.7
-===>   Registering installation for qjail-1.7
-===>  Cleaning for qjail-1.7
-[root@rataplan /usr/ports/sysutils/qjail]#
-```</p>
-
-<h3>Create /usr/jails</h3>
-
-<p><code>
-[root@rataplan ~]# zfs create zroot/usr/jails
-</code></p>
-
-<h3>mount the freebsd 9.1 dvd</h3>
-
-<p><code>
-root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/
-</code></p>
-
-<h3>qjail install</h3>
-
-<p>```
-root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/</p>
-
-<p>The base RELEASE distribution files are populating the fulljail.
-Est LT 1 minute elapse time for this to complete.</p>
-
-<p>The lib32 RELEASE distribution files are populating the fulljail.
-Est LT 1 minute elapse time for this to complete.</p>
-
-<p>Basejail &amp; newjail are being populated.
-Est LT 1 minute elapse time for this to complete.</p>
-
-<p>Successfully installed qjail system.</p>
-
-<p>root@rataplan:/root #</p>
-
-<p>```</p>
-
-<h3>Creating a zfs filesystem for the jail</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
-root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
-
-<h3>Creating a jail with Qjail</h3>
-
-<p><code>
-[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
-Successfully created  stafdb
-[root@rataplan ~]#
-</code></p>
-
-<h3>Start the jail</h3>
-
-<p><code>
-root@rataplan:/usr/local/etc # qjail start stafdb
-Jail started successfully. stafdb
-root@rataplan:/usr/local/etc #
-</code></p>
-
-<h3>List the jails</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail list</p>
-
-<p>STA JID  NIC IP              Jailname</p>
-
-<hr />
-
-<p>DR  4    re0 192.168.1.42    stafmail
-DR  3    re0 192.168.1.41    staffs
-DR  6    re0 192.168.1.43    stafdb</p>
-
-<p>root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
-
-<h3>console access</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail console stafdb
-Last login: Sat Feb 23 16:19:32 on pts/0
-FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013</p>
-
-<p>Welcome to your FreeBSD jail
-stafdb /root >
-```</p>
-
-<h3>install the freebsd ports to the jail</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail update -p stafdb</p>
-
-<p>Sat Feb 23 16:21:55 CET 2013</p>
-
-<p>The elapse download time of the portsnap compressed ports file
-is estimated at 25 minutes for the initial fetch.
-Subsequent fetches will generally take less than a minute.</p>
-
-<p>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
-Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
-Fetching snapshot metadata... done.
-Updating from Sat Feb 16 11:47:49 CET 2013 to Sat Feb 23 15:58:32 CET 2013.
-Fetching 4 metadata patches... done.
-Applying metadata patches... done.
-Fetching 0 metadata files... done.
-Fetching 524 patches.....10....20....30....40....50....60....70....80....90....100....110....120....130....140....150....160....170....180....190....200....210....220....230....240....250....260....270....280....290....300....310....320....330....340....350....360....370....380....390....400....410....420....430....440....450....460....470....480....490....500....510....520.. done.
-Applying patches... done.
-Fetching 42 new ports or files... done.
-Portsnap fetch completed successfully</p>
-
-<p>Sat Feb 23 16:22:40 CET 2013</p>
-
-<p>The ports basejail/usr/ports directory tree is being updated.
-The elapse time for this to complete is estimated at 1 minute
-to 10 minutes depending on how current your ports system is.</p>
-
-<p>Portsnap update completed successfully
-root@rataplan:/usr/local/etc #
-```</p>
-
-<h3>update the base jail</h3>
-
-<p>```
-root@rataplan:/usr/local/etc # qjail stop
+<pre><code>root@rataplan:/usr/local/etc # qjail stop
 Jail stopped successfully. stafmail
 Jail stopped successfully. staffs
 Jail already stopped.      stafdb
-root@rataplan:/usr/local/etc #</p>
+</code></pre>
 
-<p>root@rataplan:/usr/local/etc # qjail update -b</p>
+<h3><em>ezjail</em> setup</h3>
 
-<p>Deletion of basejail binaries successful for bin.
-Deletion of basejail binaries successful for lib.
-Deletion of basejail binaries successful for libexec.
-Deletion of basejail binaries successful for sbin.
-Deletion of basejail binaries successful for usr/bin.
-Deletion of basejail binaries successful for usr/include.
-Deletion of basejail binaries successful for usr/lib.
-Deletion of basejail binaries successful for usr/libdata.
-Deletion of basejail binaries successful for usr/libexec.
-Deletion of basejail binaries successful for usr/sbin.
-Deletion of basejail binaries successful for usr/lib32.</p>
+<h4>Installing ezjail</h4>
 
-<p>Copied host's binaries to basejail successfully for bin.
-Copied host's binaries to basejail successfully for lib.
-Copied host's binaries to basejail successfully for libexec.
-Copied host's binaries to basejail successfully for sbin.
-Copied host's binaries to basejail successfully for usr/bin.
-Copied host's binaries to basejail successfully for usr/include.
-Copied host's binaries to basejail successfully for usr/lib.
-Copied host's binaries to basejail successfully for usr/libdata.
-Copied host's binaries to basejail successfully for usr/libexec.
-Copied host's binaries to basejail successfully for usr/sbin.
-Copied host's binaries to basejail successfully for usr/lib32.</p>
+<p>The installation of <em>ezjail</em> is pretty straightforward&hellip;</p>
 
-<p>Host to basejail binaries update completed successfully.
-root@rataplan:/usr/local/etc #</p>
+<pre><code>root@rataplan:/root # cd /usr/ports/sysutils/ezjail/
+root@rataplan:/usr/ports/sysutils/ezjail # make install clean
+===&gt;  Installing for ezjail-3.2.3
+===&gt;   Generating temporary packing list
+===&gt;  Checking if sysutils/ezjail already installed
+mkdir -p /usr/local/etc/ezjail/ /usr/local/man/man1/ /usr/local/man/man5/ /usr/local/man/man7 /usr/local/man/man8 /usr/local/etc/rc.d/ /usr/local/bin/ /usr/local/share/examples/ezjail /usr/local/share/zsh/site-functions
+cp -p ezjail.conf.sample /usr/local/etc/
+cp -R -p examples/example /usr/local/share/examples/ezjail/
+cp -R -p examples/nullmailer-example /usr/local/share/examples/ezjail/
+cp -R -p share/zsh/site-functions/ /usr/local/share/zsh/site-functions/
+sed s:EZJAIL_PREFIX:/usr/local: ezjail.sh &gt; /usr/local/etc/rc.d/ezjail
+sed s:EZJAIL_PREFIX:/usr/local: ezjail-admin &gt; /usr/local/bin/ezjail-admin
+sed s:EZJAIL_PREFIX:/usr/local: man8/ezjail-admin.8 &gt; /usr/local/man/man8/ezjail-admin.8
+sed s:EZJAIL_PREFIX:/usr/local: man5/ezjail.conf.5 &gt; /usr/local/man/man5/ezjail.conf.5
+sed s:EZJAIL_PREFIX:/usr/local: man7/ezjail.7 &gt; /usr/local/man/man7/ezjail.7
+chmod 755 /usr/local/etc/rc.d/ezjail /usr/local/bin/ezjail-admin
+chown -R root:wheel /usr/local/man/man8/ezjail-admin.8 /usr/local/man/man5/ezjail.conf.5 /usr/local/man/man7/ezjail.7 /usr/local/share/examples/ezjail/
+chmod 0440 /usr/local/share/examples/ezjail/example/usr/local/etc/sudoers
+[ -f /usr/local/etc/ezjail.conf ] ||  /bin/cp -p /usr/local/etc/ezjail.conf.sample  /usr/local/etc/ezjail.conf
+===&gt;   Compressing manual pages for ezjail-3.2.3
+===&gt;   Registering installation for ezjail-3.2.3
+===&gt;  Cleaning for ezjail-3.2.3
+root@rataplan:/usr/ports/sysutils/ezjail # 
+</code></pre>
 
-<p>root@rataplan:/usr/local/etc # qjail start
-Jail started successfully. stafmail
-Jail started successfully. staffs
-Jail started successfully. stafdb
-root@rataplan:/usr/local/etc #</p>
+<h4>Create /usr/jails</h4>
 
-<p>```</p>
+<pre><code>root@rataplan:/root # zfs create zroot/usr/jails
+root@rataplan:/root # 
+</code></pre>
 
-<h3>update /etc/rc.conf</h3>
+<h4>Copy the sample config</h4>
 
-<p>```
-#</p>
+<pre><code>root@rataplan:/root # cd /usr/local/etc/
+root@rataplan:/usr/local/etc # cp ezjail.conf.sample ezjail.conf
+</code></pre>
 
-<h1>qjails</h1>
+<h4>Update ezjail.conf to use zfs</h4>
 
-<p>#</p>
+<p>This will create a zfs filesystem for each jail automatically. Cool ;-)</p>
 
-<p>qjail_enable="YES"</p>
+<pre><code># Setting this to YES will start to manage the basejail and newjail in ZFS
+ezjail_use_zfs="YES"
+# Setting this to YES will manage ALL new jails in their own zfs
+ezjail_use_zfs_for_jails="YES"
+# The name of the ZFS ezjail should create jails on, it will be mounted at the ezjail_jaildir
+ezjail_jailzfs="zroot/usr/jails"
+</code></pre>
 
-<p>```</p>
+<h4>Installing the base jail without a make world</h4>
+
+<p>Most ezjail howto&rsquo;s that I found assume that you already ran a &ldquo;make world&rdquo;. I want to setup the base jail without a &ldquo;make world&rdquo; because this takes too much time on my system.
+Lucky you can install the basejail without a &ldquo;make world&rdquo;.</p>
+
+<pre><code>root@rataplan:/usr/local/etc # ezjail-admin install
+Trying 193.162.146.4:21 ...
+Connected to ftp.freebsd.org.
+220 beastie.tdk.net FTP server (Version 6.00LS) ready.
+331 Guest login ok, send your email address as password.
+230 Guest login ok, access restrictions apply.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+200 Type set to I.
+250 CWD command successful.
+local: base.txz remote: base.txz
+229 Entering Extended Passive Mode (|||65080|)
+150 Opening BINARY mode data connection for 'base.txz' (59854248 bytes).
+100% |***********************************************************************************************************************************| 58451 KiB  451.20 KiB/s    00:00 ETA
+226 Transfer complete.
+59854248 bytes received in 02:09 (451.20 KiB/s)
+221 Goodbye.
+Trying 193.162.146.4:21 ...
+Connected to ftp.freebsd.org.
+220 beastie.tdk.net FTP server (Version 6.00LS) ready.
+331 Guest login ok, send your email address as password.
+230 Guest login ok, access restrictions apply.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+200 Type set to I.
+250 CWD command successful.
+local: lib32.txz remote: lib32.txz
+229 Entering Extended Passive Mode (|||55936|)
+150 Opening BINARY mode data connection for 'lib32.txz' (9743636 bytes).
+ 37% |************************************************                                                                                   |  3576 KiB  447.04 KiB/s    00:13 ETA
+</code></pre>
+
+<p>&lt;snip&gt;
+<code>
+/usr/jails/basejail/usr/lib32/libbsnmp.so.6
+/usr/jails/basejail/usr/lib32/libcam.a
+/usr/jails/basejail/usr/lib32/libsupc++.a
+/usr/jails/basejail/usr/lib32/libarchive.a
+/usr/jails/basejail/usr/lib32/libpcap.so.8
+/usr/jails/basejail/usr/lib32/libbsdxml.so.4
+108748 blocks
+Note: a non-standard /etc/make.conf was copied to the template jail in order to get the ports collection running inside jails.
+root@rataplan:/usr/local/etc #
+</code>
+<code>
+root@rataplan:/usr/local/etc # cd /usr/jails/
+root@rataplan:/usr/jails # ls
+basejail    flavours    newjail
+root@rataplan:/usr/jails #
+</code></p>
+
+<h4>Add the jails ip addresses to the system.</h4>
+
+<p>This is different from qjail, by ezjail it&rsquo;s required to setup the ip addresses for each jail.</p>
+
+<p>Open /etc/rc.conf and create interface aliases for each jail.</p>
+
+<pre><code>ifconfig_re0="inet 192.168.1.40/24"
+ifconfig_re0_alias0="inet 192.168.1.41/32"
+ifconfig_re0_alias1="inet 192.168.1.42/32"
+ifconfig_re0_alias2="inet 192.168.1.43/32"
+ifconfig_re0_alias3="inet 192.168.1.44/32"
+</code></pre>
+
+<p>And create them by running netif restart</p>
+
+<pre><code>root@rataplan:/etc/rc.d # ./netif restart
+Stopping Network: lo0 re0.
+lo0: flags=8048&lt;LOOPBACK,RUNNING,MULTICAST&gt; metric 0 mtu 16384
+    options=600003&lt;RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6&gt;
+    nd6 options=21&lt;PERFORMNUD,AUTO_LINKLOCAL&gt;
+re0: flags=8802&lt;BROADCAST,SIMPLEX,MULTICAST&gt; metric 0 mtu 1500
+    options=8209b&lt;RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM,WOL_MAGIC,LINKSTATE&gt;
+    ether 30:85:a9:40:58:ba
+    inet6 fe80::3285:a9ff:fe40:58ba%re0 prefixlen 64 scopeid 0x6 
+    nd6 options=29&lt;PERFORMNUD,IFDISABLED,AUTO_LINKLOCAL&gt;
+    media: Ethernet autoselect (1000baseT &lt;full-duplex&gt;)
+    status: active
+Starting Network: lo0 re0.
+lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; metric 0 mtu 16384
+    options=600003&lt;RXCSUM,TXCSUM,RXCSUM_IPV6,TXCSUM_IPV6&gt;
+    inet6 ::1 prefixlen 128 
+    inet6 fe80::1%lo0 prefixlen 64 scopeid 0x9 
+    inet 127.0.0.1 netmask 0xff000000 
+    nd6 options=21&lt;PERFORMNUD,AUTO_LINKLOCAL&gt;
+re0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; metric 0 mtu 1500
+    options=8209b&lt;RXCSUM,TXCSUM,VLAN_MTU,VLAN_HWTAGGING,VLAN_HWCSUM,WOL_MAGIC,LINKSTATE&gt;
+    ether 30:85:a9:40:58:ba
+    inet6 fe80::3285:a9ff:fe40:58ba%re0 prefixlen 64 scopeid 0x6 
+    inet 192.168.1.40 netmask 0xffffff00 broadcast 192.168.1.255
+    inet 192.168.1.41 netmask 0xffffffff broadcast 192.168.1.41
+    inet 192.168.1.42 netmask 0xffffffff broadcast 192.168.1.42
+    inet 192.168.1.43 netmask 0xffffffff broadcast 192.168.1.43
+    inet 192.168.1.44 netmask 0xffffffff broadcast 192.168.1.44
+    nd6 options=29&lt;PERFORMNUD,IFDISABLED,AUTO_LINKLOCAL&gt;
+    media: Ethernet autoselect (none)
+    status: no carrier
+root@rataplan:/etc/rc.d # 
+</code></pre>
+
+<h4>Creating the first jail</h4>
+
+<pre><code>root@rataplan:/etc/rc.d # ezjail-admin create stafpuppet 192.168.1.44
+Warning: Some services already seem to be listening on IP 192.168.1.44
+  This may cause some confusion, here they are:
+root     ntpd       29764 31 udp4   192.168.1.44:123      *:*
+Warning: Some services already seem to be listening on all IP, (including 192.168.1.44)
+  This may cause some confusion, here they are:
+root     ntpd       29764 20 udp4   *:123                 *:*
+root     ntpd       29764 21 udp6   *:123                 *:*
+root     rpc.statd  1161  4  udp6   *:1021                *:*
+root     rpc.statd  1161  5  tcp6   *:1021                *:*
+root     rpc.statd  1161  6  udp4   *:1021                *:*
+root     rpc.statd  1161  7  tcp4   *:1021                *:*
+root     nfsd       1157  5  tcp4   *:2049                *:*
+root     nfsd       1157  6  tcp6   *:2049                *:*
+root     mountd     1151  6  udp6   *:942                 *:*
+root     mountd     1151  7  tcp6   *:942                 *:*
+root     mountd     1151  8  udp4   *:942                 *:*
+root     mountd     1151  9  tcp4   *:942                 *:*
+root     rpcbind    1120  6  udp6   *:111                 *:*
+root     rpcbind    1120  7  udp6   *:960                 *:*
+root     rpcbind    1120  8  tcp6   *:111                 *:*
+root     rpcbind    1120  9  udp4   *:111                 *:*
+root     rpcbind    1120  10 udp4   *:777                 *:*
+root     rpcbind    1120  11 tcp4   *:111                 *:*
+root     syslogd    1099  6  udp6   *:514                 *:*
+root     syslogd    1099  7  udp4   *:514                 *:*
+root@rataplan:/etc/rc.d # 
+</code></pre>
+
+<h4>Starting the jail</h4>
+
+<pre><code>root@rataplan:/etc/rc.d # /usr/local/etc/rc.d/ezjail 
+Usage: /usr/local/etc/rc.d/ezjail [fast|force|one|quiet](start|stop|restart|rcvar|startcrypto|stopcrypto)
+root@rataplan:/etc/rc.d # /usr/local/etc/rc.d/ezjail start
+ ezjailConfiguring jails:.
+Starting jails: stafpuppet.
+</code></pre>
+
+<h4>Listing the jail</h4>
+
+<pre><code>root@rataplan:/etc/rc.d # jls
+   JID  IP Address      Hostname                      Path
+     3  192.168.1.44    stafpuppet                    /usr/jails/stafpuppet
+root@rataplan:/etc/rc.d # ping 192.168.1.44
+PING 192.168.1.44 (192.168.1.44): 56 data bytes
+64 bytes from 192.168.1.44: icmp_seq=0 ttl=64 time=0.053 ms
+^C
+--- 192.168.1.44 ping statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 0.053/0.053/0.053/0.000 ms
+root@rataplan:/etc/rc.d # 
+</code></pre>
+
+<h4>Console access</h4>
+
+<pre><code>root@rataplan:/etc/rc.d # jexec 3 csh
+root@stafpuppet:/ # 
+</code></pre>
+
+<h4>Install the freebsd ports into the base jail</h4>
+
+<pre><code>[root@rataplan ~]# ezjail-admin update -P   
+Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+Fetching snapshot metadata... done.
+Updating from Wed Apr 10 14:55:36 CEST 2013 to Thu Apr 11 14:00:20 CEST 2013.
+Fetching 3 metadata patches.. done.
+Applying metadata patches... done.
+Fetching 0 metadata files... done.
+Fetching 17 patches.....10... done.
+Applying patches... done.
+Fetching 0 new ports or files... done.
+/usr/jails/basejail/usr/ports/CHANGES
+/usr/jails/basejail/usr/ports/COPYRIGHT
+/usr/jails/basejail/usr/ports/GIDs
+/usr/jails/basejail/usr/ports/KNOBS
+/usr/jails/basejail/usr/ports/Keywords/info.yaml
+/usr/jails/basejail/usr/ports/LEGAL
+/usr/jails/basejail/usr/ports/MOVED
+/usr/jails/basejail/usr/ports/Makefile
+/usr/jails/basejail/usr/ports/Mk/Uses/
+/usr/jails/basejail/usr/ports/Mk/bsd.apache.mk
+/usr/jails/basejail/usr/ports/Mk/bsd.autotools.mk
+</code></pre>
+
+<p>&lt;snip&gt;
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/usr/jails/basejail/usr/ports/x11/xzoom/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yad/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yakuake-kde4/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yakuake/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yalias/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yeahconsole/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/yelp/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/zenity/
+</span><span class='line'>Building new INDEX files&hellip; done.
+</span><span class='line'>[root@rataplan ~]#&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;
+</span><span class='line'>Verify
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;[root@rataplan ~]# jls
+</span><span class='line'>   JID  IP Address      Hostname                      Path
+</span><span class='line'>     3  192.168.1.44    stafpuppet                    /usr/jails/stafpuppet
+</span><span class='line'>[root@rataplan ~]# jexec 3 csh
+</span><span class='line'>root@stafpuppet:/ # cd /usr/ports/
+</span><span class='line'>root@stafpuppet:/usr/ports # ls
+</span><span class='line'>.portsnap.INDEX KNOBS       Templates   astro       converters  finance     hungarian   math        news        science     www     x11-themes
+</span><span class='line'>CHANGES     Keywords    Tools       audio       databases   french      irc     misc        palm        security    x11     x11-toolkits
+</span><span class='line'>COPYRIGHT   LEGAL       UIDs        benchmarks  deskutils   ftp     japanese    multimedia  polish      shells      x11-clocks  x11-wm
+</span><span class='line'>GIDs        MOVED       UPDATING    biology     devel       games       java        net     ports-mgmt  sysutils    x11-drivers
+</span><span class='line'>INDEX-7     Makefile    accessibility   cad     dns     german      korean      net-im      portuguese  textproc    x11-fm
+</span><span class='line'>INDEX-8     Mk      arabic      chinese     editors     graphics    lang        net-mgmt    print       ukrainian   x11-fonts
+</span><span class='line'>INDEX-9     README      archivers   comms       emulators   hebrew      mail        net-p2p     russian     vietnamese  x11-servers
+</span><span class='line'>root@stafpuppet:/usr/ports #&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;pre&gt;&lt;code&gt;
+</span><span class='line'>#### Update the base jail
+</span><span class='line'>&lt;/code&gt;&lt;/pre&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;[root@rataplan /usr]# ezjail-admin update -u
+</span><span class='line'>Looking up update.FreeBSD.org mirrors&hellip; 3 mirrors found.
+</span><span class='line'>Fetching metadata signature for 9.1-RELEASE from update4.freebsd.org&hellip; done.
+</span><span class='line'>Fetching metadata index&hellip; done.
+</span><span class='line'>Inspecting system&hellip;</span></code></pre></td></tr></table></div></figure></p>
+
+<h4>update /etc/rc.conf</h4>
+
+<pre><code>#
+# ezjails
+#
+
+ezjail_enable="YES"
+</code></pre>
+
+<h3>Migrate the jails to <em>ezjail</em></h3>
+
+<h4>Recreate the jail</h4>
+
+<pre><code>[root@rataplan /etc]# ezjail-admin create staffs 192.168.1.41
+Warning: Some services already seem to be listening on IP 192.168.1.41
+  This may cause some confusion, here they are:
+root     ntpd       29764 24 udp4   192.168.1.41:123      *:*
+Warning: Some services already seem to be listening on all IP, (including 192.168.1.41)
+  This may cause some confusion, here they are:
+root     ntpd       29764 20 udp4   *:123                 *:*
+root     ntpd       29764 21 udp6   *:123                 *:*
+root     rpc.statd  1161  4  udp6   *:1021                *:*
+root     rpc.statd  1161  5  tcp6   *:1021                *:*
+root     rpc.statd  1161  6  udp4   *:1021                *:*
+root     rpc.statd  1161  7  tcp4   *:1021                *:*
+root     nfsd       1157  5  tcp4   *:2049                *:*
+root     nfsd       1157  6  tcp6   *:2049                *:*
+root     mountd     1151  6  udp6   *:942                 *:*
+root     mountd     1151  7  tcp6   *:942                 *:*
+root     mountd     1151  8  udp4   *:942                 *:*
+root     mountd     1151  9  tcp4   *:942                 *:*
+root     rpcbind    1120  6  udp6   *:111                 *:*
+root     rpcbind    1120  7  udp6   *:960                 *:*
+root     rpcbind    1120  8  tcp6   *:111                 *:*
+root     rpcbind    1120  9  udp4   *:111                 *:*
+root     rpcbind    1120  10 udp4   *:777                 *:*
+root     rpcbind    1120  11 tcp4   *:111                 *:*
+root     syslogd    1099  6  udp6   *:514                 *:*
+root     syslogd    1099  7  udp4   *:514                 *:*
+[root@rataplan /etc]# 
+</code></pre>
+
+<h4>Clone the zfs filesystem</h4>
+
+<pre><code>[root@rataplan /etc]# zfs destroy zroot/usr/jails/staffs
+[root@rataplan /etc]# zfs snapshot zroot/usr/old_jails/staffs@org
+[root@rataplan /etc]# zfs clone zroot/usr/old_jails/staffs@org zroot/usr/jails/staffs
+</code></pre>
+
+<h4>Start the jail</h4>
+
+<pre><code>[root@rataplan /etc]# /usr/local/etc/rc.d/ezjail start staffs
+Configuring jails:.
+Starting jails: staffs.
+[root@rataplan /etc]# 
+</code></pre>
 ]]></content>
   </entry>
   

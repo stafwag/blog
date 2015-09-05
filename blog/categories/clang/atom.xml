@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: clang | stafwag Blog]]></title>
+  <title><![CDATA[Category: Clang | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/clang/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,12 +14,12 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Lookat 1.4.3 released]]></title>
+    <title type="html"><![CDATA[Lookat 1.4.3 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
     <updated>2013-08-18T20:07:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/lookat_143.png" width="360" height="217" title="&#34;lookat&#34;" alt="&#34;lookat&#34;">
-I'm pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/lookat_143.png" width="360" height="217" title="&ldquo;lookat&rdquo;" >
+I&rsquo;m pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
 
 <p>This new stable version will compile correctly with <a href="http://clang.llvm.org/">LLVM/clang</a>.<br /><br /></p>
 
@@ -38,11 +38,11 @@ Have fun...
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 released]]></title>
+    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
-    <content type="html"><![CDATA[<p>Trying to release more often...</p>
+    <content type="html"><![CDATA[<p>Trying to release more often&hellip;</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>
 
@@ -55,10 +55,10 @@ Have fun...
 </ul>
 </blockquote>
 
-<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
 , download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.3rc1.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
 
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 ]]></content>
   </entry>
   

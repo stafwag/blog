@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: haswell | stafwag Blog]]></title>
+  <title><![CDATA[Category: Haswell | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/haswell/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -18,10 +18,10 @@
     <link href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/"/>
     <updated>2013-08-25T12:32:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/i7_internals.jpg" width="500" height="384" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
+    <content type="html"><![CDATA[<p><img class="right" src="/images/i7_internals.jpg" width="500" height="384" title="&ldquo;RIP pluto&rdquo;" >
 Besides the health benefits you save a lot of money.</p>
 
-<p>My "no smoking" <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.</p>
+<p>My &ldquo;no smoking&rdquo; <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.</p>
 
 <p>My upgrade consists;</p>
 
@@ -33,7 +33,7 @@ Besides the health benefits you save a lot of money.</p>
 </ul>
 
 
-<p>My pc is "smoking" fast now :-)</p>
+<p>My pc is &ldquo;smoking&rdquo; fast now :-)</p>
 ]]></content>
   </entry>
   

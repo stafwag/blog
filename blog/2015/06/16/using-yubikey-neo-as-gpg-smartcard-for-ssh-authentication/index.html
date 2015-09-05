@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Using YubiKey Neo as gpg smartcard for SSH authentication - stafwag Blog</title>
+  <title>Using YubiKey Neo as Gpg Smartcard for SSH Authentication - stafwag Blog</title>
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="I purchased a Yubi NEO I&#8217;ll use it to hold my Luks password and for ssh authentication instead of the password authentication that I still use &hellip;">
+  <meta name="description" content="I purchased a Yubi NEO I&rsquo;ll use it to hold my Luks password and for ssh authentication instead of the password authentication that I still use &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,13 +21,14 @@
   <link rel="canonical" href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">
   <link href="/blog/favicon.png" rel="icon">
   <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/blog/javascripts/modernizr-2.0.js"></script>
-  <script src="/blog/javascripts/ender.js"></script>
-  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/blog/atom.xml" rel="alternate" title="stafwag Blog" type="application/atom+xml">
+  <script src="/blog/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
   <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
   <script type="text/javascript">
@@ -47,20 +48,6 @@
 
 <body   >
   <header role="banner"><hgroup>
-
-<div style="position:absolute; right:0px; width:300px;vertical-align:text-top;">
-<script type="text/javascript"><!--
-google_ad_client = "ca-pub-4659298941528586";
-/* blog header small */
-google_ad_slot = "3241922943";
-google_ad_width = 234;
-google_ad_height = 60;
-//-->
-</script>
-<script type="text/javascript"
-src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</div>
   <h1><a href="/blog/">stafwag Blog</a></h1>
   
     <h2>staf wagemakers blog</h2>
@@ -75,7 +62,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:stafwag.github.io/blog" />
+    <input type="hidden" name="sitesearch" value="stafwag.github.io/blog">
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -102,23 +89,16 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 
 
-
-
-
-
-  
-
-
-<time datetime="2015-06-16T10:32:00+02:00" pubdate data-updated="true">Jun 16<span>th</span>, 2015</time>
+<time class='entry-date' datetime='2015-06-16T10:32:00+02:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:32 am</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&#8217;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
+<div class="entry-content"><p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
 
-<p>You&#8217;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
+<p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
 
 <h2>Install the yubiclient and smartcard software</h2>
 
@@ -279,9 +259,9 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Verify that you&#8217;ve access to the yubikey</h3>
+<h3>Verify that you&rsquo;ve access to the yubikey</h3>
 
-<p>&#8220;ykinfo -v&#8221; shows you the version on the yubikey.</p>
+<p>&ldquo;ykinfo -v&rdquo; shows you the version on the yubikey.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -292,7 +272,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you try with the user that you&#8217;ll for the yubi authentication you might get a permission denied:</p>
+<p>If you try with the user that you&rsquo;ll for the yubi authentication you might get a permission denied:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -306,7 +286,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h5>Update rule file</h5>
 
-<p>On a fedora 22 system to udev rules for the yubi key are defined in &#8220;/usr/lib/udev/rules.d/69-yubikey.rules&#8221;</p>
+<p>On a fedora 22 system to udev rules for the yubi key are defined in &ldquo;/usr/lib/udev/rules.d/69-yubikey.rules&rdquo;</p>
 
 <p>It is a good practice to only grant access to user that will use the yubikey.</p>
 
@@ -686,7 +666,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 
 <h5>Run pcsc_scan</h5>
 
-<p>Execute &#8220;pcsc_scan&#8221; to verify that you see the smartcard</p>
+<p>Execute &ldquo;pcsc_scan&rdquo; to verify that you see the smartcard</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -813,7 +793,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 <h3>Reset smartcard PIN codes</h3>
 
-<p>The default user PIN code is &#8220;123456&#8221; the default admin PIN code is &#8220;12345678&#8221;</p>
+<p>The default user PIN code is &ldquo;123456&rdquo; the default admin PIN code is &ldquo;12345678&rdquo;</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -915,7 +895,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 <h3>Generate a new key pair</h3>
 
-<h4>Execute &#8220;gpg &#8211;card-edit&#8221;</h4>
+<h4>Execute &ldquo;gpg &ndash;card-edit&rdquo;</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1132,7 +1112,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 <h3>Extract the public key</h3>
 
-<h4>Execute gpg &#8211;card-status</h4>
+<h4>Execute gpg &ndash;card-status</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1261,7 +1241,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 </span><span class='line'>ssh-rsa qwertyqwertyqwerty cardno:xxxx</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The public key must be the same as extracted with &#8220;gpgkey2ssh&#8221;</p>
+<p>The public key must be the same as extracted with &ldquo;gpgkey2ssh&rdquo;</p>
 
 <h4>Add the public key to the remote system</h4>
 
@@ -1392,20 +1372,20 @@ create a polkit rule for the user that will use the smartcard.</p>
 <h2>Links</h2>
 
 <ul>
-<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></li>
-<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></li>
-<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></li>
-<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></li>
-<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></li>
-<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></li>
-<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></li>
-<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></li>
+<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/"><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></a></li>
+<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO"><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></a></li>
+<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html"><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></a></li>
+<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171"><a href="http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></a></li>
+<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/"><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html"><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></a></li>
+<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/"><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst"><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></a></li>
+<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/"><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card"><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Udev"><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></a></li>
+<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/"><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></a></li>
 </ul>
 
 </div>
@@ -1423,14 +1403,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 
 
-
-
-
-
-  
-
-
-<time datetime="2015-06-16T10:32:00+02:00" pubdate data-updated="true">Jun 16<span>th</span>, 2015</time>
+<time class='entry-date' datetime='2015-06-16T10:32:00+02:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:32 am</span></time>
       
 
 <span class="categories">
@@ -1444,15 +1417,11 @@ create a polkit rule for the user that will use the smartcard.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/" data-via="" data-counturl="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/" data-via="" data-counturl="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
   
-<div id="linkedin_share" style="height: 90px; width: 120px; display: inline-block; text-indent: 0px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border-style: none; float: none; line-height: normal; font-size: 1px; vertical-align: baseline;">
-<script src="http://platform.linkedin.com/in.js" type="text/javascript"></script>
-<script type="IN/Share" data-counter="right"></script>
-</div>
   
     <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
   
@@ -1482,43 +1451,30 @@ create a polkit rule for the user that will use the smartcard.</p>
   
     <section>
   <h1>About Me</h1>
-  <p><a href="http://www.wagemakers.be">http://www.wagemakers.be</a></p>
-  <p><a href="http://www.linkedin.com/in/stafwagemakers">LinkedIn profile</a></p>
-  <p><a href="https://google.com/+StafWagemakers">Google Plus profile</a></p>
-<!-- Place this tag where you want the widget to render. -->
-<div class="g-person" data-width="180" data-href="http://google.com/+StafWagemakers" data-showtagline="false" data-showcoverphoto="false" data-rel="author"></div>
-
-<!-- Place this tag after the last widget tag. -->
-<script type="text/javascript">
-  (function() {
-    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-    po.src = 'https://apis.google.com/js/plusone.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-  })();
-</script>
+  <p>A little something about me.</p>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/">lookat 1.4.4rc1 released</a>
+        <a href="/blog/blog/2015/09/05/rataplan-becomes-a-watchdog/">Rataplan Becomes a Watchdog</a>
       </li>
     
       <li class="post">
-        <a href="/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/">Using squid to cache FreeBSD packages</a>
+        <a href="/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/">Lookat 1.4.4rc1 Released</a>
       </li>
     
       <li class="post">
-        <a href="/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">Using YubiKey Neo as gpg smartcard for SSH authentication</a>
+        <a href="/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/">Using Squid to Cache FreeBSD Packages</a>
       </li>
     
       <li class="post">
-        <a href="/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/">Openvas 7: adding credentials failed</a>
+        <a href="/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">Using YubiKey Neo as Gpg Smartcard for SSH Authentication</a>
       </li>
     
       <li class="post">
-        <a href="/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/">Run google chrome inside a fedora docker container over ssh</a>
+        <a href="/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/">Openvas 7: Adding Credentials Failed</a>
       </li>
     
   </ul>
@@ -1533,7 +1489,7 @@ create a polkit rule for the user that will use the smartcard.</p>
   <a href="https://github.com/stafwag">@stafwag</a> on GitHub
   
   <script type="text/javascript">
-    $.domReady(function(){
+    $(document).ready(function(){
         if (!window.jXHR){
             var jxhr = document.createElement('script');
             jxhr.type = 'text/javascript';
@@ -1599,7 +1555,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
       (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     }());
 </script>
@@ -1610,7 +1566,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
+  js = d.createElement(s); js.id = id; js.async = true;
   js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
@@ -1632,7 +1588,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>

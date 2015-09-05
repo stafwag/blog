@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: wd live | stafwag Blog]]></title>
+  <title><![CDATA[Category: Wd Live | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/wd-live/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,24 +14,23 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Convert PGS subtitles]]></title>
+    <title type="html"><![CDATA[Convert PGS Subtitles]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles/"/>
     <updated>2014-05-11T11:24:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/wdlive.jpg" width="300" height="200" title="&#34;wdlive&#34;" alt="&#34;wdlive&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/wdlive.jpg" width="300" height="200" title="&ldquo;wdlive&rdquo;" ></p>
 
-<p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it's still a nice media player.</p>
+<p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it&rsquo;s still a nice media player.</p>
 
-<p>Unfortunately it's unable to display PGS (blu-ray) subtitles.</p>
+<p>Unfortunately it&rsquo;s unable to display PGS (blu-ray) subtitles.</p>
 
-<br />&nbsp;<br />
+<p><br />&nbsp;<br /></p>
 
-
-<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it's possible to play it on my 5 year old wdlive.</p>
+<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it&rsquo;s possible to play it on my 5 year old wdlive.</p>
 
 <p>convertPgsSub 1.0.0stable1 is available github:</p>
 
-<p><a href="https://github.com/stafwag/convertPgsSub">https://github.com/stafwag/convertPgsSub</a></p>
+<p><a href="https://github.com/stafwag/convertPgsSub"><a href="https://github.com/stafwag/convertPgsSub">https://github.com/stafwag/convertPgsSub</a></a></p>
 
 <p style="font-style: italic;">
 Have fun...

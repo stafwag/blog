@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: nas | stafwag Blog]]></title>
+  <title><![CDATA[Category: Nas | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/nas/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,29 +14,25 @@
 
   
   <entry>
-    <title type="html"><![CDATA[RIP: pluto]]></title>
+    <title type="html"><![CDATA[RIP: Pluto]]></title>
     <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
+    <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&ldquo;RIP pluto&rdquo;" >
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>
 
-<p>( 1 minute silence .... )</p>
-
+<p>( 1 minute silence &hellip;. )
 <br />
-
-
-<br />
-
+<br /></p>
 
 <p>I take backups of course ;-)
 I already ordered the parts to build a new pluto.</p>
 
 <p>Pluto still hosted some <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">CSV</a> repositorties like <a href="http://www.wagemakers.be/english/programs/cgipaf">CGIpaf</a>.
-But it's time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.</p>
+But it&rsquo;s time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.</p>
 
-<p>I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It's written in ruby which is a nice bonus.</p>
+<p>I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It&rsquo;s written in ruby which is a nice bonus.</p>
 ]]></content>
   </entry>
   

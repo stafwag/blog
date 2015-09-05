@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: chrome | stafwag Blog]]></title>
+  <title><![CDATA[Category: Chrome | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/chrome/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Run google chrome inside a fedora docker container over ssh]]></title>
+    <title type="html"><![CDATA[Run Google Chrome Inside a Fedora Docker Container Over Ssh]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
@@ -25,7 +25,7 @@
 
 <p>Update (Mon Jun  8 2015):</p>
 
-<p>Running google-chrome inside a docker container isn't stable for me.
+<p>Running google-chrome inside a docker container isn&rsquo;t stable for me.
 I switched back to LXC to run google-chrome which seems to be more stable.</p>
 
 <hr />
@@ -42,47 +42,38 @@ Destroying the container each time that you start a browser is a easy way to get
 
 <p>1/ Clone the git repo</p>
 
-<p><code>
-$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
-</code></p>
+<pre><code>$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
+</code></pre>
 
 <p>2/ Copy your public ssh to id_rsa.pub</p>
 
-<p><code>
-$ cd docker-fedora-chrome-ssh
+<pre><code>$ cd docker-fedora-chrome-ssh
 $ cp ~/.ssh/id_rsa.pub .
-</code></p>
+</code></pre>
 
 <p>3/ Build the docker image</p>
 
-<p><code>
-$ docker build -t stafwag/docker-fedora-chrome-ssh .
-</code></p>
+<pre><code>$ docker build -t stafwag/docker-fedora-chrome-ssh .
+</code></pre>
 
 <p>4/ Update your ssh config</p>
 
-<p><code>
-$ vi ~/.ssh/config
-</code></p>
-
-<p>```
-Host mychrome</p>
-
-<pre><code>      User      chrome
-      Port      8022
-      HostName  127.0.0.1
-      StrictHostKeyChecking no
-      UserKnownHostsFile=/dev/null
-      ForwardX11 yes
+<pre><code>$ vi ~/.ssh/config
 </code></pre>
 
-<p>```</p>
+<pre><code>Host mychrome
+          User      chrome
+          Port      8022
+          HostName  127.0.0.1
+          StrictHostKeyChecking no
+          UserKnownHostsFile=/dev/null
+          ForwardX11 yes
+</code></pre>
 
 <p>5/ Start chrome</p>
 
-<p><code>
-$ ./startchrome.sh
-</code></p>
+<pre><code>$ ./startchrome.sh
+</code></pre>
 ]]></content>
   </entry>
   

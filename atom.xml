@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,21 @@
 
   
   <entry>
-    <title type="html"><![CDATA[lookat 1.4.4rc1 released]]></title>
+    <title type="html"><![CDATA[Rataplan Becomes a Watchdog]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/09/05/rataplan-becomes-a-watchdog/"/>
+    <updated>2015-09-05T14:47:54+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/09/05/rataplan-becomes-a-watchdog</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/watchdog_rataplan.jpg">
+<a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">My NAS</a> runs on <a href="http://www.freebsd.org">FreeBSD</a> I&rsquo;m quiet happy with it. It&rsquo;s named after the dog <a href="https://nl.wikipedia.org/wiki/Rataplan">rataplan</a> from the <a href="https://en.wikipedia.org/wiki/Lucky_Luke">Lucky Luke comic</a></p>
+
+<p>However transferring large data files to it causes the network to hang. The realtek network interface had issues with freebsd from the <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">beginning</a>. On the screen and in syslog the entry &ldquo;re0: watchdog timeout&rdquo; is printed.</p>
+
+<p>Most FreeBSD people recommends to use Intel nics, I ordered <a href="http://www.dx.com/nl/p/winyao-wy574t-intel-wg82574l-chipset-pci-e-x1-server-gigabit-network-card-adapter-green-280966">a new Intel nic at dx.com</a>. After the installation of the new NIC the network seems to be stable again.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lookat 1.4.4rc1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
     <updated>2015-07-21T12:24:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
@@ -34,10 +48,10 @@
 
 <h3>Lookat 1.4.4rc1 is available at:</h3>
 
-<p><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
 , download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc1.tar.gz">Download latest development release (1.4.4rc1)</a>.</p>
 
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 
 <h3>OpenBSD</h3>
 
@@ -49,7 +63,7 @@ Thanks to Brian Callahan for the port!</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Using squid to cache FreeBSD packages]]></title>
+    <title type="html"><![CDATA[Using Squid to Cache FreeBSD Packages]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/"/>
     <updated>2015-06-23T08:43:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages</id>
@@ -112,16 +126,16 @@ Thanks to Brian Callahan for the port!</p>
 
 <h3>Recompile</h3>
 
-<p>The squid proxy doesn&#8217;t cache to the FreeBSD packages. The squid pkgng package  is compiled with
-&#8220;LAX_HTTP  Do not enforce strict HTTP compliance&#8221; option disabled. which doesn&#8217;t allow you to override the cache headers sent by the remote site.</p>
+<p>The squid proxy doesn&rsquo;t cache to the FreeBSD packages. The squid pkgng package  is compiled with
+&ldquo;LAX_HTTP  Do not enforce strict HTTP compliance&rdquo; option disabled. which doesn&rsquo;t allow you to override the cache headers sent by the remote site.</p>
 
-<p>In order to cache the FreeBSD packages we need to recompile squid with &#8220;LAX_HTTPD&#8221; enabled.</p>
+<p>In order to cache the FreeBSD packages we need to recompile squid with &ldquo;LAX_HTTPD&rdquo; enabled.</p>
 
 <h4>Updating the ports</h4>
 
 <h5>Physical system</h5>
 
-<p>If you use a physical FreeBSD system as your proxy run the &#8220;portsnap fetch&#8221; command.</p>
+<p>If you use a physical FreeBSD system as your proxy run the &ldquo;portsnap fetch&rdquo; command.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -190,7 +204,7 @@ Thanks to Brian Callahan for the port!</p>
 
 <h5>Jail</h5>
 
-<p>If you use an <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> as your proxy run the &#8220;ezjail-admin update -P&#8221; command.</p>
+<p>If you use an <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> as your proxy run the &ldquo;ezjail-admin update -P&rdquo; command.</p>
 
 <h4>Build</h4>
 
@@ -438,7 +452,7 @@ Thanks to Brian Callahan for the port!</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Add a &#8220;refresh_pattern&#8221; for &#8220;pkgmir.pkg.freebsd.org&#8221;:</p>
+<p>Add a &ldquo;refresh_pattern&rdquo; for &ldquo;pkgmir.pkg.freebsd.org&rdquo;:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -492,13 +506,13 @@ Thanks to Brian Callahan for the port!</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Using YubiKey Neo as gpg smartcard for SSH authentication]]></title>
+    <title type="html"><![CDATA[Using YubiKey Neo as Gpg Smartcard for SSH Authentication]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
     <updated>2015-06-16T10:32:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
-    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&#8217;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
+    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
 
-<p>You&#8217;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
+<p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
 
 <h2>Install the yubiclient and smartcard software</h2>
 
@@ -659,9 +673,9 @@ Thanks to Brian Callahan for the port!</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Verify that you&#8217;ve access to the yubikey</h3>
+<h3>Verify that you&rsquo;ve access to the yubikey</h3>
 
-<p>&#8220;ykinfo -v&#8221; shows you the version on the yubikey.</p>
+<p>&ldquo;ykinfo -v&rdquo; shows you the version on the yubikey.</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -672,7 +686,7 @@ Thanks to Brian Callahan for the port!</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>If you try with the user that you&#8217;ll for the yubi authentication you might get a permission denied:</p>
+<p>If you try with the user that you&rsquo;ll for the yubi authentication you might get a permission denied:</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -686,7 +700,7 @@ Thanks to Brian Callahan for the port!</p>
 
 <h5>Update rule file</h5>
 
-<p>On a fedora 22 system to udev rules for the yubi key are defined in &#8220;/usr/lib/udev/rules.d/69-yubikey.rules&#8221;</p>
+<p>On a fedora 22 system to udev rules for the yubi key are defined in &ldquo;/usr/lib/udev/rules.d/69-yubikey.rules&rdquo;</p>
 
 <p>It is a good practice to only grant access to user that will use the yubikey.</p>
 
@@ -1066,7 +1080,7 @@ Thanks to Brian Callahan for the port!</p>
 
 <h5>Run pcsc_scan</h5>
 
-<p>Execute &#8220;pcsc_scan&#8221; to verify that you see the smartcard</p>
+<p>Execute &ldquo;pcsc_scan&rdquo; to verify that you see the smartcard</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1193,7 +1207,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 <h3>Reset smartcard PIN codes</h3>
 
-<p>The default user PIN code is &#8220;123456&#8221; the default admin PIN code is &#8220;12345678&#8221;</p>
+<p>The default user PIN code is &ldquo;123456&rdquo; the default admin PIN code is &ldquo;12345678&rdquo;</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1295,7 +1309,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 <h3>Generate a new key pair</h3>
 
-<h4>Execute &#8220;gpg &#8211;card-edit&#8221;</h4>
+<h4>Execute &ldquo;gpg &ndash;card-edit&rdquo;</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1512,7 +1526,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 
 <h3>Extract the public key</h3>
 
-<h4>Execute gpg &#8211;card-status</h4>
+<h4>Execute gpg &ndash;card-status</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1641,7 +1655,7 @@ create a polkit rule for the user that will use the smartcard.</p>
 </span><span class='line'>ssh-rsa qwertyqwertyqwerty cardno:xxxx</span></code></pre></td></tr></table></div></figure>
 
 
-<p>The public key must be the same as extracted with &#8220;gpgkey2ssh&#8221;</p>
+<p>The public key must be the same as extracted with &ldquo;gpgkey2ssh&rdquo;</p>
 
 <h4>Add the public key to the remote system</h4>
 
@@ -1772,31 +1786,31 @@ create a polkit rule for the user that will use the smartcard.</p>
 <h2>Links</h2>
 
 <ul>
-<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></li>
-<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></li>
-<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></li>
-<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></li>
-<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></li>
-<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></li>
-<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></li>
-<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></li>
+<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/"><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></a></li>
+<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO"><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></a></li>
+<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html"><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></a></li>
+<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171"><a href="http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></a></li>
+<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/"><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html"><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></a></li>
+<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/"><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst"><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></a></li>
+<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/"><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card"><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Udev"><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></a></li>
+<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/"><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></a></li>
 </ul>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Openvas 7: adding credentials failed]]></title>
+    <title type="html"><![CDATA[Openvas 7: Adding Credentials Failed]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/"/>
     <updated>2015-05-14T16:56:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed</id>
-    <content type="html"><![CDATA[<p>I&#8217;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
 
 <p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
 
@@ -1867,7 +1881,7 @@ Happy hacking!
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Run google chrome inside a fedora docker container over ssh]]></title>
+    <title type="html"><![CDATA[Run Google Chrome Inside a Fedora Docker Container Over Ssh]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
@@ -1878,7 +1892,7 @@ Happy hacking!
 
 <p>Update (Mon Jun  8 2015):</p>
 
-<p>Running google-chrome inside a docker container isn&#8217;t stable for me.
+<p>Running google-chrome inside a docker container isn&rsquo;t stable for me.
 I switched back to LXC to run google-chrome which seems to be more stable.</p>
 
 <hr />
@@ -1948,7 +1962,7 @@ Destroying the container each time that you start a browser is a easy way to get
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[happy_new_year_2015]]></title>
+    <title type="html"><![CDATA[Happy_new_year_2015]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015/"/>
     <updated>2015-01-01T12:20:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015</id>
@@ -1987,33 +2001,33 @@ Happy new year!
 </ul>
 </blockquote>
 
-<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
+<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
 
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></p>
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
 
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
 
 <p style="font-style: italic;">
-Have fun&#8230;
+Have fun...
 </p>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
+    <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I&#8217;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
-<p>As always with virtualization you&#8217;ve to careful with sharing systems or containers that doesn&#8217;t below to the same customer or service on the same physical machine since you&#8217;re never sure which traces are left behind in the memory etc.</p>
+<p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>
 
 <p><a href="https://linuxcontainers.org/">Linux containers</a> are getting more popular since the release of <a href="http://www.docker.com/">docker</a></p>
 
-<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn&#8217;t an success.</p>
+<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn&rsquo;t an success.</p>
 
-<p>On a newly create debian container networking didn&#8217;t work.</p>
+<p>On a newly create debian container networking didn&rsquo;t work.</p>
 
 <h3>First debian container</h3>
 
@@ -2093,7 +2107,7 @@ Have fun&#8230;
 </span><span class='line'>Linux mydebian 3.14.5-200.fc20.i686 #1 SMP Mon Jun 21 08:13:19 UTC 2014 i686</span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Network isn&#8217;t working&#8230;</h3>
+<h3>Network isn&rsquo;t working&hellip;</h3>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2465,7 +2479,7 @@ Have fun&#8230;
 </span><span class='line'>[staf@vicky templates]$ </span></code></pre></td></tr></table></div></figure>
 
 
-<h3>Debian container second try&#8230;</h3>
+<h3>Debian container second try&hellip;</h3>
 
 <p>And tried to create the debian container again.</p>
 
@@ -2675,7 +2689,7 @@ Have fun&#8230;
 </span><span class='line'>permitted by applicable law.</span></code></pre></td></tr></table></div></figure>
 
 
-<h4>Networking&#8230;.</h4>
+<h4>Networking&hellip;.</h4>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -2776,7 +2790,7 @@ Have fun&#8230;
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[pfsense: too secure for chromecast]]></title>
+    <title type="html"><![CDATA[Pfsense: Too Secure for Chromecast]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast/"/>
     <updated>2014-06-07T21:05:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast</id>
@@ -2784,21 +2798,21 @@ Have fun&#8230;
 
 <p>My internet firewall is a <a href="http://www.pcengines.ch/">pcengines</a> <a href="http://www.pcengines.ch/alix.htm">alix system</a> powered by <a href="https://www.pfsense.org/">pfsense</a>.</p>
 
-<p>I purchased a <a href="http://www.google.be/intl/en/chrome/devices/chromecast/">chromecast</a> at <a href="http://www.amazon.de">amazon.de</a>. The installation didn&#8217;t work, after debugging the issue it seems that &#8220;Allow intra-BSS communication&#8221; needs to be enabled for chromecast.</p>
+<p>I purchased a <a href="http://www.google.be/intl/en/chrome/devices/chromecast/">chromecast</a> at <a href="http://www.amazon.de">amazon.de</a>. The installation didn&rsquo;t work, after debugging the issue it seems that &ldquo;Allow intra-BSS communication&rdquo; needs to be enabled for chromecast.</p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Size matters, but ...]]></title>
+    <title type="html"><![CDATA[Size Matters, but ...]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/05/25/size-matters/"/>
     <updated>2014-05-25T09:11:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/05/25/size-matters</id>
     <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/dell2713.jpg" width="400" height="266" title="&#34;dell2713&#34;" alt="&#34;dell2713&#34;">
-Size matters, but &#8230; resolution and image quality are as import.</p>
+Size matters, but &hellip; resolution and image quality are as import.</p>
 
 <p>Since I was diagnosed with diabetes I have eyes issues things are getting better recently but I still needs glasses for reading etc.</p>
 
-<p>My &#8220;no smoking&#8221; <a href="https://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough for some &#8220;eye candy&#8221;. I bought a <a href="http://accessories.ap.dell.com/sna/productdetail.aspx?c=au&cs=audhs1&l=en&redirect=1&s=dhs&sku=210-40773">Dell UltraSharp U2713HM</a> a 27 inch WQHD (2560x1440) IPS display.</p>
+<p>My &ldquo;no smoking&rdquo; <a href="https://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough for some &ldquo;eye candy&rdquo;. I bought a <a href="http://accessories.ap.dell.com/sna/productdetail.aspx?c=au&cs=audhs1&l=en&redirect=1&s=dhs&sku=210-40773">Dell UltraSharp U2713HM</a> a 27 inch WQHD (2560x1440) IPS display.</p>
 
 <p>Compared to the others screens I used to work with the image quality is amazing and the higher resolution give so much more space.</p>
 
@@ -2807,40 +2821,39 @@ Size matters, but &#8230; resolution and image quality are as import.</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Convert PGS subtitles]]></title>
+    <title type="html"><![CDATA[Convert PGS Subtitles]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles/"/>
     <updated>2014-05-11T11:24:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles</id>
     <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/wdlive.jpg" width="300" height="200" title="&#34;wdlive&#34;" alt="&#34;wdlive&#34;"></p>
 
-<p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it&#8217;s still a nice media player.</p>
+<p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it&rsquo;s still a nice media player.</p>
 
-<p>Unfortunately it&#8217;s unable to display PGS (blu-ray) subtitles.</p>
+<p>Unfortunately it&rsquo;s unable to display PGS (blu-ray) subtitles.</p>
 
-<br />&nbsp;<br />
+<p><br />&nbsp;<br /></p>
 
-
-<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it&#8217;s possible to play it on my 5 year old wdlive.</p>
+<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it&rsquo;s possible to play it on my 5 year old wdlive.</p>
 
 <p>convertPgsSub 1.0.0stable1 is available github:</p>
 
-<p><a href="https://github.com/stafwag/convertPgsSub">https://github.com/stafwag/convertPgsSub</a></p>
+<p><a href="https://github.com/stafwag/convertPgsSub"><a href="https://github.com/stafwag/convertPgsSub">https://github.com/stafwag/convertPgsSub</a></a></p>
 
 <p style="font-style: italic;">
-Have fun&#8230;
+Have fun...
 </p>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[zfs on Fedora 20]]></title>
+    <title type="html"><![CDATA[Zfs on Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20/"/>
     <updated>2014-01-14T08:03:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20</id>
     <content type="html"><![CDATA[<p>With <a href="http://docs.fedoraproject.org/en-US/Fedora/20/html/Release_Notes/index.html">Fedora 20</a> being released a few weeks ago and no official zfsonlinux support for Fedora 20. It time to get zfs on linux working on Fedora 20.</p>
 
-<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></p>
+<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/"><a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></a></p>
 
 <p>So lets try to build the rpm packages for Fedora 20 from the source.</p>
 
@@ -3521,7 +3534,7 @@ Have fun&#8230;
 
 
 <p style="font-style: italic;">
-Have fun&#8230;
+Have fun...
 </p>
 
 ]]></content>
@@ -3542,7 +3555,7 @@ Best wishes 2014
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[bash saved my day]]></title>
+    <title type="html"><![CDATA[Bash Saved My Day]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
     <updated>2013-10-20T10:04:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
@@ -3563,7 +3576,7 @@ Best wishes 2014
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[yum update on fedora 19 and zfs on linux]]></title>
+    <title type="html"><![CDATA[Yum Update on Fedora 19 and Zfs on Linux]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/"/>
     <updated>2013-10-13T17:51:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux</id>
@@ -3573,10 +3586,7 @@ Best wishes 2014
 
 <p><a href="http://zfsonlinux.org/fedora.html">The installation</a> was pretty straightforward but after the installation of <a href="http://open-zfs.org/">zfs</a> <code>yum update</code> failed.</p>
 
-<br />
-
-
-
+<p><br /></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -3676,7 +3686,7 @@ Best wishes 2014
 </span><span class='line'>[root@vicky etc]# </span></code></pre></td></tr></table></div></figure>
 
 
-<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&#8217;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
+<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&rsquo;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -3817,7 +3827,7 @@ Best wishes 2014
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[CGIpaf 1.3.4pre1 released]]></title>
+    <title type="html"><![CDATA[CGIpaf 1.3.4pre1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/"/>
     <updated>2013-09-15T16:23:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released</id>
@@ -3834,16 +3844,16 @@ Best wishes 2014
 </ul>
 </blockquote>
 
-<p>CGIpaf 1.3.4pre1 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
+<p>CGIpaf 1.3.4pre1 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
 
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz">http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz</a></p>
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz"><a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz">http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz</a></a></p>
 
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Running kindle on GNU/Linux with wine]]></title>
+    <title type="html"><![CDATA[Running Kindle on GNU/Linux With Wine]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
     <updated>2013-09-08T11:57:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
@@ -3882,7 +3892,7 @@ Best wishes 2014
 </ul>
 
 
-<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></p>
+<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"><a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></a></p>
 
 <ul>
 <li>Run the installer</li>
@@ -3907,19 +3917,19 @@ Best wishes 2014
 <p>but</p></blockquote>
 
 <p><strong>
-It&#8217;s better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
+It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
 </strong></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[fedora 19 boottime on an intel core i7 4770 with a Samsung 840 Pro Series 256GB ssd]]></title>
+    <title type="html"><![CDATA[Fedora 19 Boottime on an Intel Core I7 4770 With a Samsung 840 Pro Series 256GB Ssd]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
     <updated>2013-09-01T12:21:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
     <content type="html"><![CDATA[<p>I installed <a href="http://fedoraproject.org/">fedora 19</a> on <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my new pc</a> mainly to play with <a href="http://www.ovirt.org/">ovirt</a> which seems to be easier to install on  <a href="http://fedoraproject.org/">fedora</a> than on <a href="http://www.debian.org">Debian</a>.</p>
 
-<p>Don&#8217;t worry I still have a debian system at hand&#8230;</p>
+<p>Don&rsquo;t worry I still have a debian system at hand&hellip;</p>
 
 <p>The boot time on a ssd is fast:</p>
 
@@ -3938,7 +3948,7 @@ It&#8217;s better to only read ebooks in an <a href="http://en.wikipedia.org/wik
 </span><span class='line'># dracut -f -H -o plymouth</span></code></pre></td></tr></table></div></figure>
 
 
-<p>replaced firewalld by &#8220;static&#8221; iptables;</p>
+<p>replaced firewalld by &ldquo;static&rdquo; iptables;</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -3957,63 +3967,61 @@ It&#8217;s better to only read ebooks in an <a href="http://en.wikipedia.org/wik
 
 <p>[staf@vicky~]$ systemd-analyze
 Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
-[staf@vicky~]$ systemd-analyze blame</p>
-
-<pre><code>       546ms postfix.service
-       537ms NetworkManager.service
-       508ms accounts-daemon.service
-       102ms nfs-lock.service
-        62ms proc-fs-nfsd.mount
-        59ms polkit.service
-        55ms lvm2-monitor.service
-        54ms NetworkManager-dispatcher.service
-        54ms abrt-ccpp.service
-        54ms jexec.service
-        53ms udisks2.service
-        52ms autofs.service
-        49ms var-lib-nfs-rpc_pipefs.mount
-        45ms avahi-daemon.service
-        43ms colord.service
-        41ms systemd-logind.service
-        41ms rtkit-daemon.service
-        40ms gdm.service
-        37ms systemd-fsck-root.service
-        33ms systemd-vconsole-setup.service
-        32ms fedora-loadmodules.service
-        28ms chronyd.service
-        28ms systemd-udev-trigger.service
-        26ms dev-hugepages.mount
-        26ms dev-mqueue.mount
-        26ms sys-kernel-debug.mount
-        25ms lm_sensors.service
-        24ms systemd-fsck@dev-disk-by\x2duuid-16608012\x2d1711\x2d42d7\x2d8652\x2d900e2d22ed40.service
-        23ms tmp.mount
-        22ms sys-kernel-config.mount
-        19ms systemd-user-sessions.service
-        16ms systemd-journal-flush.service
-        16ms mcelog.service
-        15ms proc-sys-fs-binfmt_misc.mount
-        14ms bluetooth.service
-        12ms systemd-sysctl.service
-        12ms systemd-tmpfiles-setup-dev.service
-        12ms rpcbind.service
-        12ms xinetd.service
-         8ms systemd-udevd.service
-         7ms fedora-readonly.service
-         7ms lvm2-lvmetad.service
-         6ms sshd.service
-         5ms systemd-readahead-collect.service
-         5ms boot.mount
-         5ms upower.service
-         4ms dev-mapper-fedora_vicky\x2dswap.swap
-         4ms systemd-remount-fs.service
-         3ms systemd-tmpfiles-setup.service
-         3ms systemd-update-utmp-runlevel.service
-         2ms auditd.service
-         1ms systemd-random-seed-load.service
-         1ms systemd-readahead-done.service
-         1ms sys-fs-fuse-connections.mount
-</code></pre>
+[staf@vicky~]$ systemd-analyze blame
+           546ms postfix.service
+           537ms NetworkManager.service
+           508ms accounts-daemon.service
+           102ms nfs-lock.service
+            62ms proc-fs-nfsd.mount
+            59ms polkit.service
+            55ms lvm2-monitor.service
+            54ms NetworkManager-dispatcher.service
+            54ms abrt-ccpp.service
+            54ms jexec.service
+            53ms udisks2.service
+            52ms autofs.service
+            49ms var-lib-nfs-rpc_pipefs.mount
+            45ms avahi-daemon.service
+            43ms colord.service
+            41ms systemd-logind.service
+            41ms rtkit-daemon.service
+            40ms gdm.service
+            37ms systemd-fsck-root.service
+            33ms systemd-vconsole-setup.service
+            32ms fedora-loadmodules.service
+            28ms chronyd.service
+            28ms systemd-udev-trigger.service
+            26ms dev-hugepages.mount
+            26ms dev-mqueue.mount
+            26ms sys-kernel-debug.mount
+            25ms lm_sensors.service
+            24ms systemd-fsck@dev-disk-by\x2duuid-16608012\x2d1711\x2d42d7\x2d8652\x2d900e2d22ed40.service
+            23ms tmp.mount
+            22ms sys-kernel-config.mount
+            19ms systemd-user-sessions.service
+            16ms systemd-journal-flush.service
+            16ms mcelog.service
+            15ms proc-sys-fs-binfmt_misc.mount
+            14ms bluetooth.service
+            12ms systemd-sysctl.service
+            12ms systemd-tmpfiles-setup-dev.service
+            12ms rpcbind.service
+            12ms xinetd.service
+             8ms systemd-udevd.service
+             7ms fedora-readonly.service
+             7ms lvm2-lvmetad.service
+             6ms sshd.service
+             5ms systemd-readahead-collect.service
+             5ms boot.mount
+             5ms upower.service
+             4ms dev-mapper-fedora_vicky\x2dswap.swap
+             4ms systemd-remount-fs.service
+             3ms systemd-tmpfiles-setup.service
+             3ms systemd-update-utmp-runlevel.service
+             2ms auditd.service
+             1ms systemd-random-seed-load.service
+             1ms systemd-readahead-done.service
+             1ms sys-fs-fuse-connections.mount</p>
 
 <p>Result:</p>
 
@@ -4030,7 +4038,7 @@ Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721
     <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/i7_internals.jpg" width="500" height="384" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
 Besides the health benefits you save a lot of money.</p>
 
-<p>My &#8220;no smoking&#8221; <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.</p>
+<p>My &ldquo;no smoking&rdquo; <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.</p>
 
 <p>My upgrade consists;</p>
 
@@ -4042,31 +4050,7 @@ Besides the health benefits you save a lot of money.</p>
 </ul>
 
 
-<p>My pc is &#8220;smoking&#8221; fast now :-)</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lookat 1.4.3 released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
-    <updated>2013-08-18T20:07:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/lookat_143.png" width="360" height="217" title="&#34;lookat&#34;" alt="&#34;lookat&#34;">
-I&#8217;m pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
-
-<p>This new stable version will compile correctly with <a href="http://clang.llvm.org/">LLVM/clang</a>.<br /><br /></p>
-
-<p>
-The new stable version 1.4.3 is available at <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a> 
-
-Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a>
-</p>
-
-
-<p style="font-style: italic;">
-Have fun&#8230;
-</p>
-
+<p>My pc is &ldquo;smoking&rdquo; fast now :-)</p>
 ]]></content>
   </entry>
   

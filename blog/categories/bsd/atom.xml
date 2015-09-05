@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: bsd | stafwag Blog]]></title>
+  <title><![CDATA[Category: Bsd | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/bsd/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -39,11 +39,11 @@
 </ul>
 </blockquote>
 
-<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
+<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
 
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></p>
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
 
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
 
 <p style="font-style: italic;">
 Have fun...
@@ -53,7 +53,7 @@ Have fun...
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[CGIpaf 1.3.4pre1 released]]></title>
+    <title type="html"><![CDATA[CGIpaf 1.3.4pre1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released/"/>
     <updated>2013-09-15T16:23:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/09/15/cgipaf-1-dot-3-4pre1-released</id>
@@ -70,11 +70,11 @@ Have fun...
 </ul>
 </blockquote>
 
-<p>CGIpaf 1.3.4pre1 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></p>
+<p>CGIpaf 1.3.4pre1 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
 
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz">http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz</a></p>
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz"><a href="http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz">http://www.wagemakers.be/downloads/cgipaf/cgipaf-1.3.4pre1.tar.gz</a></a></p>
 
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></p>
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
 ]]></content>
   </entry>
   

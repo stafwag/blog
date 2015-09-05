@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: git | stafwag Blog]]></title>
+  <title><![CDATA[Category: Git | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[bash saved my day]]></title>
+    <title type="html"><![CDATA[Bash Saved My Day]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
     <updated>2013-10-20T10:04:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
@@ -24,20 +24,19 @@
 
 <p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
 
-<p><code>
-$ ./create_cache_entries.sh  &gt; create_cache_entries.sh
+<pre><code>$ ./create_cache_entries.sh  &gt; create_cache_entries.sh 
 -bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
-$ vi create_cache_entries.sh
-</code></p>
+$ vi create_cache_entries.sh 
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 released]]></title>
+    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
-    <content type="html"><![CDATA[<p>Trying to release more often...</p>
+    <content type="html"><![CDATA[<p>Trying to release more often&hellip;</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>
 
@@ -50,15 +49,15 @@ $ vi create_cache_entries.sh
 </ul>
 </blockquote>
 
-<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
 , download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.3rc1.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
 
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[CGIpaf uploaded to github]]></title>
+    <title type="html"><![CDATA[CGIpaf Uploaded to Github]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
     <updated>2013-03-16T11:57:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
@@ -67,70 +66,61 @@ $ vi create_cache_entries.sh
 <p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
 It took a bit longer than expected.</p>
 
-<p>My first attempt didn't had the release tags right.</p>
+<p>My first attempt didn&rsquo;t had the release tags right.</p>
 
-<p>Adding <code>--retain-conflicting-attic-files</code> to cvs2git resolved this issue.</p>
+<p>Adding <code>&ndash;retain-conflicting-attic-files</code> to cvs2git resolved this issue.</p>
 
-<p>You'll find how I did it it below.</p>
+<p>You&rsquo;ll find how I did it it below.</p>
 
 <h3>cvs2git.sh:</h3>
 
-<p>```
-cvs2git \</p>
-
-<pre><code>--blobfile=cvs2git-tmp/git-blob.dat \
---dumpfile=cvs2git-tmp/git-dump.dat \
-/var/lib/cvs/cgipaf \
---username=staf \
---retain-conflicting-attic-files
+<pre><code>cvs2git \
+    --blobfile=cvs2git-tmp/git-blob.dat \
+    --dumpfile=cvs2git-tmp/git-dump.dat \
+    /var/lib/cvs/cgipaf \
+    --username=staf \
+    --retain-conflicting-attic-files
 </code></pre>
-
-<p>```</p>
 
 <h3>create local git:</h3>
 
-<p><code>
-$ mkdir ~/newgit
+<pre><code>$ mkdir ~/newgit
 $ cd ~/newgit
 $ mkdir cgipaf
 $ cd cgipaf
 $ git init
 Initialized empty Git repository in /home/staf/newgit/cgipaf/
-$
-</code></p>
+$ 
+</code></pre>
 
 <h3>import.sh:</h3>
 
-<p>```</p>
+<pre><code>#!/bin/bash
 
-<h1>!/bin/bash</h1>
-
-<p>git fast-import --export-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-blob.dat
+git fast-import --export-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-blob.dat
 git fast-import --import-marks=/home/staf/cvs2git-tmp/cvs2git-marks.dat &lt; /home/staf/cvs2git-tmp/git-dump.dat
-```</p>
+</code></pre>
 
 <h3>push to github:</h3>
 
-<p>```
-git remote add origin git@github.com:stafwag/cgipaf.git
-git push origin --mirror</p>
-
-<p>```</p>
+<pre><code>git remote add origin git@github.com:stafwag/cgipaf.git
+git push origin --mirror
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 released]]></title>
+    <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
     <updated>2012-12-12T20:32:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
     <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
 
-<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></p>
+<p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a></p>
 
-<p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></p>
+<p>Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git"><a href="http://git.savannah.gnu.org/cgit/lookat.git">http://git.savannah.gnu.org/cgit/lookat.git</a></a></p>
 
-<p>1.4.2 is a maintenance release. When there are more than 24 hours in a day I'll start with the long waited utf-8 support ;-)</p>
+<p>1.4.2 is a maintenance release. When there are more than 24 hours in a day I&rsquo;ll start with the long waited utf-8 support ;-)</p>
 
 <h3>ChangeLog</h3>
 
@@ -162,29 +152,25 @@ git push origin --mirror</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[RIP: pluto]]></title>
+    <title type="html"><![CDATA[RIP: Pluto]]></title>
     <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
+    <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&ldquo;RIP pluto&rdquo;" >
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>
 
-<p>( 1 minute silence .... )</p>
-
+<p>( 1 minute silence &hellip;. )
 <br />
-
-
-<br />
-
+<br /></p>
 
 <p>I take backups of course ;-)
 I already ordered the parts to build a new pluto.</p>
 
 <p>Pluto still hosted some <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">CSV</a> repositorties like <a href="http://www.wagemakers.be/english/programs/cgipaf">CGIpaf</a>.
-But it's time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.</p>
+But it&rsquo;s time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.</p>
 
-<p>I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It's written in ruby which is a nice bonus.</p>
+<p>I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It&rsquo;s written in ruby which is a nice bonus.</p>
 ]]></content>
   </entry>
   

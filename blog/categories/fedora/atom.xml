@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: fedora | stafwag Blog]]></title>
+  <title><![CDATA[Category: Fedora | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/fedora/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,193 +14,170 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Using YubiKey Neo as gpg smartcard for SSH authentication]]></title>
+    <title type="html"><![CDATA[Using YubiKey Neo as Gpg Smartcard for SSH Authentication]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
     <updated>2015-06-16T10:32:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
-    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I'll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
+    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
 
-<p>You'll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
+<p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
 
 <h2>Install the yubiclient and smartcard software</h2>
 
 <h3>Install the ykclient</h3>
 
-<p>```
-ykclient.x86_64 : Yubikey management library and client
+<pre><code>ykclient.x86_64 : Yubikey management library and client
 [root@vicky ~]# dnf install ykclient
-Last metadata expiration check performed 1:00:07 ago on Sun Jun 14 09:14:34 2015.</p>
+Last metadata expiration check performed 1:00:07 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                    Arch                     Version                         Repository                Size
+====================================================================================================================
+Installing:
+ ykclient                   x86_64                   2.13-1.fc22                     fedora                    35 k
 
-<h1>Dependencies resolved.</h1>
+Transaction Summary
+====================================================================================================================
+Install  1 Package
 
-<h1> Package                    Arch                     Version                         Repository                Size</h1>
-
-<p>Installing:
- ykclient                   x86_64                   2.13-1.fc22                     fedora                    35 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 35 k
+Total download size: 35 k
 Installed size: 58 k
 Is this ok [y/N]: y
-Downloading Packages:</p>
-
-<h2>ykclient-2.13-1.fc22.x86_64.rpm                                                      48 kB/s |  35 kB     00:00    </h2>
-
-<p>Total                                                                                11 kB/s |  35 kB     00:03   <br/>
+Downloading Packages:
+ykclient-2.13-1.fc22.x86_64.rpm                                                      48 kB/s |  35 kB     00:00    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                                11 kB/s |  35 kB     00:03     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : ykclient-2.13-1.fc22.x86_64                                                                     1/1
-  Verifying   : ykclient-2.13-1.fc22.x86_64                                                                     1/1</p>
+  Installing  : ykclient-2.13-1.fc22.x86_64                                                                     1/1 
+  Verifying   : ykclient-2.13-1.fc22.x86_64                                                                     1/1 
 
-<p>Installed:
-  ykclient.x86_64 2.13-1.fc22</p>
+Installed:
+  ykclient.x86_64 2.13-1.fc22                                                                                       
 
-<p>Complete!
-[root@vicky ~]#
-```</p>
+Complete!
+[root@vicky ~]# 
+</code></pre>
 
-<p>```
-root@vicky ~]# ykinfo
+<pre><code>root@vicky ~]# ykinfo
 bash: ykinfo: command not found...
-Install package 'ykpers' to provide command 'ykinfo'? [N/y] ^C</p>
+Install package 'ykpers' to provide command 'ykinfo'? [N/y] ^C
 
-<p>[root@vicky ~]# dnf install ykpers
-Last metadata expiration check performed 1:01:23 ago on Sun Jun 14 09:14:34 2015.</p>
-
-<h1>Dependencies resolved.</h1>
-
-<h1> Package                     Arch                    Version                          Repository               Size</h1>
-
-<p>Installing:
+[root@vicky ~]# dnf install ykpers
+Last metadata expiration check performed 1:01:23 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                     Arch                    Version                          Repository               Size
+====================================================================================================================
+Installing:
  libyubikey                  x86_64                  1.11-3.fc22                      fedora                   33 k
- ykpers                      x86_64                  1.17.1-1.fc22                    fedora                  101 k</p>
+ ykpers                      x86_64                  1.17.1-1.fc22                    fedora                  101 k
 
-<h1>Transaction Summary</h1>
+Transaction Summary
+====================================================================================================================
+Install  2 Packages
 
-<p>Install  2 Packages</p>
-
-<p>Total download size: 135 k
+Total download size: 135 k
 Installed size: 372 k
 Is this ok [y/N]: y
 Downloading Packages:
-(1/2): libyubikey-1.11-3.fc22.x86_64.rpm                                             13 kB/s |  33 kB     00:02</p>
-
-<h2>(2/2): ykpers-1.17.1-1.fc22.x86_64.rpm                                               38 kB/s | 101 kB     00:02    </h2>
-
-<p>Total                                                                                22 kB/s | 135 kB     00:06   <br/>
+(1/2): libyubikey-1.11-3.fc22.x86_64.rpm                                             13 kB/s |  33 kB     00:02    
+(2/2): ykpers-1.17.1-1.fc22.x86_64.rpm                                               38 kB/s | 101 kB     00:02    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                                22 kB/s | 135 kB     00:06     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : libyubikey-1.11-3.fc22.x86_64                                                                   1/2
-  Installing  : ykpers-1.17.1-1.fc22.x86_64                                                                     2/2
-  Verifying   : ykpers-1.17.1-1.fc22.x86_64                                                                     1/2
-  Verifying   : libyubikey-1.11-3.fc22.x86_64                                                                   2/2</p>
+  Installing  : libyubikey-1.11-3.fc22.x86_64                                                                   1/2 
+  Installing  : ykpers-1.17.1-1.fc22.x86_64                                                                     2/2 
+  Verifying   : ykpers-1.17.1-1.fc22.x86_64                                                                     1/2 
+  Verifying   : libyubikey-1.11-3.fc22.x86_64                                                                   2/2 
 
-<p>Installed:
-  libyubikey.x86_64 1.11-3.fc22                             ykpers.x86_64 1.17.1-1.fc22</p>
+Installed:
+  libyubikey.x86_64 1.11-3.fc22                             ykpers.x86_64 1.17.1-1.fc22                            
 
-<p>Complete!</p>
+Complete!
+</code></pre>
 
-<p>```</p>
+<h3>Verify that you&rsquo;ve access to the yubikey</h3>
 
-<h3>Verify that you've access to the yubikey</h3>
+<p>&ldquo;ykinfo -v&rdquo; shows you the version on the yubikey.</p>
 
-<p>"ykinfo -v" shows you the version on the yubikey.</p>
-
-<p>```
-[root@vicky ~]# ykinfo -v
+<pre><code>[root@vicky ~]# ykinfo -v
 version: 3.4.0
-[root@vicky ~]#</p>
+[root@vicky ~]# 
+</code></pre>
 
-<p>```</p>
+<p>If you try with the user that you&rsquo;ll for the yubi authentication you might get a permission denied:</p>
 
-<p>If you try with the user that you'll for the yubi authentication you might get a permission denied:</p>
-
-<p><code>
-staf@vicky ~]$ ykinfo -v
+<pre><code>staf@vicky ~]$ ykinfo -v
 USB error: Access denied (insufficient permissions)
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h4>Update the udev permissions</h4>
 
 <h5>Update rule file</h5>
 
-<p>On a fedora 22 system to udev rules for the yubi key are defined in "/usr/lib/udev/rules.d/69-yubikey.rules"</p>
+<p>On a fedora 22 system to udev rules for the yubi key are defined in &ldquo;/usr/lib/udev/rules.d/69-yubikey.rules&rdquo;</p>
 
 <p>It is a good practice to only grant access to user that will use the yubikey.</p>
 
-<p><code>
-[root@vicky ~]# cd /usr/lib/udev/rules.d/
-[root@vicky rules.d]# vi 69-yubikey.rules
-</code></p>
+<pre><code>[root@vicky ~]# cd /usr/lib/udev/rules.d/
+[root@vicky rules.d]# vi 69-yubikey.rules 
+</code></pre>
 
-<p>```
-ACTION!="add|change", GOTO="yubico_end"</p>
+<pre><code>ACTION!="add|change", GOTO="yubico_end"
 
-<h1>Udev rules for letting the console user access the Yubikey USB</h1>
+# Udev rules for letting the console user access the Yubikey USB
+# device node, needed for challenge/response to work correctly.
 
-<h1>device node, needed for challenge/response to work correctly.</h1>
+# Yubico Yubikey II
+ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="staf", MODE="0600"
 
-<h1>Yubico Yubikey II</h1>
-
-<p>ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="staf", MODE="0600"</p>
-
-<p>LABEL="yubico_end"
-```</p>
+LABEL="yubico_end"
+</code></pre>
 
 <h5>Update udev rules</h5>
 
-<p>```</p>
-
-<h1>udevadm control --reload</h1>
-
-<h1>udevadm trigger</h1>
-
-<p>```</p>
+<pre><code># udevadm control --reload
+# udevadm trigger
+</code></pre>
 
 <h5>Test it again</h5>
 
-<p><code>
-[staf@vicky ~]$ ykinfo -v
+<pre><code>[staf@vicky ~]$ ykinfo -v
 version: 3.4.0
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h3>Enable the smartcard interface</h3>
 
-<p>```
-staf@vicky yubi]$ ykpersonalize -m82
-Firmware version 3.4.0 Touch level 1551 Program sequence 3</p>
+<pre><code>staf@vicky yubi]$ ykpersonalize -m82
+Firmware version 3.4.0 Touch level 1551 Program sequence 3
 
-<p>The USB mode will be set to: 0x82</p>
+The USB mode will be set to: 0x82
 
-<p>Commit? (y/n) [n]: y
-[staf@vicky yubi]$</p>
-
-<p>```</p>
+Commit? (y/n) [n]: y
+[staf@vicky yubi]$ 
+</code></pre>
 
 <p>Remove the yubi key from your system and plug it back to activate the new interface.</p>
 
 <h3>Install the required smartcard software</h3>
 
-<p>```
-[root@vicky ~]# dnf install pcsc-tools <br/>
-Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015.</p>
-
-<h1>Dependencies resolved.                                       </h1>
-
-<h1> Package                         Arch                  Version                          Repository             Size</h1>
-
-<p>Installing:                                               <br/>
+<pre><code>[root@vicky ~]# dnf install pcsc-tools   
+Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.                                       
+====================================================================================================================
+ Package                         Arch                  Version                          Repository             Size
+====================================================================================================================
+Installing:                                                 
  pcsc-lite                       x86_64                1.8.13-1.fc22                    fedora                101 k
  pcsc-lite-asekey                x86_64                3.7-1.fc22                       fedora                 34 k
  pcsc-perl                       x86_64                1.4.12-11.fc22                   fedora                 61 k
@@ -209,313 +186,278 @@ Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015
  perl-Glib                       x86_64                1.310-1.fc22                     fedora                362 k
  perl-Gtk2                       x86_64                1.2495-1.fc22                    fedora                1.8 M
  perl-HTML-Tree                  noarch                1:5.03-8.fc22                    fedora                223 k
- perl-Pango                      x86_64                1.226-3.fc22                     fedora                220 k</p>
+ perl-Pango                      x86_64                1.226-3.fc22                     fedora                220 k
 
-<h1>Transaction Summary                                        </h1>
+Transaction Summary                                        
+====================================================================================================================
+Install  9 Packages                                        
 
-<p>Install  9 Packages</p>
+Total download size: 3.0 M                                  
+Installed size: 8.4 M                                       
+Is this ok [y/N]: y                                          
+Downloading Packages:                                        
+(1/9): pcsc-tools-1.4.23-1.fc22.x86_64.rpm                                           38 kB/s | 116 kB     00:03    
+(2/9): pcsc-perl-1.4.12-11.fc22.x86_64.rpm                                           20 kB/s |  61 kB     00:03    
+(3/9): pcsc-lite-1.8.13-1.fc22.x86_64.rpm                                            23 kB/s | 101 kB     00:04    
+(4/9): perl-Glib-1.310-1.fc22.x86_64.rpm                                            159 kB/s | 362 kB     00:02    
+(5/9): perl-Cairo-1.105-1.fc22.x86_64.rpm                                            56 kB/s | 126 kB     00:02    
+(6/9): perl-HTML-Tree-5.03-8.fc22.noarch.rpm                                         99 kB/s | 223 kB     00:02    
+(7/9): perl-Gtk2-1.2495-1.fc22.x86_64.rpm                                           342 kB/s | 1.8 MB     00:05    
+(8/9): perl-Pango-1.226-3.fc22.x86_64.rpm                                            89 kB/s | 220 kB     00:02    
+(9/9): pcsc-lite-asekey-3.7-1.fc22.x86_64.rpm                                        21 kB/s |  34 kB     00:01    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                               257 kB/s | 3.0 MB     00:11     
+Running transaction check                                   
+Transaction check succeeded.                                
+Running transaction test                                     
+Transaction test succeeded.                                   
+Running transaction                                             
+  Installing  : perl-Glib-1.310-1.fc22.x86_64                                                                   1/9 
+  Installing  : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              2/9 
+  Installing  : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  3/9 
+  Installing  : perl-Cairo-1.105-1.fc22.x86_64                                                                  4/9 
+  Installing  : perl-Pango-1.226-3.fc22.x86_64                                                                  5/9 
+  Installing  : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             6/9 
+  Installing  : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  7/9 
+  Installing  : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 8/9 
+  Installing  : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 9/9 
+  Verifying   : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 1/9 
+  Verifying   : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  2/9 
+  Verifying   : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 3/9 
+  Verifying   : perl-Glib-1.310-1.fc22.x86_64                                                                   4/9 
+  Verifying   : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  5/9 
+  Verifying   : perl-Cairo-1.105-1.fc22.x86_64                                                                  6/9 
+  Verifying   : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             7/9 
+  Verifying   : perl-Pango-1.226-3.fc22.x86_64                                                                  8/9 
+  Verifying   : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              9/9 
 
-<p>Total download size: 3.0 M                                <br/>
-Installed size: 8.4 M                                     <br/>
-Is this ok [y/N]: y                                        <br/>
-Downloading Packages:                                      <br/>
-(1/9): pcsc-tools-1.4.23-1.fc22.x86_64.rpm                                           38 kB/s | 116 kB     00:03  <br/>
-(2/9): pcsc-perl-1.4.12-11.fc22.x86_64.rpm                                           20 kB/s |  61 kB     00:03  <br/>
-(3/9): pcsc-lite-1.8.13-1.fc22.x86_64.rpm                                            23 kB/s | 101 kB     00:04  <br/>
-(4/9): perl-Glib-1.310-1.fc22.x86_64.rpm                                            159 kB/s | 362 kB     00:02  <br/>
-(5/9): perl-Cairo-1.105-1.fc22.x86_64.rpm                                            56 kB/s | 126 kB     00:02  <br/>
-(6/9): perl-HTML-Tree-5.03-8.fc22.noarch.rpm                                         99 kB/s | 223 kB     00:02  <br/>
-(7/9): perl-Gtk2-1.2495-1.fc22.x86_64.rpm                                           342 kB/s | 1.8 MB     00:05  <br/>
-(8/9): perl-Pango-1.226-3.fc22.x86_64.rpm                                            89 kB/s | 220 kB     00:02</p>
+Installed:
+  pcsc-lite.x86_64 1.8.13-1.fc22       pcsc-lite-asekey.x86_64 3.7-1.fc22       pcsc-perl.x86_64 1.4.12-11.fc22     
+  pcsc-tools.x86_64 1.4.23-1.fc22      perl-Cairo.x86_64 1.105-1.fc22           perl-Glib.x86_64 1.310-1.fc22       
+  perl-Gtk2.x86_64 1.2495-1.fc22       perl-HTML-Tree.noarch 1:5.03-8.fc22      perl-Pango.x86_64 1.226-3.fc22      
 
-<h2>(9/9): pcsc-lite-asekey-3.7-1.fc22.x86_64.rpm                                        21 kB/s |  34 kB     00:01    </h2>
+Complete!
+[root@vicky ~]# 
+</code></pre>
 
-<p>Total                                                                               257 kB/s | 3.0 MB     00:11   <br/>
-Running transaction check                                 <br/>
-Transaction check succeeded.                              <br/>
-Running transaction test                                   <br/>
-Transaction test succeeded.                                 <br/>
-Running transaction                                           <br/>
-  Installing  : perl-Glib-1.310-1.fc22.x86_64                                                                   1/9
-  Installing  : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              2/9
-  Installing  : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  3/9
-  Installing  : perl-Cairo-1.105-1.fc22.x86_64                                                                  4/9
-  Installing  : perl-Pango-1.226-3.fc22.x86_64                                                                  5/9
-  Installing  : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             6/9
-  Installing  : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  7/9
-  Installing  : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 8/9
-  Installing  : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 9/9
-  Verifying   : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 1/9
-  Verifying   : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  2/9
-  Verifying   : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 3/9
-  Verifying   : perl-Glib-1.310-1.fc22.x86_64                                                                   4/9
-  Verifying   : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  5/9
-  Verifying   : perl-Cairo-1.105-1.fc22.x86_64                                                                  6/9
-  Verifying   : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             7/9
-  Verifying   : perl-Pango-1.226-3.fc22.x86_64                                                                  8/9
-  Verifying   : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              9/9</p>
+<pre><code>root@vicky ~]# dnf install opensc
+Last metadata expiration check performed 0:37:38 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                  Arch                     Version                           Repository                Size
+====================================================================================================================
+Installing:
+ opensc                   x86_64                   0.14.0-2.fc22                     fedora                   976 k
 
-<p>Installed:
-  pcsc-lite.x86_64 1.8.13-1.fc22       pcsc-lite-asekey.x86_64 3.7-1.fc22       pcsc-perl.x86_64 1.4.12-11.fc22   <br/>
-  pcsc-tools.x86_64 1.4.23-1.fc22      perl-Cairo.x86_64 1.105-1.fc22           perl-Glib.x86_64 1.310-1.fc22     <br/>
-  perl-Gtk2.x86_64 1.2495-1.fc22       perl-HTML-Tree.noarch 1:5.03-8.fc22      perl-Pango.x86_64 1.226-3.fc22</p>
+Transaction Summary
+====================================================================================================================
+Install  1 Package
 
-<p>Complete!
-[root@vicky ~]#</p>
-
-<p>```</p>
-
-<p>```
-root@vicky ~]# dnf install opensc
-Last metadata expiration check performed 0:37:38 ago on Sun Jun 14 09:14:34 2015.</p>
-
-<h1>Dependencies resolved.</h1>
-
-<h1> Package                  Arch                     Version                           Repository                Size</h1>
-
-<p>Installing:
- opensc                   x86_64                   0.14.0-2.fc22                     fedora                   976 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 976 k
+Total download size: 976 k
 Installed size: 2.8 M
 Is this ok [y/N]: y
-Downloading Packages:</p>
-
-<h2>opensc-0.14.0-2.fc22.x86_64.rpm                                                     277 kB/s | 976 kB     00:03    </h2>
-
-<p>Total                                                                               203 kB/s | 976 kB     00:04   <br/>
+Downloading Packages:
+opensc-0.14.0-2.fc22.x86_64.rpm                                                     277 kB/s | 976 kB     00:03    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                               203 kB/s | 976 kB     00:04     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : opensc-0.14.0-2.fc22.x86_64                                                                     1/1
-  Verifying   : opensc-0.14.0-2.fc22.x86_64                                                                     1/1</p>
+  Installing  : opensc-0.14.0-2.fc22.x86_64                                                                     1/1 
+  Verifying   : opensc-0.14.0-2.fc22.x86_64                                                                     1/1 
 
-<p>Installed:
-  opensc.x86_64 0.14.0-2.fc22</p>
+Installed:
+  opensc.x86_64 0.14.0-2.fc22                                                                                       
 
-<p>Complete!
+Complete!
 [root@vicky ~]# dnf search opensc
-```</p>
+</code></pre>
 
-<p>```
-[root@vicky ~]# dnf search ccid
+<pre><code>[root@vicky ~]# dnf search ccid
 Last metadata expiration check performed 0:39:03 ago on Sun Jun 14 09:14:34 2015.
 ================================================ N/S Matched: ccid =================================================
 pcsc-lite-ccid.x86_64 : Generic USB CCID smart card reader driver
 libykneomgr.i686 : YubiKey NEO CCID Manager C Library
 libykneomgr.x86_64 : YubiKey NEO CCID Manager C Library
 [root@vicky ~]# dnf install pcsc-lite-ccid
-Last metadata expiration check performed 0:39:34 ago on Sun Jun 14 09:14:34 2015.</p>
+Last metadata expiration check performed 0:39:34 ago on Sun Jun 14 09:14:34 2015.
+Dependencies resolved.
+====================================================================================================================
+ Package                        Arch                   Version                         Repository              Size
+====================================================================================================================
+Installing:
+ pcsc-lite-ccid                 x86_64                 1.4.18-1.fc22                   fedora                 177 k
 
-<h1>Dependencies resolved.</h1>
+Transaction Summary
+====================================================================================================================
+Install  1 Package
 
-<h1> Package                        Arch                   Version                         Repository              Size</h1>
-
-<p>Installing:
- pcsc-lite-ccid                 x86_64                 1.4.18-1.fc22                   fedora                 177 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 177 k
+Total download size: 177 k
 Installed size: 599 k
 Is this ok [y/N]: y
-Downloading Packages:</p>
-
-<h2>pcsc-lite-ccid-1.4.18-1.fc22.x86_64.rpm                                              47 kB/s | 177 kB     00:03    </h2>
-
-<p>Total                                                                                27 kB/s | 177 kB     00:06   <br/>
+Downloading Packages:
+pcsc-lite-ccid-1.4.18-1.fc22.x86_64.rpm                                              47 kB/s | 177 kB     00:03    
+--------------------------------------------------------------------------------------------------------------------
+Total                                                                                27 kB/s | 177 kB     00:06     
 Running transaction check
 Transaction check succeeded.
 Running transaction test
 Transaction test succeeded.
 Running transaction
-  Installing  : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1
-  Verifying   : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1</p>
+  Installing  : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1 
+  Verifying   : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1 
 
-<p>Installed:
-  pcsc-lite-ccid.x86_64 1.4.18-1.fc22</p>
+Installed:
+  pcsc-lite-ccid.x86_64 1.4.18-1.fc22                                                                               
 
-<p>Complete!
-[root@vicky ~]#
-```</p>
+Complete!
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Start the pcscd service</h4>
 
-<p><code>
-root@vicky ~]# systemctl list-unit-files -t service | grep pcscd
+<pre><code>root@vicky ~]# systemctl list-unit-files -t service | grep pcscd
 pcscd.service                               static  
 [root@vicky ~]# systemctl start pcscd
 [root@vicky ~]# systemctl enable pcscd
-[root@vicky ~]#
-</code></p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Verify that you are able to see the yubi smartcard</h4>
 
 <h5>Run pcsc_scan</h5>
 
-<p>Execute "pcsc_scan" to verify that you see the smartcard</p>
+<p>Execute &ldquo;pcsc_scan&rdquo; to verify that you see the smartcard</p>
 
-<p>```
-[staf@vicky ~]$ pcsc_scan
+<pre><code>[staf@vicky ~]$ pcsc_scan 
 PC/SC device scanner
-V 1.4.23 (c) 2001-2011, Ludovic Rousseau <a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#108;&#117;&#x64;&#x6f;&#x76;&#105;&#99;&#x2e;&#114;&#x6f;&#x75;&#115;&#x73;&#x65;&#x61;&#117;&#64;&#102;&#x72;&#x65;&#101;&#x2e;&#x66;&#114;">&#x6c;&#117;&#x64;&#111;&#x76;&#105;&#x63;&#x2e;&#114;&#111;&#117;&#115;&#x73;&#101;&#x61;&#x75;&#64;&#102;&#x72;&#x65;&#x65;&#46;&#x66;&#114;</a>
+V 1.4.23 (c) 2001-2011, Ludovic Rousseau &lt;ludovic.rousseau@free.fr&gt;
 Compiled with PC/SC lite version: 1.8.13
 Using reader plug'n play mechanism
 Scanning present readers...
 0: Gemalto Gemplus USB SmartCard Reader 433-Swap [CCID Interface] (1-0000:00:06.7-1) 00 00
-1: Yubico Yubikey NEO OTP+CCID 01 00</p>
+1: Yubico Yubikey NEO OTP+CCID 01 00
 
-<p>Mon Jun 15 11:36:44 2015
+Mon Jun 15 11:36:44 2015
 Reader 0: Gemalto Gemplus USB SmartCard Reader 433-Swap [CCID Interface] (1-0000:00:06.7-1) 00 00
-  Card state: Card removed,
+  Card state: Card removed, 
 Reader 1: Yubico Yubikey NEO OTP+CCID 01 00
-  Card state: Card inserted,
-  ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1</p>
+  Card state: Card inserted, 
+  ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
 
-<p>defined(@array) is deprecated at /usr/lib64/perl5/vendor_perl/Chipcard/PCSC.pm line 69.</p>
-
-<pre><code>    (Maybe you should just omit the defined()?)
-</code></pre>
-
-<p>ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
-+ TS = 3B --> Direct Convention
+defined(@array) is deprecated at /usr/lib64/perl5/vendor_perl/Chipcard/PCSC.pm line 69.
+        (Maybe you should just omit the defined()?)
+ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
++ TS = 3B --&gt; Direct Convention
 + T0 = FC, Y(1): 1111, K: 12 (historical bytes)
-  TA(1) = 13 --> Fi=372, Di=4, 93 cycles/ETU</p>
-
-<pre><code>43010 bits/s at 4 MHz, fMax for Fi = 5 MHz =&gt; 53763 bits/s
-</code></pre>
-
-<p>  TB(1) = 00 --> VPP is not electrically connected
-  TC(1) = 00 --> Extra guard time: 0</p>
-
-<h2>  TD(1) = 81 --> Y(i+1) = 1000, Protocol T = 1 </h2>
-
-<h2>  TD(2) = 31 --> Y(i+1) = 0011, Protocol T = 1 </h2>
-
-<p>  TA(3) = FE --> IFSC: 254
-  TB(3) = 15 --> Block Waiting Integer: 1 - Character Waiting Integer: 5
+  TA(1) = 13 --&gt; Fi=372, Di=4, 93 cycles/ETU
+    43010 bits/s at 4 MHz, fMax for Fi = 5 MHz =&gt; 53763 bits/s
+  TB(1) = 00 --&gt; VPP is not electrically connected
+  TC(1) = 00 --&gt; Extra guard time: 0
+  TD(1) = 81 --&gt; Y(i+1) = 1000, Protocol T = 1 
+-----
+  TD(2) = 31 --&gt; Y(i+1) = 0011, Protocol T = 1 
+-----
+  TA(3) = FE --&gt; IFSC: 254
+  TB(3) = 15 --&gt; Block Waiting Integer: 1 - Character Waiting Integer: 5
 + Historical bytes: 59 75 62 69 6B 65 79 4E 45 4F 72 33
   Category indicator byte: 59 (proprietary format)
-+ TCK = E1 (correct checksum)</p>
++ TCK = E1 (correct checksum)
 
-<p>Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
-3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1</p>
-
-<pre><code>    YubiKey NEO (PKI)
-    http://www.yubico.com/
+Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
+3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
+        YubiKey NEO (PKI)
+        http://www.yubico.com/
 </code></pre>
-
-<p>```</p>
 
 <h4>Remote smartcard access</h4>
 
 <p>By default only console logins have access to the smartcard if you want to grant access to remote logins (e.g. ssh)
 create a polkit rule for the user that will use the smartcard.</p>
 
-<p><code>
-[root@vicky ~]# cd /usr/share/polkit-1/rules.d/                                    
-[root@vicky rules.d]# vi 30_smartcard_access.rules
-</code></p>
-
-<p>```
-polkit.addRule(function(action, subject) {</p>
-
-<pre><code>if (action.id == "org.debian.pcsc-lite.access_pcsc" &amp;&amp;
-    subject.user == "staf") {
-        return polkit.Result.YES;
-}
+<pre><code>[root@vicky ~]# cd /usr/share/polkit-1/rules.d/                                    
+[root@vicky rules.d]# vi 30_smartcard_access.rules 
 </code></pre>
 
-<p>});</p>
+<pre><code>polkit.addRule(function(action, subject) {
+    if (action.id == "org.debian.pcsc-lite.access_pcsc" &amp;&amp;
+        subject.user == "staf") {
+            return polkit.Result.YES;
+    }
+});
 
-<p>polkit.addRule(function(action, subject) {</p>
-
-<pre><code>if (action.id == "org.debian.pcsc-lite.access_card" &amp;&amp;
-    action.lookup("reader") == 'name_of_reader' &amp;&amp;
-    subject.user == "staf") {
-        return polkit.Result.YES;    }
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.debian.pcsc-lite.access_card" &amp;&amp;
+        action.lookup("reader") == 'name_of_reader' &amp;&amp;
+        subject.user == "staf") {
+            return polkit.Result.YES;    }
+});
 </code></pre>
-
-<p>});</p>
-
-<p>```</p>
 
 <h3>Reset smartcard PIN codes</h3>
 
-<p>The default user PIN code is "123456" the default admin PIN code is "12345678"</p>
+<p>The default user PIN code is &ldquo;123456&rdquo; the default admin PIN code is &ldquo;12345678&rdquo;</p>
 
-<p>```
-[staf@vicky ~]$ gpg --change-pin
-gpg: OpenPGP card no. D2760001240102000006035062250000 detected</p>
+<pre><code>[staf@vicky ~]$ gpg --change-pin 
+gpg: OpenPGP card no. D2760001240102000006035062250000 detected
 
-<p>1 - change PIN
+1 - change PIN
 2 - unblock PIN
 3 - change Admin PIN
 4 - set the Reset Code
-Q - quit</p>
+Q - quit
 
-<h4>Change user PIN</h4>
+#### Change user PIN
 
-<p>Your selection?
-```</p>
+Your selection? 
+</code></pre>
 
-<p>```
-Your selection? 1</p>
+<pre><code>Your selection? 1
 
-<p>Please enter the PIN</p>
+Please enter the PIN
 
-<p>New PIN</p>
+New PIN
 
-<p>New PIN
-PIN changed.</p>
-
-<p>```</p>
+New PIN
+PIN changed.     
+</code></pre>
 
 <h4>Change admin PIN</h4>
 
-<p>```
- - change PIN
+<pre><code> - change PIN
 2 - unblock PIN
 3 - change Admin PIN
 4 - set the Reset Code
-Q - quit</p>
+Q - quit
 
-<p>Your selection? 3
-gpg: 3 Admin PIN attempts remaining before card is permanently locked</p>
+Your selection? 3
+gpg: 3 Admin PIN attempts remaining before card is permanently locked
 
-<p>Please enter the Admin PIN</p>
+Please enter the Admin PIN
 
-<p>New Admin PIN</p>
+New Admin PIN
 
-<p>New Admin PIN
-PIN changed.</p>
+New Admin PIN
+PIN changed.     
 
-<p>1 - change PIN
+1 - change PIN
 2 - unblock PIN
 3 - change Admin PIN
 4 - set the Reset Code
-Q - quit</p>
+Q - quit
 
-<p>Your selection?</p>
-
-<p>```</p>
+Your selection? 
+</code></pre>
 
 <h3>Generate a new key pair</h3>
 
-<h4>Execute "gpg --card-edit"</h4>
+<h4>Execute &ldquo;gpg &ndash;card-edit&rdquo;</h4>
 
-<p>```
-[staf@vicky ~]$ gpg --card-edit</p>
+<pre><code>[staf@vicky ~]$ gpg --card-edit 
 
-<p>Application ID ...: D2760001240102000006035062250000
+Application ID ...: D2760001240102000006035062250000
 Version ..........: 2.0
 Manufacturer .....: unknown
 Serial number ....: 03506225
@@ -529,97 +471,72 @@ Key attributes ...: 2048R 2048R 2048R
 Max. PIN lengths .: 127 127 127
 PIN retry counter : 3 3 3
 Signature counter : 5
-Signature key ....: 1E41 4C61 B1CE F02A F431  85BF 46B9 3657 54DF 802E</p>
+Signature key ....: 1E41 4C61 B1CE F02A F431  85BF 46B9 3657 54DF 802E
+      created ....: 2015-06-15 11:47:23
+Encryption key....: BB75 75F4 404A 2681 4331  4B46 34E7 EE51 4199 C702
+      created ....: 2015-06-15 11:47:23
+Authentication key: A7F8 A844 4762 C44D 20C7  A2AF E06D 602C 069D 7EFF
+      created ....: 2015-06-15 11:47:23
+General key info..: 
+pub  2048R/54DF802E 2015-06-15 qwerty &lt;qwert@qwert&gt;
+sec&gt;  2048R/54DF802E  created: 2015-06-15  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/069D7EFF  created: 2015-06-15  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/4199C702  created: 2015-06-15  expires: never     
+                      card-no: 0006 03506225
 
-<pre><code>  created ....: 2015-06-15 11:47:23
+gpg/card&gt; 
 </code></pre>
-
-<p>Encryption key....: BB75 75F4 404A 2681 4331  4B46 34E7 EE51 4199 C702</p>
-
-<pre><code>  created ....: 2015-06-15 11:47:23
-</code></pre>
-
-<p>Authentication key: A7F8 A844 4762 C44D 20C7  A2AF E06D 602C 069D 7EFF</p>
-
-<pre><code>  created ....: 2015-06-15 11:47:23
-</code></pre>
-
-<p>General key info..:
-pub  2048R/54DF802E 2015-06-15 qwerty &lt;qwert@qwert>
-sec>  2048R/54DF802E  created: 2015-06-15  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/069D7EFF  created: 2015-06-15  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/4199C702  created: 2015-06-15  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>gpg/card>
-```</p>
 
 <h4>Enable admin commands</h4>
 
-<p>```
-gpg/card> admin
-Admin commands are allowed</p>
+<pre><code>gpg/card&gt; admin
+Admin commands are allowed                                                      
 
-<p>gpg/card>                                                                      <br/>
-```</p>
+gpg/card&gt;                                                                        
+</code></pre>
 
 <h4>Generate key</h4>
 
-<p>```
-gpg/card> generate
-Make off-card backup of encryption key? (Y/n) n</p>
+<pre><code>gpg/card&gt; generate 
+Make off-card backup of encryption key? (Y/n) n
 
-<p>gpg: NOTE: keys are already stored on the card!</p>
+gpg: NOTE: keys are already stored on the card!
 
-<p>Replace existing keys? (y/N) y</p>
+Replace existing keys? (y/N) y
 
-<p>Please note that the factory settings of the PINs are
-   PIN = <code>123456'     Admin PIN =</code>12345678'
-You should change them using the command --change-pin</p>
+Please note that the factory settings of the PINs are
+   PIN = `123456'     Admin PIN = `12345678'
+You should change them using the command --change-pin
 
-<p>Please enter the PIN
-Please specify how long the key should be valid.</p>
 
-<pre><code>     0 = key does not expire
-  &lt;n&gt;  = key expires in n days
-  &lt;n&gt;w = key expires in n weeks
-  &lt;n&gt;m = key expires in n months
-  &lt;n&gt;y = key expires in n years
-</code></pre>
-
-<p>Key is valid for? (0)
+Please enter the PIN
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 
 Key does not expire at all
-Is this correct? (y/N) y</p>
+Is this correct? (y/N) y
 
-<p>You need a user ID to identify your key; the software constructs the user ID
-from the Real Name, Comment and Email Address in this form:</p>
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
 
-<pre><code>"Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
-</code></pre>
-
-<p>Real name: staf wagemakers
+Real name: staf wagemakers
 Email address: staf@wagemakers.be
-Comment:
-You selected this USER-ID:</p>
+Comment: 
+You selected this USER-ID:
+    "staf wagemakers &lt;staf@wagemakers.be&gt;"
 
-<pre><code>"staf wagemakers &lt;staf@wagemakers.be&gt;"
-</code></pre>
-
-<p>Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
 gpg: existing key will be replaced
-gpg: 3 Admin PIN attempts remaining before card is permanently locked</p>
+gpg: 3 Admin PIN attempts remaining before card is permanently locked
 
-<p>Please enter the Admin PIN
+Please enter the Admin PIN
 gpg: please wait while key is being generated ...
 gpg: key generation completed (5 seconds)
 gpg: signatures created so far: 0
@@ -634,30 +551,26 @@ gpg: key generation completed (9 seconds)
 gpg: signatures created so far: 3
 gpg: signatures created so far: 4
 gpg: key C15CE3D7 marked as ultimately trusted
-public and secret key created and signed.</p>
+public and secret key created and signed.
 
-<p>gpg: checking the trustdb
+gpg: checking the trustdb
 gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
 gpg: depth: 0  valid:   2  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 2u
-pub   2048R/C15CE3D7 2015-06-15</p>
-
-<pre><code>  Key fingerprint = B702 663D 833B DC19 0EEF  663A 54FA 0B1E C15C E3D7
-</code></pre>
-
-<p>uid                  staf wagemakers <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#x73;&#x74;&#97;&#x66;&#64;&#119;&#x61;&#x67;&#x65;&#x6d;&#x61;&#x6b;&#101;&#x72;&#115;&#x2e;&#x62;&#x65;">&#x73;&#x74;&#97;&#x66;&#64;&#119;&#97;&#x67;&#101;&#109;&#x61;&#107;&#x65;&#x72;&#x73;&#46;&#98;&#x65;</a>
+pub   2048R/C15CE3D7 2015-06-15
+      Key fingerprint = B702 663D 833B DC19 0EEF  663A 54FA 0B1E C15C E3D7
+uid                  staf wagemakers &lt;staf@wagemakers.be&gt;
 sub   2048R/D2AEBBA3 2015-06-15
-sub   2048R/6C2C699A 2015-06-15</p>
+sub   2048R/6C2C699A 2015-06-15
 
-<p>gpg/card></p>
 
-<p>```</p>
+gpg/card&gt; 
+</code></pre>
 
 <h3>Extract the public key</h3>
 
-<h4>Execute gpg --card-status</h4>
+<h4>Execute gpg &ndash;card-status</h4>
 
-<p>```
-staf@vicky ~]$ gpg --card-status
+<pre><code>staf@vicky ~]$ gpg --card-status
 Application ID ...: D2760001240102000006035062250000
 Version ..........: 2.0
 Manufacturer .....: unknown
@@ -672,47 +585,28 @@ Key attributes ...: 2048R 2048R 2048R
 Max. PIN lengths .: 127 127 127
 PIN retry counter : 3 3 3
 Signature counter : 5
-Signature key ....: AED7 C79B 574D 45CC 7C1B  CC35 BDDE E66F 0C2C CF82</p>
-
-<pre><code>  created ....: 2015-06-16 06:32:02
+Signature key ....: AED7 C79B 574D 45CC 7C1B  CC35 BDDE E66F 0C2C CF82
+      created ....: 2015-06-16 06:32:02
+Encryption key....: 6650 AB0A 5F31 059F 3221  3F29 C9F3 2031 01B3 1F53
+      created ....: 2015-06-16 06:32:02
+Authentication key: A387 A45A 446E DC9C D78E  F173 7C19 5D7D A1D9 9813
+      created ....: 2015-06-16 06:32:02
+General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers &lt;staf@wagemakers.be&gt;
+sec&gt;  2048R/0C2CCF82  created: 2015-06-16  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/A1D99813  created: 2015-06-16  expires: never     
+                      card-no: 0006 03506225
+ssb&gt;  2048R/01B31F53  created: 2015-06-16  expires: never     
+                      card-no: 0006 03506225
+[staf@vicky ~]$ 
 </code></pre>
-
-<p>Encryption key....: 6650 AB0A 5F31 059F 3221  3F29 C9F3 2031 01B3 1F53</p>
-
-<pre><code>  created ....: 2015-06-16 06:32:02
-</code></pre>
-
-<p>Authentication key: A387 A45A 446E DC9C D78E  F173 7C19 5D7D A1D9 9813</p>
-
-<pre><code>  created ....: 2015-06-16 06:32:02
-</code></pre>
-
-<p>General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers <a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#x73;&#x74;&#x61;&#x66;&#64;&#119;&#97;&#x67;&#101;&#x6d;&#97;&#x6b;&#101;&#x72;&#x73;&#46;&#x62;&#x65;">&#x73;&#116;&#x61;&#x66;&#64;&#119;&#97;&#103;&#x65;&#x6d;&#x61;&#107;&#101;&#114;&#x73;&#x2e;&#x62;&#101;</a>
-sec>  2048R/0C2CCF82  created: 2015-06-16  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/A1D99813  created: 2015-06-16  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>ssb>  2048R/01B31F53  created: 2015-06-16  expires: never</p>
-
-<pre><code>                  card-no: 0006 03506225
-</code></pre>
-
-<p>[staf@vicky ~]$
-```</p>
 
 <h4>Run gpgkey2ssh on the authentication key</h4>
 
-<p><code>
-[staf@vicky ~]$ gpgkey2ssh A1D99813
+<pre><code>[staf@vicky ~]$ gpgkey2ssh A1D99813
 ssh-rsa qwertyqwertyqwerty COMMENT
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h3>Test ssh access</h3>
 
@@ -724,44 +618,38 @@ ssh-rsa qwertyqwertyqwerty COMMENT
 
 <p>Create your gpg-agent.conf file</p>
 
-<p><code>
-[staf@vicky ~]$ vi .gnupg/gpg-agent.conf
-</code></p>
+<pre><code>[staf@vicky ~]$ vi .gnupg/gpg-agent.conf
+</code></pre>
 
-<p><code>
-pinentry-program  /usr/bin/pinentry
+<pre><code>pinentry-program  /usr/bin/pinentry
 enable-ssh-support
-</code></p>
+</code></pre>
 
 <h4>Start the gpg-agent</h4>
 
-<p><code>
-staf@vicky ~]$ gpg-agent --daemon --verbose
+<pre><code>staf@vicky ~]$ gpg-agent --daemon --verbose
 gpg-agent[1395]: listening on socket '/home/staf/.gnupg/S.gpg-agent'
 gpg-agent[1395]: listening on socket '/home/staf/.gnupg/S.gpg-agent.ssh'
 gpg-agent[1396]: gpg-agent (GnuPG) 2.1.4 started
 SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-[staf@vicky ~]$
-</code></p>
+[staf@vicky ~]$ 
+</code></pre>
 
 <h4>Export the SSH_AUTH_SOCK variable</h4>
 
-<p>```
-SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;</p>
-
-<p>```</p>
+<pre><code>SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
+</code></pre>
 
 <h4>Verify the agent</h4>
 
 <p>Run ssh-add -L</p>
 
-<p><code>
-[staf@vicky ~]$ ssh-add -L
+<pre><code>[staf@vicky ~]$ ssh-add -L
 error fetching identities for protocol 1: agent refused operation
 ssh-rsa qwertyqwertyqwerty cardno:xxxx
-</code></p>
+</code></pre>
 
-<p>The public key must be the same as extracted with "gpgkey2ssh"</p>
+<p>The public key must be the same as extracted with &ldquo;gpgkey2ssh&rdquo;</p>
 
 <h4>Add the public key to the remote system</h4>
 
@@ -771,52 +659,52 @@ ssh-rsa qwertyqwertyqwerty cardno:xxxx
 
 <p>Try to logon to your remote system</p>
 
-<p><code>
-staf@vicky ~]$ ssh -v xxx.xxx.xxx.xxx
-</code></p>
+<pre><code>staf@vicky ~]$ ssh -v xxx.xxx.xxx.xxx
+</code></pre>
 
 <p>You should get a window that asks for user PIN code.</p>
 
-<p>```</p>
+<pre><code>
 
-<pre><code>           ┌──────────────────────────────────────────────┐
-           │ Please enter the PIN                         │
-           │                                              │
-           │ PIN ________________________________________ │
-           │                                              │
-           │      &lt;OK&gt;                        &lt;Cancel&gt;    │
-           └──────────────────────────────────────────────┘
+
+
+
+
+
+               ┌──────────────────────────────────────────────┐
+               │ Please enter the PIN                         │
+               │                                              │
+               │ PIN ________________________________________ │
+               │                                              │
+               │      &lt;OK&gt;                        &lt;Cancel&gt;    │
+               └──────────────────────────────────────────────┘
 </code></pre>
 
-<p>```</p>
+<pre><code>FreeBSD 10.1-RELEASE-p10 (GENERIC) #0: Wed May 13 06:54:13 UTC 2015
 
-<p>```
-FreeBSD 10.1-RELEASE-p10 (GENERIC) #0: Wed May 13 06:54:13 UTC 2015</p>
+Welcome to FreeBSD!
 
-<p>Welcome to FreeBSD!</p>
-
-<p>Release Notes, Errata: https://www.FreeBSD.org/releases/
+Release Notes, Errata: https://www.FreeBSD.org/releases/
 Security Advisories:   https://www.FreeBSD.org/security/
 FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
 FreeBSD FAQ:           https://www.FreeBSD.org/faq/
 Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
-FreeBSD Forums:        https://forums.FreeBSD.org/</p>
+FreeBSD Forums:        https://forums.FreeBSD.org/
 
-<p>Documents installed with the system are in the /usr/local/share/doc/freebsd/
+Documents installed with the system are in the /usr/local/share/doc/freebsd/
 directory, or can be installed later with:  pkg install en-freebsd-doc
-For other languages, replace "en" with a language code like de or fr.</p>
+For other languages, replace "en" with a language code like de or fr.
 
-<p>Show the version of FreeBSD installed:  freebsd-version ; uname -a
+Show the version of FreeBSD installed:  freebsd-version ; uname -a
 Please include that output and any error messages when posting questions.
 Introduction to manual pages:  man man
-FreeBSD directory layout:      man hier</p>
+FreeBSD directory layout:      man hier
 
-<p>Edit /etc/motd to change this login announcement.
+Edit /etc/motd to change this login announcement.
 Want to run the same command again?
 In tcsh you can type "!!"
-$</p>
-
-<p>```</p>
+$ 
+</code></pre>
 
 <h2>CleanUp</h2>
 
@@ -824,10 +712,9 @@ $</p>
 
 <p>Add</p>
 
-<p><code>
-gpg-agent --daemon
+<pre><code>gpg-agent --daemon
 SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-</code></p>
+</code></pre>
 
 <p>To your .bash_profile or setup a generic script for all users in /etc/profile.d/</p>
 
@@ -838,27 +725,27 @@ SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
 <h2>Links</h2>
 
 <ul>
-<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></li>
-<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></li>
-<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></li>
-<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></li>
-<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></li>
-<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></li>
-<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></li>
-<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></li>
-<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></li>
+<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/"><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></a></li>
+<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO"><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></a></li>
+<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html"><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></a></li>
+<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171"><a href="http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></a></li>
+<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/"><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html"><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></a></li>
+<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/"><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></a></li>
+<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
+<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst"><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></a></li>
+<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/"><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card"><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Udev"><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></a></li>
+<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/"><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></a></li>
 </ul>
 
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Run google chrome inside a fedora docker container over ssh]]></title>
+    <title type="html"><![CDATA[Run Google Chrome Inside a Fedora Docker Container Over Ssh]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
@@ -869,7 +756,7 @@ SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
 
 <p>Update (Mon Jun  8 2015):</p>
 
-<p>Running google-chrome inside a docker container isn't stable for me.
+<p>Running google-chrome inside a docker container isn&rsquo;t stable for me.
 I switched back to LXC to run google-chrome which seems to be more stable.</p>
 
 <hr />
@@ -886,85 +773,74 @@ Destroying the container each time that you start a browser is a easy way to get
 
 <p>1/ Clone the git repo</p>
 
-<p><code>
-$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
-</code></p>
+<pre><code>$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
+</code></pre>
 
 <p>2/ Copy your public ssh to id_rsa.pub</p>
 
-<p><code>
-$ cd docker-fedora-chrome-ssh
+<pre><code>$ cd docker-fedora-chrome-ssh
 $ cp ~/.ssh/id_rsa.pub .
-</code></p>
+</code></pre>
 
 <p>3/ Build the docker image</p>
 
-<p><code>
-$ docker build -t stafwag/docker-fedora-chrome-ssh .
-</code></p>
+<pre><code>$ docker build -t stafwag/docker-fedora-chrome-ssh .
+</code></pre>
 
 <p>4/ Update your ssh config</p>
 
-<p><code>
-$ vi ~/.ssh/config
-</code></p>
-
-<p>```
-Host mychrome</p>
-
-<pre><code>      User      chrome
-      Port      8022
-      HostName  127.0.0.1
-      StrictHostKeyChecking no
-      UserKnownHostsFile=/dev/null
-      ForwardX11 yes
+<pre><code>$ vi ~/.ssh/config
 </code></pre>
 
-<p>```</p>
+<pre><code>Host mychrome
+          User      chrome
+          Port      8022
+          HostName  127.0.0.1
+          StrictHostKeyChecking no
+          UserKnownHostsFile=/dev/null
+          ForwardX11 yes
+</code></pre>
 
 <p>5/ Start chrome</p>
 
-<p><code>
-$ ./startchrome.sh
-</code></p>
+<pre><code>$ ./startchrome.sh
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
+    <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I'm a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
-<p>As always with virtualization you've to careful with sharing systems or containers that doesn't below to the same customer or service on the same physical machine since you're never sure which traces are left behind in the memory etc.</p>
+<p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>
 
 <p><a href="https://linuxcontainers.org/">Linux containers</a> are getting more popular since the release of <a href="http://www.docker.com/">docker</a></p>
 
-<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn't an success.</p>
+<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn&rsquo;t an success.</p>
 
-<p>On a newly create debian container networking didn't work.</p>
+<p>On a newly create debian container networking didn&rsquo;t work.</p>
 
 <h3>First debian container</h3>
 
 <h4>Creating the container</h4>
 
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+<pre><code>[root@vicky ~]# lxc-create -n mydebian -t debian
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 debootstrap is /sbin/debootstrap
-Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ...
-Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might
-&lt; snip &gt;
+Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ... 
+Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might 
+&amp;lt; snip &amp;gt;
 'debian' template installed
 'mydebian' created
-```</p>
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
+<pre><code>[root@vicky ~]# lxc-start -n mydebian
 INIT: version 2.88 booting
 Using makefile-style concurrent boot in runlevel S.
 Cleaning up ifupdown....
@@ -981,58 +857,53 @@ Setting kernel variables ...done.
 Cleaning up temporary files....
 INIT: Entering runlevel: 3
 Using makefile-style concurrent boot in runlevel 3.
-Starting OpenBSD Secure Shell server: sshd.</p>
+Starting OpenBSD Secure Shell server: sshd.
 
-<p>Debian GNU/Linux 6.0 mydebian console</p>
+Debian GNU/Linux 6.0 mydebian console
 
-<p>mydebian login: root
-Password:
+mydebian login: root
+Password: 
 Last login: Tue Jun 21 08:05:41 UTC 2014 on console
 Linux mydebian 3.14.5-200.fc20.i686 #1 SMP Mon Jun 21 08:13:19 UTC 2014 i686
-```</p>
+</code></pre>
 
-<h3>Network isn't working...</h3>
+<h3>Network isn&rsquo;t working&hellip;</h3>
 
-<p>```
-The programs included with the Debian GNU/Linux system are free software;
+<pre><code>The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
+individual files in /usr/share/doc/*/copyright.
 
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 root@mydebian:~# ifconfig -a
-eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3</p>
+eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3  
+          inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
 
-<pre><code>      inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:13 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
-</code></pre>
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
 
-<p>lo        Link encap:Local Loopback</p>
-
-<pre><code>      inet addr:127.0.0.1  Mask:255.0.0.0
-      inet6 addr: ::1/128 Scope:Host
-      UP LOOPBACK RUNNING  MTU:65536  Metric:1
-      RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:0 
-      RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-</code></pre>
-
-<p>root@mydebian:~# ifup eth0
+root@mydebian:~# ifup eth0
 ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-root@mydebian:~#
-root@mydebian:~# cat /etc/network/interfaces
+root@mydebian:~# 
+root@mydebian:~# cat /etc/network/interfaces 
 auto lo
-iface lo inet loopback</p>
+iface lo inet loopback
 
-<p>auto eth0
+auto eth0
 iface eth0 inet dhcp
-root@mydebian:~#
-```</p>
+root@mydebian:~# 
+</code></pre>
 
 <h3>Fedora container</h3>
 
@@ -1040,29 +911,25 @@ root@mydebian:~#
 
 <h4>Creating the fedora container</h4>
 
-<p>```
-root@vicky ~]# lxc-create -n myfedora -t fedora</p>
+<pre><code>root@vicky ~]# lxc-create -n myfedora -t fedora
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 Host CPE ID from /etc/os-release: cpe:/o:fedoraproject:fedora:20
-Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ...
+Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ... 
 Downloading fedora minimal ...
 Fetching rpm name from http://be.mirror.eurid.eu/fedora/linux/releases/20/Everything/i386/os//Packages/f...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</p>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
+  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525
 
-<pre><code>                             Dload  Upload   Total   Spent    Left  Speed
-</code></pre>
-
-<p>100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
-  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525</p>
-
-<p><snip>
+&lt;snip&gt;
 Updated:
-  fedora-release.noarch 0:20-3</p>
+  fedora-release.noarch 0:20-3                                                  
 
-<p>Complete!
+Complete!
 Download complete.
-Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ...
+Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ... 
 Copying rootfs to /var/lib/lxc/myfedora/rootfs ...setting root passwd to root
 installing fedora-release package
 Package fedora-release-20-3.noarch already installed and latest version
@@ -1071,60 +938,52 @@ unlink: cannot unlink ‘/var/lib/lxc/myfedora/rootfs/etc/systemd/system/default
 container rootfs and config created
 'fedora' template installed
 'myfedora' created
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n myfedora
+<pre><code>[root@vicky ~]# lxc-start -n myfedora
 systemd 208 running in system mode. (+PAM +LIBWRAP +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT +ACL +XZ)
-Detected virtualization 'lxc'.</p>
+Detected virtualization 'lxc'.
 
-<p>Welcome to Fedora 20 (Heisenbug)!</p>
+Welcome to Fedora 20 (Heisenbug)!
 
-<p>Set hostname to <myfedora>.
+Set hostname to &lt;myfedora&gt;.
 [  OK  ] Reached target Remote File Systems.
 [  OK  ] Listening on Delayed Shutdown Socket.
 [  OK  ] Created slice Root Slice.
 [  OK  ] Created slice User and Session Slice.
 [  OK  ] Started Login Service.
-&lt; snip &gt;
-[  OK  ] Reached target Multi-User System.</p>
+&amp;lt; snip &amp;gt;
+[  OK  ] Reached target Multi-User System.
 
-<p>Fedora release 20 (Heisenbug)
-Kernel 3.14.5-200.fc20.i686 on an i686 (console)</p>
+Fedora release 20 (Heisenbug)
+Kernel 3.14.5-200.fc20.i686 on an i686 (console)
 
-<p>myfedora login: root
-Password:
+myfedora login: root
+Password: 
 Last login: Wed Jun 21 09:12:42 on console
-```</p>
+</code></pre>
 
 <h4>Networking</h4>
 
-<p>```
-[root@myfedora ~]# ping 8.8.8.8
+<pre><code>[root@myfedora ~]# ping 8.8.8.8
 connect: Network is unreachable
 [root@myfedora ~]# ip addr
-1: lo: &lt;LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default</p>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::5889:44ff:fe04:992b/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@myfedora ~]# ifup eth0
 
-<pre><code>link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-inet 127.0.0.1/8 scope host lo
-   valid_lft forever preferred_lft forever
-inet6 ::1/128 scope host 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</p>
-
-<pre><code>link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
-inet6 fe80::5889:44ff:fe04:992b/64 scope link 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>[root@myfedora ~]# ifup eth0</p>
-
-<p>Determining IP information for eth0... done.
+Determining IP information for eth0... done.
 [root@myfedora ~]# ping 8.8.8.8
 PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=113 ms
@@ -1134,8 +993,8 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 --- 8.8.8.8 ping statistics ---
 3 packets transmitted, 3 received, 0% packet loss, time 2002ms
 rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
-[root@myfedora ~]#
-```</p>
+[root@myfedora ~]# 
+</code></pre>
 
 <h3>New templates</h3>
 
@@ -1143,8 +1002,7 @@ rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
 
 <h4>Getting the templates</h4>
 
-<p><code>
-[staf@vicky github]$ git clone https://github.com/lxc/lxc
+<pre><code>[staf@vicky github]$ git clone https://github.com/lxc/lxc 
 Cloning into 'lxc'...
 remote: Reusing existing pack: 17997, done.
 remote: Counting objects: 17, done.
@@ -1153,28 +1011,26 @@ remote: Total 18014 (delta 9), reused 0 (delta 0)
 Receiving objects: 100% (18014/18014), 9.14 MiB | 77.00 KiB/s, done.
 Resolving deltas: 100% (11555/11555), done.
 Checking connectivity... done.
-[staf@vicky github]$
-</code></p>
+[staf@vicky github]$ 
+</code></pre>
 
 <h4>Configure</h4>
 
 <p>Create the configure script and it dependencies</p>
 
-<p><code>
-[staf@vicky lxc]$ autoreconf -i
+<pre><code>[staf@vicky lxc]$ autoreconf -i
 configure.ac:31: installing 'config/compile'
 configure.ac:30: installing 'config/config.guess'
 configure.ac:30: installing 'config/config.sub'
 configure.ac:29: installing 'config/install-sh'
 configure.ac:29: installing 'config/missing'
 src/lua-lxc/Makefile.am: installing 'config/depcomp'
-[staf@vicky lxc]$
-</code></p>
+[staf@vicky lxc]$ 
+</code></pre>
 
 <p>Run configure</p>
 
-<p>```
-[staf@vicky lxc]$ ./configure
+<pre><code>[staf@vicky lxc]$ ./configure 
 checking for pkg-config... /usr/bin/pkg-config
 checking pkg-config is at least version 0.9.0... yes
 checking for a BSD-compatible install... /usr/bin/install -c
@@ -1189,20 +1045,20 @@ checking for style of include used by make... GNU
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-<snip>
+&lt;snip&gt;
 Documentation:
  - examples: yes
  - API documentation: no
- - user documentation: no</p>
+ - user documentation: no
 
-<p>Debugging:
+Debugging:
  - tests: no
- - mutex debugging: no</p>
+ - mutex debugging: no
 
-<p>Paths:
+Paths:
  - Logs in configpath: no
-[staf@vicky lxc]$
-```</p>
+[staf@vicky lxc]$ 
+</code></pre>
 
 <h4>Copy the templates</h4>
 
@@ -1219,53 +1075,49 @@ lxc-busybox    lxc-download  lxc-opensuse      lxc-ubuntu
 [staf@vicky templates]$
 </code></p>
 
-<h3>Debian container second try...</h3>
+<h3>Debian container second try&hellip;</h3>
 
 <p>And tried to create the debian container again.</p>
 
-<p>```
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>mydebian  STOPPED  -     -   <br/>
-myfedora  STOPPED  -     -   <br/>
+<pre><code>[root@vicky ~]# lxc-ls --fancy
+NAME      STATE    IPV4  IPV6  
+-----------------------------
+mydebian  STOPPED  -     -     
+myfedora  STOPPED  -     -     
 [root@vicky ~]# lxc-destroy -n mydebian
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>myfedora  STOPPED  -     -   <br/>
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# lxc-ls --fancy
+NAME      STATE    IPV4  IPV6  
+-----------------------------
+myfedora  STOPPED  -     -     
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Creating the container</h4>
 
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+<pre><code>[root@vicky ~]# lxc-create -n mydebian -t debian
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 debootstrap is /sbin/debootstrap
-Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ...
+Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ... 
 Downloading debian minimal ...
 W: Cannot check Release signature; keyring file not available /usr/share/keyrings/debian-archive-keyring.gpg
-I: Retrieving Release
-I: Validating Packages
+I: Retrieving Release 
+I: Validating Packages 
 I: Resolving dependencies of required packages...
 I: Resolving dependencies of base packages...
-I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1
-I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common
+I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1 
+I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common 
 I: Checking component main on http://cdn.debian.net/debian...
 I: Validating libacl1 2.2.51-8
 I: Validating adduser 3.113+nmu3
-<snip>
+&lt;snip&gt;
 I: Unpacking debconf...
 I: Unpacking debconf-i18n...
 I: Unpacking debianutils...
 I: Unpacking diffutils...
 I: Unpacking dpkg...
 I: Unpacking e2fslibs:i386...
-<snip>
+&lt;snip&gt;
 I: Configuring apt...
 I: Configuring openssh-client...
 I: Configuring openssh-server...
@@ -1290,13 +1142,12 @@ Timezone in container is not configured. Adjust it manually.
 Root password is 'root', please change !
 'debian' template installed
 'mydebian' created
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
+<pre><code>[root@vicky ~]# lxc-start -n mydebian
 INIT: version 2.88 booting
 Using makefile-style concurrent boot in runlevel S.
 Cleaning up temporary files... /tmp /run /run/lock /run/shm.
@@ -1320,38 +1171,35 @@ Mount point '/dev/console' does not exist. Skipping mount. ... (warning).
 Activating lvm and md swap...done.
 Checking file systems...fsck from util-linux 2.20.1
 done.
-Mounting local filesystems...done.</p>
+Mounting local filesystems...done.
 
-<p>Debian GNU/Linux 7 mydebian console</p>
+Debian GNU/Linux 7 mydebian console
 
-<p>mydebian login: root
-Password:
-Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686</p>
+mydebian login: root
+Password: 
+Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686
 
-<p>The programs included with the Debian GNU/Linux system are free software;
+The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
+individual files in /usr/share/doc/*/copyright.
 
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
-```</p>
-
-<h4>Networking....</h4>
-
-<p>```
-root@mydebian:~# ifconfig eth0
-eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02</p>
-
-<pre><code>      inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
-      inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:32 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
 </code></pre>
 
-<p>root@mydebian:~# ping 8.8.8.8
+<h4>Networking&hellip;.</h4>
+
+<pre><code>root@mydebian:~# ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02  
+          inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
+          inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:32 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
+
+root@mydebian:~# ping 8.8.8.8
 -bash: ping: command not found
 root@mydebian:~# apt-cache search ping | grep util
 2ping - Ping utility to determine directional packet loss
@@ -1374,7 +1222,7 @@ WARNING: The following packages cannot be authenticated!
   inetutils-ping
 Install these packages without verification [y/N]? y
 Get:1 http://cdn.debian.net/debian/ wheezy/main inetutils-ping i386 2:1.9-2 [169 kB]
-Fetched 169 kB in 6s (26.4 kB/s)                                             <br/>
+Fetched 169 kB in 6s (26.4 kB/s)                                               
 debconf: delaying package configuration, since apt-utils is not installed
 Selecting previously unselected package inetutils-ping.
 (Reading database ... 9387 files and directories currently installed.)
@@ -1387,19 +1235,19 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 ^C--- 8.8.8.8 ping statistics ---
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max/stddev = 111.011/141.558/172.105/30.547 ms
-root@mydebian:~#
-```</p>
+root@mydebian:~# 
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[zfs on Fedora 20]]></title>
+    <title type="html"><![CDATA[Zfs on Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20/"/>
     <updated>2014-01-14T08:03:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20</id>
     <content type="html"><![CDATA[<p>With <a href="http://docs.fedoraproject.org/en-US/Fedora/20/html/Release_Notes/index.html">Fedora 20</a> being released a few weeks ago and no official zfsonlinux support for Fedora 20. It time to get zfs on linux working on Fedora 20.</p>
 
-<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></p>
+<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/"><a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></a></p>
 
 <p>So lets try to build the rpm packages for Fedora 20 from the source.</p>
 
@@ -1407,8 +1255,7 @@ root@mydebian:~#
 
 <h5>clone the spl git repository</h5>
 
-<p><code>
-[root@vicky ]# cd /usr/src/zfsfed20
+<pre><code>[root@vicky ]# cd /usr/src/zfsfed20
 [root@vicky zfsfed20]# git clone https://github.com/zfsonlinux/spl.git
 Cloning into 'spl'...
 remote: Reusing existing pack: 6430, done.
@@ -1416,13 +1263,12 @@ remote: Total 6430 (delta 0), reused 0 (delta 0)
 Receiving objects: 100% (6430/6430), 3.65 MiB | 60.00 KiB/s, done.
 Resolving deltas: 100% (3750/3750), done.
 Checking connectivity... done
-[root@vicky zfsfed20]#
-</code></p>
+[root@vicky zfsfed20]# 
+</code></pre>
 
 <h5>create the configure script</h5>
 
-<p><code>
-[root@vicky spl]# autoreconf -i
+<pre><code>[root@vicky spl]# autoreconf -i
 libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
 libtoolize: copying file `config/ltmain.sh'
 libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `config'.
@@ -1438,13 +1284,12 @@ configure.ac:32: installing 'config/config.sub'
 configure.ac:35: installing 'config/install-sh'
 configure.ac:35: installing 'config/missing'
 cmd/Makefile.am: installing 'config/depcomp'
-[root@vicky spl]#
-</code></p>
+[root@vicky spl]# 
+</code></pre>
 
 <h5>run configure</h5>
 
-<p>```
-[root@vicky spl]# ./configure
+<pre><code>[root@vicky spl]# ./configure 
 checking for gawk... gawk
 checking metadata... git describe
 checking build system type... x86_64-unknown-linux-gnu
@@ -1458,57 +1303,45 @@ checking for a thread-safe mkdir -p... /bin/mkdir -p
 checking whether make sets $(MAKE)... yes
 checking for gcc... gcc
 checking whether the C compiler works... yes
-config.status: executing depfiles commands</p>
+config.status: executing depfiles commands
 
-<p>&lt; snip &gt;</p>
+&amp;lt; snip &amp;gt;
 
-<p>config.status: executing libtool commands
-[root@vicky spl]#</p>
-
-<p>```</p>
+config.status: executing libtool commands
+[root@vicky spl]# 
+</code></pre>
 
 <h5>build the packages</h5>
 
-<p>```
-[root@vicky spl]# make rpm-utils rpm-dkms
-make  pkg="spl" \</p>
-
-<pre><code>def='--define "build_src_rpm 1" ' srpm-common
-</code></pre>
-
-<p>make[1]: Entering directory <code>/usr/src/zfsfed20/spl'
+<pre><code>[root@vicky spl]# make rpm-utils rpm-dkms
+make  pkg="spl" \
+    def='--define "build_src_rpm 1" ' srpm-common
+make[1]: Entering directory `/usr/src/zfsfed20/spl'
 make  dist-gzip am__post_remove_distdir='@:'
-make[2]: Entering directory</code>/usr/src/zfsfed20/spl'
+make[2]: Entering directory `/usr/src/zfsfed20/spl'
 if test -d "spl-0.6.2"; then find "spl-0.6.2" -type d ! -perm -200 -exec chmod u+w {} ';' &amp;&amp; rm -rf "spl-0.6.2" || { sleep 5 &amp;&amp; rm -rf "spl-0.6.2"; }; else :; fi
 test -d "spl-0.6.2" || mkdir "spl-0.6.2"
- (cd include &amp;&amp; make  top_distdir=../spl-0.6.2 distdir=../spl-0.6.2/include \</p>
+ (cd include &amp;&amp; make  top_distdir=../spl-0.6.2 distdir=../spl-0.6.2/include \
+     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
+make[3]: Entering directory `/usr/src/zfsfed20/spl/include'
+ (cd fs &amp;&amp; make  top_distdir=../../spl-0.6.2 distdir=../../spl-0.6.2/include/fs \
+     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
+make[4]: Entering directory `/usr/src/zfsfed20/spl/include/fs'
+make[4]: Leaving directory `/usr/src/zfsfed20/spl/include/fs'
 
-<pre><code> am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
-</code></pre>
+&amp;lt; snip &amp;gt;
 
-<p>make[3]: Entering directory `/usr/src/zfsfed20/spl/include'
- (cd fs &amp;&amp; make  top_distdir=../../spl-0.6.2 distdir=../../spl-0.6.2/include/fs \</p>
-
-<pre><code> am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
-</code></pre>
-
-<p>make[4]: Entering directory <code>/usr/src/zfsfed20/spl/include/fs'
-make[4]: Leaving directory</code>/usr/src/zfsfed20/spl/include/fs'</p>
-
-<p>&lt; snip &gt;</p>
-
-<ul>
-<li>umask 022</li>
-<li>cd /tmp/spl-build-root-CJV0xR9u/BUILD</li>
-<li>cd spl-0.6.2</li>
-<li>'[' /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64 '!=' / ']'</li>
-<li>rm -rf /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64</li>
-<li>exit 0
-Executing(--clean): /bin/sh -e /tmp/spl-build-root-CJV0xR9u/TMP/rpm-tmp.E1YvyO</li>
-<li>umask 022</li>
-<li>cd /tmp/spl-build-root-CJV0xR9u/BUILD</li>
-<li>rm -rf spl-0.6.2</li>
-<li>exit 0
++ umask 022
++ cd /tmp/spl-build-root-CJV0xR9u/BUILD
++ cd spl-0.6.2
++ '[' /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64 '!=' / ']'
++ rm -rf /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64
++ exit 0
+Executing(--clean): /bin/sh -e /tmp/spl-build-root-CJV0xR9u/TMP/rpm-tmp.E1YvyO
++ umask 022
++ cd /tmp/spl-build-root-CJV0xR9u/BUILD
++ rm -rf spl-0.6.2
++ exit 0
 make[1]: Leaving directory `/usr/src/zfsfed20/spl'
 [root@vicky spl]# ls
 aclocal.m4      config         copy-builtin  libtool      META             scripts                                spl_config.h.in                                  spl.release.in
@@ -1516,27 +1349,22 @@ AUTHORS         config.log     COPYING       Makefile     module           spl-0
 autogen.sh      config.status  DISCLAIMER    Makefile.am  patches          spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm  spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
 autom4te.cache  configure      include       Makefile.in  README.markdown  spl-0.6.2.tar.gz                       spl-dkms-0.6.2-22_gd58a99a.fc20.src.rpm
 cmd             configure.ac   lib           man          rpm              spl_config.h                           spl.release
-[root@vicky spl]#
-```</li>
-</ul>
-
+[root@vicky spl]# 
+</code></pre>
 
 <h5>install the packages</h5>
 
-<p>```
-[root@vicky spl]# rpm -Uvh spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
+<pre><code>[root@vicky spl]# rpm -Uvh spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
 Preparing...                          ################################# [100%]
 Updating / installing...
    1:spl-dkms-0.6.2-22_gd58a99a.fc20  ################################# [ 25%]
-Removing old spl-0.6.2 DKMS files...</p>
+Removing old spl-0.6.2 DKMS files...
 
-<hr />
-
-<p>Deleting module version: 0.6.2</p>
-
-<h2>completely from the DKMS tree.</h2>
-
-<p>Done.
+------------------------------
+Deleting module version: 0.6.2
+completely from the DKMS tree.
+------------------------------
+Done.
 Loading new spl-0.6.2 DKMS files...
 First Installation: checking all kernels...
 Building only for 3.11.10-301.fc20.x86_64
@@ -1544,26 +1372,22 @@ Module build for the currently running kernel was skipped since the
 kernel source for this kernel does not seem to be installed.
    2:spl-0.6.2-22_gd58a99a.fc20       ################################# [ 50%]
 Cleaning up / removing...
-   3:spl-0.6.2-1.el6                  ################################# [ 75%]</p>
+   3:spl-0.6.2-1.el6                  ################################# [ 75%]
 
-<hr />
-
-<p>Deleting module version: 0.6.2</p>
-
-<h2>completely from the DKMS tree.</h2>
-
-<p>Done.
+------------------------------
+Deleting module version: 0.6.2
+completely from the DKMS tree.
+------------------------------
+Done.
    4:spl-dkms-0.6.2-1.el6             ################################# [100%]
-[root@vicky spl]#</p>
-
-<p>```</p>
+[root@vicky spl]# 
+</code></pre>
 
 <h4>zfsonlinux</h4>
 
 <h5>clone the zfs git repository</h5>
 
-<p><code>
-[root@vicky ]# cd /usr/src/zfsfed20
+<pre><code>[root@vicky ]# cd /usr/src/zfsfed20
 [root@vicky ~]# cd /usr/src/zfsfed20/
 [root@vicky zfsfed20]# git clone https://github.com/zfsonlinux/zfs.git
 Cloning into 'zfs'...
@@ -1574,13 +1398,12 @@ remote: Total 80663 (delta 15), reused 20 (delta 6)
 Receiving objects: 100% (80663/80663), 18.05 MiB | 105.00 KiB/s, done.
 Resolving deltas: 100% (55857/55857), done.
 Checking connectivity... done
-[root@vicky zfsfed20]#
-</code></p>
+[root@vicky zfsfed20]# 
+</code></pre>
 
 <h5>create the configure script</h5>
 
-<p><code>
-[root@vicky zfs]# autoreconf -i
+<pre><code>[root@vicky zfs]# autoreconf -i
 libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
 libtoolize: copying file `config/ltmain.sh'
 libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `config'.
@@ -1596,13 +1419,12 @@ configure.ac:38: installing 'config/config.sub'
 configure.ac:41: installing 'config/install-sh'
 configure.ac:41: installing 'config/missing'
 cmd/mount_zfs/Makefile.am: installing 'config/depcomp'
-[root@vicky zfs]#
-</code></p>
+[root@vicky zfs]# 
+</code></pre>
 
 <h5>run configure</h5>
 
-<p>```
-[root@vicky zfs]# ./configure
+<pre><code>[root@vicky zfs]# ./configure 
 checking for gawk... gawk
 checking metadata... git describe
 checking build system type... x86_64-unknown-linux-gnu
@@ -1617,42 +1439,38 @@ checking whether make sets $(MAKE)... yes
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-checking for suffix of executables...
+checking for suffix of executables... 
 checking whether we are cross compiling... no
 checking for suffix of object files... o
-checking whether we are using the GNU C compiler... yes</p>
+checking whether we are using the GNU C compiler... yes
 
-<p>&lt; snip &gt;</p>
+&amp;lt; snip &amp;gt;
 
-<p>config.status: creating rpm/generic/zfs-kmod.spec
+config.status: creating rpm/generic/zfs-kmod.spec
 config.status: creating rpm/generic/zfs-dkms.spec
 config.status: creating zfs-script-config.sh
 config.status: creating zfs.release
 config.status: creating zfs_config.h
 config.status: executing depfiles commands
 config.status: executing libtool commands
-[root@vicky zfs]#
-```</p>
+[root@vicky zfs]# 
+</code></pre>
 
 <h5>build the packages</h5>
 
-<p>```
-[root@vicky zfs]# make rpm-utils rpm-dkms
-make  pkg="zfs" \</p>
-
-<pre><code>def='--define "build_src_rpm 1" ' srpm-common
-</code></pre>
-
-<p>make[1]: Entering directory <code>/usr/src/zfsfed20/zfs'
+<pre><code>[root@vicky zfs]# make rpm-utils rpm-dkms
+make  pkg="zfs" \
+    def='--define "build_src_rpm 1" ' srpm-common
+make[1]: Entering directory `/usr/src/zfsfed20/zfs'
 make  dist-gzip am__post_remove_distdir='@:'
-make[2]: Entering directory</code>/usr/src/zfsfed20/zfs'
+make[2]: Entering directory `/usr/src/zfsfed20/zfs'
 if test -d "zfs-0.6.2"; then find "zfs-0.6.2" -type d ! -perm -200 -exec chmod u+w {} ';' &amp;&amp; rm -rf "zfs-0.6.2" || { sleep 5 &amp;&amp; rm -rf "zfs-0.6.2"; }; else :; fi
-test -d "zfs-0.6.2" || mkdir "zfs-0.6.2"</p>
+test -d "zfs-0.6.2" || mkdir "zfs-0.6.2"
 
-<p>&lt; snip &gt;</p>
+&amp;lt; snip &amp;gt;
 
-<p>make[4]: Leaving directory <code>/usr/src/zfsfed20/zfs/udev/rules.d'
-make[3]: Leaving directory</code>/usr/src/zfsfed20/zfs/udev'
+make[4]: Leaving directory `/usr/src/zfsfed20/zfs/udev/rules.d'
+make[3]: Leaving directory `/usr/src/zfsfed20/zfs/udev'
 + exit 0
 Executing(--clean): /bin/sh -e /tmp/zfs-build-root-pzSqKnEH/TMP/rpm-tmp.2uRZ1C
 + umask 022
@@ -1660,13 +1478,12 @@ Executing(--clean): /bin/sh -e /tmp/zfs-build-root-pzSqKnEH/TMP/rpm-tmp.2uRZ1C
 + rm -rf zfs-0.6.2
 + exit 0
 make[1]: Leaving directory `/usr/src/zfsfed20/zfs'
-[root@vicky zfs]#
-```</p>
+[root@vicky zfs]# 
+</code></pre>
 
 <h5>install the packages</h5>
 
-<p>```
-[root@vicky zfsfed20]# yum localinstall zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm
+<pre><code>[root@vicky zfsfed20]# yum localinstall zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm
 Loaded plugins: langpacks, priorities, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
 Cannot open: zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm. Skipping.
@@ -1684,30 +1501,29 @@ Marking zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm to be installed
 Examining zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm: zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64
 Marking zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm to be installed
 Resolving Dependencies
---> Running transaction check
----> Package zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
----> Package zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20 will be installed
----> Package zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
---> Finished Dependency Resolution
+--&gt; Running transaction check
+---&gt; Package zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
+---&gt; Package zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20 will be installed
+---&gt; Package zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
+--&gt; Finished Dependency Resolution
 http://negativo17.org/repos/HandBrake/epel-20/x86_64/repodata/repomd.xml: [Errno 14] HTTP Error 404 - Not Found
-Trying other mirror.</p>
+Trying other mirror.
 
-<p>Dependencies Resolved</p>
+Dependencies Resolved
 
-<p>===================================================================================================================================</p>
-
-<h1> Package             Arch            Version                             Repository                                           Size</h1>
-
-<p>Installing:
+===================================================================================================================================
+ Package             Arch            Version                             Repository                                           Size
+===================================================================================================================================
+Installing:
  zfs                 x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-0.6.2-158_gcbe8e61.fc20.x86_64                 2.2 M
  zfs-dkms            noarch          0.6.2-158_gcbe8e61.fc20             /zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch             11 M
- zfs-dracut          x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64           13 k</p>
+ zfs-dracut          x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64           13 k
 
-<h1>Transaction Summary</h1>
+Transaction Summary
+===================================================================================================================================
+Install  3 Packages
 
-<p>Install  3 Packages</p>
-
-<p>Total size: 13 M
+Total size: 13 M
 Installed size: 13 M
 Is this ok [y/d/N]: y
 Downloading packages:
@@ -1718,85 +1534,82 @@ Running transaction
 Warning: RPMDB altered outside of yum.
 ** Found 1 pre-existing rpmdb problem(s), 'yum check' output follows:
 libvpx-1.2.0-2.git5e3439b.fc19.x86_64 is a duplicate with libvpx-1.2.0-2.fc20.i686
-  Installing : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         1/3
+  Installing : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         1/3 
 Loading new zfs-0.6.2 DKMS files...
 First Installation: checking all kernels...
 Building only for 3.12.7-300.fc20.x86_64
 Building initial module for 3.12.7-300.fc20.x86_64
-Done.</p>
+Done.
 
-<p>zavl:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>znvpair.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zunicode.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zcommon.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zfs.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zpios.ko:
+zavl:
 Running module version sanity check.
  - Original module
    - No original module exists within this kernel
  - Installation
    - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-Adding any weak-modules</p>
 
-<p>Running the post_install script:</p>
+znvpair.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>depmod...</p>
+zunicode.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>DKMS: install completed.
-  Installing : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3
-  Installing : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       3/3
-  Verifying  : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       1/3
-  Verifying  : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3
-  Verifying  : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         3/3</p>
+zcommon.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>Installed:
-  zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20   zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20   zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20</p>
+zfs.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>Complete!
-[root@vicky zfs]#</p>
+zpios.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
+Adding any weak-modules
 
-<p>```</p>
+Running the post_install script:
+
+depmod...
+
+DKMS: install completed.
+  Installing : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3 
+  Installing : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       3/3 
+  Verifying  : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       1/3 
+  Verifying  : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3 
+  Verifying  : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         3/3 
+
+Installed:
+  zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20   zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20   zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20  
+
+Complete!
+[root@vicky zfs]# 
+</code></pre>
 
 <h4>Enable zfs</h4>
 
-<p>```
-[root@vicky zfs]# chkconfig zfs on
+<pre><code>[root@vicky zfs]# chkconfig zfs on
 [root@vicky zfs]# systemctl zfs start
 Unknown operation 'zfs'.
 [root@vicky zfs]# systemctl start zfs
-[root@vicky zfs]#</p>
-
-<p>```</p>
+[root@vicky zfs]# 
+</code></pre>
 
 <p style="font-style: italic;">
 Have fun...
@@ -1806,120 +1619,112 @@ Have fun...
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[yum update on fedora 19 and zfs on linux]]></title>
+    <title type="html"><![CDATA[Yum Update on Fedora 19 and Zfs on Linux]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/"/>
     <updated>2013-10-13T17:51:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://zfsonlinux.org/images/zfs-linux.png" width="200" height="125" title="&#34;zfs on linux&#34;" alt="&#34;zfs on linux&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="left <a" src="href="http://zfsonlinux.org/images/zfs-linux.png">http://zfsonlinux.org/images/zfs-linux.png</a>" width="200" height="125" title="&ldquo;zfs on linux&rdquo;" ></p>
 
 <p>I use  <a href="http://zfsonlinux.org/"> zfs on linux</a> on <a href="http://fedoraproject.org/">fedora</a> now.</p>
 
 <p><a href="http://zfsonlinux.org/fedora.html">The installation</a> was pretty straightforward but after the installation of <a href="http://open-zfs.org/">zfs</a> <code>yum update</code> failed.</p>
 
-<br />
+<p><br /></p>
 
-
-<p>```
-[root@vicky etc]# yum update -y
+<pre><code>[root@vicky etc]# yum update -y
 Loaded plugins: langpacks, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
-fedora/19/x86_64/metalink                                                                                                                                                                   |  33 kB  00:00:00   <br/>
-fedora                                                                                                                                                                                      | 4.2 kB  00:00:00   <br/>
-fedora-chromium-stable                                                                                                                                                                      | 3.4 kB  00:00:00   <br/>
-google-chrome                                                                                                                                                                               |  951 B  00:00:00   <br/>
-rpmfusion-free                                                                                                                                                                              | 3.3 kB  00:00:00   <br/>
-rpmfusion-free-updates                                                                                                                                                                      | 3.3 kB  00:00:00   <br/>
-rpmfusion-nonfree                                                                                                                                                                           | 3.3 kB  00:00:00   <br/>
-rpmfusion-nonfree-updates                                                                                                                                                                   | 3.3 kB  00:00:00   <br/>
-updates/19/x86_64/metalink                                                                                                                                                                  |  30 kB  00:00:00   <br/>
-updates                                                                                                                                                                                     | 4.4 kB  00:00:00   <br/>
-zfs                                                                                                                                                                                         | 2.9 kB  00:00:00   <br/>
-(1/6): fedora-chromium-stable/19/x86_64/primary_db                                                                                                                                          |  20 kB  00:00:00   <br/>
-(2/6): zfs/19/x86_64/primary_db                                                                                                                                                             | 6.7 kB  00:00:00   <br/>
-(3/6): updates/19/x86_64/group_gz                                                                                                                                                           | 385 kB  00:00:02   <br/>
-(4/6): fedora/19/x86_64/group_gz                                                                                                                                                            | 384 kB  00:00:06   <br/>
-(5/6): updates/19/x86_64/primary_db                                                                                                                                                         | 8.8 MB  00:01:53   <br/>
-(6/6): fedora/19/x86_64/primary_db                                                                                                                                                          |  17 MB  00:03:34   <br/>
-(1/10): google-chrome/primary                                                                                                                                                               | 1.9 kB  00:00:00   <br/>
-(2/10): rpmfusion-free-updates/19/x86_64/primary_db                                                                                                                                         | 217 kB  00:00:01   <br/>
-(3/10): rpmfusion-nonfree/19/x86_64/primary_db                                                                                                                                              | 149 kB  00:00:00   <br/>
-(4/10): rpmfusion-free/19/x86_64/primary_db                                                                                                                                                 | 440 kB  00:00:03   <br/>
-(5/10): rpmfusion-nonfree-updates/19/x86_64/primary_db                                                                              b                                                       |  97 kB  00:00:00   <br/>
-(6/10): rpmfusion-nonfree-updates/19/x86_64/group_gz                                                                                                                                        |  990 B  00:00:05   <br/>
-(7/10): rpmfusion-nonfree/19/x86_64/group_gz                                                                                                                                                |  993 B  00:00:07   <br/>
-(8/10): rpmfusion-free/19/x86_64/group_gz                                                                                                                                                   | 1.6 kB  00:00:07   <br/>
-(9/10): rpmfusion-free-updates/19/x86_64/group_gz                                                                                                                                           | 1.6 kB  00:00:07   <br/>
-(10/10): updates/19/x86_64/updateinfo                                                                                                                                                       | 861 kB  00:00:09   <br/>
+fedora/19/x86_64/metalink                                                                                                                                                                   |  33 kB  00:00:00     
+fedora                                                                                                                                                                                      | 4.2 kB  00:00:00     
+fedora-chromium-stable                                                                                                                                                                      | 3.4 kB  00:00:00     
+google-chrome                                                                                                                                                                               |  951 B  00:00:00     
+rpmfusion-free                                                                                                                                                                              | 3.3 kB  00:00:00     
+rpmfusion-free-updates                                                                                                                                                                      | 3.3 kB  00:00:00     
+rpmfusion-nonfree                                                                                                                                                                           | 3.3 kB  00:00:00     
+rpmfusion-nonfree-updates                                                                                                                                                                   | 3.3 kB  00:00:00     
+updates/19/x86_64/metalink                                                                                                                                                                  |  30 kB  00:00:00     
+updates                                                                                                                                                                                     | 4.4 kB  00:00:00     
+zfs                                                                                                                                                                                         | 2.9 kB  00:00:00     
+(1/6): fedora-chromium-stable/19/x86_64/primary_db                                                                                                                                          |  20 kB  00:00:00     
+(2/6): zfs/19/x86_64/primary_db                                                                                                                                                             | 6.7 kB  00:00:00     
+(3/6): updates/19/x86_64/group_gz                                                                                                                                                           | 385 kB  00:00:02     
+(4/6): fedora/19/x86_64/group_gz                                                                                                                                                            | 384 kB  00:00:06     
+(5/6): updates/19/x86_64/primary_db                                                                                                                                                         | 8.8 MB  00:01:53     
+(6/6): fedora/19/x86_64/primary_db                                                                                                                                                          |  17 MB  00:03:34     
+(1/10): google-chrome/primary                                                                                                                                                               | 1.9 kB  00:00:00     
+(2/10): rpmfusion-free-updates/19/x86_64/primary_db                                                                                                                                         | 217 kB  00:00:01     
+(3/10): rpmfusion-nonfree/19/x86_64/primary_db                                                                                                                                              | 149 kB  00:00:00     
+(4/10): rpmfusion-free/19/x86_64/primary_db                                                                                                                                                 | 440 kB  00:00:03     
+(5/10): rpmfusion-nonfree-updates/19/x86_64/primary_db                                                                              b                                                       |  97 kB  00:00:00     
+(6/10): rpmfusion-nonfree-updates/19/x86_64/group_gz                                                                                                                                        |  990 B  00:00:05     
+(7/10): rpmfusion-nonfree/19/x86_64/group_gz                                                                                                                                                |  993 B  00:00:07     
+(8/10): rpmfusion-free/19/x86_64/group_gz                                                                                                                                                   | 1.6 kB  00:00:07     
+(9/10): rpmfusion-free-updates/19/x86_64/group_gz                                                                                                                                           | 1.6 kB  00:00:07     
+(10/10): updates/19/x86_64/updateinfo                                                                                                                                                       | 861 kB  00:00:09     
 google-chrome                                                                                                                                                                                                  3/3
 Resolving Dependencies
---> Running transaction check
----> Package dkms.noarch 0:2.2.0.3-14.zfs1.fc19 will be updated
---> Processing Dependency: dkms = 2.2.0.3-14.zfs1.fc19 for package: zfs-dkms-0.6.2-1.fc19.noarch
----> Package dkms.noarch 0:2.2.0.3-17.fc19 will be an update
---> Finished Dependency Resolution
-Error: Package: zfs-dkms-0.6.2-1.fc19.noarch (@zfs)</p>
-
-<pre><code>       Requires: dkms = 2.2.0.3-14.zfs1.fc19
-       Removing: dkms-2.2.0.3-14.zfs1.fc19.noarch (@zfs)
-           dkms = 2.2.0.3-14.zfs1.fc19
-       Updated By: dkms-2.2.0.3-17.fc19.noarch (updates)
-           dkms = 2.2.0.3-17.fc19
-       Available: dkms-2.2.0.3-5.fc19.noarch (fedora)
-           dkms = 2.2.0.3-5.fc19
+--&gt; Running transaction check
+---&gt; Package dkms.noarch 0:2.2.0.3-14.zfs1.fc19 will be updated
+--&gt; Processing Dependency: dkms = 2.2.0.3-14.zfs1.fc19 for package: zfs-dkms-0.6.2-1.fc19.noarch
+---&gt; Package dkms.noarch 0:2.2.0.3-17.fc19 will be an update
+--&gt; Finished Dependency Resolution
+Error: Package: zfs-dkms-0.6.2-1.fc19.noarch (@zfs)
+           Requires: dkms = 2.2.0.3-14.zfs1.fc19
+           Removing: dkms-2.2.0.3-14.zfs1.fc19.noarch (@zfs)
+               dkms = 2.2.0.3-14.zfs1.fc19
+           Updated By: dkms-2.2.0.3-17.fc19.noarch (updates)
+               dkms = 2.2.0.3-17.fc19
+           Available: dkms-2.2.0.3-5.fc19.noarch (fedora)
+               dkms = 2.2.0.3-5.fc19
+ You could try using --skip-broken to work around the problem
+ You could try running: rpm -Va --nofiles --nodigest
+[root@vicky etc]# 
 </code></pre>
 
-<p> You could try using --skip-broken to work around the problem
- You could try running: rpm -Va --nofiles --nodigest
-[root@vicky etc]#
-```</p>
+<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&rsquo;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
 
-<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn't installed on my box. After installing <code>yum-plugin-priorities</code></p>
-
-<p>```
-[root@vicky etc]# yum install yum-plugin-priorities
+<pre><code>[root@vicky etc]# yum install yum-plugin-priorities
 Loaded plugins: langpacks, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
 Resolving Dependencies
---> Running transaction check
----> Package yum-plugin-priorities.noarch 0:1.1.31-18.fc19 will be installed
---> Finished Dependency Resolution</p>
+--&gt; Running transaction check
+---&gt; Package yum-plugin-priorities.noarch 0:1.1.31-18.fc19 will be installed
+--&gt; Finished Dependency Resolution
 
-<p>Dependencies Resolved</p>
+Dependencies Resolved
 
-<p>===================================================================================================================================================================================================================</p>
+===================================================================================================================================================================================================================
+ Package                                                     Arch                                         Version                                              Repository                                     Size
+===================================================================================================================================================================================================================
+Installing:
+ yum-plugin-priorities                                       noarch                                       1.1.31-18.fc19                                       updates                                        22 k
 
-<h1> Package                                                     Arch                                         Version                                              Repository                                     Size</h1>
+Transaction Summary
+===================================================================================================================================================================================================================
+Install  1 Package
 
-<p>Installing:
- yum-plugin-priorities                                       noarch                                       1.1.31-18.fc19                                       updates                                        22 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 22 k
+Total download size: 22 k
 Installed size: 28 k
 Is this ok [y/d/N]: y
 Downloading packages:
-yum-plugin-priorities-1.1.31-18.fc19.noarch.rpm                                                                                                                                             |  22 kB  00:00:01   <br/>
+yum-plugin-priorities-1.1.31-18.fc19.noarch.rpm                                                                                                                                             |  22 kB  00:00:01     
 Running transaction check
 Running transaction test
 Transaction test succeeded
 Running transaction
-  Installing : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1
-  Verifying  : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1</p>
+  Installing : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
+  Verifying  : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
 
-<p>Installed:
-  yum-plugin-priorities.noarch 0:1.1.31-18.fc19</p>
+Installed:
+  yum-plugin-priorities.noarch 0:1.1.31-18.fc19                                                                                                                                                                    
 
-<p>Complete!
-[root@vicky etc]#
-```</p>
+Complete!
+[root@vicky etc]# 
+</code></pre>
 
 <p>And make sure that the zfs has the priority</p>
 
-<p>```
-[root@localhost etc]# cat yum.repos.d/zfs.repo
+<pre><code>[root@localhost etc]# cat yum.repos.d/zfs.repo
 [zfs]
 name=ZFS of Linux for Fedora $releasever
 baseurl=http://archive.zfsonlinux.org/fedora/$releasever/$basearch/
@@ -1928,28 +1733,27 @@ priority=1
 metadata_expire=7d
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-Requires:       yum-plugin-priorities</p>
+Requires:       yum-plugin-priorities
 
-<p>[zfs-source]
+[zfs-source]
 name=ZFS of Linux for Fedora $releasever - Source
 baseurl=http://archive.zfsonlinux.org/fedora/$releasever/SRPMS/
 enabled=0
 metadata_expire=7d
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-[root@vicky etc]#
-```</p>
+[root@vicky etc]# 
+</code></pre>
 
 <p> <code>yum update</code> works again.</p>
 
-<p><code>
-[root@vicky etc]# yum update -y
+<pre><code>[root@vicky etc]# yum update -y
 Loaded plugins: langpacks, priorities, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
 2 packages excluded due to repository priority protections
 No packages marked for update
-[root@vicky etc]#
-</code></p>
+[root@vicky etc]# 
+</code></pre>
 ]]></content>
   </entry>
   

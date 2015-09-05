@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: wine | stafwag Blog]]></title>
+  <title><![CDATA[Category: Wine | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/wine/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,11 +14,11 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Running kindle on GNU/Linux with wine]]></title>
+    <title type="html"><![CDATA[Running Kindle on GNU/Linux With Wine]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
     <updated>2013-09-08T11:57:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/i7_desktop.jpg" width="400" height="300" title="&ldquo;desktop&rdquo;" ></p>
 
 <p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>
 
@@ -41,43 +41,39 @@
 </ul>
 
 
-<p>```
-[root@vicky ~]# yum install wine
-Loaded plugins: langpacks, refresh-packagekit</p>
-
-<p>```</p>
+<pre><code>[root@vicky ~]# yum install wine
+Loaded plugins: langpacks, refresh-packagekit
+</code></pre>
 
 <ul>
 <li>Download Kindle for Window xp</li>
 </ul>
 
 
-<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></p>
+<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"><a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></a></p>
 
 <ul>
 <li>Run the installer</li>
 </ul>
 
 
-<p><code>
-[swagemakers@vicky ~]$ wine ~/Downloads/KindleForPC-installer.exe
-</code></p>
+<pre><code>[swagemakers@vicky ~]$ wine ~/Downloads/KindleForPC-installer.exe 
+</code></pre>
 
 <ul>
 <li>Create kindle startup script</li>
 </ul>
 
 
-<p><code>
-wine $HOME/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &amp;
-</code></p>
+<pre><code>wine $HOME/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &amp;
+</code></pre>
 
 <blockquote><p>Happy reading</p>
 
 <p>but</p></blockquote>
 
 <p><strong>
-It's better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
+It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
 </strong></p>
 ]]></content>
   </entry>

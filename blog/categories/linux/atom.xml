@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: linux | stafwag Blog]]></title>
+  <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Run google chrome inside a fedora docker container over ssh]]></title>
+    <title type="html"><![CDATA[Run Google Chrome Inside a Fedora Docker Container Over Ssh]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
@@ -25,7 +25,7 @@
 
 <p>Update (Mon Jun  8 2015):</p>
 
-<p>Running google-chrome inside a docker container isn't stable for me.
+<p>Running google-chrome inside a docker container isn&rsquo;t stable for me.
 I switched back to LXC to run google-chrome which seems to be more stable.</p>
 
 <hr />
@@ -42,85 +42,74 @@ Destroying the container each time that you start a browser is a easy way to get
 
 <p>1/ Clone the git repo</p>
 
-<p><code>
-$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
-</code></p>
+<pre><code>$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git
+</code></pre>
 
 <p>2/ Copy your public ssh to id_rsa.pub</p>
 
-<p><code>
-$ cd docker-fedora-chrome-ssh
+<pre><code>$ cd docker-fedora-chrome-ssh
 $ cp ~/.ssh/id_rsa.pub .
-</code></p>
+</code></pre>
 
 <p>3/ Build the docker image</p>
 
-<p><code>
-$ docker build -t stafwag/docker-fedora-chrome-ssh .
-</code></p>
+<pre><code>$ docker build -t stafwag/docker-fedora-chrome-ssh .
+</code></pre>
 
 <p>4/ Update your ssh config</p>
 
-<p><code>
-$ vi ~/.ssh/config
-</code></p>
-
-<p>```
-Host mychrome</p>
-
-<pre><code>      User      chrome
-      Port      8022
-      HostName  127.0.0.1
-      StrictHostKeyChecking no
-      UserKnownHostsFile=/dev/null
-      ForwardX11 yes
+<pre><code>$ vi ~/.ssh/config
 </code></pre>
 
-<p>```</p>
+<pre><code>Host mychrome
+          User      chrome
+          Port      8022
+          HostName  127.0.0.1
+          StrictHostKeyChecking no
+          UserKnownHostsFile=/dev/null
+          ForwardX11 yes
+</code></pre>
 
 <p>5/ Start chrome</p>
 
-<p><code>
-$ ./startchrome.sh
-</code></p>
+<pre><code>$ ./startchrome.sh
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
+    <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I'm a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
-<p>As always with virtualization you've to careful with sharing systems or containers that doesn't below to the same customer or service on the same physical machine since you're never sure which traces are left behind in the memory etc.</p>
+<p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>
 
 <p><a href="https://linuxcontainers.org/">Linux containers</a> are getting more popular since the release of <a href="http://www.docker.com/">docker</a></p>
 
-<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn't an success.</p>
+<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn&rsquo;t an success.</p>
 
-<p>On a newly create debian container networking didn't work.</p>
+<p>On a newly create debian container networking didn&rsquo;t work.</p>
 
 <h3>First debian container</h3>
 
 <h4>Creating the container</h4>
 
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+<pre><code>[root@vicky ~]# lxc-create -n mydebian -t debian
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 debootstrap is /sbin/debootstrap
-Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ...
-Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might
-&lt; snip &gt;
+Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ... 
+Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might 
+&amp;lt; snip &amp;gt;
 'debian' template installed
 'mydebian' created
-```</p>
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
+<pre><code>[root@vicky ~]# lxc-start -n mydebian
 INIT: version 2.88 booting
 Using makefile-style concurrent boot in runlevel S.
 Cleaning up ifupdown....
@@ -137,58 +126,53 @@ Setting kernel variables ...done.
 Cleaning up temporary files....
 INIT: Entering runlevel: 3
 Using makefile-style concurrent boot in runlevel 3.
-Starting OpenBSD Secure Shell server: sshd.</p>
+Starting OpenBSD Secure Shell server: sshd.
 
-<p>Debian GNU/Linux 6.0 mydebian console</p>
+Debian GNU/Linux 6.0 mydebian console
 
-<p>mydebian login: root
-Password:
+mydebian login: root
+Password: 
 Last login: Tue Jun 21 08:05:41 UTC 2014 on console
 Linux mydebian 3.14.5-200.fc20.i686 #1 SMP Mon Jun 21 08:13:19 UTC 2014 i686
-```</p>
+</code></pre>
 
-<h3>Network isn't working...</h3>
+<h3>Network isn&rsquo;t working&hellip;</h3>
 
-<p>```
-The programs included with the Debian GNU/Linux system are free software;
+<pre><code>The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
+individual files in /usr/share/doc/*/copyright.
 
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 root@mydebian:~# ifconfig -a
-eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3</p>
+eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3  
+          inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
 
-<pre><code>      inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:13 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
-</code></pre>
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
 
-<p>lo        Link encap:Local Loopback</p>
-
-<pre><code>      inet addr:127.0.0.1  Mask:255.0.0.0
-      inet6 addr: ::1/128 Scope:Host
-      UP LOOPBACK RUNNING  MTU:65536  Metric:1
-      RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:0 
-      RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-</code></pre>
-
-<p>root@mydebian:~# ifup eth0
+root@mydebian:~# ifup eth0
 ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-root@mydebian:~#
-root@mydebian:~# cat /etc/network/interfaces
+root@mydebian:~# 
+root@mydebian:~# cat /etc/network/interfaces 
 auto lo
-iface lo inet loopback</p>
+iface lo inet loopback
 
-<p>auto eth0
+auto eth0
 iface eth0 inet dhcp
-root@mydebian:~#
-```</p>
+root@mydebian:~# 
+</code></pre>
 
 <h3>Fedora container</h3>
 
@@ -196,29 +180,25 @@ root@mydebian:~#
 
 <h4>Creating the fedora container</h4>
 
-<p>```
-root@vicky ~]# lxc-create -n myfedora -t fedora</p>
+<pre><code>root@vicky ~]# lxc-create -n myfedora -t fedora
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 Host CPE ID from /etc/os-release: cpe:/o:fedoraproject:fedora:20
-Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ...
+Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ... 
 Downloading fedora minimal ...
 Fetching rpm name from http://be.mirror.eurid.eu/fedora/linux/releases/20/Everything/i386/os//Packages/f...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</p>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
+  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525
 
-<pre><code>                             Dload  Upload   Total   Spent    Left  Speed
-</code></pre>
-
-<p>100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
-  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525</p>
-
-<p><snip>
+&lt;snip&gt;
 Updated:
-  fedora-release.noarch 0:20-3</p>
+  fedora-release.noarch 0:20-3                                                  
 
-<p>Complete!
+Complete!
 Download complete.
-Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ...
+Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ... 
 Copying rootfs to /var/lib/lxc/myfedora/rootfs ...setting root passwd to root
 installing fedora-release package
 Package fedora-release-20-3.noarch already installed and latest version
@@ -227,60 +207,52 @@ unlink: cannot unlink ‘/var/lib/lxc/myfedora/rootfs/etc/systemd/system/default
 container rootfs and config created
 'fedora' template installed
 'myfedora' created
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n myfedora
+<pre><code>[root@vicky ~]# lxc-start -n myfedora
 systemd 208 running in system mode. (+PAM +LIBWRAP +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT +ACL +XZ)
-Detected virtualization 'lxc'.</p>
+Detected virtualization 'lxc'.
 
-<p>Welcome to Fedora 20 (Heisenbug)!</p>
+Welcome to Fedora 20 (Heisenbug)!
 
-<p>Set hostname to <myfedora>.
+Set hostname to &lt;myfedora&gt;.
 [  OK  ] Reached target Remote File Systems.
 [  OK  ] Listening on Delayed Shutdown Socket.
 [  OK  ] Created slice Root Slice.
 [  OK  ] Created slice User and Session Slice.
 [  OK  ] Started Login Service.
-&lt; snip &gt;
-[  OK  ] Reached target Multi-User System.</p>
+&amp;lt; snip &amp;gt;
+[  OK  ] Reached target Multi-User System.
 
-<p>Fedora release 20 (Heisenbug)
-Kernel 3.14.5-200.fc20.i686 on an i686 (console)</p>
+Fedora release 20 (Heisenbug)
+Kernel 3.14.5-200.fc20.i686 on an i686 (console)
 
-<p>myfedora login: root
-Password:
+myfedora login: root
+Password: 
 Last login: Wed Jun 21 09:12:42 on console
-```</p>
+</code></pre>
 
 <h4>Networking</h4>
 
-<p>```
-[root@myfedora ~]# ping 8.8.8.8
+<pre><code>[root@myfedora ~]# ping 8.8.8.8
 connect: Network is unreachable
 [root@myfedora ~]# ip addr
-1: lo: &lt;LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default</p>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::5889:44ff:fe04:992b/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@myfedora ~]# ifup eth0
 
-<pre><code>link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-inet 127.0.0.1/8 scope host lo
-   valid_lft forever preferred_lft forever
-inet6 ::1/128 scope host 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</p>
-
-<pre><code>link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
-inet6 fe80::5889:44ff:fe04:992b/64 scope link 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>[root@myfedora ~]# ifup eth0</p>
-
-<p>Determining IP information for eth0... done.
+Determining IP information for eth0... done.
 [root@myfedora ~]# ping 8.8.8.8
 PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=113 ms
@@ -290,8 +262,8 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 --- 8.8.8.8 ping statistics ---
 3 packets transmitted, 3 received, 0% packet loss, time 2002ms
 rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
-[root@myfedora ~]#
-```</p>
+[root@myfedora ~]# 
+</code></pre>
 
 <h3>New templates</h3>
 
@@ -299,8 +271,7 @@ rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
 
 <h4>Getting the templates</h4>
 
-<p><code>
-[staf@vicky github]$ git clone https://github.com/lxc/lxc
+<pre><code>[staf@vicky github]$ git clone https://github.com/lxc/lxc 
 Cloning into 'lxc'...
 remote: Reusing existing pack: 17997, done.
 remote: Counting objects: 17, done.
@@ -309,28 +280,26 @@ remote: Total 18014 (delta 9), reused 0 (delta 0)
 Receiving objects: 100% (18014/18014), 9.14 MiB | 77.00 KiB/s, done.
 Resolving deltas: 100% (11555/11555), done.
 Checking connectivity... done.
-[staf@vicky github]$
-</code></p>
+[staf@vicky github]$ 
+</code></pre>
 
 <h4>Configure</h4>
 
 <p>Create the configure script and it dependencies</p>
 
-<p><code>
-[staf@vicky lxc]$ autoreconf -i
+<pre><code>[staf@vicky lxc]$ autoreconf -i
 configure.ac:31: installing 'config/compile'
 configure.ac:30: installing 'config/config.guess'
 configure.ac:30: installing 'config/config.sub'
 configure.ac:29: installing 'config/install-sh'
 configure.ac:29: installing 'config/missing'
 src/lua-lxc/Makefile.am: installing 'config/depcomp'
-[staf@vicky lxc]$
-</code></p>
+[staf@vicky lxc]$ 
+</code></pre>
 
 <p>Run configure</p>
 
-<p>```
-[staf@vicky lxc]$ ./configure
+<pre><code>[staf@vicky lxc]$ ./configure 
 checking for pkg-config... /usr/bin/pkg-config
 checking pkg-config is at least version 0.9.0... yes
 checking for a BSD-compatible install... /usr/bin/install -c
@@ -345,20 +314,20 @@ checking for style of include used by make... GNU
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-<snip>
+&lt;snip&gt;
 Documentation:
  - examples: yes
  - API documentation: no
- - user documentation: no</p>
+ - user documentation: no
 
-<p>Debugging:
+Debugging:
  - tests: no
- - mutex debugging: no</p>
+ - mutex debugging: no
 
-<p>Paths:
+Paths:
  - Logs in configpath: no
-[staf@vicky lxc]$
-```</p>
+[staf@vicky lxc]$ 
+</code></pre>
 
 <h4>Copy the templates</h4>
 
@@ -375,53 +344,49 @@ lxc-busybox    lxc-download  lxc-opensuse      lxc-ubuntu
 [staf@vicky templates]$
 </code></p>
 
-<h3>Debian container second try...</h3>
+<h3>Debian container second try&hellip;</h3>
 
 <p>And tried to create the debian container again.</p>
 
-<p>```
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>mydebian  STOPPED  -     -   <br/>
-myfedora  STOPPED  -     -   <br/>
+<pre><code>[root@vicky ~]# lxc-ls --fancy
+NAME      STATE    IPV4  IPV6  
+-----------------------------
+mydebian  STOPPED  -     -     
+myfedora  STOPPED  -     -     
 [root@vicky ~]# lxc-destroy -n mydebian
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>myfedora  STOPPED  -     -   <br/>
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# lxc-ls --fancy
+NAME      STATE    IPV4  IPV6  
+-----------------------------
+myfedora  STOPPED  -     -     
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Creating the container</h4>
 
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+<pre><code>[root@vicky ~]# lxc-create -n mydebian -t debian
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 debootstrap is /sbin/debootstrap
-Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ...
+Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ... 
 Downloading debian minimal ...
 W: Cannot check Release signature; keyring file not available /usr/share/keyrings/debian-archive-keyring.gpg
-I: Retrieving Release
-I: Validating Packages
+I: Retrieving Release 
+I: Validating Packages 
 I: Resolving dependencies of required packages...
 I: Resolving dependencies of base packages...
-I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1
-I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common
+I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1 
+I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common 
 I: Checking component main on http://cdn.debian.net/debian...
 I: Validating libacl1 2.2.51-8
 I: Validating adduser 3.113+nmu3
-<snip>
+&lt;snip&gt;
 I: Unpacking debconf...
 I: Unpacking debconf-i18n...
 I: Unpacking debianutils...
 I: Unpacking diffutils...
 I: Unpacking dpkg...
 I: Unpacking e2fslibs:i386...
-<snip>
+&lt;snip&gt;
 I: Configuring apt...
 I: Configuring openssh-client...
 I: Configuring openssh-server...
@@ -446,13 +411,12 @@ Timezone in container is not configured. Adjust it manually.
 Root password is 'root', please change !
 'debian' template installed
 'mydebian' created
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
+<pre><code>[root@vicky ~]# lxc-start -n mydebian
 INIT: version 2.88 booting
 Using makefile-style concurrent boot in runlevel S.
 Cleaning up temporary files... /tmp /run /run/lock /run/shm.
@@ -476,38 +440,35 @@ Mount point '/dev/console' does not exist. Skipping mount. ... (warning).
 Activating lvm and md swap...done.
 Checking file systems...fsck from util-linux 2.20.1
 done.
-Mounting local filesystems...done.</p>
+Mounting local filesystems...done.
 
-<p>Debian GNU/Linux 7 mydebian console</p>
+Debian GNU/Linux 7 mydebian console
 
-<p>mydebian login: root
-Password:
-Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686</p>
+mydebian login: root
+Password: 
+Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686
 
-<p>The programs included with the Debian GNU/Linux system are free software;
+The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
+individual files in /usr/share/doc/*/copyright.
 
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
-```</p>
-
-<h4>Networking....</h4>
-
-<p>```
-root@mydebian:~# ifconfig eth0
-eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02</p>
-
-<pre><code>      inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
-      inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:32 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
 </code></pre>
 
-<p>root@mydebian:~# ping 8.8.8.8
+<h4>Networking&hellip;.</h4>
+
+<pre><code>root@mydebian:~# ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02  
+          inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
+          inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:32 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
+
+root@mydebian:~# ping 8.8.8.8
 -bash: ping: command not found
 root@mydebian:~# apt-cache search ping | grep util
 2ping - Ping utility to determine directional packet loss
@@ -530,7 +491,7 @@ WARNING: The following packages cannot be authenticated!
   inetutils-ping
 Install these packages without verification [y/N]? y
 Get:1 http://cdn.debian.net/debian/ wheezy/main inetutils-ping i386 2:1.9-2 [169 kB]
-Fetched 169 kB in 6s (26.4 kB/s)                                             <br/>
+Fetched 169 kB in 6s (26.4 kB/s)                                               
 debconf: delaying package configuration, since apt-utils is not installed
 Selecting previously unselected package inetutils-ping.
 (Reading database ... 9387 files and directories currently installed.)
@@ -543,19 +504,19 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 ^C--- 8.8.8.8 ping statistics ---
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max/stddev = 111.011/141.558/172.105/30.547 ms
-root@mydebian:~#
-```</p>
+root@mydebian:~# 
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[zfs on Fedora 20]]></title>
+    <title type="html"><![CDATA[Zfs on Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20/"/>
     <updated>2014-01-14T08:03:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20</id>
     <content type="html"><![CDATA[<p>With <a href="http://docs.fedoraproject.org/en-US/Fedora/20/html/Release_Notes/index.html">Fedora 20</a> being released a few weeks ago and no official zfsonlinux support for Fedora 20. It time to get zfs on linux working on Fedora 20.</p>
 
-<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></p>
+<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/"><a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></a></p>
 
 <p>So lets try to build the rpm packages for Fedora 20 from the source.</p>
 
@@ -563,8 +524,7 @@ root@mydebian:~#
 
 <h5>clone the spl git repository</h5>
 
-<p><code>
-[root@vicky ]# cd /usr/src/zfsfed20
+<pre><code>[root@vicky ]# cd /usr/src/zfsfed20
 [root@vicky zfsfed20]# git clone https://github.com/zfsonlinux/spl.git
 Cloning into 'spl'...
 remote: Reusing existing pack: 6430, done.
@@ -572,13 +532,12 @@ remote: Total 6430 (delta 0), reused 0 (delta 0)
 Receiving objects: 100% (6430/6430), 3.65 MiB | 60.00 KiB/s, done.
 Resolving deltas: 100% (3750/3750), done.
 Checking connectivity... done
-[root@vicky zfsfed20]#
-</code></p>
+[root@vicky zfsfed20]# 
+</code></pre>
 
 <h5>create the configure script</h5>
 
-<p><code>
-[root@vicky spl]# autoreconf -i
+<pre><code>[root@vicky spl]# autoreconf -i
 libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
 libtoolize: copying file `config/ltmain.sh'
 libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `config'.
@@ -594,13 +553,12 @@ configure.ac:32: installing 'config/config.sub'
 configure.ac:35: installing 'config/install-sh'
 configure.ac:35: installing 'config/missing'
 cmd/Makefile.am: installing 'config/depcomp'
-[root@vicky spl]#
-</code></p>
+[root@vicky spl]# 
+</code></pre>
 
 <h5>run configure</h5>
 
-<p>```
-[root@vicky spl]# ./configure
+<pre><code>[root@vicky spl]# ./configure 
 checking for gawk... gawk
 checking metadata... git describe
 checking build system type... x86_64-unknown-linux-gnu
@@ -614,57 +572,45 @@ checking for a thread-safe mkdir -p... /bin/mkdir -p
 checking whether make sets $(MAKE)... yes
 checking for gcc... gcc
 checking whether the C compiler works... yes
-config.status: executing depfiles commands</p>
+config.status: executing depfiles commands
 
-<p>&lt; snip &gt;</p>
+&amp;lt; snip &amp;gt;
 
-<p>config.status: executing libtool commands
-[root@vicky spl]#</p>
-
-<p>```</p>
+config.status: executing libtool commands
+[root@vicky spl]# 
+</code></pre>
 
 <h5>build the packages</h5>
 
-<p>```
-[root@vicky spl]# make rpm-utils rpm-dkms
-make  pkg="spl" \</p>
-
-<pre><code>def='--define "build_src_rpm 1" ' srpm-common
-</code></pre>
-
-<p>make[1]: Entering directory <code>/usr/src/zfsfed20/spl'
+<pre><code>[root@vicky spl]# make rpm-utils rpm-dkms
+make  pkg="spl" \
+    def='--define "build_src_rpm 1" ' srpm-common
+make[1]: Entering directory `/usr/src/zfsfed20/spl'
 make  dist-gzip am__post_remove_distdir='@:'
-make[2]: Entering directory</code>/usr/src/zfsfed20/spl'
+make[2]: Entering directory `/usr/src/zfsfed20/spl'
 if test -d "spl-0.6.2"; then find "spl-0.6.2" -type d ! -perm -200 -exec chmod u+w {} ';' &amp;&amp; rm -rf "spl-0.6.2" || { sleep 5 &amp;&amp; rm -rf "spl-0.6.2"; }; else :; fi
 test -d "spl-0.6.2" || mkdir "spl-0.6.2"
- (cd include &amp;&amp; make  top_distdir=../spl-0.6.2 distdir=../spl-0.6.2/include \</p>
+ (cd include &amp;&amp; make  top_distdir=../spl-0.6.2 distdir=../spl-0.6.2/include \
+     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
+make[3]: Entering directory `/usr/src/zfsfed20/spl/include'
+ (cd fs &amp;&amp; make  top_distdir=../../spl-0.6.2 distdir=../../spl-0.6.2/include/fs \
+     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
+make[4]: Entering directory `/usr/src/zfsfed20/spl/include/fs'
+make[4]: Leaving directory `/usr/src/zfsfed20/spl/include/fs'
 
-<pre><code> am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
-</code></pre>
+&amp;lt; snip &amp;gt;
 
-<p>make[3]: Entering directory `/usr/src/zfsfed20/spl/include'
- (cd fs &amp;&amp; make  top_distdir=../../spl-0.6.2 distdir=../../spl-0.6.2/include/fs \</p>
-
-<pre><code> am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
-</code></pre>
-
-<p>make[4]: Entering directory <code>/usr/src/zfsfed20/spl/include/fs'
-make[4]: Leaving directory</code>/usr/src/zfsfed20/spl/include/fs'</p>
-
-<p>&lt; snip &gt;</p>
-
-<ul>
-<li>umask 022</li>
-<li>cd /tmp/spl-build-root-CJV0xR9u/BUILD</li>
-<li>cd spl-0.6.2</li>
-<li>'[' /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64 '!=' / ']'</li>
-<li>rm -rf /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64</li>
-<li>exit 0
-Executing(--clean): /bin/sh -e /tmp/spl-build-root-CJV0xR9u/TMP/rpm-tmp.E1YvyO</li>
-<li>umask 022</li>
-<li>cd /tmp/spl-build-root-CJV0xR9u/BUILD</li>
-<li>rm -rf spl-0.6.2</li>
-<li>exit 0
++ umask 022
++ cd /tmp/spl-build-root-CJV0xR9u/BUILD
++ cd spl-0.6.2
++ '[' /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64 '!=' / ']'
++ rm -rf /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64
++ exit 0
+Executing(--clean): /bin/sh -e /tmp/spl-build-root-CJV0xR9u/TMP/rpm-tmp.E1YvyO
++ umask 022
++ cd /tmp/spl-build-root-CJV0xR9u/BUILD
++ rm -rf spl-0.6.2
++ exit 0
 make[1]: Leaving directory `/usr/src/zfsfed20/spl'
 [root@vicky spl]# ls
 aclocal.m4      config         copy-builtin  libtool      META             scripts                                spl_config.h.in                                  spl.release.in
@@ -672,27 +618,22 @@ AUTHORS         config.log     COPYING       Makefile     module           spl-0
 autogen.sh      config.status  DISCLAIMER    Makefile.am  patches          spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm  spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
 autom4te.cache  configure      include       Makefile.in  README.markdown  spl-0.6.2.tar.gz                       spl-dkms-0.6.2-22_gd58a99a.fc20.src.rpm
 cmd             configure.ac   lib           man          rpm              spl_config.h                           spl.release
-[root@vicky spl]#
-```</li>
-</ul>
-
+[root@vicky spl]# 
+</code></pre>
 
 <h5>install the packages</h5>
 
-<p>```
-[root@vicky spl]# rpm -Uvh spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
+<pre><code>[root@vicky spl]# rpm -Uvh spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
 Preparing...                          ################################# [100%]
 Updating / installing...
    1:spl-dkms-0.6.2-22_gd58a99a.fc20  ################################# [ 25%]
-Removing old spl-0.6.2 DKMS files...</p>
+Removing old spl-0.6.2 DKMS files...
 
-<hr />
-
-<p>Deleting module version: 0.6.2</p>
-
-<h2>completely from the DKMS tree.</h2>
-
-<p>Done.
+------------------------------
+Deleting module version: 0.6.2
+completely from the DKMS tree.
+------------------------------
+Done.
 Loading new spl-0.6.2 DKMS files...
 First Installation: checking all kernels...
 Building only for 3.11.10-301.fc20.x86_64
@@ -700,26 +641,22 @@ Module build for the currently running kernel was skipped since the
 kernel source for this kernel does not seem to be installed.
    2:spl-0.6.2-22_gd58a99a.fc20       ################################# [ 50%]
 Cleaning up / removing...
-   3:spl-0.6.2-1.el6                  ################################# [ 75%]</p>
+   3:spl-0.6.2-1.el6                  ################################# [ 75%]
 
-<hr />
-
-<p>Deleting module version: 0.6.2</p>
-
-<h2>completely from the DKMS tree.</h2>
-
-<p>Done.
+------------------------------
+Deleting module version: 0.6.2
+completely from the DKMS tree.
+------------------------------
+Done.
    4:spl-dkms-0.6.2-1.el6             ################################# [100%]
-[root@vicky spl]#</p>
-
-<p>```</p>
+[root@vicky spl]# 
+</code></pre>
 
 <h4>zfsonlinux</h4>
 
 <h5>clone the zfs git repository</h5>
 
-<p><code>
-[root@vicky ]# cd /usr/src/zfsfed20
+<pre><code>[root@vicky ]# cd /usr/src/zfsfed20
 [root@vicky ~]# cd /usr/src/zfsfed20/
 [root@vicky zfsfed20]# git clone https://github.com/zfsonlinux/zfs.git
 Cloning into 'zfs'...
@@ -730,13 +667,12 @@ remote: Total 80663 (delta 15), reused 20 (delta 6)
 Receiving objects: 100% (80663/80663), 18.05 MiB | 105.00 KiB/s, done.
 Resolving deltas: 100% (55857/55857), done.
 Checking connectivity... done
-[root@vicky zfsfed20]#
-</code></p>
+[root@vicky zfsfed20]# 
+</code></pre>
 
 <h5>create the configure script</h5>
 
-<p><code>
-[root@vicky zfs]# autoreconf -i
+<pre><code>[root@vicky zfs]# autoreconf -i
 libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
 libtoolize: copying file `config/ltmain.sh'
 libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `config'.
@@ -752,13 +688,12 @@ configure.ac:38: installing 'config/config.sub'
 configure.ac:41: installing 'config/install-sh'
 configure.ac:41: installing 'config/missing'
 cmd/mount_zfs/Makefile.am: installing 'config/depcomp'
-[root@vicky zfs]#
-</code></p>
+[root@vicky zfs]# 
+</code></pre>
 
 <h5>run configure</h5>
 
-<p>```
-[root@vicky zfs]# ./configure
+<pre><code>[root@vicky zfs]# ./configure 
 checking for gawk... gawk
 checking metadata... git describe
 checking build system type... x86_64-unknown-linux-gnu
@@ -773,42 +708,38 @@ checking whether make sets $(MAKE)... yes
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-checking for suffix of executables...
+checking for suffix of executables... 
 checking whether we are cross compiling... no
 checking for suffix of object files... o
-checking whether we are using the GNU C compiler... yes</p>
+checking whether we are using the GNU C compiler... yes
 
-<p>&lt; snip &gt;</p>
+&amp;lt; snip &amp;gt;
 
-<p>config.status: creating rpm/generic/zfs-kmod.spec
+config.status: creating rpm/generic/zfs-kmod.spec
 config.status: creating rpm/generic/zfs-dkms.spec
 config.status: creating zfs-script-config.sh
 config.status: creating zfs.release
 config.status: creating zfs_config.h
 config.status: executing depfiles commands
 config.status: executing libtool commands
-[root@vicky zfs]#
-```</p>
+[root@vicky zfs]# 
+</code></pre>
 
 <h5>build the packages</h5>
 
-<p>```
-[root@vicky zfs]# make rpm-utils rpm-dkms
-make  pkg="zfs" \</p>
-
-<pre><code>def='--define "build_src_rpm 1" ' srpm-common
-</code></pre>
-
-<p>make[1]: Entering directory <code>/usr/src/zfsfed20/zfs'
+<pre><code>[root@vicky zfs]# make rpm-utils rpm-dkms
+make  pkg="zfs" \
+    def='--define "build_src_rpm 1" ' srpm-common
+make[1]: Entering directory `/usr/src/zfsfed20/zfs'
 make  dist-gzip am__post_remove_distdir='@:'
-make[2]: Entering directory</code>/usr/src/zfsfed20/zfs'
+make[2]: Entering directory `/usr/src/zfsfed20/zfs'
 if test -d "zfs-0.6.2"; then find "zfs-0.6.2" -type d ! -perm -200 -exec chmod u+w {} ';' &amp;&amp; rm -rf "zfs-0.6.2" || { sleep 5 &amp;&amp; rm -rf "zfs-0.6.2"; }; else :; fi
-test -d "zfs-0.6.2" || mkdir "zfs-0.6.2"</p>
+test -d "zfs-0.6.2" || mkdir "zfs-0.6.2"
 
-<p>&lt; snip &gt;</p>
+&amp;lt; snip &amp;gt;
 
-<p>make[4]: Leaving directory <code>/usr/src/zfsfed20/zfs/udev/rules.d'
-make[3]: Leaving directory</code>/usr/src/zfsfed20/zfs/udev'
+make[4]: Leaving directory `/usr/src/zfsfed20/zfs/udev/rules.d'
+make[3]: Leaving directory `/usr/src/zfsfed20/zfs/udev'
 + exit 0
 Executing(--clean): /bin/sh -e /tmp/zfs-build-root-pzSqKnEH/TMP/rpm-tmp.2uRZ1C
 + umask 022
@@ -816,13 +747,12 @@ Executing(--clean): /bin/sh -e /tmp/zfs-build-root-pzSqKnEH/TMP/rpm-tmp.2uRZ1C
 + rm -rf zfs-0.6.2
 + exit 0
 make[1]: Leaving directory `/usr/src/zfsfed20/zfs'
-[root@vicky zfs]#
-```</p>
+[root@vicky zfs]# 
+</code></pre>
 
 <h5>install the packages</h5>
 
-<p>```
-[root@vicky zfsfed20]# yum localinstall zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm
+<pre><code>[root@vicky zfsfed20]# yum localinstall zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm
 Loaded plugins: langpacks, priorities, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
 Cannot open: zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm. Skipping.
@@ -840,30 +770,29 @@ Marking zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm to be installed
 Examining zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm: zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64
 Marking zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm to be installed
 Resolving Dependencies
---> Running transaction check
----> Package zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
----> Package zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20 will be installed
----> Package zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
---> Finished Dependency Resolution
+--&gt; Running transaction check
+---&gt; Package zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
+---&gt; Package zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20 will be installed
+---&gt; Package zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
+--&gt; Finished Dependency Resolution
 http://negativo17.org/repos/HandBrake/epel-20/x86_64/repodata/repomd.xml: [Errno 14] HTTP Error 404 - Not Found
-Trying other mirror.</p>
+Trying other mirror.
 
-<p>Dependencies Resolved</p>
+Dependencies Resolved
 
-<p>===================================================================================================================================</p>
-
-<h1> Package             Arch            Version                             Repository                                           Size</h1>
-
-<p>Installing:
+===================================================================================================================================
+ Package             Arch            Version                             Repository                                           Size
+===================================================================================================================================
+Installing:
  zfs                 x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-0.6.2-158_gcbe8e61.fc20.x86_64                 2.2 M
  zfs-dkms            noarch          0.6.2-158_gcbe8e61.fc20             /zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch             11 M
- zfs-dracut          x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64           13 k</p>
+ zfs-dracut          x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64           13 k
 
-<h1>Transaction Summary</h1>
+Transaction Summary
+===================================================================================================================================
+Install  3 Packages
 
-<p>Install  3 Packages</p>
-
-<p>Total size: 13 M
+Total size: 13 M
 Installed size: 13 M
 Is this ok [y/d/N]: y
 Downloading packages:
@@ -874,85 +803,82 @@ Running transaction
 Warning: RPMDB altered outside of yum.
 ** Found 1 pre-existing rpmdb problem(s), 'yum check' output follows:
 libvpx-1.2.0-2.git5e3439b.fc19.x86_64 is a duplicate with libvpx-1.2.0-2.fc20.i686
-  Installing : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         1/3
+  Installing : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         1/3 
 Loading new zfs-0.6.2 DKMS files...
 First Installation: checking all kernels...
 Building only for 3.12.7-300.fc20.x86_64
 Building initial module for 3.12.7-300.fc20.x86_64
-Done.</p>
+Done.
 
-<p>zavl:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>znvpair.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zunicode.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zcommon.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zfs.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/</p>
-
-<p>zpios.ko:
+zavl:
 Running module version sanity check.
  - Original module
    - No original module exists within this kernel
  - Installation
    - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-Adding any weak-modules</p>
 
-<p>Running the post_install script:</p>
+znvpair.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>depmod...</p>
+zunicode.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>DKMS: install completed.
-  Installing : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3
-  Installing : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       3/3
-  Verifying  : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       1/3
-  Verifying  : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3
-  Verifying  : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         3/3</p>
+zcommon.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>Installed:
-  zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20   zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20   zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20</p>
+zfs.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
 
-<p>Complete!
-[root@vicky zfs]#</p>
+zpios.ko:
+Running module version sanity check.
+ - Original module
+   - No original module exists within this kernel
+ - Installation
+   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
+Adding any weak-modules
 
-<p>```</p>
+Running the post_install script:
+
+depmod...
+
+DKMS: install completed.
+  Installing : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3 
+  Installing : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       3/3 
+  Verifying  : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       1/3 
+  Verifying  : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3 
+  Verifying  : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         3/3 
+
+Installed:
+  zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20   zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20   zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20  
+
+Complete!
+[root@vicky zfs]# 
+</code></pre>
 
 <h4>Enable zfs</h4>
 
-<p>```
-[root@vicky zfs]# chkconfig zfs on
+<pre><code>[root@vicky zfs]# chkconfig zfs on
 [root@vicky zfs]# systemctl zfs start
 Unknown operation 'zfs'.
 [root@vicky zfs]# systemctl start zfs
-[root@vicky zfs]#</p>
-
-<p>```</p>
+[root@vicky zfs]# 
+</code></pre>
 
 <p style="font-style: italic;">
 Have fun...
@@ -962,120 +888,112 @@ Have fun...
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[yum update on fedora 19 and zfs on linux]]></title>
+    <title type="html"><![CDATA[Yum Update on Fedora 19 and Zfs on Linux]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/"/>
     <updated>2013-10-13T17:51:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://zfsonlinux.org/images/zfs-linux.png" width="200" height="125" title="&#34;zfs on linux&#34;" alt="&#34;zfs on linux&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="left <a" src="href="http://zfsonlinux.org/images/zfs-linux.png">http://zfsonlinux.org/images/zfs-linux.png</a>" width="200" height="125" title="&ldquo;zfs on linux&rdquo;" ></p>
 
 <p>I use  <a href="http://zfsonlinux.org/"> zfs on linux</a> on <a href="http://fedoraproject.org/">fedora</a> now.</p>
 
 <p><a href="http://zfsonlinux.org/fedora.html">The installation</a> was pretty straightforward but after the installation of <a href="http://open-zfs.org/">zfs</a> <code>yum update</code> failed.</p>
 
-<br />
+<p><br /></p>
 
-
-<p>```
-[root@vicky etc]# yum update -y
+<pre><code>[root@vicky etc]# yum update -y
 Loaded plugins: langpacks, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
-fedora/19/x86_64/metalink                                                                                                                                                                   |  33 kB  00:00:00   <br/>
-fedora                                                                                                                                                                                      | 4.2 kB  00:00:00   <br/>
-fedora-chromium-stable                                                                                                                                                                      | 3.4 kB  00:00:00   <br/>
-google-chrome                                                                                                                                                                               |  951 B  00:00:00   <br/>
-rpmfusion-free                                                                                                                                                                              | 3.3 kB  00:00:00   <br/>
-rpmfusion-free-updates                                                                                                                                                                      | 3.3 kB  00:00:00   <br/>
-rpmfusion-nonfree                                                                                                                                                                           | 3.3 kB  00:00:00   <br/>
-rpmfusion-nonfree-updates                                                                                                                                                                   | 3.3 kB  00:00:00   <br/>
-updates/19/x86_64/metalink                                                                                                                                                                  |  30 kB  00:00:00   <br/>
-updates                                                                                                                                                                                     | 4.4 kB  00:00:00   <br/>
-zfs                                                                                                                                                                                         | 2.9 kB  00:00:00   <br/>
-(1/6): fedora-chromium-stable/19/x86_64/primary_db                                                                                                                                          |  20 kB  00:00:00   <br/>
-(2/6): zfs/19/x86_64/primary_db                                                                                                                                                             | 6.7 kB  00:00:00   <br/>
-(3/6): updates/19/x86_64/group_gz                                                                                                                                                           | 385 kB  00:00:02   <br/>
-(4/6): fedora/19/x86_64/group_gz                                                                                                                                                            | 384 kB  00:00:06   <br/>
-(5/6): updates/19/x86_64/primary_db                                                                                                                                                         | 8.8 MB  00:01:53   <br/>
-(6/6): fedora/19/x86_64/primary_db                                                                                                                                                          |  17 MB  00:03:34   <br/>
-(1/10): google-chrome/primary                                                                                                                                                               | 1.9 kB  00:00:00   <br/>
-(2/10): rpmfusion-free-updates/19/x86_64/primary_db                                                                                                                                         | 217 kB  00:00:01   <br/>
-(3/10): rpmfusion-nonfree/19/x86_64/primary_db                                                                                                                                              | 149 kB  00:00:00   <br/>
-(4/10): rpmfusion-free/19/x86_64/primary_db                                                                                                                                                 | 440 kB  00:00:03   <br/>
-(5/10): rpmfusion-nonfree-updates/19/x86_64/primary_db                                                                              b                                                       |  97 kB  00:00:00   <br/>
-(6/10): rpmfusion-nonfree-updates/19/x86_64/group_gz                                                                                                                                        |  990 B  00:00:05   <br/>
-(7/10): rpmfusion-nonfree/19/x86_64/group_gz                                                                                                                                                |  993 B  00:00:07   <br/>
-(8/10): rpmfusion-free/19/x86_64/group_gz                                                                                                                                                   | 1.6 kB  00:00:07   <br/>
-(9/10): rpmfusion-free-updates/19/x86_64/group_gz                                                                                                                                           | 1.6 kB  00:00:07   <br/>
-(10/10): updates/19/x86_64/updateinfo                                                                                                                                                       | 861 kB  00:00:09   <br/>
+fedora/19/x86_64/metalink                                                                                                                                                                   |  33 kB  00:00:00     
+fedora                                                                                                                                                                                      | 4.2 kB  00:00:00     
+fedora-chromium-stable                                                                                                                                                                      | 3.4 kB  00:00:00     
+google-chrome                                                                                                                                                                               |  951 B  00:00:00     
+rpmfusion-free                                                                                                                                                                              | 3.3 kB  00:00:00     
+rpmfusion-free-updates                                                                                                                                                                      | 3.3 kB  00:00:00     
+rpmfusion-nonfree                                                                                                                                                                           | 3.3 kB  00:00:00     
+rpmfusion-nonfree-updates                                                                                                                                                                   | 3.3 kB  00:00:00     
+updates/19/x86_64/metalink                                                                                                                                                                  |  30 kB  00:00:00     
+updates                                                                                                                                                                                     | 4.4 kB  00:00:00     
+zfs                                                                                                                                                                                         | 2.9 kB  00:00:00     
+(1/6): fedora-chromium-stable/19/x86_64/primary_db                                                                                                                                          |  20 kB  00:00:00     
+(2/6): zfs/19/x86_64/primary_db                                                                                                                                                             | 6.7 kB  00:00:00     
+(3/6): updates/19/x86_64/group_gz                                                                                                                                                           | 385 kB  00:00:02     
+(4/6): fedora/19/x86_64/group_gz                                                                                                                                                            | 384 kB  00:00:06     
+(5/6): updates/19/x86_64/primary_db                                                                                                                                                         | 8.8 MB  00:01:53     
+(6/6): fedora/19/x86_64/primary_db                                                                                                                                                          |  17 MB  00:03:34     
+(1/10): google-chrome/primary                                                                                                                                                               | 1.9 kB  00:00:00     
+(2/10): rpmfusion-free-updates/19/x86_64/primary_db                                                                                                                                         | 217 kB  00:00:01     
+(3/10): rpmfusion-nonfree/19/x86_64/primary_db                                                                                                                                              | 149 kB  00:00:00     
+(4/10): rpmfusion-free/19/x86_64/primary_db                                                                                                                                                 | 440 kB  00:00:03     
+(5/10): rpmfusion-nonfree-updates/19/x86_64/primary_db                                                                              b                                                       |  97 kB  00:00:00     
+(6/10): rpmfusion-nonfree-updates/19/x86_64/group_gz                                                                                                                                        |  990 B  00:00:05     
+(7/10): rpmfusion-nonfree/19/x86_64/group_gz                                                                                                                                                |  993 B  00:00:07     
+(8/10): rpmfusion-free/19/x86_64/group_gz                                                                                                                                                   | 1.6 kB  00:00:07     
+(9/10): rpmfusion-free-updates/19/x86_64/group_gz                                                                                                                                           | 1.6 kB  00:00:07     
+(10/10): updates/19/x86_64/updateinfo                                                                                                                                                       | 861 kB  00:00:09     
 google-chrome                                                                                                                                                                                                  3/3
 Resolving Dependencies
---> Running transaction check
----> Package dkms.noarch 0:2.2.0.3-14.zfs1.fc19 will be updated
---> Processing Dependency: dkms = 2.2.0.3-14.zfs1.fc19 for package: zfs-dkms-0.6.2-1.fc19.noarch
----> Package dkms.noarch 0:2.2.0.3-17.fc19 will be an update
---> Finished Dependency Resolution
-Error: Package: zfs-dkms-0.6.2-1.fc19.noarch (@zfs)</p>
-
-<pre><code>       Requires: dkms = 2.2.0.3-14.zfs1.fc19
-       Removing: dkms-2.2.0.3-14.zfs1.fc19.noarch (@zfs)
-           dkms = 2.2.0.3-14.zfs1.fc19
-       Updated By: dkms-2.2.0.3-17.fc19.noarch (updates)
-           dkms = 2.2.0.3-17.fc19
-       Available: dkms-2.2.0.3-5.fc19.noarch (fedora)
-           dkms = 2.2.0.3-5.fc19
+--&gt; Running transaction check
+---&gt; Package dkms.noarch 0:2.2.0.3-14.zfs1.fc19 will be updated
+--&gt; Processing Dependency: dkms = 2.2.0.3-14.zfs1.fc19 for package: zfs-dkms-0.6.2-1.fc19.noarch
+---&gt; Package dkms.noarch 0:2.2.0.3-17.fc19 will be an update
+--&gt; Finished Dependency Resolution
+Error: Package: zfs-dkms-0.6.2-1.fc19.noarch (@zfs)
+           Requires: dkms = 2.2.0.3-14.zfs1.fc19
+           Removing: dkms-2.2.0.3-14.zfs1.fc19.noarch (@zfs)
+               dkms = 2.2.0.3-14.zfs1.fc19
+           Updated By: dkms-2.2.0.3-17.fc19.noarch (updates)
+               dkms = 2.2.0.3-17.fc19
+           Available: dkms-2.2.0.3-5.fc19.noarch (fedora)
+               dkms = 2.2.0.3-5.fc19
+ You could try using --skip-broken to work around the problem
+ You could try running: rpm -Va --nofiles --nodigest
+[root@vicky etc]# 
 </code></pre>
 
-<p> You could try using --skip-broken to work around the problem
- You could try running: rpm -Va --nofiles --nodigest
-[root@vicky etc]#
-```</p>
+<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&rsquo;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
 
-<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn't installed on my box. After installing <code>yum-plugin-priorities</code></p>
-
-<p>```
-[root@vicky etc]# yum install yum-plugin-priorities
+<pre><code>[root@vicky etc]# yum install yum-plugin-priorities
 Loaded plugins: langpacks, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
 Resolving Dependencies
---> Running transaction check
----> Package yum-plugin-priorities.noarch 0:1.1.31-18.fc19 will be installed
---> Finished Dependency Resolution</p>
+--&gt; Running transaction check
+---&gt; Package yum-plugin-priorities.noarch 0:1.1.31-18.fc19 will be installed
+--&gt; Finished Dependency Resolution
 
-<p>Dependencies Resolved</p>
+Dependencies Resolved
 
-<p>===================================================================================================================================================================================================================</p>
+===================================================================================================================================================================================================================
+ Package                                                     Arch                                         Version                                              Repository                                     Size
+===================================================================================================================================================================================================================
+Installing:
+ yum-plugin-priorities                                       noarch                                       1.1.31-18.fc19                                       updates                                        22 k
 
-<h1> Package                                                     Arch                                         Version                                              Repository                                     Size</h1>
+Transaction Summary
+===================================================================================================================================================================================================================
+Install  1 Package
 
-<p>Installing:
- yum-plugin-priorities                                       noarch                                       1.1.31-18.fc19                                       updates                                        22 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 22 k
+Total download size: 22 k
 Installed size: 28 k
 Is this ok [y/d/N]: y
 Downloading packages:
-yum-plugin-priorities-1.1.31-18.fc19.noarch.rpm                                                                                                                                             |  22 kB  00:00:01   <br/>
+yum-plugin-priorities-1.1.31-18.fc19.noarch.rpm                                                                                                                                             |  22 kB  00:00:01     
 Running transaction check
 Running transaction test
 Transaction test succeeded
 Running transaction
-  Installing : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1
-  Verifying  : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1</p>
+  Installing : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
+  Verifying  : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
 
-<p>Installed:
-  yum-plugin-priorities.noarch 0:1.1.31-18.fc19</p>
+Installed:
+  yum-plugin-priorities.noarch 0:1.1.31-18.fc19                                                                                                                                                                    
 
-<p>Complete!
-[root@vicky etc]#
-```</p>
+Complete!
+[root@vicky etc]# 
+</code></pre>
 
 <p>And make sure that the zfs has the priority</p>
 
-<p>```
-[root@localhost etc]# cat yum.repos.d/zfs.repo
+<pre><code>[root@localhost etc]# cat yum.repos.d/zfs.repo
 [zfs]
 name=ZFS of Linux for Fedora $releasever
 baseurl=http://archive.zfsonlinux.org/fedora/$releasever/$basearch/
@@ -1084,37 +1002,36 @@ priority=1
 metadata_expire=7d
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-Requires:       yum-plugin-priorities</p>
+Requires:       yum-plugin-priorities
 
-<p>[zfs-source]
+[zfs-source]
 name=ZFS of Linux for Fedora $releasever - Source
 baseurl=http://archive.zfsonlinux.org/fedora/$releasever/SRPMS/
 enabled=0
 metadata_expire=7d
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-[root@vicky etc]#
-```</p>
+[root@vicky etc]# 
+</code></pre>
 
 <p> <code>yum update</code> works again.</p>
 
-<p><code>
-[root@vicky etc]# yum update -y
+<pre><code>[root@vicky etc]# yum update -y
 Loaded plugins: langpacks, priorities, refresh-packagekit
 Repository google-chrome is listed more than once in the configuration
 2 packages excluded due to repository priority protections
 No packages marked for update
-[root@vicky etc]#
-</code></p>
+[root@vicky etc]# 
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Running kindle on GNU/Linux with wine]]></title>
+    <title type="html"><![CDATA[Running Kindle on GNU/Linux With Wine]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
     <updated>2013-09-08T11:57:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/i7_desktop.jpg" width="400" height="300" title="&ldquo;desktop&rdquo;" ></p>
 
 <p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>
 
@@ -1137,43 +1054,39 @@ No packages marked for update
 </ul>
 
 
-<p>```
-[root@vicky ~]# yum install wine
-Loaded plugins: langpacks, refresh-packagekit</p>
-
-<p>```</p>
+<pre><code>[root@vicky ~]# yum install wine
+Loaded plugins: langpacks, refresh-packagekit
+</code></pre>
 
 <ul>
 <li>Download Kindle for Window xp</li>
 </ul>
 
 
-<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></p>
+<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"><a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></a></p>
 
 <ul>
 <li>Run the installer</li>
 </ul>
 
 
-<p><code>
-[swagemakers@vicky ~]$ wine ~/Downloads/KindleForPC-installer.exe
-</code></p>
+<pre><code>[swagemakers@vicky ~]$ wine ~/Downloads/KindleForPC-installer.exe 
+</code></pre>
 
 <ul>
 <li>Create kindle startup script</li>
 </ul>
 
 
-<p><code>
-wine $HOME/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &amp;
-</code></p>
+<pre><code>wine $HOME/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &amp;
+</code></pre>
 
 <blockquote><p>Happy reading</p>
 
 <p>but</p></blockquote>
 
 <p><strong>
-It's better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
+It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
 </strong></p>
 ]]></content>
   </entry>

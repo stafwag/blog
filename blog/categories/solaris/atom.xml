@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: solaris | stafwag Blog]]></title>
+  <title><![CDATA[Category: Solaris | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/solaris/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,40 +14,38 @@
 
   
   <entry>
-    <title type="html"><![CDATA[lxc templates in Fedora 20]]></title>
+    <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
     <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I'm a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
+    <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
-<p>As always with virtualization you've to careful with sharing systems or containers that doesn't below to the same customer or service on the same physical machine since you're never sure which traces are left behind in the memory etc.</p>
+<p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>
 
 <p><a href="https://linuxcontainers.org/">Linux containers</a> are getting more popular since the release of <a href="http://www.docker.com/">docker</a></p>
 
-<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn't an success.</p>
+<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn&rsquo;t an success.</p>
 
-<p>On a newly create debian container networking didn't work.</p>
+<p>On a newly create debian container networking didn&rsquo;t work.</p>
 
 <h3>First debian container</h3>
 
 <h4>Creating the container</h4>
 
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+<pre><code>[root@vicky ~]# lxc-create -n mydebian -t debian
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 debootstrap is /sbin/debootstrap
-Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ...
-Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might
-&lt; snip &gt;
+Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ... 
+Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might 
+&amp;lt; snip &amp;gt;
 'debian' template installed
 'mydebian' created
-```</p>
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
+<pre><code>[root@vicky ~]# lxc-start -n mydebian
 INIT: version 2.88 booting
 Using makefile-style concurrent boot in runlevel S.
 Cleaning up ifupdown....
@@ -64,58 +62,53 @@ Setting kernel variables ...done.
 Cleaning up temporary files....
 INIT: Entering runlevel: 3
 Using makefile-style concurrent boot in runlevel 3.
-Starting OpenBSD Secure Shell server: sshd.</p>
+Starting OpenBSD Secure Shell server: sshd.
 
-<p>Debian GNU/Linux 6.0 mydebian console</p>
+Debian GNU/Linux 6.0 mydebian console
 
-<p>mydebian login: root
-Password:
+mydebian login: root
+Password: 
 Last login: Tue Jun 21 08:05:41 UTC 2014 on console
 Linux mydebian 3.14.5-200.fc20.i686 #1 SMP Mon Jun 21 08:13:19 UTC 2014 i686
-```</p>
+</code></pre>
 
-<h3>Network isn't working...</h3>
+<h3>Network isn&rsquo;t working&hellip;</h3>
 
-<p>```
-The programs included with the Debian GNU/Linux system are free software;
+<pre><code>The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
+individual files in /usr/share/doc/*/copyright.
 
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 root@mydebian:~# ifconfig -a
-eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3</p>
+eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3  
+          inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
 
-<pre><code>      inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:13 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
-</code></pre>
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
 
-<p>lo        Link encap:Local Loopback</p>
-
-<pre><code>      inet addr:127.0.0.1  Mask:255.0.0.0
-      inet6 addr: ::1/128 Scope:Host
-      UP LOOPBACK RUNNING  MTU:65536  Metric:1
-      RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:0 
-      RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-</code></pre>
-
-<p>root@mydebian:~# ifup eth0
+root@mydebian:~# ifup eth0
 ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-root@mydebian:~#
-root@mydebian:~# cat /etc/network/interfaces
+root@mydebian:~# 
+root@mydebian:~# cat /etc/network/interfaces 
 auto lo
-iface lo inet loopback</p>
+iface lo inet loopback
 
-<p>auto eth0
+auto eth0
 iface eth0 inet dhcp
-root@mydebian:~#
-```</p>
+root@mydebian:~# 
+</code></pre>
 
 <h3>Fedora container</h3>
 
@@ -123,29 +116,25 @@ root@mydebian:~#
 
 <h4>Creating the fedora container</h4>
 
-<p>```
-root@vicky ~]# lxc-create -n myfedora -t fedora</p>
+<pre><code>root@vicky ~]# lxc-create -n myfedora -t fedora
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 Host CPE ID from /etc/os-release: cpe:/o:fedoraproject:fedora:20
-Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ...
+Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ... 
 Downloading fedora minimal ...
 Fetching rpm name from http://be.mirror.eurid.eu/fedora/linux/releases/20/Everything/i386/os//Packages/f...
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</p>
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
+  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525
 
-<pre><code>                             Dload  Upload   Total   Spent    Left  Speed
-</code></pre>
-
-<p>100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
-  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525</p>
-
-<p><snip>
+&lt;snip&gt;
 Updated:
-  fedora-release.noarch 0:20-3</p>
+  fedora-release.noarch 0:20-3                                                  
 
-<p>Complete!
+Complete!
 Download complete.
-Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ...
+Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ... 
 Copying rootfs to /var/lib/lxc/myfedora/rootfs ...setting root passwd to root
 installing fedora-release package
 Package fedora-release-20-3.noarch already installed and latest version
@@ -154,60 +143,52 @@ unlink: cannot unlink ‘/var/lib/lxc/myfedora/rootfs/etc/systemd/system/default
 container rootfs and config created
 'fedora' template installed
 'myfedora' created
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n myfedora
+<pre><code>[root@vicky ~]# lxc-start -n myfedora
 systemd 208 running in system mode. (+PAM +LIBWRAP +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT +ACL +XZ)
-Detected virtualization 'lxc'.</p>
+Detected virtualization 'lxc'.
 
-<p>Welcome to Fedora 20 (Heisenbug)!</p>
+Welcome to Fedora 20 (Heisenbug)!
 
-<p>Set hostname to <myfedora>.
+Set hostname to &lt;myfedora&gt;.
 [  OK  ] Reached target Remote File Systems.
 [  OK  ] Listening on Delayed Shutdown Socket.
 [  OK  ] Created slice Root Slice.
 [  OK  ] Created slice User and Session Slice.
 [  OK  ] Started Login Service.
-&lt; snip &gt;
-[  OK  ] Reached target Multi-User System.</p>
+&amp;lt; snip &amp;gt;
+[  OK  ] Reached target Multi-User System.
 
-<p>Fedora release 20 (Heisenbug)
-Kernel 3.14.5-200.fc20.i686 on an i686 (console)</p>
+Fedora release 20 (Heisenbug)
+Kernel 3.14.5-200.fc20.i686 on an i686 (console)
 
-<p>myfedora login: root
-Password:
+myfedora login: root
+Password: 
 Last login: Wed Jun 21 09:12:42 on console
-```</p>
+</code></pre>
 
 <h4>Networking</h4>
 
-<p>```
-[root@myfedora ~]# ping 8.8.8.8
+<pre><code>[root@myfedora ~]# ping 8.8.8.8
 connect: Network is unreachable
 [root@myfedora ~]# ip addr
-1: lo: &lt;LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default</p>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default 
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::5889:44ff:fe04:992b/64 scope link 
+       valid_lft forever preferred_lft forever
+[root@myfedora ~]# ifup eth0
 
-<pre><code>link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-inet 127.0.0.1/8 scope host lo
-   valid_lft forever preferred_lft forever
-inet6 ::1/128 scope host 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000</p>
-
-<pre><code>link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
-inet6 fe80::5889:44ff:fe04:992b/64 scope link 
-   valid_lft forever preferred_lft forever
-</code></pre>
-
-<p>[root@myfedora ~]# ifup eth0</p>
-
-<p>Determining IP information for eth0... done.
+Determining IP information for eth0... done.
 [root@myfedora ~]# ping 8.8.8.8
 PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=113 ms
@@ -217,8 +198,8 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 --- 8.8.8.8 ping statistics ---
 3 packets transmitted, 3 received, 0% packet loss, time 2002ms
 rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
-[root@myfedora ~]#
-```</p>
+[root@myfedora ~]# 
+</code></pre>
 
 <h3>New templates</h3>
 
@@ -226,8 +207,7 @@ rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
 
 <h4>Getting the templates</h4>
 
-<p><code>
-[staf@vicky github]$ git clone https://github.com/lxc/lxc
+<pre><code>[staf@vicky github]$ git clone https://github.com/lxc/lxc 
 Cloning into 'lxc'...
 remote: Reusing existing pack: 17997, done.
 remote: Counting objects: 17, done.
@@ -236,28 +216,26 @@ remote: Total 18014 (delta 9), reused 0 (delta 0)
 Receiving objects: 100% (18014/18014), 9.14 MiB | 77.00 KiB/s, done.
 Resolving deltas: 100% (11555/11555), done.
 Checking connectivity... done.
-[staf@vicky github]$
-</code></p>
+[staf@vicky github]$ 
+</code></pre>
 
 <h4>Configure</h4>
 
 <p>Create the configure script and it dependencies</p>
 
-<p><code>
-[staf@vicky lxc]$ autoreconf -i
+<pre><code>[staf@vicky lxc]$ autoreconf -i
 configure.ac:31: installing 'config/compile'
 configure.ac:30: installing 'config/config.guess'
 configure.ac:30: installing 'config/config.sub'
 configure.ac:29: installing 'config/install-sh'
 configure.ac:29: installing 'config/missing'
 src/lua-lxc/Makefile.am: installing 'config/depcomp'
-[staf@vicky lxc]$
-</code></p>
+[staf@vicky lxc]$ 
+</code></pre>
 
 <p>Run configure</p>
 
-<p>```
-[staf@vicky lxc]$ ./configure
+<pre><code>[staf@vicky lxc]$ ./configure 
 checking for pkg-config... /usr/bin/pkg-config
 checking pkg-config is at least version 0.9.0... yes
 checking for a BSD-compatible install... /usr/bin/install -c
@@ -272,20 +250,20 @@ checking for style of include used by make... GNU
 checking for gcc... gcc
 checking whether the C compiler works... yes
 checking for C compiler default output file name... a.out
-<snip>
+&lt;snip&gt;
 Documentation:
  - examples: yes
  - API documentation: no
- - user documentation: no</p>
+ - user documentation: no
 
-<p>Debugging:
+Debugging:
  - tests: no
- - mutex debugging: no</p>
+ - mutex debugging: no
 
-<p>Paths:
+Paths:
  - Logs in configpath: no
-[staf@vicky lxc]$
-```</p>
+[staf@vicky lxc]$ 
+</code></pre>
 
 <h4>Copy the templates</h4>
 
@@ -302,53 +280,49 @@ lxc-busybox    lxc-download  lxc-opensuse      lxc-ubuntu
 [staf@vicky templates]$
 </code></p>
 
-<h3>Debian container second try...</h3>
+<h3>Debian container second try&hellip;</h3>
 
 <p>And tried to create the debian container again.</p>
 
-<p>```
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>mydebian  STOPPED  -     -   <br/>
-myfedora  STOPPED  -     -   <br/>
+<pre><code>[root@vicky ~]# lxc-ls --fancy
+NAME      STATE    IPV4  IPV6  
+-----------------------------
+mydebian  STOPPED  -     -     
+myfedora  STOPPED  -     -     
 [root@vicky ~]# lxc-destroy -n mydebian
-[root@vicky ~]# lxc-ls --fancy</p>
-
-<h2>NAME      STATE    IPV4  IPV6  </h2>
-
-<p>myfedora  STOPPED  -     -   <br/>
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# lxc-ls --fancy
+NAME      STATE    IPV4  IPV6  
+-----------------------------
+myfedora  STOPPED  -     -     
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Creating the container</h4>
 
-<p>```
-[root@vicky ~]# lxc-create -n mydebian -t debian</p>
+<pre><code>[root@vicky ~]# lxc-create -n mydebian -t debian
 
-<p>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
+lxc-create: No config file specified, using the default config /etc/lxc/default.conf
 debootstrap is /sbin/debootstrap
-Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ...
+Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ... 
 Downloading debian minimal ...
 W: Cannot check Release signature; keyring file not available /usr/share/keyrings/debian-archive-keyring.gpg
-I: Retrieving Release
-I: Validating Packages
+I: Retrieving Release 
+I: Validating Packages 
 I: Resolving dependencies of required packages...
 I: Resolving dependencies of base packages...
-I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1
-I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common
+I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1 
+I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common 
 I: Checking component main on http://cdn.debian.net/debian...
 I: Validating libacl1 2.2.51-8
 I: Validating adduser 3.113+nmu3
-<snip>
+&lt;snip&gt;
 I: Unpacking debconf...
 I: Unpacking debconf-i18n...
 I: Unpacking debianutils...
 I: Unpacking diffutils...
 I: Unpacking dpkg...
 I: Unpacking e2fslibs:i386...
-<snip>
+&lt;snip&gt;
 I: Configuring apt...
 I: Configuring openssh-client...
 I: Configuring openssh-server...
@@ -373,13 +347,12 @@ Timezone in container is not configured. Adjust it manually.
 Root password is 'root', please change !
 'debian' template installed
 'mydebian' created
-[root@vicky ~]#
-```</p>
+[root@vicky ~]# 
+</code></pre>
 
 <h4>Booting</h4>
 
-<p>```
-[root@vicky ~]# lxc-start -n mydebian
+<pre><code>[root@vicky ~]# lxc-start -n mydebian
 INIT: version 2.88 booting
 Using makefile-style concurrent boot in runlevel S.
 Cleaning up temporary files... /tmp /run /run/lock /run/shm.
@@ -403,38 +376,35 @@ Mount point '/dev/console' does not exist. Skipping mount. ... (warning).
 Activating lvm and md swap...done.
 Checking file systems...fsck from util-linux 2.20.1
 done.
-Mounting local filesystems...done.</p>
+Mounting local filesystems...done.
 
-<p>Debian GNU/Linux 7 mydebian console</p>
+Debian GNU/Linux 7 mydebian console
 
-<p>mydebian login: root
-Password:
-Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686</p>
+mydebian login: root
+Password: 
+Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686
 
-<p>The programs included with the Debian GNU/Linux system are free software;
+The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.</p>
+individual files in /usr/share/doc/*/copyright.
 
-<p>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
-```</p>
-
-<h4>Networking....</h4>
-
-<p>```
-root@mydebian:~# ifconfig eth0
-eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02</p>
-
-<pre><code>      inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
-      inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
-      UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-      RX packets:32 errors:0 dropped:0 overruns:0 frame:0
-      TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
-      collisions:0 txqueuelen:1000 
-      RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
 </code></pre>
 
-<p>root@mydebian:~# ping 8.8.8.8
+<h4>Networking&hellip;.</h4>
+
+<pre><code>root@mydebian:~# ifconfig eth0
+eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02  
+          inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
+          inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:32 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
+
+root@mydebian:~# ping 8.8.8.8
 -bash: ping: command not found
 root@mydebian:~# apt-cache search ping | grep util
 2ping - Ping utility to determine directional packet loss
@@ -457,7 +427,7 @@ WARNING: The following packages cannot be authenticated!
   inetutils-ping
 Install these packages without verification [y/N]? y
 Get:1 http://cdn.debian.net/debian/ wheezy/main inetutils-ping i386 2:1.9-2 [169 kB]
-Fetched 169 kB in 6s (26.4 kB/s)                                             <br/>
+Fetched 169 kB in 6s (26.4 kB/s)                                               
 debconf: delaying package configuration, since apt-utils is not installed
 Selecting previously unselected package inetutils-ping.
 (Reading database ... 9387 files and directories currently installed.)
@@ -470,39 +440,39 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 ^C--- 8.8.8.8 ping statistics ---
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max/stddev = 111.011/141.558/172.105/30.547 ms
-root@mydebian:~#
-```</p>
+root@mydebian:~# 
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Ide is still alive...]]></title>
+    <title type="html"><![CDATA[Ide Is Still Alive...]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&ldquo;sta2ide&rdquo;" ></p>
 
 <p>
 The dvd drive in my <a href="http://en.wikipedia.org/wiki/Sun_Blade_(workstation)">sun blade 1500 workstation</a> broke down. I use this system acausally for some development, it's always handy to have a <a href="http://en.wikipedia.org/wiki/Endianness">big endian</a> system at hand.<br /><br />
 </p>
 
 
-<p>The dvd drive was still handy to load another operating system on it.<br />The dvd drive has an <a href="http://en.wikipedia.org/wiki/Integrated_Drive_Electronics">ide interface</a> which are hard to get these days...<br /><br />
-<img class="left" src="/images/sata_dvd_0.jpg" width="326" height="245" title="&#34;dvd rom&#34;" alt="&#34;dvd rom&#34;"></p>
+<p>The dvd drive was still handy to load another operating system on it.<br />The dvd drive has an <a href="http://en.wikipedia.org/wiki/Integrated_Drive_Electronics">ide interface</a> which are hard to get these days&hellip;<br /><br />
+<img class="left" src="/images/sata_dvd_0.jpg" width="326" height="245" title="&ldquo;dvd rom&rdquo;" ></p>
 
 <p>
 I found a <a href="http://www.conrad.be/ce/nl/product/974497/IDE-naar-SATA-converter/SHOP_AREA_37572">ide to sata convertor</a> and a <a href="http://www.conrad.be/ce/nl/product/417054/Samsung-DVD-ROM-SATA-SH-118ABBEBE-bulk/SHOP_AREA_17682">new dvd drive</a> with a <a href="http://en.wikipedia.org/wiki/Serial_ATA">sata interface</a> at <a href="http://www.conrad.be">conrad</a>. This should convert the sata interface to an ide interface without any driver and works with any operating system.<br /><br />Well let's put this to a test on a <a href="http://en.wikipedia.org/wiki/SPARC">sparc</a> system with <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system">solaris</a> :-)<br /><br />
 </p>
 
 
-<p><img class="right" src="/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&#34;on dvd&#34;" alt="&#34;on dvd&#34;"></p>
+<p><img class="right" src="/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&ldquo;on dvd&rdquo;" ></p>
 
 <p>
 The installation was pretty straightforward, luckily the dvd rom drive has a plastic back since the converter touches the back of the dvd rom drive.<br /><br />  
 </p>
 
 
-<p><img class="right" src="/images/sun1500_alive_0.jpg" width="326" height="244" title="&#34;sun 1500 alive&#34;" alt="&#34;sun 1500 alive&#34;"></p>
+<p><img class="right" src="/images/sun1500_alive_0.jpg" width="326" height="244" title="&ldquo;sun 1500 alive&rdquo;" ></p>
 
 <p>
 After a quick test it seems to work like a charm. I might install <a href="http://www.opensxce.org">opensxce</a> on it.<br /><br />It seems to be the only option to run an <a href="http://en.wikipedia.org/wiki/OpenSolaris">opensolaris</a> ancestor on sparc hardware.</p>
@@ -511,42 +481,7 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Ide is still alive...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
-    <updated>2013-08-10T14:26:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
-
-<p>
-The dvd drive in my <a href="http://en.wikipedia.org/wiki/Sun_Blade_(workstation)">sun blade 1500 workstation</a> broke down. I use this system acausally for some development, it's always handy to have a <a href="http://en.wikipedia.org/wiki/Endianness">big endian</a> system at hand.<br /><br />
-</p>
-
-
-<p>The dvd drive was still handy to load another operating system on it.<br />The dvd drive has an <a href="http://en.wikipedia.org/wiki/Integrated_Drive_Electronics">ide interface</a> which are hard to get these days...<br /><br />
-<img class="left" src="/images/sata_dvd_0.jpg" width="326" height="245" title="&#34;dvd rom&#34;" alt="&#34;dvd rom&#34;"></p>
-
-<p>
-I found a <a href="http://www.conrad.be/ce/nl/product/974497/IDE-naar-SATA-converter/SHOP_AREA_37572">ide to sata convertor</a> and a <a href="http://www.conrad.be/ce/nl/product/417054/Samsung-DVD-ROM-SATA-SH-118ABBEBE-bulk/SHOP_AREA_17682">new dvd drive</a> with a <a href="http://en.wikipedia.org/wiki/Serial_ATA">sata interface</a> at <a href="http://www.conrad.be">conrad</a>. This should convert the sata interface to an ide interface without any driver and works with any operating system.<br /><br />Well let's put this to a test on a <a href="http://en.wikipedia.org/wiki/SPARC">sparc</a> system with <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system">solaris</a> :-)<br /><br />
-</p>
-
-
-<p><img class="right" src="/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&#34;on dvd&#34;" alt="&#34;on dvd&#34;"></p>
-
-<p>
-The installation was pretty straightforward, luckily the dvd rom drive has a plastic back since the converter touches the back of the dvd rom drive.<br /><br />  
-</p>
-
-
-<p><img class="right" src="/images/sun1500_alive_0.jpg" width="326" height="244" title="&#34;sun 1500 alive&#34;" alt="&#34;sun 1500 alive&#34;"></p>
-
-<p>
-After a quick test it seems to work like a charm. I might install <a href="http://www.opensxce.org">opensxce</a> on it.<br /><br />It seems to be the only option to run an <a href="http://en.wikipedia.org/wiki/OpenSolaris">opensolaris</a> ancestor on sparc hardware.</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Freebsd 9.1 jails with Qjail]]></title>
+    <title type="html"><![CDATA[Freebsd 9.1 Jails With Qjail]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
     <updated>2013-02-16T12:35:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
@@ -555,151 +490,138 @@ After a quick test it seems to work like a charm. I might install <a href="http:
 
 <p><strong></p>
 
-<p>I'm using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+<p>I&rsquo;m using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
-Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.</p>
+Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html"><a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a></a>.</p>
 
 <p></strong></p>
 
 <hr />
 
 
-<p>I'm adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
+<p>I&rsquo;m adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a></p>
 
-<p>I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
+<p>I&rsquo;m coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it&rsquo;s a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.</p>
 
 <p>On FreeBSD there are <a href="http://en.wikipedia.org/wiki/FreeBSD_jail">jails</a> to isolate services and improve security.</p>
 
-<p>At first I didn't like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.</p>
+<p>At first I didn&rsquo;t like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.</p>
 
 <p>Lucky <a href="http://sourceforge.net/projects/qjail/">Qjail</a> makes the deployment a lot easier.</p>
 
 <h3>Installing Qjail</h3>
 
-<p>```
-[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
+<pre><code>[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
 [root@rataplan /usr/ports/sysutils/qjail]# make install clean
-===>  License BSD accepted by the user
-=> qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
-=> Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
+===&gt;  License BSD accepted by the user
+=&gt; qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
+=&gt; Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
 qjail-1.7.tar.bz2                             100% of   39 kB  139 kBps
-===>  Extracting for qjail-1.7
-=> SHA256 Checksum OK for qjail-1.7.tar.bz2.
-===>  Patching for qjail-1.7
-===>  Configuring for qjail-1.7
-===>  Installing for qjail-1.7
-===>   Generating temporary packing list
-===>  Checking if sysutils/qjail already installed
+===&gt;  Extracting for qjail-1.7
+=&gt; SHA256 Checksum OK for qjail-1.7.tar.bz2.
+===&gt;  Patching for qjail-1.7
+===&gt;  Configuring for qjail-1.7
+===&gt;  Installing for qjail-1.7
+===&gt;   Generating temporary packing list
+===&gt;  Checking if sysutils/qjail already installed
 #
-Use the qjail utility to deploy small or large numbers of jails quickly.</p>
+Use the qjail utility to deploy small or large numbers of jails quickly.
 
-<p>First issue "rehash" command to enable the qjail command (if using csh).
+First issue "rehash" command to enable the qjail command (if using csh).
 Then issue "man qjail-intro" to read the qjail introduction.
 After reading that do "man qjail" for the usage details.
 #
-===>   Compressing manual pages for qjail-1.7
-===>   Registering installation for qjail-1.7
-===>  Cleaning for qjail-1.7
-[root@rataplan /usr/ports/sysutils/qjail]#
-```</p>
+===&gt;   Compressing manual pages for qjail-1.7
+===&gt;   Registering installation for qjail-1.7
+===&gt;  Cleaning for qjail-1.7
+[root@rataplan /usr/ports/sysutils/qjail]# 
+</code></pre>
 
 <h3>Create /usr/jails</h3>
 
-<p><code>
-[root@rataplan ~]# zfs create zroot/usr/jails
-</code></p>
+<pre><code>[root@rataplan ~]# zfs create zroot/usr/jails
+</code></pre>
 
 <h3>mount the freebsd 9.1 dvd</h3>
 
-<p><code>
-root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/
-</code></p>
+<pre><code>root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/
+</code></pre>
 
 <h3>qjail install</h3>
 
-<p>```
-root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/</p>
+<pre><code>root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/
 
-<p>The base RELEASE distribution files are populating the fulljail.
-Est LT 1 minute elapse time for this to complete.</p>
+The base RELEASE distribution files are populating the fulljail.
+Est LT 1 minute elapse time for this to complete.
 
-<p>The lib32 RELEASE distribution files are populating the fulljail.
-Est LT 1 minute elapse time for this to complete.</p>
+The lib32 RELEASE distribution files are populating the fulljail.
+Est LT 1 minute elapse time for this to complete.
 
-<p>Basejail &amp; newjail are being populated.
-Est LT 1 minute elapse time for this to complete.</p>
+Basejail &amp; newjail are being populated.
+Est LT 1 minute elapse time for this to complete.
 
-<p>Successfully installed qjail system.</p>
+Successfully installed qjail system.
 
-<p>root@rataplan:/root #</p>
-
-<p>```</p>
+root@rataplan:/root # 
+</code></pre>
 
 <h3>Creating a zfs filesystem for the jail</h3>
 
-<p>```
-root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
-root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
+<pre><code>root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
+root@rataplan:/usr/local/etc # 
+</code></pre>
 
 <h3>Creating a jail with Qjail</h3>
 
-<p><code>
-[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
+<pre><code>[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
 Successfully created  stafdb
-[root@rataplan ~]#
-</code></p>
+[root@rataplan ~]# 
+</code></pre>
 
 <h3>Start the jail</h3>
 
-<p><code>
-root@rataplan:/usr/local/etc # qjail start stafdb
+<pre><code>root@rataplan:/usr/local/etc # qjail start stafdb
 Jail started successfully. stafdb
-root@rataplan:/usr/local/etc #
-</code></p>
+root@rataplan:/usr/local/etc # 
+</code></pre>
 
 <h3>List the jails</h3>
 
-<p>```
-root@rataplan:/usr/local/etc # qjail list</p>
+<pre><code>root@rataplan:/usr/local/etc # qjail list
 
-<p>STA JID  NIC IP              Jailname</p>
 
-<hr />
-
-<p>DR  4    re0 192.168.1.42    stafmail
+STA JID  NIC IP              Jailname
+--- ---- --- --------------- ---------------------------------------------------
+DR  4    re0 192.168.1.42    stafmail
 DR  3    re0 192.168.1.41    staffs
-DR  6    re0 192.168.1.43    stafdb</p>
+DR  6    re0 192.168.1.43    stafdb
 
-<p>root@rataplan:/usr/local/etc #</p>
 
-<p>```</p>
+root@rataplan:/usr/local/etc # 
+</code></pre>
 
 <h3>console access</h3>
 
-<p>```
-root@rataplan:/usr/local/etc # qjail console stafdb
+<pre><code>root@rataplan:/usr/local/etc # qjail console stafdb
 Last login: Sat Feb 23 16:19:32 on pts/0
-FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013</p>
+FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013
 
-<p>Welcome to your FreeBSD jail
-stafdb /root >
-```</p>
+Welcome to your FreeBSD jail
+stafdb /root &gt;
+</code></pre>
 
 <h3>install the freebsd ports to the jail</h3>
 
-<p>```
-root@rataplan:/usr/local/etc # qjail update -p stafdb</p>
+<pre><code>root@rataplan:/usr/local/etc # qjail update -p stafdb
 
-<p>Sat Feb 23 16:21:55 CET 2013</p>
+Sat Feb 23 16:21:55 CET 2013
 
-<p>The elapse download time of the portsnap compressed ports file
+The elapse download time of the portsnap compressed ports file
 is estimated at 25 minutes for the initial fetch.
-Subsequent fetches will generally take less than a minute.</p>
+Subsequent fetches will generally take less than a minute.
 
-<p>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
 Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
 Fetching snapshot metadata... done.
 Updating from Sat Feb 16 11:47:49 CET 2013 to Sat Feb 23 15:58:32 CET 2013.
@@ -709,30 +631,29 @@ Fetching 0 metadata files... done.
 Fetching 524 patches.....10....20....30....40....50....60....70....80....90....100....110....120....130....140....150....160....170....180....190....200....210....220....230....240....250....260....270....280....290....300....310....320....330....340....350....360....370....380....390....400....410....420....430....440....450....460....470....480....490....500....510....520.. done.
 Applying patches... done.
 Fetching 42 new ports or files... done.
-Portsnap fetch completed successfully</p>
+Portsnap fetch completed successfully
 
-<p>Sat Feb 23 16:22:40 CET 2013</p>
+Sat Feb 23 16:22:40 CET 2013
 
-<p>The ports basejail/usr/ports directory tree is being updated.
+The ports basejail/usr/ports directory tree is being updated.
 The elapse time for this to complete is estimated at 1 minute
-to 10 minutes depending on how current your ports system is.</p>
+to 10 minutes depending on how current your ports system is.
 
-<p>Portsnap update completed successfully
-root@rataplan:/usr/local/etc #
-```</p>
+Portsnap update completed successfully
+root@rataplan:/usr/local/etc # 
+</code></pre>
 
 <h3>update the base jail</h3>
 
-<p>```
-root@rataplan:/usr/local/etc # qjail stop
+<pre><code>root@rataplan:/usr/local/etc # qjail stop
 Jail stopped successfully. stafmail
 Jail stopped successfully. staffs
 Jail already stopped.      stafdb
-root@rataplan:/usr/local/etc #</p>
+root@rataplan:/usr/local/etc # 
 
-<p>root@rataplan:/usr/local/etc # qjail update -b</p>
+root@rataplan:/usr/local/etc # qjail update -b 
 
-<p>Deletion of basejail binaries successful for bin.
+Deletion of basejail binaries successful for bin.
 Deletion of basejail binaries successful for lib.
 Deletion of basejail binaries successful for libexec.
 Deletion of basejail binaries successful for sbin.
@@ -742,9 +663,9 @@ Deletion of basejail binaries successful for usr/lib.
 Deletion of basejail binaries successful for usr/libdata.
 Deletion of basejail binaries successful for usr/libexec.
 Deletion of basejail binaries successful for usr/sbin.
-Deletion of basejail binaries successful for usr/lib32.</p>
+Deletion of basejail binaries successful for usr/lib32.
 
-<p>Copied host's binaries to basejail successfully for bin.
+Copied host's binaries to basejail successfully for bin.
 Copied host's binaries to basejail successfully for lib.
 Copied host's binaries to basejail successfully for libexec.
 Copied host's binaries to basejail successfully for sbin.
@@ -754,31 +675,26 @@ Copied host's binaries to basejail successfully for usr/lib.
 Copied host's binaries to basejail successfully for usr/libdata.
 Copied host's binaries to basejail successfully for usr/libexec.
 Copied host's binaries to basejail successfully for usr/sbin.
-Copied host's binaries to basejail successfully for usr/lib32.</p>
+Copied host's binaries to basejail successfully for usr/lib32.
 
-<p>Host to basejail binaries update completed successfully.
-root@rataplan:/usr/local/etc #</p>
+Host to basejail binaries update completed successfully.
+root@rataplan:/usr/local/etc # 
 
-<p>root@rataplan:/usr/local/etc # qjail start
+root@rataplan:/usr/local/etc # qjail start
 Jail started successfully. stafmail
 Jail started successfully. staffs
 Jail started successfully. stafdb
-root@rataplan:/usr/local/etc #</p>
-
-<p>```</p>
+root@rataplan:/usr/local/etc # 
+</code></pre>
 
 <h3>update /etc/rc.conf</h3>
 
-<p>```
-#</p>
+<pre><code>#
+# qjails
+#
 
-<h1>qjails</h1>
-
-<p>#</p>
-
-<p>qjail_enable="YES"</p>
-
-<p>```</p>
+qjail_enable="YES"
+</code></pre>
 ]]></content>
   </entry>
   

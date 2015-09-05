@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: bash | stafwag Blog]]></title>
+  <title><![CDATA[Category: Bash | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/bash/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[bash saved my day]]></title>
+    <title type="html"><![CDATA[Bash Saved My Day]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
     <updated>2013-10-20T10:04:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
@@ -24,11 +24,10 @@
 
 <p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
 
-<p><code>
-$ ./create_cache_entries.sh  &gt; create_cache_entries.sh
+<pre><code>$ ./create_cache_entries.sh  &gt; create_cache_entries.sh 
 -bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
-$ vi create_cache_entries.sh
-</code></p>
+$ vi create_cache_entries.sh 
+</code></pre>
 ]]></content>
   </entry>
   

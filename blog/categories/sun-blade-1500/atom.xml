@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: sun blade 1500 | stafwag Blog]]></title>
+  <title><![CDATA[Category: Sun Blade 1500 | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/sun-blade-1500/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,33 +14,33 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Ide is still alive...]]></title>
+    <title type="html"><![CDATA[Ide Is Still Alive...]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&#34;sta2ide&#34;" alt="&#34;sta2ide&#34;"></p>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&ldquo;sta2ide&rdquo;" ></p>
 
 <p>
 The dvd drive in my <a href="http://en.wikipedia.org/wiki/Sun_Blade_(workstation)">sun blade 1500 workstation</a> broke down. I use this system acausally for some development, it's always handy to have a <a href="http://en.wikipedia.org/wiki/Endianness">big endian</a> system at hand.<br /><br />
 </p>
 
 
-<p>The dvd drive was still handy to load another operating system on it.<br />The dvd drive has an <a href="http://en.wikipedia.org/wiki/Integrated_Drive_Electronics">ide interface</a> which are hard to get these days...<br /><br />
-<img class="left" src="/images/sata_dvd_0.jpg" width="326" height="245" title="&#34;dvd rom&#34;" alt="&#34;dvd rom&#34;"></p>
+<p>The dvd drive was still handy to load another operating system on it.<br />The dvd drive has an <a href="http://en.wikipedia.org/wiki/Integrated_Drive_Electronics">ide interface</a> which are hard to get these days&hellip;<br /><br />
+<img class="left" src="/images/sata_dvd_0.jpg" width="326" height="245" title="&ldquo;dvd rom&rdquo;" ></p>
 
 <p>
 I found a <a href="http://www.conrad.be/ce/nl/product/974497/IDE-naar-SATA-converter/SHOP_AREA_37572">ide to sata convertor</a> and a <a href="http://www.conrad.be/ce/nl/product/417054/Samsung-DVD-ROM-SATA-SH-118ABBEBE-bulk/SHOP_AREA_17682">new dvd drive</a> with a <a href="http://en.wikipedia.org/wiki/Serial_ATA">sata interface</a> at <a href="http://www.conrad.be">conrad</a>. This should convert the sata interface to an ide interface without any driver and works with any operating system.<br /><br />Well let's put this to a test on a <a href="http://en.wikipedia.org/wiki/SPARC">sparc</a> system with <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system">solaris</a> :-)<br /><br />
 </p>
 
 
-<p><img class="right" src="/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&#34;on dvd&#34;" alt="&#34;on dvd&#34;"></p>
+<p><img class="right" src="/images/sata2dvdondvd_0.jpg" width="196" height="87" title="&ldquo;on dvd&rdquo;" ></p>
 
 <p>
 The installation was pretty straightforward, luckily the dvd rom drive has a plastic back since the converter touches the back of the dvd rom drive.<br /><br />  
 </p>
 
 
-<p><img class="right" src="/images/sun1500_alive_0.jpg" width="326" height="244" title="&#34;sun 1500 alive&#34;" alt="&#34;sun 1500 alive&#34;"></p>
+<p><img class="right" src="/images/sun1500_alive_0.jpg" width="326" height="244" title="&ldquo;sun 1500 alive&rdquo;" ></p>
 
 <p>
 After a quick test it seems to work like a charm. I might install <a href="http://www.opensxce.org">opensxce</a> on it.<br /><br />It seems to be the only option to run an <a href="http://en.wikipedia.org/wiki/OpenSolaris">opensolaris</a> ancestor on sparc hardware.</p>

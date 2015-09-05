@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: tux | stafwag Blog]]></title>
+  <title><![CDATA[Category: Tux | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/tux/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -23,7 +23,7 @@ Best wishes 2014
 </p>
 
 
-<p><img class="center" src="/images/tux2014.png" width="759" height="446" title="&#34;tux2014.png&#34;" alt="&#34;tux2014.png&#34;"></p>
+<p><img class="center" src="/images/tux2014.png" width="759" height="446" title="&ldquo;tux2014.png&rdquo;" ></p>
 ]]></content>
   </entry>
   

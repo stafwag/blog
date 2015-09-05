@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: lookat | stafwag Blog]]></title>
+  <title><![CDATA[Category: Lookat | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/lookat/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[lookat 1.4.4rc1 released]]></title>
+    <title type="html"><![CDATA[Lookat 1.4.4rc1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
     <updated>2015-07-21T12:24:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
@@ -34,10 +34,10 @@
 
 <h3>Lookat 1.4.4rc1 is available at:</h3>
 
-<p><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
 , download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc1.tar.gz">Download latest development release (1.4.4rc1)</a>.</p>
 
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 
 <h3>OpenBSD</h3>
 
@@ -49,12 +49,12 @@ Thanks to Brian Callahan for the port!</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Lookat 1.4.3 released]]></title>
+    <title type="html"><![CDATA[Lookat 1.4.3 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
     <updated>2013-08-18T20:07:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/lookat_143.png" width="360" height="217" title="&#34;lookat&#34;" alt="&#34;lookat&#34;">
-I'm pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/lookat_143.png" width="360" height="217" title="&ldquo;lookat&rdquo;" >
+I&rsquo;m pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
 
 <p>This new stable version will compile correctly with <a href="http://clang.llvm.org/">LLVM/clang</a>.<br /><br /></p>
 
@@ -73,60 +73,58 @@ Have fun...
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[yum install lookat]]></title>
+    <title type="html"><![CDATA[Yum Install Lookat]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat/"/>
     <updated>2013-05-25T20:09:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat</id>
-    <content type="html"><![CDATA[<p>"yum install lookat" works on Fedora now  ;-)</p>
+    <content type="html"><![CDATA[<p>&ldquo;yum install lookat&rdquo; works on Fedora now  ;-)</p>
 
 <p>Thanks <a href="http://cicku.me/">Christopher</a>!</p>
 
-<p>```
-[staf@vicky ~]$ sudo yum install lookat
-[sudo] password for staf:
+<pre><code>[staf@vicky ~]$ sudo yum install lookat
+[sudo] password for staf: 
 Loaded plugins: langpacks, presto, refresh-packagekit, security
 Repository google-chrome is listed more than once in the configuration
 Resolving Dependencies
---> Running transaction check
----> Package lookat.x86_64 0:1.4.2-1.fc18 will be installed
---> Finished Dependency Resolution</p>
+--&gt; Running transaction check
+---&gt; Package lookat.x86_64 0:1.4.2-1.fc18 will be installed
+--&gt; Finished Dependency Resolution
 
-<p>Dependencies Resolved</p>
+Dependencies Resolved
 
-<p>================================================================================================================================================================================</p>
+================================================================================================================================================================================
+ Package                                 Arch                                    Version                                         Repository                                Size
+================================================================================================================================================================================
+Installing:
+ lookat                                  x86_64                                  1.4.2-1.fc18                                    updates                                   55 k
 
-<h1> Package                                 Arch                                    Version                                         Repository                                Size</h1>
+Transaction Summary
+================================================================================================================================================================================
+Install  1 Package
 
-<p>Installing:
- lookat                                  x86_64                                  1.4.2-1.fc18                                    updates                                   55 k</p>
-
-<h1>Transaction Summary</h1>
-
-<p>Install  1 Package</p>
-
-<p>Total download size: 55 k
+Total download size: 55 k
 Installed size: 118 k
 Is this ok [y/N]: y
 Downloading Packages:
-lookat-1.4.2-1.fc18.x86_64.rpm                                                                                                                           |  55 kB  00:00:00   <br/>
+lookat-1.4.2-1.fc18.x86_64.rpm                                                                                                                           |  55 kB  00:00:00     
 Running Transaction Check
 Running Transaction Test
 Transaction Test Succeeded
 Running Transaction
-  Installing : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1
-  Verifying  : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1</p>
+  Installing : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1 
+  Verifying  : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1 
 
-<p>Installed:
-  lookat.x86_64 0:1.4.2-1.fc18</p>
+Installed:
+  lookat.x86_64 0:1.4.2-1.fc18                                                                                                                                                  
 
-<p>Complete!
-[staf@vicky ~]$
-```</p>
+Complete!
+[staf@vicky ~]$ 
+</code></pre>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lookat/bekijk has landed in fedora]]></title>
+    <title type="html"><![CDATA[Lookat/bekijk Has Landed in Fedora]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora/"/>
     <updated>2013-05-12T12:37:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/05/12/lookat-slash-bekijk-has-landed-in-fedora</id>
@@ -134,16 +132,16 @@ Running Transaction
 
 <p><a href="http://www.wagemakers.be/english/programs/lookat">Lookat</a> has landed in <a href="http://www.fedoraproject.org">Fedora</a>.</p>
 
-<p><a href="https://admin.fedoraproject.org/pkgdb/acls/name/lookat">https://admin.fedoraproject.org/pkgdb/acls/name/lookat</a></p>
+<p><a href="https://admin.fedoraproject.org/pkgdb/acls/name/lookat"><a href="https://admin.fedoraproject.org/pkgdb/acls/name/lookat">https://admin.fedoraproject.org/pkgdb/acls/name/lookat</a></a></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 released]]></title>
+    <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 Released]]></title>
     <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
     <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
-    <content type="html"><![CDATA[<p>Trying to release more often...</p>
+    <content type="html"><![CDATA[<p>Trying to release more often&hellip;</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>
 
@@ -156,10 +154,10 @@ Running Transaction
 </ul>
 </blockquote>
 
-<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a>
+<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
 , download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.3rc1.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
 
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></p>
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 2015 | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/2015/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-07-21T12:47:17+02:00</updated>
+  <updated>2015-09-05T16:07:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[happy_new_year_2015]]></title>
+    <title type="html"><![CDATA[Happy_new_year_2015]]></title>
     <link href="http://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015/"/>
     <updated>2015-01-01T12:20:00+01:00</updated>
     <id>http://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015</id>
@@ -23,7 +23,7 @@ Happy new year!
 </p>
 
 
-<p><img class="center" src="/images/2015.jpg" width="1000" height="625" title="&#34;2014.jpg&#34;" alt="&#34;2014.jpg&#34;"></p>
+<p><img class="center" src="/images/2015.jpg" width="1000" height="625" title="&ldquo;2014.jpg&rdquo;" ></p>
 ]]></content>
   </entry>
   
