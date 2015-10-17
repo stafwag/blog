@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-09-05T17:08:43+02:00</updated>
+  <updated>2015-10-17T15:48:06+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,31 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Lookat 1.4.4rc2 Released]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/"/>
+    <updated>2015-10-17T15:36:05+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released</id>
+    <content type="html"><![CDATA[<p>Lookat 1.4.4rc2 is the second release candicate of Lookat 1.4.4</p>
+
+<h3>ChangeLog</h3>
+
+<ul>
+<li>NetBSD support</li>
+</ul>
+
+
+<h3>Lookat 1.4.4rc2 is available at:</h3>
+
+<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
+, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc2.tar.gz">Download latest development release (1.4.4rc1)</a>.</p>
+
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Rataplan Becomes a Watchdog]]></title>
@@ -4027,30 +4052,6 @@ Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721
 
 <div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM  "></iframe></div>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[The Benefits of Stopping Smoking...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/"/>
-    <updated>2013-08-25T12:32:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/i7_internals.jpg" width="500" height="384" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;">
-Besides the health benefits you save a lot of money.</p>
-
-<p>My &ldquo;no smoking&rdquo; <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.</p>
-
-<p>My upgrade consists;</p>
-
-<ul>
-<li>a new motherboard: <a href="http://www.alternate.be/MSI/MSI+Z87-G43/html/product/1080883/">MSI Z87-G43</a></li>
-<li>a new cpu: <a href="http://www.alternate.be/Intel(R)/Intel(R)+Core(TM)_i7-4770/html/product/1063381/?tk=7&lk=5333">Intel® Core Haswell i7-4770</a></li>
-<li>16 GB DDR3 Ram: <a href="http://www.alternate.be/Crucial/Crucial+16_GB_DDR3-1600_Kit/html/product/1024065/">Crucial 16 GB DDR3-1600</a></li>
-<li>I had even some money left to purchase a nice ssd: <a href="http://www.komplett.be/komplett/product/zkb-01com/20183020/samsung-840-pro-series-256gb/details.aspx">Samsung 840 Pro Series 256GB</a></li>
-</ul>
-
-
-<p>My pc is &ldquo;smoking&rdquo; fast now :-)</p>
 ]]></content>
   </entry>
   
