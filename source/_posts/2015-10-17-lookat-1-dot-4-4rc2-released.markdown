@@ -3,7 +3,7 @@ layout: post
 title: "Lookat 1.4.4rc2 Released"
 date: 2015-10-17 15:36:05 +0200
 comments: true
-categories: 
+categories: [ lookat, netbsd ] 
 ---
 
 Lookat 1.4.4rc2 is the second release candicate of Lookat 1.4.4
