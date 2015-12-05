@@ -1,0 +1,618 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Protecting Your SSH Keys With SmartCard-HSM - stafwag Blog</title>
+  <meta name="author" content="staf wagemakers">
+
+  
+  <meta name="description" content="I use a yubi key for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/">
+  <link href="/blog/favicon.png" rel="icon">
+  <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/blog/atom.xml" rel="alternate" title="stafwag Blog" type="application/atom+xml">
+  <script src="/blog/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37258385-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/">stafwag Blog</a></h1>
+  
+    <h2>staf wagemakers blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="stafwag.github.io/blog">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/blog/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Protecting Your SSH Keys With SmartCard-HSM</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-12-05T09:37:41+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:37 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
+
+<h2>Create your first ssh keypair</h2>
+
+<h3>Verify your smartcard connection</h3>
+
+<p>Insert you smartcard and verify the connection, see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">my previous post</a> if  you need more information about the smartcard initialization</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs11-tool -L
+</span><span class='line'>Available slots:
+</span><span class='line'>Slot 0 (0xffffffffffffffff): Virtual hotplug slot
+</span><span class='line'>  (empty)
+</span><span class='line'>Slot 1 (0x1): Generic Smart Card Reader Interface [Smart Card Reader Interface
+</span><span class='line'>  token label        : SmartCard-HSM (UserPIN)
+</span><span class='line'>  token manufacturer : www.CardContact.de
+</span><span class='line'>  token model        : PKCS#15 emulated
+</span><span class='line'>  token flags        : rng, login required, PIN initialized, token initialized
+</span><span class='line'>  hardware version   : 24.13
+</span><span class='line'>  firmware version   : 1.2
+</span><span class='line'>  serial num         : DECM0102331
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Create your keypair</h3>
+
+<p>Create your ssh key pair and give the a meaningful label</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs11-tool --slot 1 --keypairgen --key-type rsa:2048 --label my_ssh_key --login
+</span><span class='line'>Logging in to "SmartCard-HSM (UserPIN)".
+</span><span class='line'>Please enter User PIN: 
+</span><span class='line'>Key pair generated:
+</span><span class='line'>Private Key Object; RSA 
+</span><span class='line'>  label:      my_ssh_key
+</span><span class='line'>  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>  Usage:      decrypt, sign, unwrap
+</span><span class='line'>Public Key Object; RSA 2048 bits
+</span><span class='line'>  label:      my_ssh_key
+</span><span class='line'>  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>  Usage:      encrypt, verify, wrap
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Extract your public key</h3>
+
+<p>We used <a href="https://en.wikipedia.org/wiki/PKCS_11">PKCS11</a> to generate the keypair, <a href="https://en.wikipedia.org/wiki/PKCS">PKCS15</a> is designed identify users to applications.</p>
+
+<h4>Dump the token content</h4>
+
+<p>Dump the token content to get the id of your ssh keypair.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs15-tool -D
+</span><span class='line'>Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
+</span><span class='line'>PKCS#15 Card [SmartCard-HSM]:
+</span><span class='line'>        Version        : 0
+</span><span class='line'>        Serial number  : DECM0102331
+</span><span class='line'>        Manufacturer ID: www.CardContact.de
+</span><span class='line'>        Flags          : 
+</span><span class='line'>
+</span><span class='line'>PIN [UserPIN]
+</span><span class='line'>        Object Flags   : [0x3], private, modifiable
+</span><span class='line'>        ID             : 01
+</span><span class='line'>        Flags          : [0x81A], local, unblock-disabled, initialized, exchangeRefData
+</span><span class='line'>        Length         : min_len:6, max_len:15, stored_len:0
+</span><span class='line'>        Pad char       : 0x00
+</span><span class='line'>        Reference      : 129 (0x81)
+</span><span class='line'>        Type           : ascii-numeric
+</span><span class='line'>        Tries left     : 3
+</span><span class='line'>
+</span><span class='line'>PIN [SOPIN]
+</span><span class='line'>        Object Flags   : [0x1], private
+</span><span class='line'>        ID             : 02
+</span><span class='line'>        Flags          : [0x9E], local, change-disabled, unblock-disabled, initialized, soPin
+</span><span class='line'>        Length         : min_len:16, max_len:16, stored_len:0
+</span><span class='line'>        Pad char       : 0x00
+</span><span class='line'>        Reference      : 136 (0x88)
+</span><span class='line'>        Type           : bcd
+</span><span class='line'>        Tries left     : 3
+</span><span class='line'>
+</span><span class='line'>Private EC Key [myfirst_keypair]
+</span><span class='line'>        Object Flags   : [0x3], private, modifiable
+</span><span class='line'>        Usage          : [0x10C], sign, signRecover, derive
+</span><span class='line'>        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
+</span><span class='line'>        FieldLength    : 256
+</span><span class='line'>        Key ref        : 1 (0x1)
+</span><span class='line'>        Native         : yes
+</span><span class='line'>        Path           : e82b0601040181c31f0201::
+</span><span class='line'>        Auth ID        : 01
+</span><span class='line'>        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
+</span><span class='line'>        MD:guid        : {efac9b29-2289-658c-98d1-af5af965d484}
+</span><span class='line'>          :cmap flags  : 0x0
+</span><span class='line'>          :sign        : 0
+</span><span class='line'>          :key-exchange: 0
+</span><span class='line'>
+</span><span class='line'>Private RSA Key [my_ssh_key]
+</span><span class='line'>        Object Flags   : [0x3], private, modifiable
+</span><span class='line'>        Usage          : [0x2E], decrypt, sign, signRecover, unwrap
+</span><span class='line'>        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
+</span><span class='line'>        ModLength      : 2048
+</span><span class='line'>        Key ref        : 2 (0x2)
+</span><span class='line'>        Native         : yes
+</span><span class='line'>        Path           : e82b0601040181c31f0201::
+</span><span class='line'>        Auth ID        : 01
+</span><span class='line'>        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>        MD:guid        : {a272b2ad-ff6f-606c-801a-4153be498018}
+</span><span class='line'>          :cmap flags  : 0x0
+</span><span class='line'>          :sign        : 0
+</span><span class='line'>          :key-exchange: 0
+</span><span class='line'>
+</span><span class='line'>Public EC Key [myfirst_keypair]
+</span><span class='line'>        Object Flags   : [0x0]
+</span><span class='line'>        Usage          : [0x0]
+</span><span class='line'>        Access Flags   : [0x2], extract
+</span><span class='line'>        FieldLength    : 256
+</span><span class='line'>        Key ref        : 0 (0x0)
+</span><span class='line'>        Native         : no
+</span><span class='line'>        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
+</span><span class='line'>        DirectValue    : &lt;present&gt;
+</span><span class='line'>
+</span><span class='line'>Public RSA Key [my_ssh_key]
+</span><span class='line'>        Object Flags   : [0x0]
+</span><span class='line'>        Usage          : [0x0]
+</span><span class='line'>        Access Flags   : [0x2], extract
+</span><span class='line'>        ModLength      : 2048
+</span><span class='line'>        Key ref        : 0 (0x0)
+</span><span class='line'>        Native         : no
+</span><span class='line'>        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>        DirectValue    : &lt;present&gt;
+</span><span class='line'>
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Get the public key</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs15-tool --read-ssh-key fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
+</span><span class='line'>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWShfPjqh+pU8lCoIhXIXh+cGpSem1iNFH6TuluQQLPiqPIeObCTfqC8q9TjR/2FYzG+3ECdiRr0fiywE9OnzUgJI5oOjXfMwY3xE1PbYBrSvYERofhkEv2ejlyRifN3sbLGSU0V7pX+BNOuiJCquCehPMV9+ehkjbk9hPRFUzL1GywsOkmWUoIzrdjH0dlhPX3TUCdoizWAIdUqg+RX4DCEc52RvaGdX4Tn2THxeffXqFJ/gKkParZSLmOND1iRhtJeJ8CmgAqfD8ReshbcSs231h/QvUl3JaThcrLbPrSQFzVUH+rN+pGlSl722NWyPNPWlwwE+SreTLbQRoWayN my_ssh_key
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Configure the remote host</h3>
+
+<p>Add the key to the remote host</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky .ssh]$ vi authorized_keys 
+</span><span class='line'>[staf@vicky .ssh]$ 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Test the connection</h3>
+
+<p>Test you ssh connection with the PKCS11 interface:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh localhost
+</span><span class='line'>Permission denied (publickey,gssapi-keyex,gssapi-with-mic).</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With the PKCS11 interface enabled:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh -o "PKCS11Provider opensc-pkcs11.so" localhost
+</span><span class='line'>C_GetAttributeValue failed: 18
+</span><span class='line'>Enter PIN for 'SmartCard-HSM (UserPIN)': 
+</span><span class='line'>Last login: Thu Dec  3 09:55:23 2015 from ::1
+</span><span class='line'>gpg-agent[17327]: enabled debug flags: command cache ipc
+</span><span class='line'>gpg-agent: a gpg-agent is already running - not starting a new one
+</span><span class='line'>gpg-agent: secmem usage: 0/32768 bytes in 0 blocks
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Update your ssh_config</h3>
+
+<p>Add PKCS11Provider opensc-pkcs11.so to your ~/.ssh/config or your global ssh_config</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky ~]$ cd .ssh/
+</span><span class='line'>[staf@vicky .ssh]$ vim config
+</span><span class='line'>PKCS11Provider opensc-pkcs11.so
+</span><span class='line'>[staf@vicky .ssh]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p><strong><em> Have fun &hellip; </em></strong></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">staf wagemakers</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-12-05T09:37:41+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:37 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/blog/categories/hsm/'>hsm</a>, <a class='category' href='/blog/blog/categories/security/'>security</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/" data-via="" data-counturl="http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/" title="Previous Post: Starting to protect my private keys with SmartCard-Hsm">&laquo; Starting to protect my private keys with SmartCard-Hsm</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><a href="http://www.wagemakers.be">http://www.wagemakers.be</a></p>
+  <p><a href="http://www.linkedin.com/in/stafwagemakers">LinkedIn profile</a></p>
+  <p><a href="https://google.com/+StafWagemakers">Google Plus profile</a></p>
+<!-- Place this tag where you want the widget to render. -->
+<div class="g-person" data-width="180" data-href="http://google.com/+StafWagemakers" data-showtagline="false" data-showcoverphoto="false" data-rel="author"></div>
+
+<!-- Place this tag after the last widget tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/">Protecting Your SSH Keys With SmartCard-HSM</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">Starting to Protect My Private Keys With SmartCard-Hsm</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/">Lookat 1.4.4rc2 Released</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2015/09/05/rataplan-becomes-a-watchdog/">Rataplan Becomes a Watchdog</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/">Lookat 1.4.4rc1 Released</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/stafwag">@stafwag</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'stafwag',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<hr />
+<br />
+<br />
+<br />
+<br />
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4659298941528586";
+/* blogads_right */
+google_ad_slot = "8839948148";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - staf wagemakers -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'stafwag';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
