@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm/</loc>
+    <lastmod>2015-12-26T14:55:59+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/</loc>
     <lastmod>2015-12-05T09:37:41+01:00</lastmod>
   </url>
@@ -348,5 +352,14 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/hsm/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/arm/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/arch/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/odroid/</loc>
   </url>
 </urlset>
