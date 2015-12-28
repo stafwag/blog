@@ -9,7 +9,9 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="I own an odroid u3 that I used for my media center with xbmc while I like the performance of the Exynos4412 CPU but the drivers for the Mali GPU &hellip;">
+  <meta name="description" content="Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer. ChangeLog NetBSD support
+OpenBSD support
+English &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +79,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2015/12/28/lookat-1-dot-4-4-released/">Lookat 1.4.4 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-12-28T15:48:50+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:48 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
+
+<h3>ChangeLog</h3>
+
+<ul>
+<li>NetBSD support</li>
+<li>OpenBSD support</li>
+<li>English translation issues corrected</li>
+<li>autoconf updated to 2.69</li>
+<li>Corrected minor compile warnings</li>
+</ul>
+
+
+<h3>Lookat 1.4.4 is available at:</h3>
+
+<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
+, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4.tar.gz">Download latest stable release (1.4.4)</a>.</p>
+
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
+
+<p><strong><em> Have fun </em></strong></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -5400,107 +5451,6 @@ Happy hacking!
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/">Run Google Chrome Inside a Fedora Docker Container Over Ssh</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-05-12T14:55:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:55 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong></p>
-
-<hr />
-
-
-<p>Update (Mon Jun  8 2015):</p>
-
-<p>Running google-chrome inside a docker container isn&rsquo;t stable for me.
-I switched back to LXC to run google-chrome which seems to be more stable.</p>
-
-<hr />
-
-
-<p></strong></p>
-
-<p>Created a docker image to start a docker container with chrome.
-Destroying the container each time that you start a browser is a easy way to get rid of your cookies and browser history.</p>
-
-<h2>Run google chrome inside a fedora docker container over ssh</h2>
-
-<h3>Installation instructions</h3>
-
-<p>1/ Clone the git repo</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git</span></code></pre></td></tr></table></div></figure>
-
-
-<p>2/ Copy your public ssh to id_rsa.pub</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd docker-fedora-chrome-ssh
-</span><span class='line'>$ cp ~/.ssh/id_rsa.pub .</span></code></pre></td></tr></table></div></figure>
-
-
-<p>3/ Build the docker image</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ docker build -t stafwag/docker-fedora-chrome-ssh .</span></code></pre></td></tr></table></div></figure>
-
-
-<p>4/ Update your ssh config</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vi ~/.ssh/config</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Host mychrome
-</span><span class='line'>          User      chrome
-</span><span class='line'>          Port      8022
-</span><span class='line'>          HostName  127.0.0.1
-</span><span class='line'>          StrictHostKeyChecking no
-</span><span class='line'>          UserKnownHostsFile=/dev/null
-</span><span class='line'>          ForwardX11 yes</span></code></pre></td></tr></table></div></figure>
-
-
-<p>5/ Start chrome</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./startchrome.sh</span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -5534,6 +5484,10 @@ Destroying the container each time that you start a browser is a easy way to get
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2015/12/28/lookat-1-dot-4-4-released/">Lookat 1.4.4 Released</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2015/12/26/running-docker-on-arm/">Running Docker on ARM</a>
       </li>
     
@@ -5547,10 +5501,6 @@ Destroying the container each time that you start a browser is a easy way to get
     
       <li class="post">
         <a href="/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/">Lookat 1.4.4rc2 Released</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2015/09/05/rataplan-becomes-a-watchdog/">Rataplan Becomes a Watchdog</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Openbsd | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/openbsd/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-12-26T15:33:00+01:00</updated>
+  <updated>2015-12-28T15:54:02+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,35 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Lookat 1.4.4 Released]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
+    <updated>2015-12-28T15:48:50+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
+    <content type="html"><![CDATA[<p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
+
+<h3>ChangeLog</h3>
+
+<ul>
+<li>NetBSD support</li>
+<li>OpenBSD support</li>
+<li>English translation issues corrected</li>
+<li>autoconf updated to 2.69</li>
+<li>Corrected minor compile warnings</li>
+</ul>
+
+
+<h3>Lookat 1.4.4 is available at:</h3>
+
+<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
+, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4.tar.gz">Download latest stable release (1.4.4)</a>.</p>
+
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4rc1 Released]]></title>

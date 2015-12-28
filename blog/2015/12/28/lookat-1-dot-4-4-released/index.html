@@ -5,11 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Openvas 7: Adding Credentials Failed - stafwag Blog</title>
+  <title>Lookat 1.4.4 Released - stafwag Blog</title>
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="I&rsquo;m creating a new openvas 7 system running centos 7 as a KVM instance. The installation went fine but it was impossible to create new &hellip;">
+  <meta name="description" content="Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer. ChangeLog NetBSD support
+OpenBSD support
+English &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/">
+  <link rel="canonical" href="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/">
   <link href="/blog/favicon.png" rel="icon">
   <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/blog/atom.xml" rel="alternate" title="stafwag Blog" type="application/atom+xml">
@@ -80,7 +82,7 @@
   
   <header>
     
-      <h1 class="entry-title">Openvas 7: Adding Credentials Failed</h1>
+      <h1 class="entry-title">Lookat 1.4.4 Released</h1>
     
     
       <p class="meta">
@@ -89,80 +91,34 @@
 
 
 
-<time class='entry-date' datetime='2015-05-14T16:56:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:56 pm</span></time>
+<time class='entry-date' datetime='2015-12-28T15:48:50+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:48 pm</span></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
+<div class="entry-content"><p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
 
-<p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
+<h3>ChangeLog</h3>
 
-<p>I had a similar issue with my openvas 6 installation, this was resolved by creating the  <code>/etc/openvas/gnupg</code> directory and creating the key  <code>openvasmd --create-credentials-encryption-key</code></p>
-
-<p>But on my openvas 7 installation a creation of the encryption key was slooooow.
-As always Good Randomness is important for creating keys. So I decided to install haveged to get more randomness and hopefully this would speed up key creation.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# yum install haveged
-</span><span class='line'>
-</span><span class='line'>Loaded plugins: fastestmirror
-</span><span class='line'>Loading mirror speeds from cached hostfile
-</span><span class='line'> * atomic: www6.atomicorp.com
-</span><span class='line'> * base: centos.cu.be
-</span><span class='line'> * extras: centos.cu.be
-</span><span class='line'> * updates: centos.cu.be
-</span><span class='line'>Package haveged-1.9.1-2.el7.art.x86_64 already installed and latest version
-</span><span class='line'>Nothing to do
-</span><span class='line'>[root@localhost ~]# 
-</span><span class='line'>[root@localhost ~]# systemct list-unit-files --type=service | grep haveged
-</span><span class='line'>-bash: systemct: command not found
-</span><span class='line'>[root@localhost ~]# systemctl list-unit-files --type=service | grep haveged
-</span><span class='line'>haveged.service                             disabled
-</span><span class='line'>[root@localhost ~]# systemctl enable haveged
-</span><span class='line'>ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.target.wants/haveged.service'
-</span><span class='line'>[root@localhost ~]# systemctl start haveged
-</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
+<ul>
+<li>NetBSD support</li>
+<li>OpenBSD support</li>
+<li>English translation issues corrected</li>
+<li>autoconf updated to 2.69</li>
+<li>Corrected minor compile warnings</li>
+</ul>
 
 
-<p>The key creation took a only sec.</p>
+<h3>Lookat 1.4.4 is available at:</h3>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# openvasmd --create-credentials-encryption-key
-</span><span class='line'>Key creation succeeded.
-</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
+<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
+, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4.tar.gz">Download latest stable release (1.4.4)</a>.</p>
 
+<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 
-<p>Adding new credentials works like a charm now.</p>
-
-<p style="font-style: italic;">
-Happy hacking!
-</p>
-
-
-
+<p><strong><em> Have fun </em></strong></p>
 </div>
 
 
@@ -178,12 +134,12 @@ Happy hacking!
 
 
 
-<time class='entry-date' datetime='2015-05-14T16:56:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:56 pm</span></time>
+<time class='entry-date' datetime='2015-12-28T15:48:50+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:48 pm</span></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/blog/categories/centos/'>centos</a>, <a class='category' href='/blog/blog/categories/kvm/'>kvm</a>, <a class='category' href='/blog/blog/categories/openvas/'>openvas</a>, <a class='category' href='/blog/blog/categories/security/'>security</a>
+    <a class='category' href='/blog/blog/categories/lookat/'>lookat</a>, <a class='category' href='/blog/blog/categories/netbsd/'>netbsd</a>, <a class='category' href='/blog/blog/categories/openbsd/'>openbsd</a>
   
 </span>
 
@@ -192,7 +148,7 @@ Happy hacking!
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/" data-via="" data-counturl="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/" data-via="" data-counturl="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -205,10 +161,8 @@ Happy hacking!
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/" title="Previous Post: Run google chrome inside a fedora docker container over ssh">&laquo; Run google chrome inside a fedora docker container over ssh</a>
+        <a class="basic-alignment left" href="/blog/blog/2015/12/26/running-docker-on-arm/" title="Previous Post: Running Docker on ARM">&laquo; Running Docker on ARM</a>
       
-      
-        <a class="basic-alignment right" href="/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/" title="Next Post: Using YubiKey Neo as gpg smartcard for SSH authentication">Using YubiKey Neo as gpg smartcard for SSH authentication &raquo;</a>
       
     </p>
   </footer>
@@ -338,8 +292,8 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/';
-        var disqus_url = 'http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/';
+        var disqus_identifier = 'http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/';
+        var disqus_url = 'http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/';
         var disqus_script = 'embed.js';
       
     (function () {
