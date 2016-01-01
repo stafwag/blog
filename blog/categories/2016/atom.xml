@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 2016 | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/2016/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2016-01-01T10:27:15+01:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Happy New Year 2016]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016/"/>
+    <updated>2016-01-01T10:24:48+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016</id>
+    <content type="html"><![CDATA[<p><strong><em> Happy new year! </em></strong></p>
+
+<p><img class="center" src="/images/2016.jpg" width="1000" height="625" title="&ldquo;2014.jpg&rdquo;" ></p>
+]]></content>
+  </entry>
+  
+</feed>

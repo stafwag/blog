@@ -9,9 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer. ChangeLog NetBSD support
-OpenBSD support
-English &hellip;">
+  <meta name="description" content=" Happy new year! ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +77,37 @@ English &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2016/01/01/happy-new-year-2016/">Happy New Year 2016</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-01-01T10:24:48+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2016</span></span> <span class='time'>10:24 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em> Happy new year! </em></strong></p>
+
+<p><img class="center" src="/blog/images/2016.jpg" width="1000" height="625" title="&#34;2014.jpg&#34;" alt="&#34;2014.jpg&#34;"></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -5356,101 +5385,6 @@ create a polkit rule for the user that will use the smartcard.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/">Openvas 7: Adding Credentials Failed</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-05-14T16:56:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:56 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
-
-<p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
-
-<p>I had a similar issue with my openvas 6 installation, this was resolved by creating the  <code>/etc/openvas/gnupg</code> directory and creating the key  <code>openvasmd --create-credentials-encryption-key</code></p>
-
-<p>But on my openvas 7 installation a creation of the encryption key was slooooow.
-As always Good Randomness is important for creating keys. So I decided to install haveged to get more randomness and hopefully this would speed up key creation.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# yum install haveged
-</span><span class='line'>
-</span><span class='line'>Loaded plugins: fastestmirror
-</span><span class='line'>Loading mirror speeds from cached hostfile
-</span><span class='line'> * atomic: www6.atomicorp.com
-</span><span class='line'> * base: centos.cu.be
-</span><span class='line'> * extras: centos.cu.be
-</span><span class='line'> * updates: centos.cu.be
-</span><span class='line'>Package haveged-1.9.1-2.el7.art.x86_64 already installed and latest version
-</span><span class='line'>Nothing to do
-</span><span class='line'>[root@localhost ~]# 
-</span><span class='line'>[root@localhost ~]# systemct list-unit-files --type=service | grep haveged
-</span><span class='line'>-bash: systemct: command not found
-</span><span class='line'>[root@localhost ~]# systemctl list-unit-files --type=service | grep haveged
-</span><span class='line'>haveged.service                             disabled
-</span><span class='line'>[root@localhost ~]# systemctl enable haveged
-</span><span class='line'>ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.target.wants/haveged.service'
-</span><span class='line'>[root@localhost ~]# systemctl start haveged
-</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>The key creation took a only sec.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# openvasmd --create-credentials-encryption-key
-</span><span class='line'>Key creation succeeded.
-</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Adding new credentials works like a charm now.</p>
-
-<p style="font-style: italic;">
-Happy hacking!
-</p>
-
-
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -5484,6 +5418,10 @@ Happy hacking!
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2016/01/01/happy-new-year-2016/">Happy New Year 2016</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2015/12/28/lookat-1-dot-4-4-released/">Lookat 1.4.4 Released</a>
       </li>
     
@@ -5497,10 +5435,6 @@ Happy hacking!
     
       <li class="post">
         <a href="/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">Starting to Protect My Private Keys With SmartCard-Hsm</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/">Lookat 1.4.4rc2 Released</a>
       </li>
     
   </ul>
@@ -5562,7 +5496,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - staf wagemakers -
+  Copyright &copy; 2016 - staf wagemakers -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

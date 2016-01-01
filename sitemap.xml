@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016/</loc>
+    <lastmod>2016-01-01T10:24:48+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/</loc>
     <lastmod>2015-12-28T15:48:50+01:00</lastmod>
   </url>
@@ -365,5 +369,8 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/odroid/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/2016/</loc>
   </url>
 </urlset>

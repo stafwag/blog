@@ -9,8 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Update (Mon Jun 8 2015): Running google-chrome inside a docker container isn&rsquo;t stable for me.
-I switched back to LXC to run google-chrome &hellip;">
+  <meta name="description" content="I&rsquo;m creating a new openvas 7 system running centos 7 as a KVM instance. The installation went fine but it was impossible to create new &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,101 @@ I switched back to LXC to run google-chrome &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/">Openvas 7: Adding Credentials Failed</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-05-14T16:56:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>14</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>4:56 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
+
+<p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
+
+<p>I had a similar issue with my openvas 6 installation, this was resolved by creating the  <code>/etc/openvas/gnupg</code> directory and creating the key  <code>openvasmd --create-credentials-encryption-key</code></p>
+
+<p>But on my openvas 7 installation a creation of the encryption key was slooooow.
+As always Good Randomness is important for creating keys. So I decided to install haveged to get more randomness and hopefully this would speed up key creation.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# yum install haveged
+</span><span class='line'>
+</span><span class='line'>Loaded plugins: fastestmirror
+</span><span class='line'>Loading mirror speeds from cached hostfile
+</span><span class='line'> * atomic: www6.atomicorp.com
+</span><span class='line'> * base: centos.cu.be
+</span><span class='line'> * extras: centos.cu.be
+</span><span class='line'> * updates: centos.cu.be
+</span><span class='line'>Package haveged-1.9.1-2.el7.art.x86_64 already installed and latest version
+</span><span class='line'>Nothing to do
+</span><span class='line'>[root@localhost ~]# 
+</span><span class='line'>[root@localhost ~]# systemct list-unit-files --type=service | grep haveged
+</span><span class='line'>-bash: systemct: command not found
+</span><span class='line'>[root@localhost ~]# systemctl list-unit-files --type=service | grep haveged
+</span><span class='line'>haveged.service                             disabled
+</span><span class='line'>[root@localhost ~]# systemctl enable haveged
+</span><span class='line'>ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.target.wants/haveged.service'
+</span><span class='line'>[root@localhost ~]# systemctl start haveged
+</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>The key creation took a only sec.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# openvasmd --create-credentials-encryption-key
+</span><span class='line'>Key creation succeeded.
+</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Adding new credentials works like a charm now.</p>
+
+<p style="font-style: italic;">
+Happy hacking!
+</p>
+
+
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1933,47 +2027,6 @@ Best wishes 2014
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/10/20/bash-saved-my-day/">Bash Saved My Day</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-10-20T10:04:00+02:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>10:04 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
-
-<p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
-
-<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./create_cache_entries.sh  &gt; create_cache_entries.sh 
-</span><span class='line'>-bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
-</span><span class='line'>$ vi create_cache_entries.sh </span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/3">&larr; Older</a>
@@ -2009,6 +2062,10 @@ Best wishes 2014
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2016/01/01/happy-new-year-2016/">Happy New Year 2016</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2015/12/28/lookat-1-dot-4-4-released/">Lookat 1.4.4 Released</a>
       </li>
     
@@ -2022,10 +2079,6 @@ Best wishes 2014
     
       <li class="post">
         <a href="/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">Starting to Protect My Private Keys With SmartCard-Hsm</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/">Lookat 1.4.4rc2 Released</a>
       </li>
     
   </ul>
@@ -2087,7 +2140,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - staf wagemakers -
+  Copyright &copy; 2016 - staf wagemakers -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

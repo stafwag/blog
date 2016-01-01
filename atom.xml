@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2015-12-28T15:54:02+01:00</updated>
+  <updated>2016-01-01T10:27:15+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Happy New Year 2016]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016/"/>
+    <updated>2016-01-01T10:24:48+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016</id>
+    <content type="html"><![CDATA[<p><strong><em> Happy new year! </em></strong></p>
+
+<p><img class="center" src="http://stafwag.github.io/blog/images/2016.jpg" width="1000" height="625" title="&#34;2014.jpg&#34;" alt="&#34;2014.jpg&#34;"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4 Released]]></title>
@@ -6855,27 +6866,6 @@ Best wishes 2014
 
 
 <p><img class="center" src="http://stafwag.github.io/blog/images/tux2014.png" width="759" height="446" title="&#34;tux2014.png&#34;" alt="&#34;tux2014.png&#34;"></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Bash Saved My Day]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
-    <updated>2013-10-20T10:04:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
-    <content type="html"><![CDATA[<p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
-
-<p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
-
-<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./create_cache_entries.sh  &gt; create_cache_entries.sh 
-</span><span class='line'>-bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
-</span><span class='line'>$ vi create_cache_entries.sh </span></code></pre></td></tr></table></div></figure>
-
 ]]></content>
   </entry>
   
