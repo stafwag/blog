@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Thunderbird | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/thunderbird/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2016-01-17T14:33:30+01:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Thunderbird: Importing S/mime Certificate Failed]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed.markdown/"/>
+    <updated>2016-01-17T09:03:53+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed.markdown</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&ldquo;thunderbird smime failed&rdquo;" ></p>
+
+<p>On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate"><a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a></a>
+you get a list of free <a href="https://en.wikipedia.org/wiki/S/MIME">s/mime</a> certificate.</p>
+
+<p>I ordered a free 30 days certificate at <a href="globalsign">globalsign</a>: <a href="https://www.globalsign.com/en/personalsign/trial/"><a href="https://www.globalsign.com/en/personalsign/trial/">https://www.globalsign.com/en/personalsign/trial/</a></a></p>
+
+<p>The import of the <a href="https://en.wikipedia.org/wiki/PKCS_12">pkcs12</a> failed in thunderbird with the message: &ldquo;The PKCS #12 operation failed for unknown reasons.&rdquo;</p>
+
+<p>Searhing the internet didn&rsquo;t provide a solution. To debug this issue I started to extract the private / certificate from the pkcs12 file provided by globalsign and creating a new one.</p>
+
+<p>To execute this command I use an encrypted <a href="https://gitlab.com/cryptsetup/cryptsetup/blob/master/README.md">luks</a> volume.</p>
+
+<h1>Create a new pkcs12 file</h1>
+
+<h2>verifing the pkx file</h2>
+
+<h3>password too long?</h3>
+
+<p>The first issue was that my pkx that I has was that my password was too long by default the openssl pkcs12 command seems to have a limit of 32 characters.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx 
+Enter Import Password:
+Can't read Password
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<p>Use the &ldquo;-passin pass&rdquo;, &ldquo;-passin stdin&rdquo; or &ldquo;-passin file&rdquo; argument resolves this issue. The &ldquo;-passin pass&rdquo; argument will show the password on the screen and in shell history, the &ldquo;-passin stdin&rdquo; will show your password on the screen, the &ldquo;-passin file&rdquo; will leave your password on the (hopefully encrypted) filesystem  so I went with the &ldquo;-pass file&rdquo; option.</p>
+
+<h3>Created password file</h3>
+
+<p>Create the file thats holds your password with the corrected file permissions, you must be the only one that is able to read this file:</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ touch pass
+[staf@vicky staf@wagemakers.be]$ chmod 600 pass
+[staf@vicky staf@wagemakers.be]$ vi pass
+</code></pre>
+
+<h3>Try again</h3>
+
+<p>With the &ldquo;-passin file&rdquo; argument we are able to the pkcs12 file.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -passin file:pass
+MAC verified OK
+Bag Attributes
+    localKeyID: 9B B7 F3 7A 96 46 1F 08 28 A2 BC 2B 87 0E 53 92 29 B4 7D 7D 
+Key Attributes: &lt;No Attributes&gt;
+Enter PEM pass phrase:
+Bag Attributes
+    localKeyID: 9B B7 F3 7A 96 46 1F 08 28 A2 BC 2B 87 0E 53 92 29 B4 7D 7D 
+subject=/CN=staf@wagemakers.be/emailAddress=staf@wagemakers.be
+issuer=/C=BE/O=GlobalSign nv-sa/CN=GlobalSign PersonalSign 1 CA - SHA256 - G2
+-----BEGIN CERTIFICATE-----
+&lt;snip&gt;
+</code></pre>
+
+<h2>Extract</h2>
+
+<p>We&rsquo;ll extract the private key and the certificates and build a new pkcs12 file and import this pkcs12 file into thunderbird.</p>
+
+<h3>Extract the private key</h3>
+
+<p>The private key is encrypted with the &ldquo;bag&rdquo; so need to type it or copy/pass it&hellip;</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -nocerts -out key.pem -passin file:pass 
+MAC verified OK
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+</code></pre>
+
+<h3>Extract the client certificate</h3>
+
+<p>The client certificate isn&rsquo;t encrypted so you can leave the pem password empty.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -clcerts -out staf.pem -passin file:pass 
+MAC verified OK
+
+Enter PEM pass phrase:
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<h3>Verify the key and certificate</h3>
+
+<p>To verify that the certificate and the private belongs together we need to verify the modulus of the key and the certificate the sha1sum should match.</p>
+
+<pre><code>staf@vicky staf@wagemakers.be]$ openssl rsa -in key.pem -modulus -noout | sha1sum
+Enter pass phrase for key.pem:
+1234567890123456789012345678901234567890  -
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl x509 -in staf.pem -modulus -noout | sha1sum
+1234567890123456789012345678901234567890  -
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<h3>Extract the signing certificate(s)</h3>
+
+<p>The following command extracts the ca certificates.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -cacerts -out cacerts.pem -passin file:pass
+MAC verified OK
+Enter PEM pass phrase:
+</code></pre>
+
+<h2>Create a new pkcs12 file</h2>
+
+<p>This time we use a 32 characters password.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -export -in staf.pem -inkey key.pem -certfile cacerts.pem -out staf_new.p12
+Enter pass phrase for key.pem:
+Enter Export Password:
+Verifying - Enter Export Password:
+</code></pre>
+
+<h1>Import the the new pkcs12 file</h1>
+
+<p><img class="right" src="/images/thunderbird_import_smime_ok.png" width="598" height="152" title="&ldquo;thunderbird smime import ok&rdquo;" >
+Not sure what the issue was with original pkcs12 but the import works now&hellip;.
+ - it might have been the 32 characters password -.   After I was able to use the signing and ecnryption part in thunderbird.</p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Thunderbird: Importing S/mime Certificate Failed]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
+    <updated>2016-01-17T09:03:53+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
+    <content type="html"><![CDATA[<p><img class="left" src="/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&ldquo;thunderbird smime failed&rdquo;" ></p>
+
+<p>On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate"><a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a></a>
+you get a list of free <a href="https://en.wikipedia.org/wiki/S/MIME">s/mime</a> certificate.</p>
+
+<p>I ordered a free 30 days certificate at <a href="globalsign">globalsign</a>: <a href="https://www.globalsign.com/en/personalsign/trial/"><a href="https://www.globalsign.com/en/personalsign/trial/">https://www.globalsign.com/en/personalsign/trial/</a></a></p>
+
+<p>The import of the <a href="https://en.wikipedia.org/wiki/PKCS_12">pkcs12</a> failed in Thunderbird with the message: &ldquo;The PKCS #12 operation failed for unknown reasons.&rdquo;</p>
+
+<p>Searching the internet didn&rsquo;t provide a solution. To debug this issue I started to extract the private / certificate from the pkcs12 file provided by globalsign and creating a new one.</p>
+
+<p>To execute this command I use an encrypted <a href="https://gitlab.com/cryptsetup/cryptsetup/blob/master/README.md">luks</a> volume.</p>
+
+<h1>Create a new pkcs12 file</h1>
+
+<h2>verifying the pkx file</h2>
+
+<h3>password too long?</h3>
+
+<p>The first issue was that the password of my pkx was too long by default the openssl pkcs12 command seems to have a limit of 32 characters.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx 
+Enter Import Password:
+Can't read Password
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<p>Use the &ldquo;-passin pass&rdquo;, &ldquo;-passin stdin&rdquo; or &ldquo;-passin file&rdquo; argument resolves this issue. The &ldquo;-passin pass&rdquo; argument will show the password on the screen and in shell history, the &ldquo;-passin stdin&rdquo; will show your password on the screen, the &ldquo;-passin file&rdquo; will leave your password on the (hopefully encrypted) filesystem  so I went with the &ldquo;-pass file&rdquo; option.</p>
+
+<h3>Created password file</h3>
+
+<p>Create the file that holds your password with the corrected file permissions, you must be the only one that is able to read this file:</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ touch pass
+[staf@vicky staf@wagemakers.be]$ chmod 600 pass
+[staf@vicky staf@wagemakers.be]$ vi pass
+</code></pre>
+
+<h3>Try again</h3>
+
+<p>With the &ldquo;-passin file&rdquo; argument we are able to the pkcs12 file.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -passin file:pass
+MAC verified OK
+Bag Attributes
+    localKeyID: 9B B7 F3 7A 96 46 1F 08 28 A2 BC 2B 87 0E 53 92 29 B4 7D 7D 
+Key Attributes: &lt;No Attributes&gt;
+Enter PEM pass phrase:
+Bag Attributes
+    localKeyID: 9B B7 F3 7A 96 46 1F 08 28 A2 BC 2B 87 0E 53 92 29 B4 7D 7D 
+subject=/CN=staf@wagemakers.be/emailAddress=staf@wagemakers.be
+issuer=/C=BE/O=GlobalSign nv-sa/CN=GlobalSign PersonalSign 1 CA - SHA256 - G2
+-----BEGIN CERTIFICATE-----
+&lt;snip&gt;
+</code></pre>
+
+<h2>Extract</h2>
+
+<p>We&rsquo;ll extract the private key and the certificates and build a new pkcs12 file and import this pkcs12 file into thunderbird.</p>
+
+<h3>Extract the private key</h3>
+
+<p>The private key is encrypted with the &ldquo;bag&rdquo; so need to type it or copy/pass it&hellip;</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -nocerts -out key.pem -passin file:pass 
+MAC verified OK
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+</code></pre>
+
+<h3>Extract the client certificate</h3>
+
+<p>The client certificate isn&rsquo;t encrypted so you can leave the pem password empty.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -clcerts -out staf.pem -passin file:pass 
+MAC verified OK
+
+Enter PEM pass phrase:
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<h3>Verify the key and certificate</h3>
+
+<p>To verify that the certificate and the private belongs together we need to verify the modulus of the key and the certificate the sha1sum should match.</p>
+
+<pre><code>staf@vicky staf@wagemakers.be]$ openssl rsa -in key.pem -modulus -noout | sha1sum
+Enter pass phrase for key.pem:
+1234567890123456789012345678901234567890  -
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl x509 -in staf.pem -modulus -noout | sha1sum
+1234567890123456789012345678901234567890  -
+[staf@vicky staf@wagemakers.be]$ 
+</code></pre>
+
+<h3>Extract the signing certificate(s)</h3>
+
+<p>The following command extracts the ca certificates.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -cacerts -out cacerts.pem -passin file:pass
+MAC verified OK
+Enter PEM pass phrase:
+</code></pre>
+
+<h2>Create a new pkcs12 file</h2>
+
+<p>This time we use a 32 characters password.</p>
+
+<pre><code>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -export -in staf.pem -inkey key.pem -certfile cacerts.pem -out staf_new.p12
+Enter pass phrase for key.pem:
+Enter Export Password:
+Verifying - Enter Export Password:
+</code></pre>
+
+<h1>Import the the new pkcs12 file</h1>
+
+<p><img class="right" src="/images/thunderbird_import_smime_ok.png" width="598" height="152" title="&ldquo;thunderbird smime import ok&rdquo;" >
+Not sure what the issue was with original pkcs12 but the import works now&hellip;.
+ - it might have been the 32 characters password -.   After I was able to use the signing and encryption part in thunderbird.</p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
+  
+</feed>
