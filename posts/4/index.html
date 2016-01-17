@@ -9,33 +9,8 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="&ldquo;yum install lookat&rdquo; works on Fedora now ;-) Thanks Christopher! 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27 &hellip;">
+  <meta name="description" content="Thanks to Christopher Meng Lookat has landed in Fedora. https://admin.fedoraproject.org/pkgdb/acls/name/lookat
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,115 +78,6 @@
     <div id="content">
       <div class="blog-index">
   
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/05/25/yum-install-lookat/">Yum Install Lookat</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-05-25T20:09:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>8:09 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>&ldquo;yum install lookat&rdquo; works on Fedora now  ;-)</p>
-
-<p>Thanks <a href="http://cicku.me/">Christopher</a>!</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ sudo yum install lookat
-</span><span class='line'>[sudo] password for staf: 
-</span><span class='line'>Loaded plugins: langpacks, presto, refresh-packagekit, security
-</span><span class='line'>Repository google-chrome is listed more than once in the configuration
-</span><span class='line'>Resolving Dependencies
-</span><span class='line'>--&gt; Running transaction check
-</span><span class='line'>---&gt; Package lookat.x86_64 0:1.4.2-1.fc18 will be installed
-</span><span class='line'>--&gt; Finished Dependency Resolution
-</span><span class='line'>
-</span><span class='line'>Dependencies Resolved
-</span><span class='line'>
-</span><span class='line'>================================================================================================================================================================================
-</span><span class='line'> Package                                 Arch                                    Version                                         Repository                                Size
-</span><span class='line'>================================================================================================================================================================================
-</span><span class='line'>Installing:
-</span><span class='line'> lookat                                  x86_64                                  1.4.2-1.fc18                                    updates                                   55 k
-</span><span class='line'>
-</span><span class='line'>Transaction Summary
-</span><span class='line'>================================================================================================================================================================================
-</span><span class='line'>Install  1 Package
-</span><span class='line'>
-</span><span class='line'>Total download size: 55 k
-</span><span class='line'>Installed size: 118 k
-</span><span class='line'>Is this ok [y/N]: y
-</span><span class='line'>Downloading Packages:
-</span><span class='line'>lookat-1.4.2-1.fc18.x86_64.rpm                                                                                                                           |  55 kB  00:00:00     
-</span><span class='line'>Running Transaction Check
-</span><span class='line'>Running Transaction Test
-</span><span class='line'>Transaction Test Succeeded
-</span><span class='line'>Running Transaction
-</span><span class='line'>  Installing : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1 
-</span><span class='line'>  Verifying  : lookat-1.4.2-1.fc18.x86_64                                                                                                                                   1/1 
-</span><span class='line'>
-</span><span class='line'>Installed:
-</span><span class='line'>  lookat.x86_64 0:1.4.2-1.fc18                                                                                                                                                  
-</span><span class='line'>
-</span><span class='line'>Complete!
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-</div>
-  
-  
-
-
-    </article>
   
   
     <article>
@@ -1612,10 +1478,6 @@ But it&rsquo;s time to move the source to a safer place. This will be <a href="h
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed.markdown/">Thunderbird: Importing S/mime Certificate Failed</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/">Thunderbird: Importing S/mime Certificate Failed</a>
       </li>
     
@@ -1629,6 +1491,10 @@ But it&rsquo;s time to move the source to a safer place. This will be <a href="h
     
       <li class="post">
         <a href="/blog/blog/2015/12/26/running-docker-on-arm/">Running Docker on ARM</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/">Protecting Your SSH Keys With SmartCard-HSM</a>
       </li>
     
   </ul>
