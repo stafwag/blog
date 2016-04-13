@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cgipaf | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/cgipaf/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2016-01-31T10:31:00+01:00</updated>
+  <updated>2016-04-13T11:13:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CGIpaf 1.3.5 Released]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released/"/>
+    <updated>2016-04-13T11:00:13+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released</id>
+    <content type="html"><![CDATA[<p>CGIpaf 1.3.5 has been released</p>
+
+<h3>ChangeLog</h3>
+
+<h5>version 1.3.5         ( 13 Apr 2016 )</h5>
+
+<blockquote><ul>
+<li>pwd_mkdb errors were not handled correctly on BSD</li>
+<li>kyua test scripts added</li>
+</ul>
+</blockquote>
+
+<p>CGIpaf 1.3.5 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
+
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
+
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
+
+<p style="font-style: italic;">
+Have fun...
+</p>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CGIpaf 1.3.4 Released]]></title>
