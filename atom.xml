@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2016-04-13T11:13:44+02:00</updated>
+  <updated>2016-08-30T09:15:28+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,1186 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Install Arch on an Encrypted Btrfs Partition]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/"/>
+    <updated>2016-08-30T08:59:00+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/Arch-linux-logo.png" width="300" height="225" title="&#34;Arch Linux Logo&#34;" alt="&#34;Arch Linux Logo&#34;"></p>
+
+<p>I&rsquo;m preparing to move <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my workstation</a> to <a href="https://www.archlinux.org/">arch linux</a> Before I&rsquo;ll install it on my physical workstation I did the installation on a virtual machine. I&rsquo;ll use <a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">btrfs</a> as the filesystem during the installation. btrfs is a nice filesystem but it had some serious dataloss issue with <a href="https://btrfs.wiki.kernel.org/index.php/RAID56">RAID5/RAID6</a> recently.</p>
+
+<p>btrfs might not stable enough for a production environment but it has some nice features like snapshots, send/recieve, compression etc. I use <a href="http://www.open-zfs.org/wiki/Main_Page">zfs</a> for my important date anyway.</p>
+
+<h2>To encrypt or not to encrypt&hellip;</h2>
+
+<p>It&rsquo;s possible to encrypt your boot partition <a href="https://www.gnu.org/software/grub/">grub</a> has support for <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">luks</a> volumes. This cause grub to ask for a password during the system startup you&rsquo;ll need to type in your password a second time during the system startup when you Linux initrd image is booted. It&rsquo;s possible to avoid this by adding a keyfile to your crypttab - which migh be considered as a security risk -.</p>
+
+<p>In this howto we&rsquo;ll setup a single root partition to have full disk encryption. I&rsquo;m not sure I go with an encrypted boot partition during my final installation. I might just create an empty partition of 1G so I can move switch between an encrypted and an non-encrypted boot filesystem.</p>
+
+<p><img class="left" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/00_boot.png" width="440" title="&#34;00_boot.png&#34;" alt="&#34;00_boot.png&#34;"></p>
+
+<h2>Download the arch linux iso and boot it</h2>
+
+<p>After arch linux is booted verify that you have internet access if the network card is support and dchp is enabled on you network you should get a network address.</p>
+
+<h2>Network access</h2>
+
+<p>To setup the system remotely we first need to setup network to our system.</p>
+
+<h3>Verify the interface</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # ip a
+</span><span class='line'>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default 
+</span><span class='line'>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+</span><span class='line'>    inet 127.0.0.1/8 scope host lo
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>    inet6 ::1/128 scope host 
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+</span><span class='line'>    link/ether 52:54:00:69:d4:94 brd ff:ff:ff:ff:ff:ff
+</span><span class='line'>    inet 192.168.122.23/24 brd 192.168.122.255 scope global eth0
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>    inet6 fe80::a7b:481f:2f70:e688/64 scope link 
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Verify internet access</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # ping -c 3 8.8.8.8                                                                                      :(
+</span><span class='line'>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=49.2 ms
+</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=2 ttl=49 time=45.8 ms
+</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=3 ttl=49 time=46.8 ms
+</span><span class='line'>
+</span><span class='line'>--- 8.8.8.8 ping statistics ---
+</span><span class='line'>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+</span><span class='line'>rtt min/avg/max/mdev = 45.896/47.329/49.201/1.406 ms
+</span><span class='line'>root@archiso ~ # nslookup www.google.be
+</span><span class='line'>Server:         192.168.122.1
+</span><span class='line'>Address:        192.168.122.1#53
+</span><span class='line'>
+</span><span class='line'>Non-authoritative answer:
+</span><span class='line'>Name:   www.google.be
+</span><span class='line'>Address: 64.233.167.94
+</span><span class='line'>
+</span><span class='line'>root@archiso ~ # ping www.google.be
+</span><span class='line'>PING www.google.be (64.233.167.94) 56(84) bytes of data.
+</span><span class='line'>64 bytes from wl-in-f94.1e100.net (64.233.167.94): icmp_seq=1 ttl=46 time=58.7 ms
+</span><span class='line'>64 bytes from wl-in-f94.1e100.net (64.233.167.94): icmp_seq=2 ttl=46 time=58.7 ms
+</span><span class='line'>64 bytes from wl-in-f94.1e100.net (64.233.167.94): icmp_seq=3 ttl=46 time=58.4 ms
+</span><span class='line'>^C
+</span><span class='line'>--- www.google.be ping statistics ---
+</span><span class='line'>3 packets transmitted, 3 received, 0% packet loss, time 2000ms
+</span><span class='line'>rtt min/avg/max/mdev = 58.479/58.645/58.742/0.230 ms
+</span><span class='line'>root@archiso ~ #                   
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ssh access</h2>
+
+<p>If you want to install arch linux over ssh you need to assign a root passwd and start the sshd service.</p>
+
+<h3>root password</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # passwd root       
+</span><span class='line'>Enter new UNIX password: 
+</span><span class='line'>Retype new UNIX password: 
+</span><span class='line'>passwd: password updated successfully
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>start sshd</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # systemctl list-unit-files -t service | grep ssh
+</span><span class='line'>sshd.service                               disabled
+</span><span class='line'>sshd@.service                              static  
+</span><span class='line'>sshdgenkeys.service                        static  
+</span><span class='line'>root@archiso ~ # systemctl start sshd                           
+</span><span class='line'>root@archiso ~ #
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Logon remotely</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh -l root 192.168.122.23
+</span><span class='line'>root@192.168.122.23's password: 
+</span><span class='line'>Last login: Tue Jun 30 09:06:00 2015 from 192.168.122.1
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Partition</h2>
+
+<h3>Find your harddisk device name</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cat /proc/partitions
+</span><span class='line'>major minor  #blocks  name
+</span><span class='line'>
+</span><span class='line'>   8        0  268435456 sda
+</span><span class='line'>  11        0     759808 sr0
+</span><span class='line'>   7        0     328616 loop0
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Overwrite it with random data</h3>
+
+<p>Because we are creating an ecrypted filesystem it&rsquo;s a good idea to overwrite it with random data.</p>
+
+<p>We&rsquo;ll use badblocks for this another method is to use &ldquo;dd if=/dev/random of=/dev/xxx&rdquo; the &ldquo;dd&rdquo; method is probably the best method but is a lot slower.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # badblocks -c 10240 -s -w -t random -v /dev/sda
+</span><span class='line'>Checking for bad blocks in read-write mode
+</span><span class='line'>From block 0 to 268435455
+</span><span class='line'>Testing with random pattern: done                                                 
+</span><span class='line'>Reading and comparing: done                                                 
+</span><span class='line'>Pass completed, 0 bad blocks found. (0/0/0 errors)
+</span><span class='line'>badblocks -c 10240 -s -w -t random -v /dev/sda  49.22s user 21.72s system 3% cpu 33:48.40 total
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Partition the harddisk</h3>
+
+<p>Create 3 partitions:</p>
+
+<ul>
+<li>1G /boot (we&rsquo;ll not use this during the installation - see above - )</li>
+<li>32G swap</li>
+<li>root btrfs partition</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # fdisk /dev/sda                                
+</span><span class='line'>
+</span><span class='line'>Welcome to fdisk (util-linux 2.28).                                                    
+</span><span class='line'>Changes will remain in memory only, until you decide to write them.
+</span><span class='line'>Be careful before using the write command.
+</span><span class='line'>
+</span><span class='line'>Device does not contain a recognized partition table.
+</span><span class='line'>Created a new DOS disklabel with disk identifier 0x7ff944e5.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): p
+</span><span class='line'>Disk /dev/sda: 256 GiB, 274877906944 bytes, 536870912 sectors
+</span><span class='line'>Units: sectors of 1 * 512 = 512 bytes
+</span><span class='line'>Sector size (logical/physical): 512 bytes / 512 bytes
+</span><span class='line'>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span><span class='line'>Disklabel type: dos
+</span><span class='line'>Disk identifier: 0x7ff944e5
+</span><span class='line'>
+</span><span class='line'>Command (m for help): n
+</span><span class='line'>Partition type
+</span><span class='line'>   p   primary (0 primary, 0 extended, 4 free)
+</span><span class='line'>   e   extended (container for logical partitions)
+</span><span class='line'>Select (default p): p
+</span><span class='line'>Partition number (1-4, default 1): 1
+</span><span class='line'>First sector (2048-536870911, default 2048): +1G
+</span><span class='line'>Value out of range.
+</span><span class='line'>First sector (2048-536870911, default 2048): 
+</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2048-536870911, default 536870911): 
+</span><span class='line'>Do you really want to quit? y
+</span><span class='line'>1 root@archiso ~ # fdisk /dev/sda                                                   :(
+</span><span class='line'>
+</span><span class='line'>Welcome to fdisk (util-linux 2.28).                                                    
+</span><span class='line'>Changes will remain in memory only, until you decide to write them.
+</span><span class='line'>Be careful before using the write command.
+</span><span class='line'>
+</span><span class='line'>Device does not contain a recognized partition table.
+</span><span class='line'>Created a new DOS disklabel with disk identifier 0xa806e281.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): p
+</span><span class='line'>Disk /dev/sda: 256 GiB, 274877906944 bytes, 536870912 sectors
+</span><span class='line'>Units: sectors of 1 * 512 = 512 bytes
+</span><span class='line'>Sector size (logical/physical): 512 bytes / 512 bytes
+</span><span class='line'>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span><span class='line'>Disklabel type: dos
+</span><span class='line'>Disk identifier: 0xa806e281
+</span><span class='line'>
+</span><span class='line'>Command (m for help): n
+</span><span class='line'>Partition type
+</span><span class='line'>   p   primary (0 primary, 0 extended, 4 free)
+</span><span class='line'>   e   extended (container for logical partitions)
+</span><span class='line'>Select (default p): p
+</span><span class='line'>Partition number (1-4, default 1): 1
+</span><span class='line'>First sector (2048-536870911, default 2048): 
+</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2048-536870911, default 536870911): +1G
+</span><span class='line'>
+</span><span class='line'>Created a new partition 1 of type 'Linux' and of size 1 GiB.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): n
+</span><span class='line'>Partition type
+</span><span class='line'>   p   primary (1 primary, 0 extended, 3 free)
+</span><span class='line'>   e   extended (container for logical partitions)
+</span><span class='line'>Select (default p): p
+</span><span class='line'>Partition number (2-4, default 2): 
+</span><span class='line'>First sector (2099200-536870911, default 2099200): 
+</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2099200-536870911, default 536870911): +32G
+</span><span class='line'>
+</span><span class='line'>Created a new partition 2 of type 'Linux' and of size 32 GiB.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): n
+</span><span class='line'>Partition type
+</span><span class='line'>   p   primary (2 primary, 0 extended, 2 free)
+</span><span class='line'>   e   extended (container for logical partitions)
+</span><span class='line'>Select (default p): p
+</span><span class='line'>Partition number (3,4, default 3): 
+</span><span class='line'>First sector (69208064-536870911, default 69208064): 
+</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (69208064-536870911, default 536870911): 
+</span><span class='line'>
+</span><span class='line'>Created a new partition 3 of type 'Linux' and of size 223 GiB.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): w
+</span><span class='line'>The partition table has been altered.
+</span><span class='line'>Calling ioctl() to re-read partition table.
+</span><span class='line'>Syncing disks.
+</span><span class='line'>
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Format the root partition</h3>
+
+<p>We&rsquo;ll continue with the root filesystem - we&rsquo;ll initialize the swapspace after the installation -</p>
+
+<h4>Create the root luks volume;</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 256 --hash sha256 --use-random /dev/sda3
+</span><span class='line'>
+</span><span class='line'>WARNING!
+</span><span class='line'>========
+</span><span class='line'>This will overwrite data on /dev/sda3 irrevocably.
+</span><span class='line'>
+</span><span class='line'>Are you sure? (Type uppercase yes): YES
+</span><span class='line'>Enter passphrase: 
+</span><span class='line'>Verify passphrase: 
+</span><span class='line'>5.01s user 0.04s system 21% cpu 23.750 total
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Open the root luks volume</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cryptsetup luksOpen /dev/sda3 cryptroot
+</span><span class='line'>Enter passphrase for /dev/sda3: 
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Format the root volume with btrfs</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # mkfs.btrfs /dev/mapper/cryptroot
+</span><span class='line'>btrfs-progs v4.6.1
+</span><span class='line'>See http://btrfs.wiki.kernel.org for more information.
+</span><span class='line'>
+</span><span class='line'>Label:              (null)
+</span><span class='line'>UUID:               cbfcc8d6-0cf9-4656-bcda-2525faeadfe6
+</span><span class='line'>Node size:          16384
+</span><span class='line'>Sector size:        4096
+</span><span class='line'>Filesystem size:    217.00GiB
+</span><span class='line'>Block group profiles:
+</span><span class='line'>  Data:             single            8.00MiB
+</span><span class='line'>  Metadata:         DUP               1.01GiB
+</span><span class='line'>  System:           DUP              12.00MiB
+</span><span class='line'>SSD detected:       no
+</span><span class='line'>Incompat features:  extref, skinny-metadata
+</span><span class='line'>Number of devices:  1
+</span><span class='line'>Devices:
+</span><span class='line'>   ID        SIZE  PATH
+</span><span class='line'>    1   217.00GiB  /dev/mapper/cryptroot
+</span><span class='line'>
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Mount the root filesystem</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults /dev/mapper/cryptroot /mnt
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the subvolumes</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cd /mnt
+</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active
+</span><span class='line'>Create subvolume './__active'
+</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active/rootvol
+</span><span class='line'>Create subvolume '__active/rootvol'
+</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active/home
+</span><span class='line'>Create subvolume '__active/home'
+</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active/var
+</span><span class='line'>Create subvolume '__active/var'
+</span><span class='line'>root@archiso /mnt # btrfs subvolume create __snapshots
+</span><span class='line'>Create subvolume './__snapshots'
+</span><span class='line'>root@archiso /mnt #</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Mount the subvolumes</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso /mnt # cd 
+</span><span class='line'>root@archiso ~ # umount /mnt
+</span><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults,subvol=__active/rootvol /dev/mapper/cryptroot /mnt
+</span><span class='line'>root@archiso ~ # mkdir /mnt/{home,var}
+</span><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults,subvol=__active/home /dev/mapper/cryptroot /mnt/home
+</span><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults,subvol=__active/var /dev/mapper/cryptroot /mnt/var
+</span><span class='line'>root@archiso ~ # sync
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>System installation</h2>
+
+<h3>bootstrap the system</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # pacstrap /mnt base base-devel btrfs-progs
+</span><span class='line'>==&gt; Creating install root at /mnt
+</span><span class='line'>==&gt; Installing packages to /mnt
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> core                     119.9 KiB   652K/s 00:00 [######################] 100%
+</span><span class='line'> extra                   1760.1 KiB   688K/s 00:03 [######################] 100%
+</span><span class='line'> community                  3.6 MiB   906K/s 00:04 [######################] 100%
+</span><span class='line'>:: There are 50 members in group base:
+</span><span class='line'>:: Repository core
+</span><span class='line'>   1) bash  2) bzip2  3) coreutils  4) cryptsetup  5) device-mapper  6) dhcpcd
+</span><span class='line'>   7) diffutils  8) e2fsprogs  9) file  10) filesystem  11) findutils  12) gawk
+</span><span class='line'>   13) gcc-libs  14) gettext  15) glibc  16) grep  17) gzip  18) inetutils
+</span><span class='line'>   19) iproute2  20) iputils  21) jfsutils  22) less  23) licenses  24) linux
+</span><span class='line'>   25) logrotate  26) lvm2  27) man-db  28) man-pages  29) mdadm  30) nano
+</span><span class='line'>   31) netctl  32) pacman  33) pciutils  34) pcmciautils  35) perl
+</span><span class='line'>   36) procps-ng  37) psmisc  38) reiserfsprogs  39) s-nail  40) sed
+</span><span class='line'>   41) shadow  42) sysfsutils  43) systemd-sysvcompat  44) tar  45) texinfo
+</span><span class='line'>   46) usbutils  47) util-linux  48) vi  49) which  50) xfsprogs
+</span><span class='line'>
+</span><span class='line'>Enter a selection (default=all): 
+</span><span class='line'>:: There are 25 members in group base-devel:
+</span><span class='line'>:: Repository core
+</span><span class='line'>   1) autoconf  2) automake  3) binutils  4) bison  5) fakeroot  6) file
+</span><span class='line'>   7) findutils  8) flex  9) gawk  10) gcc  11) gettext  12) grep  13) groff
+</span><span class='line'>   14) gzip  15) libtool  16) m4  17) make  18) pacman  19) patch
+</span><span class='line'>   20) pkg-config  21) sed  22) sudo  23) texinfo  24) util-linux  25) which
+</span><span class='line'>
+</span><span class='line'>Enter a selection (default=all): 
+</span><span class='line'>warning: skipping target: file
+</span><span class='line'>warning: skipping target: findutils
+</span><span class='line'>warning: skipping target: gawk
+</span><span class='line'>warning: skipping target: gettext
+</span><span class='line'>warning: skipping target: grep
+</span><span class='line'>warning: skipping target: gzip
+</span><span class='line'>warning: skipping target: pacman
+</span><span class='line'>warning: skipping target: sed
+</span><span class='line'>warning: skipping target: texinfo
+</span><span class='line'>warning: skipping target: util-linux
+</span><span class='line'>warning: skipping target: which
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (144) acl-2.2.52-2  archlinux-keyring-20160812-1  attr-2.4.47-1
+</span><span class='line'>               ca-certificates-20160507-1  ca-certificates-cacert-20140824-3
+</span><span class='line'>               ca-certificates-mozilla-3.26-1  ca-certificates-utils-20160507-1
+</span><span class='line'>               cracklib-2.9.6-1  curl-7.50.1-1  db-5.3.28-3  dbus-1.10.8-1
+</span><span class='line'>               expat-2.2.0-2  gc-7.4.2-4  gdbm-1.12-2  glib2-2.48.1-1
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>               procps-ng-3.3.12-1  psmisc-22.21-3  reiserfsprogs-3.6.25-1
+</span><span class='line'>               s-nail-14.8.10-1  sed-4.2.2-4  shadow-4.2.1-3  sudo-1.8.17.p1-1
+</span><span class='line'>               sysfsutils-2.1.0-9  systemd-sysvcompat-231-1  tar-1.29-1
+</span><span class='line'>               texinfo-6.1-4  usbutils-008-1  util-linux-2.28.1-1
+</span><span class='line'>               vi-1:070224-2  which-2.21-2  xfsprogs-4.7.0-1
+</span><span class='line'>
+</span><span class='line'>Total Download Size:   231.85 MiB
+</span><span class='line'>Total Installed Size:  801.27 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] 
+</span><span class='line'>:: Retrieving packages...
+</span><span class='line'> linux-api-headers-4...   810.7 KiB   891K/s 00:01 [######################] 100%
+</span><span class='line'> tzdata-2016f-1-any       215.4 KiB   909K/s 00:00 [######################] 100%
+</span><span class='line'> iana-etc-20160513-1-any  352.2 KiB   723K/s 00:00 [######################] 100%
+</span><span class='line'> filesystem-2015.09-...     8.8 KiB   875K/s 00:00 [######################] 100%
+</span><span class='line'> glibc-2.24-2-x86_64        8.1 MiB   918K/s 00:09 [######################] 100%
+</span><span class='line'> gcc-libs-6.1.1-5-x86_64   14.9 MiB   899K/s 00:17 [######################] 100%
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>(144/144) installing btrfs-progs                   [######################] 100%
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/4) Updating manpage index...
+</span><span class='line'>mandb: can't set the locale; make sure $LC_* and $LANG are correct
+</span><span class='line'>(2/4) Updating the info directory file...
+</span><span class='line'>(3/4) Updating udev Hardware Database...
+</span><span class='line'>(4/4) Rebuilding certificate stores...
+</span><span class='line'>pacstrap /mnt base base-devel btrfs-progs  27.81s user 10.20s system 10% cpu 5:50.56 total
+</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Generate /etc/fstab</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # genfstab -p /mnt &gt;&gt; /mnt/etc/fstab
+</span><span class='line'>root@archiso ~ # vi /mnt/etc/fstab
+</span><span class='line'># 
+</span><span class='line'># /etc/fstab: static file system information
+</span><span class='line'>#
+</span><span class='line'># &lt;file system&gt; &lt;dir&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;
+</span><span class='line'># UUID=c8ca38de-4e58-4c7c-8f5b-c9c3f92f6a24
+</span><span class='line'>/dev/mapper/cryptroot   /               btrfs           rw,noatime,compress=lzo,ssd,dis
+</span><span class='line'>card,space_cache,subvolid=258,subvol=/__active/rootvol,subvol=__active/rootvol  0 0
+</span><span class='line'>
+</span><span class='line'># UUID=c8ca38de-4e58-4c7c-8f5b-c9c3f92f6a24
+</span><span class='line'>/dev/mapper/cryptroot   /home           btrfs           rw,noatime,compress=lzo,ssd,dis
+</span><span class='line'>card,space_cache,subvolid=259,subvol=/__active/home,subvol=__active/home        0 0
+</span><span class='line'>
+</span><span class='line'># UUID=c8ca38de-4e58-4c7c-8f5b-c9c3f92f6a24
+</span><span class='line'>/dev/mapper/cryptroot   /var            btrfs           rw,noatime,compress=lzo,ssd,dis
+</span><span class='line'>card,space_cache,subvolid=260,subvol=/__active/var,subvol=__active/var  0 0</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>chroot</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # arch-chroot /mnt
+</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Set the timezone</h3>
+
+<p>Link for timezone to /etc/localtime</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# ln -s /usr/share/zoneinfo/Europe/Brussels /etc/localtime
+</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Set the hardwareclock to UTC</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>hwclock --systohc --utc</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Generate the required locales</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/locale.gen 
+</span><span class='line'>[root@archiso /]# locale-gen
+</span><span class='line'>Generating locales...
+</span><span class='line'>  en_IE.UTF-8... done
+</span><span class='line'>  en_IE.ISO-8859-1... done
+</span><span class='line'>  en_IE.ISO-8859-15@euro... done
+</span><span class='line'>  en_US.UTF-8... done
+</span><span class='line'>  en_US.ISO-8859-1... done
+</span><span class='line'>  nl_BE.UTF-8... done
+</span><span class='line'>  nl_BE.ISO-8859-1... done
+</span><span class='line'>  nl_BE.ISO-8859-15@euro... done
+</span><span class='line'>Generation complete.
+</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Hostname</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/hostname
+</span><span class='line'>[root@archiso /]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/hosts</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mkinitcpio</h3>
+
+<h4>HOOKS</h4>
+
+<p>Add encrypt to HOOKS before filesystems in /etc/mkinitcpio.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/mkinitcpio.conf </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>HOOKS="base udev autodetect modconf block encrypt filesystems keyboard fsck"</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create boot image</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# mkinitcpio -p linux
+</span><span class='line'>==&gt; Building image from preset: /etc/mkinitcpio.d/linux.preset: 'default'
+</span><span class='line'>  -&gt; -k /boot/vmlinuz-linux -c /etc/mkinitcpio.conf -g /boot/initramfs-linux.img
+</span><span class='line'>==&gt; Starting build: 4.7.1-1-ARCH
+</span><span class='line'>  -&gt; Running build hook: [base]
+</span><span class='line'>  -&gt; Running build hook: [udev]
+</span><span class='line'>  -&gt; Running build hook: [autodetect]
+</span><span class='line'>  -&gt; Running build hook: [modconf]
+</span><span class='line'>  -&gt; Running build hook: [block]
+</span><span class='line'>  -&gt; Running build hook: [encrypt]
+</span><span class='line'>  -&gt; Running build hook: [filesystems]
+</span><span class='line'>  -&gt; Running build hook: [keyboard]
+</span><span class='line'>  -&gt; Running build hook: [fsck]
+</span><span class='line'>==&gt; Generating module dependencies
+</span><span class='line'>==&gt; Creating gzip-compressed initcpio image: /boot/initramfs-linux.img
+</span><span class='line'>==&gt; Image generation successful
+</span><span class='line'>==&gt; Building image from preset: /etc/mkinitcpio.d/linux.preset: 'fallback'
+</span><span class='line'>  -&gt; -k /boot/vmlinuz-linux -c /etc/mkinitcpio.conf -g /boot/initramfs-linux-fallback.img -S autodetect
+</span><span class='line'>==&gt; Starting build: 4.7.1-1-ARCH
+</span><span class='line'>  -&gt; Running build hook: [base]
+</span><span class='line'>  -&gt; Running build hook: [udev]
+</span><span class='line'>  -&gt; Running build hook: [modconf]
+</span><span class='line'>  -&gt; Running build hook: [block]
+</span><span class='line'>==&gt; WARNING: Possibly missing firmware for module: wd719x
+</span><span class='line'>==&gt; WARNING: Possibly missing firmware for module: aic94xx
+</span><span class='line'>  -&gt; Running build hook: [encrypt]
+</span><span class='line'>  -&gt; Running build hook: [filesystems]
+</span><span class='line'>  -&gt; Running build hook: [keyboard]
+</span><span class='line'>  -&gt; Running build hook: [fsck]
+</span><span class='line'>==&gt; Generating module dependencies
+</span><span class='line'>==&gt; Creating gzip-compressed initcpio image: /boot/initramfs-linux-fallback.img
+</span><span class='line'>==&gt; Image generation successful
+</span><span class='line'>[root@archiso /]#</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>set the root password</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# passwd root
+</span><span class='line'>New password: 
+</span><span class='line'>Retype new password: 
+</span><span class='line'>passwd: password updated successfully
+</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>GRUB</h3>
+
+<h4>install Grub</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# pacman -Sy grub
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> core is up to date
+</span><span class='line'> extra                   1760.1 KiB   917K/s 00:02 [######################] 100%
+</span><span class='line'> community                  3.6 MiB   896K/s 00:04 [######################] 100%
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) grub-1:2.02.beta3-3
+</span><span class='line'>
+</span><span class='line'>Total Download Size:    5.83 MiB
+</span><span class='line'>Total Installed Size:  28.70 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] y
+</span><span class='line'>:: Retrieving packages...
+</span><span class='line'> grub-1:2.02.beta3-3...     5.8 MiB   917K/s 00:07 [######################] 100%
+</span><span class='line'>(1/1) checking keys in keyring                     [######################] 100%
+</span><span class='line'>(1/1) checking package integrity                   [######################] 100%
+</span><span class='line'>(1/1) loading package files                        [######################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                  [######################] 100%
+</span><span class='line'>(1/1) checking available disk space                [######################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing grub                              [######################] 100%
+</span><span class='line'>Generating grub.cfg.example config file...
+</span><span class='line'>This may fail on some machines running a custom kernel.
+</span><span class='line'>done.
+</span><span class='line'>Optional dependencies for grub
+</span><span class='line'>    freetype2: For grub-mkfont usage
+</span><span class='line'>    fuse: For grub-mount usage
+</span><span class='line'>    dosfstools: For grub-mkrescue FAT FS and EFI support
+</span><span class='line'>    efibootmgr: For grub-install EFI support
+</span><span class='line'>    libisoburn: Provides xorriso for generating grub rescue iso using
+</span><span class='line'>    grub-mkrescue
+</span><span class='line'>    os-prober: To detect other OSes when generating grub.cfg in BIOS systems
+</span><span class='line'>    mtools: For grub-mkrescue FAT FS support
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/2) Updating manpage index...
+</span><span class='line'>(2/2) Updating the info directory file...
+</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Install grub to your boot disk</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# grub-install --target=i386-pc /dev/sda
+</span><span class='line'>Installing for i386-pc platform.
+</span><span class='line'>grub-install: error: attempt to install to encrypted disk without cryptodisk enabled. Set `GRUB_ENABLE_CRYPTODISK=y' in file `/etc/default/grub'.
+</span><span class='line'>[root@archiso /]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Enable cryptodisk</h4>
+
+<p>Because we use an encrypted boot disk we need to enable cryptdisk support.</p>
+
+<p>Add  GRUB_ENABLE_CRYPTODISK=y to /etc/default/grub</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/default/grub
+</span><span class='line'>[root@archiso /]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>GRUB_DEFAULT=0
+</span><span class='line'>GRUB_TIMEOUT=5
+</span><span class='line'>GRUB_DISTRIBUTOR="Arch"
+</span><span class='line'>GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+</span><span class='line'>GRUB_CMDLINE_LINUX=""
+</span><span class='line'>GRUB_ENABLE_CRYPTODISK=y</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And run grub-install again</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# grub-install --target=i386-pc /dev/sda
+</span><span class='line'>Installing for i386-pc platform.
+</span><span class='line'>Installation finished. No error reported.
+</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create grub.cfg</h4>
+
+<p>Add your encrypted root partition to GRUB_CMDLINE_LINUX= in /etc/default/grub</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>GRUB_DEFAULT=0
+</span><span class='line'>GRUB_TIMEOUT=5
+</span><span class='line'>GRUB_DISTRIBUTOR="Arch"
+</span><span class='line'>GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+</span><span class='line'>GRUB_CMDLINE_LINUX=""cryptdevice=/dev/sda3:cryptroot""
+</span><span class='line'>ENABLE_CRYPTODISK=y 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And generate grub.cfg</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# grub-mkconfig -o /boot/grub/grub.cfg
+</span><span class='line'>Generating grub configuration file ...
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux
+</span><span class='line'>Found initrd image(s) in /boot: initramfs-linux.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: initramfs-linux-fallback.img
+</span><span class='line'>done
+</span><span class='line'>[root@archiso /]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reboot</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /boot/grub/grub.cfg
+</span><span class='line'>[root@archiso /]# sync
+</span><span class='line'>[root@archiso /]# reboot
+</span><span class='line'>Running in chroot, ignoring request.
+</span><span class='line'>[root@archiso /]# exit
+</span><span class='line'>arch-chroot /mnt  9.76s user 1.37s system 0% cpu 23:13.29 total
+</span><span class='line'>root@archiso ~ # reboot</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Finish the installation</h2>
+
+<h3>1st boot</h3>
+
+<p>As mentioned before the GRUB will as for a passphrase to decrypt the boot partition.</p>
+
+<p><img class="center" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/01_1st_boot.png" width="700" height="274" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;">
+<img class="center" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_grub_menu.png" width="700" height="484" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
+
+<p>You&rsquo;ll need to type it the password a secod time during the loading of initrd.</p>
+
+<p><img class="center" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_decrypt_root.png" width="700" height="165" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
+
+<h3>Setup swap space</h3>
+
+<p>Update /etc/crypttab</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>swap         /dev/sda2                                    /dev/urandom            swap,
+</span><span class='line'>cipher=aes-cbc-essiv:sha256,size=256</span></code></pre></td></tr></table></div></figure>
+
+
+<p>reboot the system to verify that the encrypted swap partition is mapper correctly during the system startup</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# ls -l /dev/mapper/
+</span><span class='line'>total 0
+</span><span class='line'>crw------- 1 root root 10, 236 Aug 29 15:43 control
+</span><span class='line'>lrwxrwxrwx 1 root root       7 Aug 29 15:43 cryptroot -&gt; ../dm-0
+</span><span class='line'>lrwxrwxrwx 1 root root       7 Aug 29 15:43 swap -&gt; ../dm-1
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Create swap</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# mkswap /dev/mapper/swap 
+</span><span class='line'>Setting up swapspace version 1, size = 32 GiB (34359734272 bytes)
+</span><span class='line'>no label, UUID=66ea5a08-0833-4e84-8b95-f1a9c2d772b2
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Activate swap</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# swapon /dev/mapper/swap
+</span><span class='line'>[root@vicky ~]# free
+</span><span class='line'>              total        used        free      shared  buff/cache   available
+</span><span class='line'>Mem:        4051236       85932     3890708         440       74596     3807084
+</span><span class='line'>Swap:      33554428           0    33554428
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Update /etc/fstab</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>/dev/mapper/swap swap                    swap    defaults,discard,pri=3        0 0 </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p style="font-style: italic;">
+Have fun
+</p>
+
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/Installation_guide"><a href="https://wiki.archlinux.org/index.php/Installation_guide">https://wiki.archlinux.org/index.php/Installation_guide</a></a></li>
+<li><a href="http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html"><a href="http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html">http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html</a></a></li>
+<li><a href="http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html"><a href="http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html">http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html</a></a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CGIpaf 1.3.5 Released]]></title>
@@ -6338,32 +7518,6 @@ Size matters, but &hellip; resolution and image quality are as import.</p>
 <p>Compared to the others screens I used to work with the image quality is amazing and the higher resolution give so much more space.</p>
 
 <p><a href="https://plus.google.com/photos/+StafWagemakers/albums/6017268505479487345">Dell 2713HM images</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Convert PGS Subtitles]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles/"/>
-    <updated>2014-05-11T11:24:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/wdlive.jpg" width="300" height="200" title="&#34;wdlive&#34;" alt="&#34;wdlive&#34;"></p>
-
-<p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it&rsquo;s still a nice media player.</p>
-
-<p>Unfortunately it&rsquo;s unable to display PGS (blu-ray) subtitles.</p>
-
-<p><br />&nbsp;<br /></p>
-
-<p>I created a shell scripts (converPgsSub.sh) to convert the subtitles a mkv file so it&rsquo;s possible to play it on my 5 year old wdlive.</p>
-
-<p>convertPgsSub 1.0.0stable1 is available github:</p>
-
-<p><a href="https://github.com/stafwag/convertPgsSub"><a href="https://github.com/stafwag/convertPgsSub">https://github.com/stafwag/convertPgsSub</a></a></p>
-
-<p style="font-style: italic;">
-Have fun...
-</p>
-
 ]]></content>
   </entry>
   
