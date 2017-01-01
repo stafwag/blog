@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2016-08-30T09:15:28+02:00</updated>
+  <updated>2017-01-01T09:51:35+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Best Wishes 2017!]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017/"/>
+    <updated>2017-01-01T09:43:34+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017</id>
+    <content type="html"><![CDATA[<p><strong><em> Best Wishes 2017! </em></strong></p>
+
+<p><img class="center" src="http://stafwag.github.io/blog/images/best_wishes_2017_scaled.jpg" width="1000" height="667" title="&#34;best_wishes_2017_scaled.jpg&#34;" alt="&#34;best_wishes_2017_scaled.jpg&#34;"></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Install Arch on an Encrypted Btrfs Partition]]></title>
@@ -1406,7 +1417,7 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
     <id>http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016</id>
     <content type="html"><![CDATA[<p><strong><em> Happy new year! </em></strong></p>
 
-<p><img class="center" src="http://stafwag.github.io/blog/images/2016.jpg" width="1000" height="625" title="&#34;2014.jpg&#34;" alt="&#34;2014.jpg&#34;"></p>
+<p><img class="center" src="http://stafwag.github.io/blog/images/2016.jpg" width="1000" height="625" title="&#34;2016.jpg&#34;" alt="&#34;2016.jpg&#34;"></p>
 ]]></content>
   </entry>
   
@@ -7500,24 +7511,6 @@ Have fun...
 <p>My internet firewall is a <a href="http://www.pcengines.ch/">pcengines</a> <a href="http://www.pcengines.ch/alix.htm">alix system</a> powered by <a href="https://www.pfsense.org/">pfsense</a>.</p>
 
 <p>I purchased a <a href="http://www.google.be/intl/en/chrome/devices/chromecast/">chromecast</a> at <a href="http://www.amazon.de">amazon.de</a>. The installation didn&rsquo;t work, after debugging the issue it seems that &ldquo;Allow intra-BSS communication&rdquo; needs to be enabled for chromecast.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Size Matters, but ...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/05/25/size-matters/"/>
-    <updated>2014-05-25T09:11:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/05/25/size-matters</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/dell2713.jpg" width="400" height="266" title="&#34;dell2713&#34;" alt="&#34;dell2713&#34;">
-Size matters, but &hellip; resolution and image quality are as import.</p>
-
-<p>Since I was diagnosed with diabetes I have eyes issues things are getting better recently but I still needs glasses for reading etc.</p>
-
-<p>My &ldquo;no smoking&rdquo; <a href="https://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough for some &ldquo;eye candy&rdquo;. I bought a <a href="http://accessories.ap.dell.com/sna/productdetail.aspx?c=au&cs=audhs1&l=en&redirect=1&s=dhs&sku=210-40773">Dell UltraSharp U2713HM</a> a 27 inch WQHD (2560x1440) IPS display.</p>
-
-<p>Compared to the others screens I used to work with the image quality is amazing and the higher resolution give so much more space.</p>
-
-<p><a href="https://plus.google.com/photos/+StafWagemakers/albums/6017268505479487345">Dell 2713HM images</a></p>
 ]]></content>
   </entry>
   

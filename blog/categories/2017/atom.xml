@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 2017 | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/2017/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2017-01-01T09:51:35+01:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Best Wishes 2017!]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017/"/>
+    <updated>2017-01-01T09:43:34+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017</id>
+    <content type="html"><![CDATA[<p><strong><em> Best Wishes 2017! </em></strong></p>
+
+<p><img class="center" src="/images/best_wishes_2017_scaled.jpg" width="1000" height="667" title="&ldquo;best_wishes_2017_scaled.jpg&rdquo;" ></p>
+]]></content>
+  </entry>
+  
+</feed>

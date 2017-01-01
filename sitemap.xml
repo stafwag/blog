@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017/</loc>
+    <lastmod>2017-01-01T09:43:34+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/</loc>
     <lastmod>2016-08-30T08:59:00+02:00</lastmod>
   </url>
@@ -396,5 +400,8 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/luks/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/2017/</loc>
   </url>
 </urlset>
