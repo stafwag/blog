@@ -1,0 +1,11 @@
+---
+layout: post
+title: "Best Wishes 2017!"
+date: 2017-01-01 09:43:34 +0100
+comments: true
+categories:  [ 2017 ]  
+---
+
+*** Best Wishes 2017! ***
+
+{% img center /images/best_wishes_2017_scaled.jpg 1000 667 "best_wishes_2017_scaled.jpg" %}
