@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/</loc>
+    <lastmod>2017-02-11T16:09:11+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017/</loc>
     <lastmod>2017-01-01T09:43:34+01:00</lastmod>
   </url>
@@ -403,5 +407,20 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/2017/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/libreboot/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/trisquel/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/parabola/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/thinkpad/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/x60/</loc>
   </url>
 </urlset>
