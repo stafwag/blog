@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-02-11T17:00:13+01:00</updated>
+  <updated>2017-05-25T09:08:44+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,1213 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Install Parabola GNU/Linux on an Encrypted Btrfs Logical Volume]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
+    <updated>2017-05-25T09:05:38+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
+    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/413px-Gnu10-mascot-logo_100ppi.png" width="200" height="291" title="&#34;413px-Gnu10-mascot-logo_100ppi.png&#34;" alt="&#34;413px-Gnu10-mascot-logo_100ppi.png&#34;"></p>
+
+<p>I finally found time to complete the installation of my <a href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">Libreboot laptop</a></p>
+
+<p>I decided to give <a href="https://www.parabola.nu/">Parabola GNU/Linux</a> a try as my daily driver to get a fully <a href="https://en.wikipedia.org/wiki/Free_software">Free Software</a> Laptop/tablet.</p>
+
+<h2>Download the Parabola GNU/Linux iso and boot it</h2>
+
+<p>After Parabola GNU/Linux is booted verify that you have internet access if the network card is support and dhcp is enabled on you network you should get a network address.</p>
+
+<h2>Network access</h2>
+
+<p>To setup the system remotely we first need to setup network to our system.</p>
+
+<h3>Verify the interface</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>1 root@parabolaiso ~ # ip a
+</span><span class='line'>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1
+</span><span class='line'>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+</span><span class='line'>    inet 127.0.0.1/8 scope host lo
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>    inet6 ::1/128 scope host 
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>2: enp1s0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+</span><span class='line'>    link/ether 00:16:d3:b7:3a:96 brd ff:ff:ff:ff:ff:ff
+</span><span class='line'>    inet 192.168.1.11/24 brd 192.168.1.255 scope global enp1s0
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>    inet6 fe80::e5db:c85f:4478:1f44/64 scope link 
+</span><span class='line'>       valid_lft forever preferred_lft forever
+</span><span class='line'>3: wlp2s0: &lt;BROADCAST,MULTICAST&gt; mtu 1500 qdisc noop state DOWN group default qlen 1000
+</span><span class='line'>    link/ether 00:1b:77:4d:5a:57 brd ff:ff:ff:ff:ff:ff
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Verify internet access</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # ping -c 3 www.google.be
+</span><span class='line'>PING www.google.be (172.217.17.67) 56(84) bytes of data.
+</span><span class='line'>64 bytes from ams16s30-in-f3.1e100.net (172.217.17.67): icmp_seq=1 ttl=56 time=91.3 ms
+</span><span class='line'>64 bytes from ams16s30-in-f3.1e100.net (172.217.17.67): icmp_seq=2 ttl=56 time=48.7 ms
+</span><span class='line'>64 bytes from ams16s30-in-f3.1e100.net (172.217.17.67): icmp_seq=3 ttl=56 time=47.9 ms
+</span><span class='line'>
+</span><span class='line'>--- www.google.be ping statistics ---
+</span><span class='line'>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+</span><span class='line'>rtt min/avg/max/mdev = 47.998/62.714/91.366/20.264 ms
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ssh access</h2>
+
+<p>If you want to install Parabola GNU/Linux over ssh you need to assign a root passwd and start the sshd service.</p>
+
+<h3>root password</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # passwd root
+</span><span class='line'>New password: 
+</span><span class='line'>Retype new password: 
+</span><span class='line'>passwd: password updated successfully
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>create a user account</h3>
+
+<p>Parabola doesn&rsquo;t allow remote ssh root logons. Create a new account to access the system remotely.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # useradd install
+</span><span class='line'>root@parabolaiso ~ # passwd install
+</span><span class='line'>New password: 
+</span><span class='line'>Retype new password: 
+</span><span class='line'>passwd: password updated successfully
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>start sshd</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # systemctl start sshd
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Logon remotely</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh install@petronella 
+</span><span class='line'>install@petronella's password: 
+</span><span class='line'>
+</span><span class='line'>===============================================================================
+</span><span class='line'>                                                                          
+</span><span class='line'>         Parabola live media 2016.11.03                                
+</span><span class='line'>                                                                          
+</span><span class='line'>    To install Parabola, the system must be connected to the internet.    
+</span><span class='line'>    For instructions, enter this command:                                 
+</span><span class='line'>      lynx network.html                                           
+</span><span class='line'>                                                                          
+</span><span class='line'>    Press the number keys while holding Alt to switch virtual terminals.  
+</span><span class='line'>    This allows entering commands without closing lynx.                   
+</span><span class='line'>                                                                          
+</span><span class='line'>===============================================================================
+</span><span class='line'>
+</span><span class='line'>Could not chdir to home directory /home/install: No such file or directory
+</span><span class='line'>[install@parabolaiso /]$ su -
+</span><span class='line'>Password: 
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Partition your harddisk</h2>
+
+<h3>Find your harddisk device name</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # lsblk -o NAME,VENDOR,MODEL,TYPE,SIZE 
+</span><span class='line'>NAME                  VENDOR   MODEL            TYPE   SIZE
+</span><span class='line'>loop1                                           loop   1.9G
+</span><span class='line'>`-parabola_root-image                           dm     1.9G
+</span><span class='line'>sdb                   ATA      OCZ-VERTEX2      disk 107.1G
+</span><span class='line'>`-sdb1                                          part 107.1G
+</span><span class='line'>loop2                                           loop   1.9G
+</span><span class='line'>`-parabola_root-image                           dm     1.9G
+</span><span class='line'>loop0                                           loop 269.7M
+</span><span class='line'>sda                   Kingston DataTraveler 2.0 disk   7.2G
+</span><span class='line'>|-sda2                                          part    31M
+</span><span class='line'>`-sda1                                          part   613M
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Overwrite it with random data</h3>
+
+<p>Because we are creating an ecrypted filesystem it&rsquo;s a good idea to overwrite it with random data.</p>
+
+<p>We&rsquo;ll use badblocks for this another method is to use &ldquo;dd if=/dev/random of=/dev/xxx&rdquo; the &ldquo;dd&rdquo; method is probably the best method but is a lot slower.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # badblocks -c 10240 -s -w -t random -v /dev/sdb
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>Checking for bad blocks in read-write mode
+</span><span class='line'>From block 0 to 112337063
+</span><span class='line'>Testing with random pattern: done                                                 
+</span><span class='line'>Reading and comparing: done                                                 
+</span><span class='line'>Pass completed, 0 bad blocks found. (0/0/0 errors)
+</span><span class='line'>badblocks -c 10240 -s -w -t random -v /dev/sdb  82.82s user 20.08s system 3% cpu 48:12.29 total
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Partition the harddisk</h3>
+
+<p>We&rsquo;ll use lvm is this setup, while it should be possible to  boot from an encrypted partition with Libreboot partition I create a small unencrypted boot partition.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # fdisk /dev/sdb
+</span><span class='line'>
+</span><span class='line'>Welcome to fdisk (util-linux 2.28.2).
+</span><span class='line'>Changes will remain in memory only, until you decide to write them.
+</span><span class='line'>Be careful before using the write command.
+</span><span class='line'>
+</span><span class='line'>Device does not contain a recognized partition table.
+</span><span class='line'>Created a new DOS disklabel with disk identifier 0x2640923c.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): p
+</span><span class='line'>Disk /dev/sdb: 107.1 GiB, 115033153536 bytes, 224674128 sectors
+</span><span class='line'>Units: sectors of 1 * 512 = 512 bytes
+</span><span class='line'>Sector size (logical/physical): 512 bytes / 512 bytes
+</span><span class='line'>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span><span class='line'>Disklabel type: dos
+</span><span class='line'>Disk identifier: 0x2640923c
+</span><span class='line'>
+</span><span class='line'>Command (m for help): n
+</span><span class='line'>Partition type
+</span><span class='line'>   p   primary (0 primary, 0 extended, 4 free)
+</span><span class='line'>   e   extended (container for logical partitions)
+</span><span class='line'>Select (default p): p
+</span><span class='line'>Partition number (1-4, default 1): 
+</span><span class='line'>First sector (2048-224674127, default 2048): 
+</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2048-224674127, default 224674127): +1G
+</span><span class='line'>
+</span><span class='line'>Created a new partition 1 of type 'Linux' and of size 1 GiB.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): n
+</span><span class='line'>Partition type
+</span><span class='line'>   p   primary (1 primary, 0 extended, 3 free)
+</span><span class='line'>   e   extended (container for logical partitions)
+</span><span class='line'>Select (default p): p
+</span><span class='line'>Partition number (2-4, default 2): 
+</span><span class='line'>First sector (2099200-224674127, default 2099200): 
+</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2099200-224674127, default 224674127): 
+</span><span class='line'>
+</span><span class='line'>Created a new partition 2 of type 'Linux' and of size 106.1 GiB.
+</span><span class='line'>
+</span><span class='line'>Command (m for help): p
+</span><span class='line'>Disk /dev/sdb: 107.1 GiB, 115033153536 bytes, 224674128 sectors
+</span><span class='line'>Units: sectors of 1 * 512 = 512 bytes
+</span><span class='line'>Sector size (logical/physical): 512 bytes / 512 bytes
+</span><span class='line'>I/O size (minimum/optimal): 512 bytes / 512 bytes
+</span><span class='line'>Disklabel type: dos
+</span><span class='line'>Disk identifier: 0x2640923c
+</span><span class='line'>
+</span><span class='line'>Device     Boot   Start       End   Sectors   Size Id Type
+</span><span class='line'>/dev/sdb1          2048   2099199   2097152     1G 83 Linux
+</span><span class='line'>/dev/sdb2       2099200 224674127 222574928 106.1G 83 Linux
+</span><span class='line'>
+</span><span class='line'>Command (m for help): w
+</span><span class='line'>The partition table has been altered.
+</span><span class='line'>Calling ioctl() to re-read partition table.
+</span><span class='line'>Syncing disks.
+</span><span class='line'>
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Encrypt the LVM physical volume</h3>
+
+<h4>Benchmark</h4>
+
+<p>We bechmark the encryption to decide which encryption we&rsquo;ll use.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # cryptsetup benchmark
+</span><span class='line'># Tests are approximate using memory only (no storage IO).
+</span><span class='line'>PBKDF2-sha1       382134 iterations per second for 256-bit key
+</span><span class='line'>PBKDF2-sha256     479239 iterations per second for 256-bit key
+</span><span class='line'>PBKDF2-sha512     347671 iterations per second for 256-bit key
+</span><span class='line'>PBKDF2-ripemd160  319687 iterations per second for 256-bit key
+</span><span class='line'>PBKDF2-whirlpool  221032 iterations per second for 256-bit key
+</span><span class='line'>#  Algorithm | Key |  Encryption |  Decryption
+</span><span class='line'>     aes-cbc   128b    79.1 MiB/s    93.9 MiB/s
+</span><span class='line'> serpent-cbc   128b    30.0 MiB/s   112.0 MiB/s
+</span><span class='line'> twofish-cbc   128b    77.5 MiB/s   102.5 MiB/s
+</span><span class='line'>     aes-cbc   256b    62.7 MiB/s    71.0 MiB/s
+</span><span class='line'> serpent-cbc   256b    30.0 MiB/s   111.9 MiB/s
+</span><span class='line'> twofish-cbc   256b    77.5 MiB/s   102.4 MiB/s
+</span><span class='line'>     aes-xts   256b    93.0 MiB/s    93.3 MiB/s
+</span><span class='line'> serpent-xts   256b   100.3 MiB/s   104.5 MiB/s
+</span><span class='line'> twofish-xts   256b    93.8 MiB/s    95.0 MiB/s
+</span><span class='line'>     aes-xts   512b    70.5 MiB/s    70.7 MiB/s
+</span><span class='line'> serpent-xts   512b   100.3 MiB/s   104.4 MiB/s
+</span><span class='line'> twofish-xts   512b    93.9 MiB/s    94.9 MiB/s
+</span><span class='line'>cryptsetup benchmark  3.91s user 24.02s system 99% cpu 28.093 total
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create Luks volume</h4>
+
+<p>The serpent xts with a 512 bits keys seems to give a pretty good performance while sha256 hashing gives the best performance.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # cryptsetup luksFormat --cipher serpent-xts-plain64 --key-size 512 --hash sha256 --use-random /dev/sdb2 
+</span><span class='line'>
+</span><span class='line'>WARNING!
+</span><span class='line'>========
+</span><span class='line'>This will overwrite data on /dev/sdb2 irrevocably.
+</span><span class='line'>
+</span><span class='line'>Are you sure? (Type uppercase yes): YES
+</span><span class='line'>Enter passphrase: 
+</span><span class='line'>Verify passphrase: 
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>LVM setup</h2>
+
+<h3>Create the volumes</h3>
+
+<h4>Open the LUKS volume</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ #  cryptsetup luksOpen /dev/sdb2 pv
+</span><span class='line'>Enter passphrase for /dev/sdb2: 
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>This create /dev/mapper/pv</p>
+
+<h4>Create the physical volume</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # pvcreate /dev/mapper/pv                 
+</span><span class='line'>  Physical volume "/dev/mapper/pv" successfully created.
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Show the pv</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # pvs
+</span><span class='line'>  PV             VG Fmt  Attr PSize   PFree  
+</span><span class='line'>  /dev/mapper/pv    lvm2 ---  106.13g 106.13g
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the volume group</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # vgcreate vg /dev/mapper/pv
+</span><span class='line'>  Volume group "vg" successfully created
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Show the created volume group</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # vgs
+</span><span class='line'>  VG #PV #LV #SN Attr   VSize   VFree  
+</span><span class='line'>  vg   1   0   0 wz--n- 106.13g 106.13g
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the swap logical volume</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # lvcreate -L 4G vg -n lv_swap 
+</span><span class='line'>  Logical volume "lv_swap" created.
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the root logical volume</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # lvcreate -L 20G vg -n lv_root   
+</span><span class='line'>  Logical volume "lv_root" created.
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Display the create logical volumes</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # lvs
+</span><span class='line'>  LV      VG Attr       LSize  Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+</span><span class='line'>  lv_root vg -wi-a----- 20.00g                                                    
+</span><span class='line'>  lv_swap vg -wi-a-----  4.00g                                                    
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Format the logical volumes</h3>
+
+<h4>Create the swapspace</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # mkswap /dev/mapper/vg-lv_swap       
+</span><span class='line'>Setting up swapspace version 1, size = 4 GiB (4294963200 bytes)
+</span><span class='line'>no label, UUID=32f6e5d4-67a3-42e3-8a90-6ee3ae0fdaa3
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>And activate it;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # swapon /dev/mapper/vg-lv_swap       
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the root filesystem</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # mkfs.btrfs /dev/mapper/vg-lv_root       
+</span><span class='line'>btrfs-progs v4.8.2
+</span><span class='line'>See http://btrfs.wiki.kernel.org for more information.
+</span><span class='line'>
+</span><span class='line'>Detected a SSD, turning off metadata duplication.  Mkfs with -m dup if you want to force metadata duplication.
+</span><span class='line'>Label:              (null)
+</span><span class='line'>UUID:               
+</span><span class='line'>Node size:          16384
+</span><span class='line'>Sector size:        4096
+</span><span class='line'>Filesystem size:    20.00GiB
+</span><span class='line'>Block group profiles:
+</span><span class='line'>  Data:             single            8.00MiB
+</span><span class='line'>  Metadata:         single            8.00MiB
+</span><span class='line'>  System:           single            4.00MiB
+</span><span class='line'>SSD detected:       yes
+</span><span class='line'>Incompat features:  extref, skinny-metadata
+</span><span class='line'>Number of devices:  1
+</span><span class='line'>Devices:
+</span><span class='line'>   ID        SIZE  PATH
+</span><span class='line'>    1    20.00GiB  /dev/mapper/vg-lv_root
+</span><span class='line'>
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the boot filesystem</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # mkfs.ext2 /dev/sdb1 
+</span><span class='line'>mke2fs 1.43.3 (04-Sep-2016)
+</span><span class='line'>Discarding device blocks: done                            
+</span><span class='line'>Creating filesystem with 262144 4k blocks and 65536 inodes
+</span><span class='line'>Filesystem UUID: e3fd741d-d0e0-483f-a9cd-3fbd3f9d66d1
+</span><span class='line'>Superblock backups stored on blocks: 
+</span><span class='line'>        32768, 98304, 163840, 229376
+</span><span class='line'>
+</span><span class='line'>Allocating group tables: done                            
+</span><span class='line'>Writing inode tables: done                            
+</span><span class='line'>Writing superblocks and filesystem accounting information: done
+</span><span class='line'>
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Mount the filesystems</h4>
+
+<p>Mount the root filesystem;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # 
+</span><span class='line'>root@parabolaiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults /dev/mapper/vg-lv_root /mnt
+</span><span class='line'>root@parabolaiso ~ # 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Create the /home and /boot directories</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # mkdir -p /mnt/{boot,home}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Mount the boot filesystem</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # mount /dev/sdb1 /mnt/boot
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Show;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # df -h
+</span><span class='line'>Filesystem                       Size  Used Avail Use% Mounted on
+</span><span class='line'>dev                              1.6G     0  1.6G   0% /dev
+</span><span class='line'>run                              1.6G   26M  1.6G   2% /run
+</span><span class='line'>/dev/sda1                        613M  613M     0 100% /run/parabolaiso/bootmnt
+</span><span class='line'>cowspace                         2.4G  8.9M  2.4G   1% /run/parabolaiso/cowspace
+</span><span class='line'>/dev/loop0                       270M  270M     0 100% /run/parabolaiso/sfs/root-image
+</span><span class='line'>/dev/mapper/parabola_root-image  1.9G  885M 1003M  47% /
+</span><span class='line'>tmpfs                            1.6G     0  1.6G   0% /dev/shm
+</span><span class='line'>tmpfs                            1.6G     0  1.6G   0% /sys/fs/cgroup
+</span><span class='line'>tmpfs                            1.6G     0  1.6G   0% /tmp
+</span><span class='line'>tmpfs                            1.6G  1.6M  1.6G   1% /etc/pacman.d/gnupg
+</span><span class='line'>tmpfs                            320M     0  320M   0% /run/user/0
+</span><span class='line'>tmpfs                            320M     0  320M   0% /run/user/1001
+</span><span class='line'>/dev/mapper/vg-lv_root            20G   17M   20G   1% /mnt
+</span><span class='line'>/dev/sdb1                       1008M  1.3M  956M   1% /mnt/boot
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>System installation</h2>
+
+<h3>boostrap the system</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # pacstrap /mnt base base-devel btrfs-progs
+</span><span class='line'>==&gt; Creating install root at /mnt
+</span><span class='line'>==&gt; Installing packages to /mnt
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> libre                                              437.7 KiB   228K/s 00:02 [############################################] 100%
+</span><span class='line'> core                                               111.1 KiB   280K/s 00:00 [############################################] 100%
+</span><span class='line'> extra                                             1535.4 KiB   544K/s 00:03 [############################################] 100%
+</span><span class='line'> community                                            3.6 MiB   615K/s 00:06 [############################################] 100%
+</span><span class='line'> pcr                                                620.0 KiB   662K/s 00:01 [############################################] 100%
+</span><span class='line'>:: There are 52 members in group base:
+</span><span class='line'>:: Repository libre
+</span><span class='line'>   1) filesystem  2) licenses  3) linux-libre  4) pacman  5) pacman-mirrorlist  6) systemd-sysvcompat  7) your-freedom
+</span><span class='line'>:: Repository core
+</span><span class='line'>   8) bash  9) bzip2  10) coreutils  11) cryptsetup  12) device-mapper  13) dhcpcd  14) diffutils  15) e2fsprogs  16) file
+</span><span class='line'>   17) findutils  18) gawk  19) gcc-libs  20) gettext  21) glibc  22) grep  23) gzip  24) inetutils  25) iproute2  26) iputils
+</span><span class='line'>   27) jfsutils  28) less  29) logrotate  30) lvm2  31) man-db  32) man-pages  33) mdadm  34) nano  35) netctl  36) pciutils
+</span><span class='line'>   37) pcmciautils  38) perl  39) procps-ng  40) psmisc  41) reiserfsprogs  42) s-nail  43) sed  44) shadow  45) sysfsutils
+</span><span class='line'>   46) tar  47) texinfo  48) usbutils  49) util-linux  50) vi  51) which  52) xfsprogs
+</span><span class='line'>
+</span><span class='line'>Enter a selection (default=all): </span></code></pre></td></tr></table></div></figure>
+
+
+<p>&lt; snip &gt;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(2/7) Updating udev hardware database...
+</span><span class='line'>(3/7) Updating system user accounts...
+</span><span class='line'>(4/7) Creating temporary files...
+</span><span class='line'>(5/7) Arming ConditionNeedsUpdate...
+</span><span class='line'>(6/7) Updating the info directory file...
+</span><span class='line'>(7/7) Rebuilding certificate stores...
+</span><span class='line'>pacstrap /mnt base base-devel btrfs-progs  62.07s user 14.31s system 1% cpu 1:13:22.44 total
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Generate /etc/fstab</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ #
+</span><span class='line'>root@parabolaiso ~ # genfstab -U -p /mnt  &gt;&gt; /mnt/etc/fstab
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>review</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # cat /mnt/etc/fstab
+</span><span class='line'># 
+</span><span class='line'># /etc/fstab: static file system information
+</span><span class='line'>#
+</span><span class='line'># &lt;file system&gt; &lt;dir&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;
+</span><span class='line'># UUID=3731a69b-7240-4618-8e5e-4684d7e719e3
+</span><span class='line'># /dev/mapper/vg-lv_root
+</span><span class='line'>UUID=3731a69b-7240-4618-8e5e-4684d7e719e3       /               btrfs           rw,relatime,ssd,space_cache,subvolid=5,subvol=/0 0
+</span><span class='line'>
+</span><span class='line'># /dev/sdb1
+</span><span class='line'>UUID=e3fd741d-d0e0-483f-a9cd-3fbd3f9d66d1       /boot           ext2            rw,relatime,block_validity,barrier,user_xattr,acl       0 2
+</span><span class='line'>
+</span><span class='line'># /dev/mapper/vg-lv_swap
+</span><span class='line'>UUID=32f6e5d4-67a3-42e3-8a90-6ee3ae0fdaa3       none            swap            defaults        0 0
+</span><span class='line'>
+</span><span class='line'>root@parabolaiso ~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>chroot</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@parabolaiso ~ # arch-chroot /mnt
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Set the timezone</h3>
+
+<p>Set the link for the correct timezone</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# ln -sf /usr/share/zoneinfo/Europe/Brussels /etc/localtime
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Set the hardwareclock to UTC</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# hwclock --systohc --utc
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Generate the required locales</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# vi /etc/locale.gen 
+</span><span class='line'>[root@parabolaiso /]# local 
+</span><span class='line'>local       locale      locale-gen  localectl   localedef   
+</span><span class='line'>[root@parabolaiso /]# locale-gen
+</span><span class='line'>Generating locales...
+</span><span class='line'>  en_IE.UTF-8... done
+</span><span class='line'>  en_IE.ISO-8859-1... done
+</span><span class='line'>  en_IE.ISO-8859-15@euro... done
+</span><span class='line'>  en_US.UTF-8... done
+</span><span class='line'>  en_US.ISO-8859-1... done
+</span><span class='line'>  nl_BE.UTF-8... done
+</span><span class='line'>  nl_BE.ISO-8859-1... done
+</span><span class='line'>  nl_BE.ISO-8859-15@euro... done
+</span><span class='line'>Generation complete.
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Hostname</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# vi /etc/hostname
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mkinitcpio</h3>
+
+<h4>HOOKS</h4>
+
+<p>Add &ldquo;encrypt lvm2&rdquo; to HOOKS before filesystems in /etc/mkinitcpio.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# vi /etc/mkinitcpio.conf</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>HOOKS="base udev autodetect modconf block encrypt lvm2 filesystems keyboard fsck"</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create boot image</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]#  mkinitcpio -p linux-libre
+</span><span class='line'>==&gt; Building image from preset: /etc/mkinitcpio.d/linux-libre.preset: 'default'
+</span><span class='line'>  -&gt; -k /boot/vmlinuz-linux-libre -c /etc/mkinitcpio.conf -g /boot/initramfs-linux-libre.img
+</span><span class='line'>==&gt; Starting build: 4.10.6-gnu-1
+</span><span class='line'>  -&gt; Running build hook: [base]
+</span><span class='line'>  -&gt; Running build hook: [udev]
+</span><span class='line'>  -&gt; Running build hook: [autodetect]
+</span><span class='line'>  -&gt; Running build hook: [modconf]
+</span><span class='line'>  -&gt; Running build hook: [block]
+</span><span class='line'>  -&gt; Running build hook: [sd-encrypt]
+</span><span class='line'>/usr/lib/initcpio/install/sd-encrypt: line 21: add_systemd_unit: command not found
+</span><span class='line'>/usr/lib/initcpio/install/sd-encrypt: line 25: add_systemd_unit: command not found
+</span><span class='line'>/usr/lib/initcpio/install/sd-encrypt: line 26: add_systemd_unit: command not found
+</span><span class='line'>  -&gt; Running build hook: [lvm2]
+</span><span class='line'>  -&gt; Running build hook: [filesystems]
+</span><span class='line'>  -&gt; Running build hook: [keyboard]
+</span><span class='line'>  -&gt; Running build hook: [fsck]
+</span><span class='line'>==&gt; Generating module dependencies
+</span><span class='line'>==&gt; Creating gzip-compressed initcpio image: /boot/initramfs-linux-libre.img
+</span><span class='line'>==&gt; Image generation successful
+</span><span class='line'>==&gt; Building image from preset: /etc/mkinitcpio.d/linux-libre.preset: 'fallback'
+</span><span class='line'>  -&gt; -k /boot/vmlinuz-linux-libre -c /etc/mkinitcpio.conf -g /boot/initramfs-linux-libre-fallback.img -S autodetect
+</span><span class='line'>==&gt; Starting build: 4.10.6-gnu-1
+</span><span class='line'>  -&gt; Running build hook: [base]
+</span><span class='line'>  -&gt; Running build hook: [udev]
+</span><span class='line'>  -&gt; Running build hook: [modconf]
+</span><span class='line'>  -&gt; Running build hook: [block]
+</span><span class='line'>==&gt; WARNING: Possibly missing firmware for module: isci
+</span><span class='line'>  -&gt; Running build hook: [sd-encrypt]
+</span><span class='line'>/usr/lib/initcpio/install/sd-encrypt: line 21: add_systemd_unit: command not found
+</span><span class='line'>/usr/lib/initcpio/install/sd-encrypt: line 25: add_systemd_unit: command not found
+</span><span class='line'>/usr/lib/initcpio/install/sd-encrypt: line 26: add_systemd_unit: command not found
+</span><span class='line'>  -&gt; Running build hook: [lvm2]
+</span><span class='line'>  -&gt; Running build hook: [filesystems]
+</span><span class='line'>  -&gt; Running build hook: [keyboard]
+</span><span class='line'>  -&gt; Running build hook: [fsck]
+</span><span class='line'>==&gt; Generating module dependencies
+</span><span class='line'>==&gt; Creating gzip-compressed initcpio image: /boot/initramfs-linux-libre-fallback.img
+</span><span class='line'>==&gt; Image generation successful
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>set the root password</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# passwd root
+</span><span class='line'>New password: 
+</span><span class='line'>Retype new password: 
+</span><span class='line'>passwd: password updated successfully
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>GRUB</h3>
+
+<h4>install Grub</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]#  pacman -Sy grub
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> libre is up to date
+</span><span class='line'> core is up to date
+</span><span class='line'> extra is up to date
+</span><span class='line'> community is up to date
+</span><span class='line'> pcr is up to date
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) grub-1:2.02.rc2-1.parabola1
+</span><span class='line'>
+</span><span class='line'>Total Download Size:    6.04 MiB
+</span><span class='line'>Total Installed Size:  35.87 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] 
+</span><span class='line'>:: Retrieving packages...
+</span><span class='line'> grub-1:2.02.rc2-1.parabola1-x86_64                   6.0 MiB   128K/s 00:48 [############################################] 100%
+</span><span class='line'>(1/1) checking keys in keyring                                               [############################################] 100%
+</span><span class='line'>(1/1) checking package integrity                                             [############################################] 100%
+</span><span class='line'>(1/1) loading package files                                                  [############################################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                                            [############################################] 100%
+</span><span class='line'>(1/1) checking available disk space                                          [############################################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing grub                                                        [############################################] 100%
+</span><span class='line'>Generating grub.cfg.example config file...
+</span><span class='line'>This may fail on some machines running a custom kernel.
+</span><span class='line'>done.
+</span><span class='line'>Optional dependencies for grub
+</span><span class='line'>    freetype2: For grub-mkfont usage
+</span><span class='line'>    fuse: For grub-mount usage
+</span><span class='line'>    dosfstools: For grub-mkrescue FAT FS and EFI support
+</span><span class='line'>    efibootmgr: For grub-install EFI support
+</span><span class='line'>    libisoburn: Provides xorriso for generating grub rescue iso using grub-mkrescue
+</span><span class='line'>    os-prober: To detect other OSes when generating grub.cfg in BIOS systems
+</span><span class='line'>    mtools: For grub-mkrescue FAT FS support
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/2) Arming ConditionNeedsUpdate...
+</span><span class='line'>(2/2) Updating the info directory file...
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Install grub to your boot disk</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# grub-install --target=i386-pc /dev/sdb
+</span><span class='line'>Installing for i386-pc platform.
+</span><span class='line'>Installation finished. No error reported.
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create grub.cfg</h4>
+
+<p>We&rsquo;ll use the uuid for the crypted device.</p>
+
+<h5>Get the UUID for the encrypted physical volume</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# ls -l /dev/disk/by-uuid/
+</span><span class='line'>total 0
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:07 2016-11-03-15-52-21-00 -&gt; ../../sda1
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:09 32f6e5d4-67a3-42e3-8a90-6ee3ae0fdaa3 -&gt; ../../dm-2
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:09 3731a69b-7240-4618-8e5e-4684d7e719e3 -&gt; ../../dm-3
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:07 BD3C-9D8E -&gt; ../../sda2
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:07 e3fd741d-d0e0-483f-a9cd-3fbd3f9d66d1 -&gt; ../../sdb1
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:09 eb600d4a-a2fd-4698-8847-14e6dc1b5e6c -&gt; ../../sdb2
+</span><span class='line'>lrwxrwxrwx 1 root root 10 Apr  3 10:07 f6312bc5-7593-4b6d-8427-0cf92d9de40b -&gt; ../../dm-0
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Update /etc/default/grub</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>GRUB_DEFAULT=0
+</span><span class='line'>GRUB_TIMEOUT=5
+</span><span class='line'>GRUB_DISTRIBUTOR="Parabola"
+</span><span class='line'>GRUB_CMDLINE_LINUX_DEFAULT="quiet"
+</span><span class='line'>GRUB_CMDLINE_LINUX="cryptdevice=/dev/disk/by-uuid/eb600d4a-a2fd-4698-8847-14e6dc1b5e6c:pv"</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Generate grub.cfg</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# grub-mkconfig -o /boot/grub/grub.cfg
+</span><span class='line'>Generating grub configuration file ...
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-libre
+</span><span class='line'>Found initrd image: /boot/initramfs-linux-libre.img
+</span><span class='line'>Found fallback initramfs image: /boot/initramfs-linux-libre-fallback.img
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>  WARNING: Failed to connect to lvmetad. Falling back to device scanning.
+</span><span class='line'>done
+</span><span class='line'>[root@parabolaiso /]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reboot</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@parabolaiso /]# exit
+</span><span class='line'>root@parabolaiso ~ # umount /mnt/boot
+</span><span class='line'>root@parabolaiso ~ # umount /mnt/    
+</span><span class='line'>root@parabolaiso ~ # lvchange -an /dev/vg/lv_root  
+</span><span class='line'>root@parabolaiso ~ # swapoff /dev/vg/lv_swap
+</span><span class='line'>root@parabolaiso ~ # lvchange -an /dev/vg/lv_swap
+</span><span class='line'>root@parabolaiso ~ # cryptsetup luksClose  /dev/mapper/pv
+</span><span class='line'>root@parabolaiso ~ # reboot
+</span><span class='line'>Connection to petronella closed by remote host.
+</span><span class='line'>Connection to petronella closed.
+</span><span class='line'>[staf@vicky octopress]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>First boot</h2>
+
+<p>If everything goes well GNU/Linux get booted, &hellip; if not. You&rsquo;ll have some fun to resolve the boot issues :-)</p>
+
+<p style="font-style: italic;">
+Have fun!
+</p>
+
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://libreboot.org/docs/gnulinux/encrypted_parabola.html">https://libreboot.org/docs/gnulinux/encrypted_parabola.html</a></li>
+<li><a href="http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/">http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/</a></li>
+<li><a href="http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html">http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html</a></li>
+<li><a href="http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html">http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to Install Libreboot on a ThinkPad X60]]></title>
@@ -7697,781 +8904,6 @@ Happy new year!
 <p style="font-style: italic;">
 Have fun...
 </p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
-    <updated>2014-06-09T14:28:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
-    <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
-
-<p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>
-
-<p><a href="https://linuxcontainers.org/">Linux containers</a> are getting more popular since the release of <a href="http://www.docker.com/">docker</a></p>
-
-<p>When I tried to create a few containers on Fedora 20, the first attempt (a debian container) wasn&rsquo;t an success.</p>
-
-<p>On a newly create debian container networking didn&rsquo;t work.</p>
-
-<h3>First debian container</h3>
-
-<h4>Creating the container</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# lxc-create -n mydebian -t debian
-</span><span class='line'>
-</span><span class='line'>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
-</span><span class='line'>debootstrap is /sbin/debootstrap
-</span><span class='line'>Checking cache download in /var/cache/lxc/debian/rootfs-squeeze-i386 ... 
-</span><span class='line'>Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might 
-</span><span class='line'>&lt; snip &gt;
-</span><span class='line'>'debian' template installed
-</span><span class='line'>'mydebian' created</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Booting</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# lxc-start -n mydebian
-</span><span class='line'>INIT: version 2.88 booting
-</span><span class='line'>Using makefile-style concurrent boot in runlevel S.
-</span><span class='line'>Cleaning up ifupdown....
-</span><span class='line'>Setting up networking....
-</span><span class='line'>Activating lvm and md swap...done.
-</span><span class='line'>Checking file systems...fsck from util-linux-ng 2.17.2
-</span><span class='line'>done.
-</span><span class='line'>Mounting local filesystems...done.
-</span><span class='line'>Activating swapfile swap...done.
-</span><span class='line'>Cleaning up temporary files....
-</span><span class='line'>Configuring network interfaces...ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-</span><span class='line'>failed.
-</span><span class='line'>Setting kernel variables ...done.
-</span><span class='line'>Cleaning up temporary files....
-</span><span class='line'>INIT: Entering runlevel: 3
-</span><span class='line'>Using makefile-style concurrent boot in runlevel 3.
-</span><span class='line'>Starting OpenBSD Secure Shell server: sshd.
-</span><span class='line'>
-</span><span class='line'>Debian GNU/Linux 6.0 mydebian console
-</span><span class='line'>
-</span><span class='line'>mydebian login: root
-</span><span class='line'>Password: 
-</span><span class='line'>Last login: Tue Jun 21 08:05:41 UTC 2014 on console
-</span><span class='line'>Linux mydebian 3.14.5-200.fc20.i686 #1 SMP Mon Jun 21 08:13:19 UTC 2014 i686</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Network isn&rsquo;t working&hellip;</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>The programs included with the Debian GNU/Linux system are free software;
-</span><span class='line'>the exact distribution terms for each program are described in the
-</span><span class='line'>individual files in /usr/share/doc/*/copyright.
-</span><span class='line'>
-</span><span class='line'>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-</span><span class='line'>permitted by applicable law.
-</span><span class='line'>root@mydebian:~# ifconfig -a
-</span><span class='line'>eth0      Link encap:Ethernet  HWaddr c2:71:98:d8:8f:c3  
-</span><span class='line'>          inet6 addr: fe80::c071:98ff:fed8:8fc3/64 Scope:Link
-</span><span class='line'>          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-</span><span class='line'>          RX packets:13 errors:0 dropped:0 overruns:0 frame:0
-</span><span class='line'>          TX packets:9 errors:0 dropped:0 overruns:0 carrier:0
-</span><span class='line'>          collisions:0 txqueuelen:1000 
-</span><span class='line'>          RX bytes:908 (908.0 B)  TX bytes:738 (738.0 B)
-</span><span class='line'>
-</span><span class='line'>lo        Link encap:Local Loopback  
-</span><span class='line'>          inet addr:127.0.0.1  Mask:255.0.0.0
-</span><span class='line'>          inet6 addr: ::1/128 Scope:Host
-</span><span class='line'>          UP LOOPBACK RUNNING  MTU:65536  Metric:1
-</span><span class='line'>          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-</span><span class='line'>          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-</span><span class='line'>          collisions:0 txqueuelen:0 
-</span><span class='line'>          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
-</span><span class='line'>
-</span><span class='line'>root@mydebian:~# ifup eth0
-</span><span class='line'>ifup: failed to open statefile /etc/network/run/ifstate: No such file or directory
-</span><span class='line'>root@mydebian:~# 
-</span><span class='line'>root@mydebian:~# cat /etc/network/interfaces 
-</span><span class='line'>auto lo
-</span><span class='line'>iface lo inet loopback
-</span><span class='line'>
-</span><span class='line'>auto eth0
-</span><span class='line'>iface eth0 inet dhcp
-</span><span class='line'>root@mydebian:~# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Fedora container</h3>
-
-<p>A Fedora container worked better.</p>
-
-<h4>Creating the fedora container</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@vicky ~]# lxc-create -n myfedora -t fedora
-</span><span class='line'>
-</span><span class='line'>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
-</span><span class='line'>Host CPE ID from /etc/os-release: cpe:/o:fedoraproject:fedora:20
-</span><span class='line'>Checking cache download in /var/cache/lxc/fedora/i686/20/rootfs ... 
-</span><span class='line'>Downloading fedora minimal ...
-</span><span class='line'>Fetching rpm name from http://be.mirror.eurid.eu/fedora/linux/releases/20/Everything/i386/os//Packages/f...
-</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
-</span><span class='line'>100   290  100   290    0     0    904      0 --:--:-- --:--:-- --:--:--   903
-</span><span class='line'>  0     0    0  145k    0     0  47212      0 --:--:--  0:00:03 --:--:-- 58525
-</span><span class='line'>
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>Updated:
-</span><span class='line'>  fedora-release.noarch 0:20-3                                                  
-</span><span class='line'>
-</span><span class='line'>Complete!
-</span><span class='line'>Download complete.
-</span><span class='line'>Copy /var/cache/lxc/fedora/i686/20/rootfs to /var/lib/lxc/myfedora/rootfs ... 
-</span><span class='line'>Copying rootfs to /var/lib/lxc/myfedora/rootfs ...setting root passwd to root
-</span><span class='line'>installing fedora-release package
-</span><span class='line'>Package fedora-release-20-3.noarch already installed and latest version
-</span><span class='line'>Nothing to do
-</span><span class='line'>unlink: cannot unlink ‘/var/lib/lxc/myfedora/rootfs/etc/systemd/system/default.target’: No such file or directory
-</span><span class='line'>container rootfs and config created
-</span><span class='line'>'fedora' template installed
-</span><span class='line'>'myfedora' created
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Booting</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# lxc-start -n myfedora
-</span><span class='line'>systemd 208 running in system mode. (+PAM +LIBWRAP +AUDIT +SELINUX +IMA +SYSVINIT +LIBCRYPTSETUP +GCRYPT +ACL +XZ)
-</span><span class='line'>Detected virtualization 'lxc'.
-</span><span class='line'>
-</span><span class='line'>Welcome to Fedora 20 (Heisenbug)!
-</span><span class='line'>
-</span><span class='line'>Set hostname to &lt;myfedora&gt;.
-</span><span class='line'>[  OK  ] Reached target Remote File Systems.
-</span><span class='line'>[  OK  ] Listening on Delayed Shutdown Socket.
-</span><span class='line'>[  OK  ] Created slice Root Slice.
-</span><span class='line'>[  OK  ] Created slice User and Session Slice.
-</span><span class='line'>[  OK  ] Started Login Service.
-</span><span class='line'>&lt; snip &gt;
-</span><span class='line'>[  OK  ] Reached target Multi-User System.
-</span><span class='line'>
-</span><span class='line'>Fedora release 20 (Heisenbug)
-</span><span class='line'>Kernel 3.14.5-200.fc20.i686 on an i686 (console)
-</span><span class='line'>
-</span><span class='line'>myfedora login: root
-</span><span class='line'>Password: 
-</span><span class='line'>Last login: Wed Jun 21 09:12:42 on console</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Networking</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@myfedora ~]# ping 8.8.8.8
-</span><span class='line'>connect: Network is unreachable
-</span><span class='line'>[root@myfedora ~]# ip addr
-</span><span class='line'>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default 
-</span><span class='line'>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-</span><span class='line'>    inet 127.0.0.1/8 scope host lo
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>    inet6 ::1/128 scope host 
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>16: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
-</span><span class='line'>    link/ether 5a:89:44:04:99:2b brd ff:ff:ff:ff:ff:ff
-</span><span class='line'>    inet6 fe80::5889:44ff:fe04:992b/64 scope link 
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>[root@myfedora ~]# ifup eth0
-</span><span class='line'>
-</span><span class='line'>Determining IP information for eth0... done.
-</span><span class='line'>[root@myfedora ~]# ping 8.8.8.8
-</span><span class='line'>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=113 ms
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=2 ttl=49 time=123 ms
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=3 ttl=49 time=123 ms
-</span><span class='line'>^C
-</span><span class='line'>--- 8.8.8.8 ping statistics ---
-</span><span class='line'>3 packets transmitted, 3 received, 0% packet loss, time 2002ms
-</span><span class='line'>rtt min/avg/max/mdev = 113.751/120.096/123.408/4.488 ms
-</span><span class='line'>[root@myfedora ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>New templates</h3>
-
-<p>Since I wanted a Debian container I clone the lxc git on github and copied the templates.</p>
-
-<h4>Getting the templates</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky github]$ git clone https://github.com/lxc/lxc 
-</span><span class='line'>Cloning into 'lxc'...
-</span><span class='line'>remote: Reusing existing pack: 17997, done.
-</span><span class='line'>remote: Counting objects: 17, done.
-</span><span class='line'>remote: Compressing objects: 100% (17/17), done.
-</span><span class='line'>remote: Total 18014 (delta 9), reused 0 (delta 0)
-</span><span class='line'>Receiving objects: 100% (18014/18014), 9.14 MiB | 77.00 KiB/s, done.
-</span><span class='line'>Resolving deltas: 100% (11555/11555), done.
-</span><span class='line'>Checking connectivity... done.
-</span><span class='line'>[staf@vicky github]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Configure</h4>
-
-<p>Create the configure script and it dependencies</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky lxc]$ autoreconf -i
-</span><span class='line'>configure.ac:31: installing 'config/compile'
-</span><span class='line'>configure.ac:30: installing 'config/config.guess'
-</span><span class='line'>configure.ac:30: installing 'config/config.sub'
-</span><span class='line'>configure.ac:29: installing 'config/install-sh'
-</span><span class='line'>configure.ac:29: installing 'config/missing'
-</span><span class='line'>src/lua-lxc/Makefile.am: installing 'config/depcomp'
-</span><span class='line'>[staf@vicky lxc]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Run configure</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky lxc]$ ./configure 
-</span><span class='line'>checking for pkg-config... /usr/bin/pkg-config
-</span><span class='line'>checking pkg-config is at least version 0.9.0... yes
-</span><span class='line'>checking for a BSD-compatible install... /usr/bin/install -c
-</span><span class='line'>checking whether build environment is sane... yes
-</span><span class='line'>checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
-</span><span class='line'>checking for gawk... gawk
-</span><span class='line'>checking whether make sets $(MAKE)... yes
-</span><span class='line'>checking whether make supports nested variables... yes
-</span><span class='line'>checking build system type... i686-pc-linux-gnu
-</span><span class='line'>checking host system type... i686-pc-linux-gnu
-</span><span class='line'>checking for style of include used by make... GNU
-</span><span class='line'>checking for gcc... gcc
-</span><span class='line'>checking whether the C compiler works... yes
-</span><span class='line'>checking for C compiler default output file name... a.out
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>Documentation:
-</span><span class='line'> - examples: yes
-</span><span class='line'> - API documentation: no
-</span><span class='line'> - user documentation: no
-</span><span class='line'>
-</span><span class='line'>Debugging:
-</span><span class='line'> - tests: no
-</span><span class='line'> - mutex debugging: no
-</span><span class='line'>
-</span><span class='line'>Paths:
-</span><span class='line'> - Logs in configpath: no
-</span><span class='line'>[staf@vicky lxc]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Copy the templates</h4>
-
-<p>Copy the newly created templates</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky templates]$ shopt -s extglob
-</span><span class='line'>[staf@vicky templates]$ 
-</span><span class='line'>[staf@vicky templates]$ ls !(*\.in|Makefile*)
-</span><span class='line'>lxc-alpine     lxc-centos    lxc-fedora        lxc-oracle  lxc-ubuntu-cloud
-</span><span class='line'>lxc-altlinux   lxc-cirros    lxc-gentoo        lxc-plamo
-</span><span class='line'>lxc-archlinux  lxc-debian    lxc-openmandriva  lxc-sshd
-</span><span class='line'>lxc-busybox    lxc-download  lxc-opensuse      lxc-ubuntu
-</span><span class='line'>[staf@vicky templates]$ sudo cp !(*\.in|Makefile*)  /usr/share/lxc/templates[sudo] password for staf: 
-</span><span class='line'>[staf@vicky templates]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Debian container second try&hellip;</h3>
-
-<p>And tried to create the debian container again.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# lxc-ls --fancy
-</span><span class='line'>NAME      STATE    IPV4  IPV6  
-</span><span class='line'>-----------------------------
-</span><span class='line'>mydebian  STOPPED  -     -     
-</span><span class='line'>myfedora  STOPPED  -     -     
-</span><span class='line'>[root@vicky ~]# lxc-destroy -n mydebian
-</span><span class='line'>[root@vicky ~]# lxc-ls --fancy
-</span><span class='line'>NAME      STATE    IPV4  IPV6  
-</span><span class='line'>-----------------------------
-</span><span class='line'>myfedora  STOPPED  -     -     
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Creating the container</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# lxc-create -n mydebian -t debian
-</span><span class='line'>
-</span><span class='line'>lxc-create: No config file specified, using the default config /etc/lxc/default.conf
-</span><span class='line'>debootstrap is /sbin/debootstrap
-</span><span class='line'>Checking cache download in /usr/local/var/cache/lxc/debian/rootfs-wheezy-i386 ... 
-</span><span class='line'>Downloading debian minimal ...
-</span><span class='line'>W: Cannot check Release signature; keyring file not available /usr/share/keyrings/debian-archive-keyring.gpg
-</span><span class='line'>I: Retrieving Release 
-</span><span class='line'>I: Validating Packages 
-</span><span class='line'>I: Resolving dependencies of required packages...
-</span><span class='line'>I: Resolving dependencies of base packages...
-</span><span class='line'>I: Found additional required dependencies: insserv libbz2-1.0 libdb5.1 libsemanage-common libsemanage1 libslang2 libustr-1.0-1 
-</span><span class='line'>I: Found additional base dependencies: adduser debian-archive-keyring gnupg gpgv isc-dhcp-common libapt-pkg4.12 libbsd0 libclass-isa-perl libedit2 libgdbm3 libgssapi-krb5-2 libk5crypto3 libkeyutils1 libkrb5-3 libkrb5support0 libncursesw5 libprocps0 libreadline6 libssl1.0.0 libstdc++6 libswitch-perl libusb-0.1-4 libwrap0 openssh-client perl perl-modules procps readline-common 
-</span><span class='line'>I: Checking component main on http://cdn.debian.net/debian...
-</span><span class='line'>I: Validating libacl1 2.2.51-8
-</span><span class='line'>I: Validating adduser 3.113+nmu3
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>I: Unpacking debconf...
-</span><span class='line'>I: Unpacking debconf-i18n...
-</span><span class='line'>I: Unpacking debianutils...
-</span><span class='line'>I: Unpacking diffutils...
-</span><span class='line'>I: Unpacking dpkg...
-</span><span class='line'>I: Unpacking e2fslibs:i386...
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>I: Configuring apt...
-</span><span class='line'>I: Configuring openssh-client...
-</span><span class='line'>I: Configuring openssh-server...
-</span><span class='line'>I: Configuring perl-modules...
-</span><span class='line'>I: Configuring libswitch-perl...
-</span><span class='line'>I: Configuring perl...
-</span><span class='line'>I: Configuring libui-dialog-perl...
-</span><span class='line'>I: Base system installed successfully.
-</span><span class='line'>Download complete.
-</span><span class='line'>Copying rootfs to /var/lib/lxc/mydebian/rootfs...Generating locales (this might take a while)...
-</span><span class='line'>  en_US.UTF-8... done
-</span><span class='line'>Generation complete.
-</span><span class='line'>update-rc.d: using dependency based boot sequencing
-</span><span class='line'>update-rc.d: using dependency based boot sequencing
-</span><span class='line'>update-rc.d: using dependency based boot sequencing
-</span><span class='line'>update-rc.d: using dependency based boot sequencing
-</span><span class='line'>Creating SSH2 RSA key; this may take some time ...
-</span><span class='line'>Creating SSH2 DSA key; this may take some time ...
-</span><span class='line'>Creating SSH2 ECDSA key; this may take some time ...
-</span><span class='line'>invoke-rc.d: policy-rc.d denied execution of restart.
-</span><span class='line'>Timezone in container is not configured. Adjust it manually.
-</span><span class='line'>Root password is 'root', please change !
-</span><span class='line'>'debian' template installed
-</span><span class='line'>'mydebian' created
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Booting</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# lxc-start -n mydebian
-</span><span class='line'>INIT: version 2.88 booting
-</span><span class='line'>Using makefile-style concurrent boot in runlevel S.
-</span><span class='line'>Cleaning up temporary files... /tmp /run /run/lock /run/shm.
-</span><span class='line'>Mount point '/dev/mqueue' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/dev/hugepages' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/systemd' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/cpuset' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/cpu,cpuacct' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/memory' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/devices' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/freezer' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/net_cls' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/blkio' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/sys/fs/cgroup/perf_event' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Filesystem type 'fuse.gvfsd-fuse' is not supported. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/run/media/staf/VBOXADDITIONS_4.3.12_93733' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/var/lib/nfs/rpc_pipefs' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/usr/lib/lxc/rootfs' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/usr/lib/lxc/rootfs' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Mount point '/dev/console' does not exist. Skipping mount. ... (warning).
-</span><span class='line'>Activating lvm and md swap...done.
-</span><span class='line'>Checking file systems...fsck from util-linux 2.20.1
-</span><span class='line'>done.
-</span><span class='line'>Mounting local filesystems...done.
-</span><span class='line'>
-</span><span class='line'>Debian GNU/Linux 7 mydebian console
-</span><span class='line'>
-</span><span class='line'>mydebian login: root
-</span><span class='line'>Password: 
-</span><span class='line'>Linux mydebian 3.14.8-200.fc20.i686 #1 SMP Mon Jun 21 09:36:56 UTC 2014 i686
-</span><span class='line'>
-</span><span class='line'>The programs included with the Debian GNU/Linux system are free software;
-</span><span class='line'>the exact distribution terms for each program are described in the
-</span><span class='line'>individual files in /usr/share/doc/*/copyright.
-</span><span class='line'>
-</span><span class='line'>Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-</span><span class='line'>permitted by applicable law.</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Networking&hellip;.</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@mydebian:~# ifconfig eth0
-</span><span class='line'>eth0      Link encap:Ethernet  HWaddr 00:16:3e:34:d3:02  
-</span><span class='line'>          inet addr:192.168.122.198  Bcast:192.168.122.255  Mask:255.255.255.0
-</span><span class='line'>          inet6 addr: fe80::216:3eff:fe34:d302/64 Scope:Link
-</span><span class='line'>          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-</span><span class='line'>          RX packets:32 errors:0 dropped:0 overruns:0 frame:0
-</span><span class='line'>          TX packets:13 errors:0 dropped:0 overruns:0 carrier:0
-</span><span class='line'>          collisions:0 txqueuelen:1000 
-</span><span class='line'>          RX bytes:3312 (3.2 KiB)  TX bytes:1806 (1.7 KiB)
-</span><span class='line'>
-</span><span class='line'>root@mydebian:~# ping 8.8.8.8
-</span><span class='line'>-bash: ping: command not found
-</span><span class='line'>root@mydebian:~# apt-cache search ping | grep util
-</span><span class='line'>2ping - Ping utility to determine directional packet loss
-</span><span class='line'>galax-extra - XQuery implementation with static typing - utilities
-</span><span class='line'>inetutils-ping - ICMP echo tool
-</span><span class='line'>iputils-arping - Tool to send ICMP echo requests to an ARP address
-</span><span class='line'>iputils-ping - Tools to test the reachability of network hosts
-</span><span class='line'>libescape-ruby - HTML/URI/shell escaping utilities for Ruby
-</span><span class='line'>mapnik-utils - C++/Python toolkit for developing GIS applications (utilities)
-</span><span class='line'>ruby-escape-utils - Faster string escaping routines for your web apps
-</span><span class='line'>root@mydebian:~# apt-get install inetutils-ping
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree... Done
-</span><span class='line'>The following NEW packages will be installed:
-</span><span class='line'>  inetutils-ping
-</span><span class='line'>0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
-</span><span class='line'>Need to get 169 kB of archives.
-</span><span class='line'>After this operation, 273 kB of additional disk space will be used.
-</span><span class='line'>WARNING: The following packages cannot be authenticated!
-</span><span class='line'>  inetutils-ping
-</span><span class='line'>Install these packages without verification [y/N]? y
-</span><span class='line'>Get:1 http://cdn.debian.net/debian/ wheezy/main inetutils-ping i386 2:1.9-2 [169 kB]
-</span><span class='line'>Fetched 169 kB in 6s (26.4 kB/s)                                               
-</span><span class='line'>debconf: delaying package configuration, since apt-utils is not installed
-</span><span class='line'>Selecting previously unselected package inetutils-ping.
-</span><span class='line'>(Reading database ... 9387 files and directories currently installed.)
-</span><span class='line'>Unpacking inetutils-ping (from .../inetutils-ping_2%3a1.9-2_i386.deb) ...
-</span><span class='line'>Setting up inetutils-ping (2:1.9-2) ...
-</span><span class='line'>root@mydebian:~# ping 8.8.8.8
-</span><span class='line'>PING 8.8.8.8 (8.8.8.8): 56 data bytes
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=0 ttl=49 time=172.105 ms
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=111.011 ms
-</span><span class='line'>^C--- 8.8.8.8 ping statistics ---
-</span><span class='line'>2 packets transmitted, 2 packets received, 0% packet loss
-</span><span class='line'>round-trip min/avg/max/stddev = 111.011/141.558/172.105/30.547 ms
-</span><span class='line'>root@mydebian:~# </span></code></pre></td></tr></table></div></figure>
 
 ]]></content>
   </entry>
