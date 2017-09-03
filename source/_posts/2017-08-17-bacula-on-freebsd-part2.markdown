@@ -729,7 +729,9 @@ root@stafdb:/var/db/postgres/data96 #
 
 ## Test the database connection
 
-Verify the database connection for the bacula jail.
+### Verify
+
+Verify the database connection for the bacula jail. See <a href="https://www.postgresql.org/docs/9.6/static/libpq-connect.html">https://www.postgresql.org/docs/9.6/static/libpq-connect.html</a>
 
 ```
 [bacula@stafbacula /var/db/bacula/.postgres]$ psql "sslmode=verify-full host=stafdb dbname=bacula sslcert=`pwd`/postgresql.crt sslkey=`pwd`/postgresql.key sslrootcert=`pwd`/root.crt"
@@ -744,9 +746,51 @@ Type "help" for help.
 bacula=>
 ```
 
+### Create environment script
+
+Bacula comes with a few scripts to popilate the catalog we will create an "environment" script to setup the required environment variabeles to connect to the database. <a href="https://www.postgresql.org/docs/9.6/static/libpq-envars.html">https://www.postgresql.org/docs/9.6/static/libpq-envars.html</a> gives an overview of PostgreSQL environment variabeles.
+
+```
+[bacula@stafbacula /var/db/bacula]$ vi psql_env.sh
+```
+
+```
+PGHOST=stafdb
+PGUSER=bacula
+PGSSLMODE=verify-full
+PGSSLCERT=/var/db/bacula/.postgres/postgresql.crt
+PGSSLKEY=/var/db/bacula/.postgres/postgresql.key
+PGSSLROOTCERT=/var/db/bacula/.postgres/root.crt
+
+export PGHOST
+export PGUSER
+export PGSSLMODE
+export PGSSLCERT
+export PGSSLKEY
+export PGSSLROOTCERT
+```
+
+Test the environment script
+
+```
+root@stafbacula:~ # su -m bacula -c /bin/sh
+$ . /var/db/bacula/psql_env.sh
+$ psql bacula
+Password: 
+DEBUG:  CommitTransaction
+DEBUG:  name: unnamed; blockState:       STARTED; state: INPROGR, xid/subid/cid: 0/1/0, nestlvl: 1, children: 
+psql (9.5.8, server 9.6.4)
+WARNING: psql major version 9.5, server major version 9.6.
+         Some psql features might not work.
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+Type "help" for help.
+
+bacula=> 
+```
+
 ## Configure the bacula catalog
 
-### Configuration derectives
+### Configuration directives
 
 I found the bacula documention not very clear howto setup the catalog connection with certificate authentication, so I downloaded the bacula source code ( version 7.4.7 )to verify the required directives. ./src/dird/d/dird_conf.c
 
