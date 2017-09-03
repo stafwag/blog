@@ -673,11 +673,12 @@ uid=770(postgres) gid=770(postgres) groups=770(postgres)
 [postgres@stafdb ~/data96]$ vi pg_hba.conf 
 ```
 
-And add the next line;
+And add the next lines;
 
 ```
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 hostssl bacula          bacula          192.168.1.52/32         md5 clientcert=1
+hostssl template1       bacula          192.168.1.52/32         md5 clientcert=1
 ```
 
 Our bacula jail ***192.168.1.52*** only needs to have to the ***bacula*** database with the ***bacula*** user over ssl ***hostssl*** passwords will be send as a ***md5*** hash and a client certificate is required ***clientcert=1***.
