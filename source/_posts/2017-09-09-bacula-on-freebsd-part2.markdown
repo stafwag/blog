@@ -1312,7 +1312,11 @@ You have messages.
 *
 ```
 
+In a next blog post we'll continue with the bacula configuration.
 
+<p style="font-style: italic;">
+Have fun!
+</p>
 
 
 # Links
