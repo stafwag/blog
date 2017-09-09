@@ -1114,7 +1114,7 @@ root@stafbacula:/usr/local/etc/bacula # vi bacula-dir.conf
 # Generic catalog service
 Catalog { 
   Name = MyCatalog
-  dbname = "bacula"; dbuser = "bacula"; dbpassword = "c99ApA3Z9hzDL" ; dbsslkey = "/var/db/bacula/.postgres
+  dbname = "bacula"; dbuser = "bacula"; dbpassword = "********" ; dbsslkey = "/var/db/bacula/.postgres
 /postgresql.key"; dbsslcert = "/var/db/bacula/.postgres/postgresql.crt"; dbsslca= "/var/db/bacula/.postgres
 /root.crt"
 
