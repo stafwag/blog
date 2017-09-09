@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/</loc>
+    <lastmod>2017-09-09T10:27:03+02:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/</loc>
     <lastmod>2017-08-06T08:43:28+02:00</lastmod>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/2017/07/23/starting-with-bacula-on-freebsd:w_part1/</loc>
+    <lastmod>2017-07-23T20:43:28+02:00</lastmod>
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/</loc>
@@ -439,5 +447,11 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/postgresql/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/postgresql/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/ssl/</loc>
   </url>
 </urlset>

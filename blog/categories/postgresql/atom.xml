@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Postgresql | stafwag Blog]]></title>
+  <title><![CDATA[Category: Postgresql, | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/postgresql/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-08-06T12:52:12+02:00</updated>
+  <updated>2017-09-09T17:02:16+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -14,86 +14,78 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Bacula on FreeBSD (Part 1 PostgresSQL in a Jail)]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/"/>
-    <updated>2017-08-06T08:43:28+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1</id>
-    <content type="html"><![CDATA[<p>I do take backups; my current solution are couple of shell script wrapper around dump/zfs send/btrfs send/rsync which is a mess.
-So decided give <a href="http://www.bacula.org/">bacula</a> a try</p>
+    <title type="html"><![CDATA[Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL )]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/"/>
+    <updated>2017-09-09T10:27:03+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/postgressl.png" width="300" height="300" title="&ldquo;PostgreSSL&rdquo;" ></p>
 
-<p>I use <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> to manage my <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jails</a>. <a href="https://www.postgresql.org/">PostgresSQL</a> is my favorite database and will use this database as the backend for bacula  and will use this database as the backend for bacula. I want to move all my databases to 1 FreeBSD jail this should make the easier to create reliable database backup in the further. For this reason we&rsquo;ll setup 2 FreeBSD jails 1 for the database and 1 for bacula.</p>
+<p>In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.</p>
 
-<p>You&rsquo;ll find my journey of installing PostgreSQL on a FreeBSD jail. In another blog post we will continue with the installation of baccula.</p>
+<p>In this post we will continue with the database connection (Catalog) we&rsquo;ll go the extra <del>mile</del> 1,609344 km and encrypt the catalog connection with ssl. Why? <strong><em>We encrypt.. because we can!</em></strong></p>
 
-<h2>PostgreSQL</h2>
+<h1>Bacula Components</h1>
 
-<h3>Jail</h3>
+<ul>
+<li><p><strong>Bacula Director</strong> <br />
+The Bacula Director is daemon that runs in the backgroud that control all backup operations.</p></li>
+<li><p><strong>Bacula Console</strong> <br />
+The Bacula console is an administrator program that allows an system administrator to control the Bacula director.</p></li>
+<li><p><strong>Bacula File</strong> <br />
+The Bacula File is a backup client install on the backup client.</p></li>
+<li><p><strong>Bacula Storage</strong> <br />
+The backup media.</p></li>
+<li><p><strong>Catalog</strong> <br />
+The Catalog is the index of the backups. Bacula supports three types of index databases mySQL ( <a href="https://mariadb.org/">mariaDB</a>), <a href="https://www.postgresql.org/">PostgreSQL</a> and <a href="https://sqlite.org/">SQLite</a></p></li>
+<li><p><strong>Bacula monitor</strong> <br />
+A Bacula monitor service is a program that allows the system administrator to cerify the status of the bacula Directors, Bacula File Daemons and Bacula Storage Daemons.</p></li>
+</ul>
 
-<h4>Create the PostgreSQL Jail</h4>
 
-<pre><code>root@rataplan:~ # ezjail-admin create stafdb "em0|192.168.1.51"
-Warning: Some services already seem to be listening on all IP, (including 192.168.1.51)
+<h1>Bacula Server</h1>
+
+<h2>Jail</h2>
+
+<h3>Create the Bacula Server Jail</h3>
+
+<pre><code>root@rataplan:~ # ezjail-admin create stafbacula "em0|192.168.1.52"
+Warning: Some services already seem to be listening on all IP, (including 192.168.1.52)
   This may cause some confusion, here they are:
 root     ntpd       754   20 udp6   *:123                 *:*
 root     ntpd       754   21 udp4   *:123                 *:*
-root     rpc.statd  717   4  udp6   *:640                 *:*
-root     rpc.statd  717   5  tcp6   *:640                 *:*
-root     rpc.statd  717   6  udp4   *:640                 *:*
-root     rpc.statd  717   7  tcp4   *:640                 *:*
+root     rpc.statd  717   4  udp6   *:846                 *:*
+root     rpc.statd  717   5  tcp6   *:846                 *:*
+root     rpc.statd  717   6  udp4   *:846                 *:*
+root     rpc.statd  717   7  tcp4   *:846                 *:*
 root     nfsd       713   5  tcp4   *:2049                *:*
 root     nfsd       713   6  tcp6   *:2049                *:*
-root     mountd     707   5  udp6   *:753                 *:*
-root     mountd     707   6  tcp6   *:753                 *:*
-root     mountd     707   7  udp4   *:753                 *:*
-root     mountd     707   8  tcp4   *:753                 *:*
+root     mountd     707   5  udp6   *:823                 *:*
+root     mountd     707   6  tcp6   *:823                 *:*
+root     mountd     707   7  udp4   *:823                 *:*
+root     mountd     707   8  tcp4   *:823                 *:*
 root     rpcbind    676   6  udp6   *:111                 *:*
-root     rpcbind    676   7  udp6   *:847                 *:*
+root     rpcbind    676   7  udp6   *:779                 *:*
 root     rpcbind    676   8  tcp6   *:111                 *:*
 root     rpcbind    676   9  udp4   *:111                 *:*
-root     rpcbind    676   10 udp4   *:766                 *:*
+root     rpcbind    676   10 udp4   *:768                 *:*
 root     rpcbind    676   11 tcp4   *:111                 *:*
-root     syslogd    657   6  udp6   *:514                 *:*
-root     syslogd    657   7  udp4   *:514                 *:*
+root     syslogd    656   6  udp6   *:514                 *:*
+root     syslogd    656   7  udp4   *:514                 *:*
 root@rataplan:~ # 
 </code></pre>
 
-<h4>PostgreSQL requires shared memory</h4>
+<h3>Start the jail</h3>
 
-<p>PostgreSQL uses shared memory it&rsquo;s required to set &ldquo;allow.sysvipc=1&rdquo; for the jail. I don&rsquo;t want to enable this globaly since this might be a security risk. Shared memory has permissions set based on the uid enabling sysvipc on a jail might cause the jail to read shared memory from the host system or another jail.</p>
-
-<p>To enable &ldquo;allow.sysvipc=1&rdquo; a jail we can update the ezjail configuration. Ezjail keep the jail configuration in /usr/local/etc/ezjail</p>
-
-<pre><code>root@rataplan:~ # cd /usr/local/etc/ezjail
-root@rataplan:/usr/local/etc/ezjail # ls
-stafansible     staffs          stafproxy       staftestbuild
-stafdb          stafmail        stafpuppet
-root@rataplan:/usr/local/etc/ezjail # 
-</code></pre>
-
-<p>Open the database jail file and update the configuration.</p>
-
-<pre><code>root@rataplan:/usr/local/etc/ezjail # vi stafdb
-</code></pre>
-
-<pre><code>#
-# Required to run PostgeSQL in the jail
-#
-
-export jail_stafdb_parameters="allow.sysvipc=1"
-</code></pre>
-
-<h4>Start the database jail</h4>
-
-<pre><code>root@rataplan:~ # ezjail-admin start stafdb
-Starting jails: stafdb.
+<pre><code>root@rataplan:~ # ezjail-admin start stafbacula
+Starting jails: stafbacula.
 /etc/rc.d/jail: WARNING: Per-jail configuration via jail_* variables  is obsolete.  Please consider migrating to /etc/jail.conf.
-root@rataplan:~ #
+root@rataplan:~ # 
 </code></pre>
 
-<h4>Console access</h4>
+<h3>Open the console</h3>
 
-<pre><code>root@rataplan:~ # ezjail-admin console stafdb
-FreeBSD 11.0-RELEASE-p9 (GENERIC) #0: Tue Apr 11 08:48:40 UTC 2017
+<pre><code>root@rataplan:~ # ezjail-admin console stafbacula
+FreeBSD 11.1-RELEASE-p1 (GENERIC) #0: Wed Sep  9 11:55:48 UTC 2017
 
 Welcome to FreeBSD!
 
@@ -114,17 +106,16 @@ Introduction to manual pages:  man man
 FreeBSD directory layout:      man hier
 
 Edit /etc/motd to change this login announcement.
-root@stafdb:~ # 
-root@stafdb:~ # 
+root@stafbacula:~ # 
 </code></pre>
 
-<h3>ProgreSQL installation</h3>
+<h2>Bacula installation</h2>
 
-<h4>Install pkg</h4>
+<h3>Install pkg</h3>
 
 <p>Set up dns</p>
 
-<pre><code>root@stafdb:~ # vi /etc/resolv.conf
+<pre><code>root@stafbacula:~ # vi /etc/resolv.conf
 </code></pre>
 
 <pre><code>nameserver 192.168.1.1
@@ -132,99 +123,78 @@ root@stafdb:~ #
 
 <p>Bootstrap pkg</p>
 
-<pre><code>root@stafdb:~ # pkg
+<pre><code>root@stafbacula:~ # pkg
 The package management tool is not yet installed on your system.
 Do you want to fetch and install it now? [y/N]: y
 Bootstrapping pkg from pkg+http://pkg.FreeBSD.org/FreeBSD:11:amd64/quarterly, please wait...
 Verifying signature with trusted certificate pkg.freebsd.org.2013102301... done
-[stafdb] Installing pkg-1.10.1...
-[stafdb] Extracting pkg-1.10.1: 100%
+[stafbacula] Installing pkg-1.10.1...
+[stafbacula] Extracting pkg-1.10.1: 100%
 pkg: not enough arguments
 Usage: pkg [-v] [-d] [-l] [-N] [-j &lt;jail name or id&gt;|-c &lt;chroot path&gt;|-r &lt;rootdir&gt;] [-C &lt;configuration file&gt;] [-R &lt;repo config dir&gt;] [-o var=value] [-4|-6] &lt;command&gt; [&lt;args&gt;]
 
 For more information on available commands and options see 'pkg help'.
-root@stafdb:~ # 
+root@stafbacula:~ # 
 </code></pre>
 
-<h4>Install PostgreSQL</h4>
+<p>Install the bacula server package</p>
 
-<p>Search for the latest PostgreSQL server version.</p>
-
-<pre><code>root@stafdb:~ # pkg search postgresql | grep server
-pgtcl-postgresql92-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
-pgtcl-postgresql93-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
-pgtcl-postgresql94-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
-pgtcl-postgresql95-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
-pgtcl-postgresql96-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
-postgresql92-server-9.2.21_1   PostgreSQL is the most advanced open-source database available anywhere
-postgresql93-server-9.3.17_1   PostgreSQL is the most advanced open-source database available anywhere
-postgresql94-server-9.4.12_1   PostgreSQL is the most advanced open-source database available anywhere
-postgresql95-server-9.5.7_1    PostgreSQL is the most advanced open-source database available anywhere
-postgresql96-server-9.6.3_1    PostgreSQL is the most advanced open-source database available anywhere
-root@stafdb:~ # 
-</code></pre>
-
-<p>Install the PostgreSQL package.</p>
-
-<pre><code>root@stafdb:~ # pkg install postgresql96-server
+<pre><code>root@stafbacula:~ # pkg install bacula-server
 Updating FreeBSD repository catalogue...
 FreeBSD repository is up to date.
 All repositories are up to date.
+Updating database digests format: 100%
 The following 8 package(s) will be affected (of 0 checked):
 
 New packages to be INSTALLED:
-        postgresql96-server: 9.6.3_1
-        libxml2: 2.9.4
-        icu: 58.2_2,1
-        gettext-runtime: 0.19.8.1_1
-        indexinfo: 0.2.6
-        postgresql96-client: 9.6.3_2
-        perl5: 5.24.1_1
+        bacula-server: 7.4.7_1
+        bacula-client: 7.4.7_1
         readline: 7.0.3
+        indexinfo: 0.2.6
+        gettext-runtime: 0.19.8.1_1
+        lzo2: 2.10_1
+        postgresql95-client: 9.5.7_1
+        perl5: 5.24.1_1
 
 Number of packages to be installed: 8
 
-The process will require 131 MiB more space.
-30 MiB to be downloaded.
+The process will require 69 MiB more space.
+17 MiB to be downloaded.
 
 Proceed with this action? [y/N]: y
-[stafdb] [1/8] Fetching postgresql96-server-9.6.3_1.txz: 100%    4 MiB 357.1kB/s    00:11    
-[stafdb] [2/8] Fetching libxml2-2.9.4.txz: 100%  802 KiB 410.4kB/s    00:02    
-[stafdb] [3/8] Fetching icu-58.2_2,1.txz: 100%    9 MiB 313.3kB/s    00:30    
-[stafdb] [4/8] Fetching gettext-runtime-0.19.8.1_1.txz: 100%  147 KiB 151.0kB/s    00:01    
-[stafdb] [5/8] Fetching indexinfo-0.2.6.txz: 100%    5 KiB   5.3kB/s    00:01    
-[stafdb] [6/8] Fetching postgresql96-client-9.6.3_2.txz: 100%    2 MiB 300.0kB/s    00:08    
-[stafdb] [7/8] Fetching perl5-5.24.1_1.txz: 100%   13 MiB 341.5kB/s    00:41    
-[stafdb] [8/8] Fetching readline-7.0.3.txz: 100%  334 KiB 342.3kB/s    00:01    
+[stafbacula] [1/8] Fetching bacula-server-7.4.7_1.txz: 100%  678 KiB 694.6kB/s    00:01    
+[stafbacula] [2/8] Fetching bacula-client-7.4.7_1.txz: 100%  286 KiB 292.8kB/s    00:01    
+[stafbacula] [3/8] Fetching readline-7.0.3.txz: 100%  334 KiB 342.4kB/s    00:01    
+[stafbacula] [4/8] Fetching indexinfo-0.2.6.txz: 100%    5 KiB   5.3kB/s    00:01    
+[stafbacula] [5/8] Fetching gettext-runtime-0.19.8.1_1.txz: 100%  148 KiB 151.1kB/s    00:01    
+[stafbacula] [6/8] Fetching lzo2-2.10_1.txz: 100%  113 KiB 115.4kB/s    00:01    
+[stafbacula] [7/8] Fetching postgresql95-client-9.5.7_1.txz: 100%    2 MiB 772.9kB/s    00:03    
+[stafbacula] [8/8] Fetching perl5-5.24.1_1.txz: 100%   13 MiB 874.0kB/s    00:16    
 Checking integrity... done (0 conflicting)
-[stafdb] [1/8] Installing indexinfo-0.2.6...
-[stafdb] [1/8] Extracting indexinfo-0.2.6: 100%
-[stafdb] [2/8] Installing gettext-runtime-0.19.8.1_1...
-[stafdb] [2/8] Extracting gettext-runtime-0.19.8.1_1: 100%
-[stafdb] [3/8] Installing perl5-5.24.1_1...
-[stafdb] [3/8] Extracting perl5-5.24.1_1: 100%
-[stafdb] [4/8] Installing readline-7.0.3...
-[stafdb] [4/8] Extracting readline-7.0.3: 100%
-[stafdb] [5/8] Installing libxml2-2.9.4...
-[stafdb] [5/8] Extracting libxml2-2.9.4: 100%
-[stafdb] [6/8] Installing icu-58.2_2,1...
-[stafdb] [6/8] Extracting icu-58.2_2,1: 100%
-[stafdb] [7/8] Installing postgresql96-client-9.6.3_2...
-[stafdb] [7/8] Extracting postgresql96-client-9.6.3_2: 100%
-[stafdb] [8/8] Installing postgresql96-server-9.6.3_1...
+[stafbacula] [1/8] Installing indexinfo-0.2.6...
+[stafbacula] [1/8] Extracting indexinfo-0.2.6: 100%
+[stafbacula] [2/8] Installing readline-7.0.3...
+[stafbacula] [2/8] Extracting readline-7.0.3: 100%
+[stafbacula] [3/8] Installing gettext-runtime-0.19.8.1_1...
+[stafbacula] [3/8] Extracting gettext-runtime-0.19.8.1_1: 100%
+[stafbacula] [4/8] Installing lzo2-2.10_1...
+[stafbacula] [4/8] Extracting lzo2-2.10_1: 100%
+[stafbacula] [5/8] Installing perl5-5.24.1_1...
+[stafbacula] [5/8] Extracting perl5-5.24.1_1: 100%
+[stafbacula] [6/8] Installing bacula-client-7.4.7_1...
 ===&gt; Creating groups.
-Creating group 'postgres' with gid '770'.
+Creating group 'bacula' with gid '910'.
 ===&gt; Creating users
-Creating user 'postgres' with uid '770'.
-
-  =========== BACKUP YOUR DATA! =============
-  As always, backup your data before
-  upgrading. If the upgrade leads to a higher
-  minor revision (e.g. 8.3.x -&gt; 8.4), a dump
-  and restore of all databases is
-  required. This is *NOT* done by the port!
-  ===========================================
-[stafdb] Extracting postgresql96-server-9.6.3_1: 100%
+Creating user 'bacula' with uid '910'.
+[stafbacula] [6/8] Extracting bacula-client-7.4.7_1: 100%
+[stafbacula] [7/8] Installing postgresql95-client-9.5.7_1...
+[stafbacula] [7/8] Extracting postgresql95-client-9.5.7_1: 100%
+[stafbacula] [8/8] Installing bacula-server-7.4.7_1...
+===&gt; Creating groups.
+Using existing group 'bacula'.
+===&gt; Creating users
+Using existing user 'bacula'.
+[stafbacula] Extracting bacula-server-7.4.7_1: 100%
 Message from perl5-5.24.1_1:
 The /usr/bin/perl symlink has been removed starting with Perl 5.20.
 For shebangs, you should either use:
@@ -237,7 +207,16 @@ or
 
 The first one will only work if you have a /usr/local/bin/perl,
 the second will work as long as perl is in PATH.
-Message from postgresql96-client-9.6.3_2:
+Message from bacula-client-7.4.7_1:
+################################################################################
+
+NOTE:
+Sample files are installed in /usr/local/etc/bacula:
+
+  bconsole.conf.sample, bacula-fd.conf.sample
+
+################################################################################
+Message from postgresql95-client-9.5.7_1:
 The PostgreSQL port has a collection of "side orders":
 
 postgresql-docs
@@ -246,7 +225,7 @@ postgresql-docs
 p5-Pg
   A perl5 API for client access to PostgreSQL databases.
 
-postgresql-tcltk 
+postgresql-tcltk
   If you want tcl/tk client support.
 
 postgresql-jdbc
@@ -270,128 +249,618 @@ postgresql-contrib
   things.
 
 etc...
-Message from postgresql96-server-9.6.3_1:
-For procedural languages and postgresql functions, please note that
-you might have to update them when updating the server.
+Message from bacula-server-7.4.7_1:
+###############################################################################
 
-If you have many tables and many clients running, consider raising
-kern.maxfiles using sysctl(8), or reconfigure your kernel
-appropriately.
+bacula server was installed
 
-The port is set up to use autovacuum for new databases, but you might
-also want to vacuum and perhaps backup your database regularly. There
-is a periodic script, /usr/local/etc/periodic/daily/502.pgsql, that
-you may find useful. You can use it to backup and perform vacuum on all
-databases nightly. Per default, it performs `vacuum analyze'. See the
-script for instructions. For autovacuum settings, please review
-~pgsql/data/postgresql.conf.
+An auto-changer manipulation script based on FreeBSDs
+chio command is included and installed at
 
-If you plan to access your PostgreSQL server using ODBC, please
-consider running the SQL script /usr/local/share/postgresql/odbc.sql
-to get the functions required for ODBC compliance.
+  /usr/local/sbin/chio-bacula
 
-Please note that if you use the rc script,
-/usr/local/etc/rc.d/postgresql, to initialize the database, unicode
-(UTF-8) will be used to store character data by default.  Set
-postgresql_initdb_flags or use login.conf settings described below to
-alter this behaviour. See the start rc script for more info.
+Please have a look at it if you want to use an
+autochanger. You have to configure the usage in
 
-To set limits, environment stuff like locale and collation and other
-things, you can set up a class in /etc/login.conf before initializing
-the database. Add something similar to this to /etc/login.conf:
----
-postgres:\
-        :lang=en_US.UTF-8:\
-        :setenv=LC_COLLATE=C:\
-        :tc=default:
----
-and run `cap_mkdb /etc/login.conf'.
-Then add 'postgresql_class="postgres"' to /etc/rc.conf.
+  /usr/local/etc/bacula/bacula-dir.conf
 
-======================================================================
+Take care of correct permissions for changer and
+tape device (e.g. /dev/ch0 and /dev/n[r]sa0) i.e.
+they must be accessible by user bacula.
 
-To initialize the database, run
+Due to lack of some features in the FreeBSD tape driver
+implementation you MUST add some OS dependent options to
+the bacula-sd.conf file:
 
-  /usr/local/etc/rc.d/postgresql initdb
+  Hardware End of Medium = no;
+  Backward Space Record  = no;
+  Backward Space File    = no;
 
-You can then start PostgreSQL by running:
+With 2 filemarks at EOT (see man mt):
+  Fast Forward Space File = no;
+  BSF at EOM = yes;
+  TWO EOF    = yes;
 
-  /usr/local/etc/rc.d/postgresql start
+With 1 filemarks at EOT (see man mt):
+  Fast Forward Space File = yes;
+  BSF at EOM = no;
+  TWO EOF   = no;
 
-For postmaster settings, see ~pgsql/data/postgresql.conf
+NOTE: YOU CAN SWITCH EOT model ONLY when starting
+      from scratch with EMPTY tapes.
 
-NB. FreeBSD's PostgreSQL port logs to syslog by default
-    See ~pgsql/data/postgresql.conf for more info
+It is also important that all the scripts accessed
+by RunBeforeJob and RunAfterJob will be executed by
+the user bacula.  Check your permissions.
 
-======================================================================
+For USB support read the bacula manual. It could be necessary
+to configure/compile a new kernel.
 
-To run PostgreSQL at startup, add
-'postgresql_enable="YES"' to /etc/rc.conf
+Look at /usr/local/share/bacula/update_bacula_tables for
+database update procedure. Details can be found in the
+ReleaseNotes
+
+If you are using sqlite you need to run the make_sqlite_tables script as
+the bacula user. Do this using 'sudo su -m bacula'.
+
+################################################################################
+root@stafbacula:~ # 
 </code></pre>
 
-<p>Enable the postgresql daemon at the jail startup</p>
+<h1>Initialize the bacula catalog</h1>
 
-<pre><code>root@stafdb:~ # sysrc postgresql_enable="YES"
-postgresql_enable:  -&gt; YES
-root@stafdb:~ # grep postgresql_enable /etc/rc.conf
-postgresql_enable="YES"
-root@stafdb:~ # 
+<p>We&rsquo;ll have a postgreSQL server running in a FreeBSD jail as our catalog (see <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/"><a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/</a></a> howto install PostgreSQL into a FreeBSD jail).</p>
+
+<h2>PostgreSQL setup</h2>
+
+<p>The setup below describes howto configure the PostgreSQL catalog with certificate and username/password authentication. This might be overkill the bacula server runs on the same physical host so no data is going out on the network. But I wanted to setup the database conneection as secure as possible and will reuse this setup for my other database connection. We&rsquo;ll setup a &ldquo;self signed&rdquo; root ca for now, but I replace this with my own CA in further.</p>
+
+<h3>PostgreSQL authentication methods</h3>
+
+<p>PostgreSQL support a lot of authentication methods you&rsquo;ll find a description of the supported of the support authentication methods below (without too much details):</p>
+
+<ul>
+<li><strong>Trust Authentication</strong> <br />
+With trust authentication the postgreSQL trust the connection from the remote host, this is the default for localhost host connection and &ldquo;socket&rdquo; connections.
+<br />&nbsp;<br /></li>
+<li><strong>Password Authentication</strong> <br />
+Authentication with login/password
+<br />&nbsp;<br /></li>
+<li><strong>GSSAPI Authentication</strong> <br />
+Authentication with the <a href="https://en.wikipedia.org/wiki/Generic_Security_Services_Application_Program_Interface">Generic Security Services Application Program Interface</a>
+<br />&nbsp;<br /></li>
+<li><strong>SSPI Authentication</strong> <br />
+Authentication with the <a href="https://en.wikipedia.org/wiki/Security_Support_Provider_Interface"">Security Support Provider Interface</a> - SSPI is a proprietary variant of GSSAPI with extensions and very Windows-specific data types -
+<br />&nbsp;<br /></li>
+<li><strong>Kerberos Authentication</strong> <br />
+Authentication using the <a href="https://en.wikipedia.org/wiki/Kerberos_(protocol)">Kerberos protocol</a>
+<br />&nbsp;<br /></li>
+<li><strong>Ident Authentication</strong> <br />
+Authentication using the <a href="https://en.wikipedia.org/wiki/Ident_protocol">ident protocol</a>
+<br />&nbsp;<br /></li>
+<li><strong>Peer Authentication</strong> <br />
+Authentication using the <a href="https://www.freebsd.org/cgi/man.cgi?query=getpeereid">getpeereid()</a> kernel function, only supported for local connection on BSD, MacOS and GNU/Linux.
+<br />&nbsp;<br /></li>
+<li><strong>LDAP Authentication</strong> <br />
+<a href="https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol">LDAP</a> authentication.</a>
+<br />&nbsp;<br /></li>
+<li><strong>RADIUS Authentication</strong> <br />
+<a href="https://en.wikipedia.org/wiki/RADIUS">Radius</a> authentication.
+<br />&nbsp;<br /></li>
+<li><strong>Certificate Authentication</strong> <br />
+Authentication with a <a href="https://en.wikipedia.org/wiki/Public_key_infrastructure">PKI certificate</a>.
+<br />&nbsp;<br /></li>
+<li><strong>PAM Authentication</strong> <br />
+<a href="https://en.wikipedia.org/wiki/Pluggable_authentication_module">PAM</a> based authentication</a>
+<br />&nbsp;<br />
+<br />&nbsp;<br />
+I wanted to use password authentication over ssl with a client certificate.
+The bacula documents isn&rsquo;t very clear on howto configure it. After a quick lot at the bacula source code it should be supported, so let&rsquo;s give it a try&hellip;</li>
+</ul>
+
+
+<h3>Configure the PostgreSQL jail</h3>
+
+<h4>Allow network connections</h4>
+
+<p>Logon the postgreSQL server jail move to the postgreSQL data directory and edit postgresql.conf to allow TCP/IP connections.</p>
+
+<pre><code>root@stafdb:/var/db/postgres/data96 # pwd
+/var/db/postgres/data96
+root@stafdb:/var/db/postgres/data96 # vim postgresql.conf
 </code></pre>
 
-<p>Initialize the database</p>
+<pre><code># - Connection Settings -
 
-<pre><code>root@stafdb:~ # service postgresql initdb
-The files belonging to this database system will be owned by user "postgres".
-This user must also own the server process.
-
-The database cluster will be initialized with locale "C".
-The default text search configuration will be set to "english".
-
-Data page checksums are disabled.
-
-creating directory /var/db/postgres/data96 ... ok
-creating subdirectories ... ok
-selecting default max_connections ... 100
-selecting default shared_buffers ... 128MB
-selecting dynamic shared memory implementation ... posix
-creating configuration files ... ok
-running bootstrap script ... ok
-performing post-bootstrap initialization ... ok
-syncing data to disk ... ok
-
-WARNING: enabling "trust" authentication for local connections
-You can change this by editing pg_hba.conf or using the option -A, or
---auth-local and --auth-host, the next time you run initdb.
-
-Success. You can now start the database server using:
-
-    /usr/local/bin/pg_ctl -D /var/db/postgres/data96 -l logfile start
-
-root@stafdb:~ # 
+listen_addresses = '192.168.1.51'               # what IP address(es) to listen on;
+# listen_addresses = 'localhost'                # what IP address(es) to listen on;
+                                        # comma-separated list of addresses;
+                                        # defaults to 'localhost'; use '*' for all
+                                        # (change requires restart)
+#port = 5432                            # (change requires restart)
 </code></pre>
 
-<p>Start the database</p>
+<h4>SSL encryption</h4>
 
-<pre><code>Droot@stafdb:~ # service postgresql start
+<p>It&rsquo;s always a good idea to encrypt your connections.</p>
+
+<h5>SSL Server setup</h5>
+
+<h6>Umask</h6>
+
+<p>set the umask to prevent somebody can read you private key.</p>
+
+<pre><code>root@stafdb:/var/db/postgres/data96 # su - postgres
+$ umask 077 
+$ 
+</code></pre>
+
+<h6>Create a private key</h6>
+
+<p>Create a private key without encrypting it.</p>
+
+<pre><code>openssl genrsa -out server.key 4096
+Generating RSA private key, 4096 bit long modulus
+........................................................................................................................................................................................................................++
+......++
+e is 65537 (0x10001)
+$ 
+</code></pre>
+
+<h6>Create a self-signed certificate</h6>
+
+<pre><code>$ openssl req -new -key server.key -days 3650 -out server.crt -x509 -subj '/C=BE/ST=Flanders/L=Antwerp/O=stafnet/CN=stafdb'
+$ ls -ltr                                                                                               total 23
+-rw-------   1 postgres  postgres  3247 Sep  9 11:47 server.key
+-rw-------   1 postgres  postgres  1964 Sep  9 11:52 server.crt
+$ 
+</code></pre>
+
+<h6>Root ca</h6>
+
+<p>We created a self signed certificate so the server certificate is our trusted ca root.</p>
+
+<pre><code>$ ln -s server.crt root.crt
+$ ls -ltr
+total 24
+-rw-------   1 postgres  postgres  3247 Sep  9 11:47 server.key
+-rw-------   1 postgres  postgres  1964 Sep  9 11:52 server.crt
+lrwx------   1 postgres  postgres    10 Sep  9 11:53 root.crt -&gt; server.crt
+$ 
+</code></pre>
+
+<h6>Enable ssl</h6>
+
+<p>Edit postgresql.conf and  update the ssl setting</p>
+
+<pre><code>$ vi postgresql.conf
+</code></pre>
+
+<p>By default ssl_ca_file is not set but this directive is required so don&rsquo;t forget to set it.
+We disable the 3DES ciphers they&rsquo;re obsolete&hellip; We don&rsquo;t speficy a crl for now.</p>
+
+<pre><code>#authentication_timeout = 1min          # 1s-600s
+ssl = on                                # (change requires restart)
+ssl_ciphers = 'HIGH:MEDIUM:!3DES:!aNULL' # allowed SSL ciphers
+                                        # (change requires restart)
+ssl_prefer_server_ciphers = on          # (change requires restart)
+#ssl_ecdh_curve = 'prime256v1'          # (change requires restart)
+ssl_cert_file = 'server.crt'            # (change requires restart)
+ssl_key_file = 'server.key'             # (change requires restart)
+ssl_ca_file = 'root.crt'                        # (change requires restart)
+#ssl_crl_file = ''                      # (change requires restart)
+#password_encryption = on
+</code></pre>
+
+<h5>SSL Client setup</h5>
+
+<h6>Become bacula</h6>
+
+<p>Logon to the bacula jail and become the bacula user. We use &ldquo;su -m &hellip;&rdquo; to logon to the locked daemon account, this will take over the root environment.</p>
+
+<pre><code>root@rataplan:~ # ezjail-admin console stafbacula
+Last login: Wed Sep  9 09:33:16 on pts/0
+FreeBSD 11.1-RELEASE-p1 (GENERIC) #0: Wed Sep  9 11:55:48 UTC 2017
+
+Welcome to FreeBSD!
+
+Release Notes, Errata: https://www.FreeBSD.org/releases/
+Security Advisories:   https://www.FreeBSD.org/security/
+FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
+FreeBSD FAQ:           https://www.FreeBSD.org/faq/
+Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
+FreeBSD Forums:        https://forums.FreeBSD.org/
+
+Documents installed with the system are in the /usr/local/share/doc/freebsd/
+directory, or can be installed later with:  pkg install en-freebsd-doc
+For other languages, replace "en" with a language code like de or fr.
+
+Show the version of FreeBSD installed:  freebsd-version ; uname -a
+Please include that output and any error messages when posting questions.
+Introduction to manual pages:  man man
+FreeBSD directory layout:      man hier
+
+Edit /etc/motd to change this login announcement.
+You have new mail.
+root@stafbacula:~ # su -m bacula -c "/bin/sh"
+$ id
+uid=910(bacula) gid=910(bacula) groups=910(bacula)
+$ 
+</code></pre>
+
+<h6>umask</h6>
+
+<p>Set the umask to prevent somebody can read you private key.</p>
+
+<pre><code>$ umask 077
+$ 
+</code></pre>
+
+<h6>move to the bacula home directory</h6>
+
+<pre><code>$ cat /etc/passwd | grep bacula
+bacula:*:910:910:Bacula Daemon:/var/db/bacula:/usr/sbin/nologin
+$ cd /var/db/bacula
+</code></pre>
+
+<h6>create the .postges directory</h6>
+
+<pre><code>$ mkdir .postgres
+$ ls -la
+total 12
+drwxrwx---   3 bacula  bacula   3 Sep  9 09:41 .
+drwxr-xr-x  14 root    wheel   18 Sep  9 14:41 ..
+drwx------   2 bacula  bacula   2 Sep  9 09:41 .postgres
+$ cd .postgres/
+$ 
+</code></pre>
+
+<h6>Create a private key</h6>
+
+<p>We took over the root evironment therefor we need to set the RANDFILE variable to randfile in the bacula home directory.</p>
+
+<pre><code>$ pwd
+/var/db/bacula/.postgres
+$ export RANDFILE=/var/db/bacula/.rnd
+$ 
+</code></pre>
+
+<p>Create the private key.</p>
+
+<pre><code>$ openssl genrsa -out `hostname`.key 4096
+Generating RSA private key, 4096 bit long modulus
+..........++
+.......................................................++
+e is 65537 (0x10001)
+$ 
+</code></pre>
+
+<h6>Create the client csr</h6>
+
+<pre><code>$ openssl req -new -key stafbacula.key -out stafbacula.csr -subj '/C=BE/ST=Flanders/L=Antwerp/O=stafnet/CN=stafbacula'
+$ 
+</code></pre>
+
+<h6>Create the client certifocate</h6>
+
+<p>Logon to the postgreSQL jail as postgres and sign the client csr.</p>
+
+<pre><code>[postgres@stafdb ~/data96]$ openssl x509 -req -in stafbacula.csr -CAcreateserial -CA root.crt -CAkey server.key -out stafbacula.crt 
+Signature ok
+subject=/C=BE/ST=Flanders/L=Antwerp/O=stafnet/CN=stafbacula
+Getting CA Private Key
+[postgres@stafdb ~/data96]$ 
+</code></pre>
+
+<h5>Copy the client certificate and the trusted root certificate to bacula jail</h5>
+
+<pre><code>$ uname -a
+FreeBSD stafbacula 11.1-RELEASE-p1 FreeBSD 11.1-RELEASE-p1 #0: Wed Sep  9 11:55:48 UTC 2017     root@amd64-builder.daemonology.net:/usr/obj/usr/src/sys/GENERIC  amd64
+$ pwd
+/var/db/bacula/.postgres
+$ ls -ltr
+total 24
+-rw-------  1 bacula  bacula  3243 Sep  9 09:47 stafbacula.key
+-rw-------  1 bacula  bacula  1679 Sep  9 09:54 stafbacula.csr
+-rw-------  1 bacula  bacula  1964 Sep  9 10:04 root.crt
+-rw-------  1 bacula  bacula  1850 Sep  9 10:06 stafbacula.crt
+$ 
+</code></pre>
+
+<h4>Host file on the bacula jail</h4>
+
+<p>The hostname of the posgresql jail has to match with the CN of the server certificate. So we&rsquo;ll add the hostname to /etc/hosts</p>
+
+<pre><code>root@stafbacula:~ # vi /etc/hosts
+</code></pre>
+
+<pre><code>192.168.1.51    stafdb
+</code></pre>
+
+<h2>Setup the bacula database</h2>
+
+<h4>Create the bacula database user</h4>
+
+<pre><code>[postgres@stafdb ~/data96]$ id
+uid=770(postgres) gid=770(postgres) groups=770(postgres)
+[postgres@stafdb ~/data96]$ psql postgres
+psql (9.6.3)
+Type "help" for help.
+
+postgres=# create user bacula WITH PASSWORD 'xxxxxx';
+CREATE ROLE
+postgres=# 
+</code></pre>
+
+<p>To update the user password;</p>
+
+<pre><code>postgres=# alter user bacula PASSWORD 'yyyyyyy';
+ALTER ROLE
+postgres=# 
+</code></pre>
+
+<p>You can view the new permissions in the pg_user table or by execute the \du (describe user shortcut), by default the user has minimal permissions.</p>
+
+<pre><code>postgres=# select * from pg_user where usename = 'bacula';
+ usename | usesysid | usecreatedb | usesuper | userepl | usebypassrls |  passwd  | valuntil | useconfig 
+---------+----------+-------------+----------+---------+--------------+----------+----------+-----------
+ bacula  |    16386 | f           | f        | f       | f            | ******** |          | 
+(1 row)
+
+postgres=# 
+</code></pre>
+
+<pre><code>postgres=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of 
+-----------+------------------------------------------------------------+-----------
+ bacula    |                                                            | {}
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+postgres=# 
+</code></pre>
+
+<h3>Allow the bacula user to create databases</h3>
+
+<p>The bacula database script will try to create the bacula catalog database.
+We&rsquo;ll allow the bacula user to create databases,</p>
+
+<pre><code>postgres=# alter user bacula CREATEDB;
+ALTER ROLE
+postgres=# select * from pg_user where usename = 'bacula';
+ usename | usesysid | usecreatedb | usesuper | userepl | usebypassrls |  passwd  | valuntil | useconfig 
+---------+----------+-------------+----------+---------+--------------+----------+----------+-----------
+ bacula  |    16386 | t           | f        | f       | f            | ******** |          | 
+(1 row)
+
+postgres=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of 
+-----------+------------------------------------------------------------+-----------
+ bacula    | Create DB                                                  | {}
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+postgres=# 
+</code></pre>
+
+<h3>Create the bacula database</h3>
+
+<p>We&rsquo;ll create a bacula database so we can verify the database connection from the bacula user to the bacula database.</p>
+
+<p>Create a new bacula database</p>
+
+<pre><code>postgres=# create database bacula;
+CREATE DATABASE
+postgres=# 
+</code></pre>
+
+<p>Grant all permissions to the bacula user</p>
+
+<pre><code>postgres=# grant ALL on DATABASE bacula to bacula;
+GRANT
+postgres=# 
+</code></pre>
+
+<h2>Update pg_hba</h2>
+
+<p>The pg_hba.conf configuration controls the <strong>H</strong>ost <strong>B</strong>ased <strong>A</strong>ccess to your postgreSQL database(s).</p>
+
+<pre><code>[postgres@stafdb ~/data96]$ pwd
+/var/db/postgres/data96
+[postgres@stafdb ~/data96]$ id
+uid=770(postgres) gid=770(postgres) groups=770(postgres)
+[postgres@stafdb ~/data96]$ vi pg_hba.conf 
+</code></pre>
+
+<p>And add the next lines;</p>
+
+<pre><code># TYPE  DATABASE        USER            ADDRESS                 METHOD
+hostssl bacula          bacula          192.168.1.52/32         md5 clientcert=1
+hostssl template0       bacula          192.168.1.52/32         md5 clientcert=1
+hostssl template1       bacula          192.168.1.52/32         md5 clientcert=1
+hostssl postgres        bacula          192.168.1.52/32         md5 clientcert=1
+</code></pre>
+
+<p>Our bacula jail <strong><em>192.168.1.52</em></strong> only needs to have to the <strong><em>bacula</em></strong> database with the <strong><em>bacula</em></strong> user over ssl <strong><em>hostssl</em></strong> passwords will be send as a <strong><em>md5</em></strong> hash and a client certificate is required <strong><em>clientcert=1</em></strong>.</p>
+
+<p>We could also used the <strong><em>cert</em></strong> method and <strong><em>map</em></strong> the client certificate to postgresql user so we could authenticate with the client certificate only&hellip;</p>
+
+<p>We allow access to the template* and the postgres database because it&rsquo;s required for the bacula database xcreate script. We can remove them ( only allow access to the bacula database ) after the catalog database is created.</p>
+
+<h2>Restart postgresql</h2>
+
+<pre><code>root@stafdb:/var/db/postgres/data96 # service postgresql restart
+DEBUG:  postgres: PostmasterMain: initial environment dump:
+DEBUG:  -----------------------------------------
+DEBUG:          LC_TIME=C
+DEBUG:          LC_NUMERIC=C
+DEBUG:          LC_MONETARY=C
+DEBUG:          LC_MESSAGES=C
+DEBUG:          LC_CTYPE=C
+DEBUG:          LC_COLLATE=C
+DEBUG:          MAIL=/var/mail/postgres
+DEBUG:          PGLOCALEDIR=/usr/local/share/locale
+DEBUG:          PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/var/db/postgres/bin
+DEBUG:          PGDATA=/var/db/postgres/data96
+DEBUG:          PWD=/var/db/postgres
+DEBUG:          PGSYSCONFDIR=/usr/local/etc/postgresql
+DEBUG:          HOME=/var/db/postgres
+DEBUG:          USER=postgres
+DEBUG:          SHELL=/bin/sh
+DEBUG:          PG_GRANDPARENT_PID=79045
+DEBUG:          BLOCKSIZE=K
+DEBUG:  -----------------------------------------
 LOG:  could not create IPv6 socket: Protocol not supported
+LOG:  could not bind IPv4 socket: Address already in use
+HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+WARNING:  could not create listen socket for "192.168.1.51"
+DEBUG:  invoking IpcMemoryCreate(size=148480000)
+DEBUG:  SlruScanDirectory invoking callback on pg_notify/0000
+DEBUG:  removing file "pg_notify/0000"
+DEBUG:  dynamic shared memory system will support 288 segments
+DEBUG:  created dynamic shared memory control segment 773439544 (2316 bytes)
+DEBUG:  max_safe_fds = 984, usable_fds = 1000, already_open = 6
 LOG:  ending log output to stderr
 HINT:  Future log output will go to log destination "syslog".
-root@stafdb:~ # 
+DEBUG:  CommitTransaction
+DEBUG:  name: unnamed; blockState:       STARTED; state: INPROGR, xid/subid/cid: 0/1/0, nestlvl: 1, children: 
+root@stafdb:/var/db/postgres/data96 #
 </code></pre>
 
-<p>Verify the database</p>
+<h2>Test the database connection</h2>
 
-<pre><code>root@stafdb:~ # su - postgres                                                                                                   
-$ psql -l                                                                                                                       
-psql: could not connect to server: No such file or directory                                                                    
-        Is the server running locally and accepting                                                                             
-        connections on Unix domain socket "/tmp/.s.PGSQL.5432"?                                                                 
-$ ^Droot@stafdb:~ # service postgresql start
-LOG:  could not create IPv6 socket: Protocol not supported                                                                      
-LOG:  ending log output to stderr                                                                                               
-HINT:  Future log output will go to log destination "syslog".                                                                   
-root@stafdb:~ # su - postgres
-$ psql -l
+<h3>Verify</h3>
+
+<p>Verify the database connection for the bacula jail. See <a href="https://www.postgresql.org/docs/9.6/static/libpq-connect.html"><a href="https://www.postgresql.org/docs/9.6/static/libpq-connect.html">https://www.postgresql.org/docs/9.6/static/libpq-connect.html</a></a></p>
+
+<pre><code>[bacula@stafbacula /var/db/bacula/.postgres]$ psql "sslmode=verify-full host=stafdb dbname=bacula sslcert=`pwd`/postgresql.crt sslkey=`pwd`/postgresql.key sslrootcert=`pwd`/root.crt"
+Password:
+DEBUG:  CommitTransaction
+DEBUG:  name: unnamed; blockState:       STARTED; state: INPROGR, xid/subid/cid: 0/1/0, nestlvl: 1, children:
+psql (9.5.7, server 9.6.3)
+WARNING: psql major version 9.5, server major version 9.6.
+         Some psql features might not work.
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+Type "help" for help.
+bacula=&gt;
+</code></pre>
+
+<h3>Create environment script</h3>
+
+<p>Bacula comes with a few scripts to popilate the catalog we will create an &ldquo;environment&rdquo; script to setup the required environment variabeles to connect to the database. <a href="https://www.postgresql.org/docs/9.6/static/libpq-envars.html"><a href="https://www.postgresql.org/docs/9.6/static/libpq-envars.html">https://www.postgresql.org/docs/9.6/static/libpq-envars.html</a></a> gives an overview of PostgreSQL environment variabeles.</p>
+
+<pre><code>[bacula@stafbacula /var/db/bacula]$ vi psql_env.sh
+</code></pre>
+
+<pre><code>PGHOST=stafdb
+PGUSER=bacula
+PGSSLMODE=verify-full
+PGSSLCERT=/var/db/bacula/.postgres/postgresql.crt
+PGSSLKEY=/var/db/bacula/.postgres/postgresql.key
+PGSSLROOTCERT=/var/db/bacula/.postgres/root.crt
+
+export PGHOST
+export PGUSER
+export PGSSLMODE
+export PGSSLCERT
+export PGSSLKEY
+export PGSSLROOTCERT
+</code></pre>
+
+<p>Test the environment script</p>
+
+<pre><code>root@stafbacula:~ # su -m bacula -c /bin/sh
+$ . /var/db/bacula/psql_env.sh
+$ psql bacula
+Password: 
+DEBUG:  CommitTransaction
+DEBUG:  name: unnamed; blockState:       STARTED; state: INPROGR, xid/subid/cid: 0/1/0, nestlvl: 1, children: 
+psql (9.5.8, server 9.6.4)
+WARNING: psql major version 9.5, server major version 9.6.
+         Some psql features might not work.
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+Type "help" for help.
+
+bacula=&gt; 
+</code></pre>
+
+<h2>Configure the bacula catalog</h2>
+
+<h3>Configuration directives</h3>
+
+<p>I found the bacula documention not very clear howto setup the catalog connection with certificate authentication - or I looked at the wrong place - so I downloaded the bacula source code ( version 7.4.7 )to verify the required directives. ./src/dird/d/dird_conf.c</p>
+
+<pre><code>[staf@vicky bacula-7.4.7]$ vim ./src/dird/dird_conf.c
+</code></pre>
+
+<pre><code>/*
+   Bacula(R) - The Network Backup Solution
+
+   Copyright (C) 2000-2016 Kern Sibbald
+
+   The original author of Bacula is Kern Sibbald, with contributions
+   from many others, a complete list can be found in the file AUTHORS.
+
+   You may use this file and others of this release according to the
+   license defined in the LICENSE file, which includes the Affero General
+   Public License, v3.0 ("AGPLv3") and some additional permissions and
+   terms pursuant to its AGPLv3 Section 7.
+
+   This notice must be preserved when any source code is
+   conveyed and/or propagated.
+
+   Bacula(R) is a registered trademark of Kern Sibbald.
+*/
+
+&lt;snip&gt;
+
+/*
+ *    Catalog Resource Directives
+ *
+ *   name          handler     value                 code flags    default_value
+ */
+static RES_ITEM cat_items[] = {
+   {"Name",     store_name,     ITEM(res_cat.hdr.name),    0, ITEM_REQUIRED, 0},
+   {"Description", store_str,   ITEM(res_cat.hdr.desc),    0, 0, 0},
+   {"dbaddress", store_str,     ITEM(res_cat.db_address),  0, 0, 0},
+   {"Address",  store_str,      ITEM(res_cat.db_address),  0, 0, 0},
+   {"DbPort",   store_pint32,   ITEM(res_cat.db_port),      0, 0, 0},
+   /* keep this password as store_str for the moment */
+   {"dbpassword", store_str,    ITEM(res_cat.db_password), 0, 0, 0},
+   {"Password", store_str,      ITEM(res_cat.db_password), 0, 0, 0},
+   {"dbuser",   store_str,      ITEM(res_cat.db_user),     0, 0, 0},
+   {"User",     store_str,      ITEM(res_cat.db_user),     0, 0, 0},
+   {"DbName",   store_str,      ITEM(res_cat.db_name),     0, ITEM_REQUIRED, 0},
+   {"dbdriver", store_str,      ITEM(res_cat.db_driver),   0, 0, 0},
+   {"DbSocket", store_str,      ITEM(res_cat.db_socket),   0, 0, 0},
+   {"dbsslkey", store_str,      ITEM(res_cat.db_ssl_key),  0, 0, 0},
+   {"dbsslcert", store_str,     ITEM(res_cat.db_ssl_cert),  0, 0, 0},
+   {"dbsslca", store_str,       ITEM(res_cat.db_ssl_ca),  0, 0, 0},
+   {"dbsslcapath", store_str,   ITEM(res_cat.db_ssl_capath),  0, 0, 0},
+   {"dbsslcipher", store_str,   ITEM(res_cat.db_ssl_cipher),  0, 0, 0},
+   /* Turned off for the moment */
+   {"MultipleConnections", store_bit, ITEM(res_cat.mult_db_connections), 0, 0, 0},
+   {"DisableBatchInsert", store_bool, ITEM(res_cat.disable_batch_insert), 0, ITEM_DEFAULT, false},
+   {NULL, NULL, {0}, 0, 0, 0}
+};
+</code></pre>
+
+<p>The ssl directives didn&rsquo;t seem to work with postgresql :-( If we feed the postgresql environment variables with the correct ssl settings to the bacula director it seems to work.</p>
+
+<h2>Initialize the database</h2>
+
+<h3>Drop the existing bacula database</h3>
+
+<p>The bacacla create script will try to create a new bacaula database so we&rsquo;ll to drop or test database on our database server.</p>
+
+<pre><code>root@stafdb:~ # su - postgres
+$ psql
+psql (9.6.4)
+Type "help" for help.
+
+postgres=# drop database bacula ;
+DROP DATABASE
+postgres=# \l
                              List of databases
    Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
 -----------+----------+----------+---------+-------+-----------------------
@@ -402,8 +871,379 @@ $ psql -l
            |          |          |         |       | postgres=CTc/postgres
 (3 rows)
 
+postgres=# 
+</code></pre>
+
+<h3>Create the database</h3>
+
+<p>Logon the bacula jail and create the bacula database.</p>
+
+<pre><code>$ . /var/db/bacula/psql_env.sh
+$ ./create_bacula_database
+Creating postgresql database
+Password: 
+Password: 
+CREATE DATABASE
+ALTER DATABASE
+Creation of bacula database succeeded.
+Password: 
+Password: 
+Database encoding OK
+</code></pre>
+
+<h3>Populate the bacula tables</h3>
+
+<pre><code>$ ./make_bacula_tables 
+Making postgresql tables
+Password: 
+CREATE TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+CREATE TABLE
+CREATE INDEX
+INSERT 0 1
+Creation of Bacula PostgreSQL tables succeeded.
 $ 
 </code></pre>
+
+<h3>Verify</h3>
+
+<p>Logon the bacula database and verify that the database populated.</p>
+
+<pre><code>$ psql
+Password: 
+psql (9.5.8, server 9.6.4)
+WARNING: psql major version 9.5, server major version 9.6.
+         Some psql features might not work.
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+Type "help" for help.
+
+bacula=&gt; \d
+                       List of relations
+ Schema |               Name                |   Type   | Owner  
+--------+-----------------------------------+----------+--------
+ public | basefiles                         | table    | bacula
+ public | basefiles_baseid_seq              | sequence | bacula
+ public | cdimages                          | table    | bacula
+ public | client                            | table    | bacula
+ public | client_clientid_seq               | sequence | bacula
+ public | counters                          | table    | bacula
+ public | device                            | table    | bacula
+ public | device_deviceid_seq               | sequence | bacula
+ public | file                              | table    | bacula
+ public | file_fileid_seq                   | sequence | bacula
+ public | filename                          | table    | bacula
+ public | filename_filenameid_seq           | sequence | bacula
+ public | fileset                           | table    | bacula
+ public | fileset_filesetid_seq             | sequence | bacula
+ public | job                               | table    | bacula
+ public | job_jobid_seq                     | sequence | bacula
+ public | jobhisto                          | table    | bacula
+ public | jobmedia                          | table    | bacula
+ public | jobmedia_jobmediaid_seq           | sequence | bacula
+ public | location                          | table    | bacula
+ public | location_locationid_seq           | sequence | bacula
+ public | locationlog                       | table    | bacula
+ public | locationlog_loclogid_seq          | sequence | bacula
+ public | log                               | table    | bacula
+ public | log_logid_seq                     | sequence | bacula
+ public | media                             | table    | bacula
+ public | media_mediaid_seq                 | sequence | bacula
+ public | mediatype                         | table    | bacula
+ public | mediatype_mediatypeid_seq         | sequence | bacula
+ public | path                              | table    | bacula
+ public | path_pathid_seq                   | sequence | bacula
+ public | pathhierarchy                     | table    | bacula
+ public | pathvisibility                    | table    | bacula
+ public | pool                              | table    | bacula
+ public | pool_poolid_seq                   | sequence | bacula
+ public | restoreobject                     | table    | bacula
+ public | restoreobject_restoreobjectid_seq | sequence | bacula
+ public | snapshot                          | table    | bacula
+ public | snapshot_snapshotid_seq           | sequence | bacula
+--More--(byte 2667)
+</code></pre>
+
+<h3>Cleanup</h3>
+
+<p>Disable the access to template? and postgres databases.</p>
+
+<pre><code>root@stafdb:/var/db/postgres/data96 # vi pg_hba.conf
+</code></pre>
+
+<pre><code>host    all             all             ::1/128                 trust
+hostssl bacula          bacula          192.168.1.52/32         md5 clientcert=1
+# hostssl       template0       bacula          192.168.1.52/32         md5 clientcert=1
+# hostssl       template1       bacula          192.168.1.52/32         md5 clientcert=1
+# hostssl       postgres        bacula          192.168.1.52/32         md5 clientcert=1
+</code></pre>
+
+<p>Reload</p>
+
+<pre><code>root@stafdb:/var/db/postgres/data96 # service postgresql reload
+root@stafdb:/var/db/postgres/data96 # 
+</code></pre>
+
+<p>Test it. Verify that access to the postgres database is denied from the bacula host.</p>
+
+<pre><code>$ psql postgres
+psql: FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "postgres", SSL on
+$ 
+</code></pre>
+
+<h2>Bacula catalog configuration</h2>
+
+<h3>Update the bacula director configuration</h3>
+
+<pre><code>root@stafbacula:/usr/local/etc/bacula # vi bacula-dir.conf
+</code></pre>
+
+<pre><code># Generic catalog service
+Catalog { 
+  Name = MyCatalog
+  dbname = "bacula"; dbuser = "bacula"; dbpassword = "c99ApA3Z9hzDL" ; dbsslkey = "/var/db/bacula/.postgres
+/postgresql.key"; dbsslcert = "/var/db/bacula/.postgres/postgresql.crt"; dbsslca= "/var/db/bacula/.postgres
+/root.crt"
+
+}
+</code></pre>
+
+<h3>Test the catalog connection</h3>
+
+<p>bacula include a program to verify the bacula catalog &ldquo;dbcheck&rdquo;, the -c switch select the bacula director configuration file the -B switch print out the configuration.</p>
+
+<pre><code>bacula@stafbacula /usr/local]$ dbcheck -c /usr/local/etc/bacula/bacula-dir.conf -B -v
+catalog=MyCatalog
+db_name=bacula
+db_driver=
+db_user=bacula
+db_password=*******
+db_address=stafdb
+db_port=0
+db_socket=
+db_type=PostgreSQL
+working_dir=/var/db/bacula
+[bacula@stafbacula /usr/local]$ 
+</code></pre>
+
+<p>For some reason the ssl directives aren&rsquo;t include and the connection fails</p>
+
+<pre><code>[bacula@stafbacula /usr/local/etc/rc.d]$ dbcheck -c /usr/local/etc/bacula/bacula-dir.conf -v
+dbcheck: Fatal Error at dbcheck.c:303 because:
+postgresql.c:271 Unable to connect to PostgreSQL server. Database=bacula User=bacula
+Possible causes: SQL server not running; password incorrect; max_connections exceeded.
+09-Sep 14:22 dbcheck: Fatal Error at dbcheck.c:303 because:
+postgresql.c:271 Unable to connect to PostgreSQL server. Database=bacula User=bacula
+Possible causes: SQL server not running; password incorrect; max_connections exceeded.
+[bacula@stafbacula /usr/local/etc/rc.d]$ 
+</code></pre>
+
+<p>On our postgres host we get the error message that the bacula host tries to connect without SSL.</p>
+
+<pre><code>oot@stafdb:/var/db/postgres/data96 # tail -f /var/log/messages
+Sep  9 14:22:10 stafdb postgres[14183]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:10 stafdb postgres[14184]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:15 stafdb postgres[14185]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:15 stafdb postgres[14186]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:20 stafdb postgres[14187]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:20 stafdb postgres[14188]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:25 stafdb postgres[14190]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:25 stafdb postgres[14191]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:30 stafdb postgres[14193]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:30 stafdb postgres[14194]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+</code></pre>
+
+<p>When set the postgresql varialables with the correct ssl settings the connnection works fine.</p>
+
+<pre><code>[bacula@stafbacula /usr/local/etc/rc.d]$ dbcheck -c /usr/local/etc/bacula/bacula-dir.conf -v
+Hello, this is the database check/correct program.
+Modify database is off. Verbose is on.
+Please select the function you want to perform.
+
+     1) Toggle modify database flag
+     2) Toggle verbose flag
+     3) Check for bad Filename records
+     4) Check for bad Path records
+     5) Check for duplicate Filename records
+     6) Check for duplicate Path records
+     7) Check for orphaned Jobmedia records
+     8) Check for orphaned File records
+     9) Check for orphaned Path records
+    10) Check for orphaned Filename records
+    11) Check for orphaned FileSet records
+    12) Check for orphaned Client records
+    13) Check for orphaned Job records
+    14) Check for all Admin records
+    15) Check for all Restore records
+    16) All (3-15)
+    17) Quit
+Select function number: 
+</code></pre>
+
+<h2>Bacula director</h2>
+
+<h3>Enable the  bacula director</h3>
+
+<pre><code>root@stafbacula:/usr/local/etc/rc.d # sysrc bacula_dir_enable=yes
+bacula_dir_enable:  -&gt; yes
+root@stafbacula:/usr/local/etc/rc.d # 
+</code></pre>
+
+<h4>Create the bacula.log</h4>
+
+<pre><code>root@stafbacula:/var/log # touch /var/log/bacula.log
+root@stafbacula:/var/log # chown bacula:bacula /var/log/bacula.log
+</code></pre>
+
+<h4>Include the postgreSQL ssl settings in the bacula director startup script</h4>
+
+<p>Update the bacula-dir startup sript to include the ssl settings.</p>
+
+<pre><code># Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# bacula_dir_enable  (bool):   Set to NO by default.
+#                Set it to YES to enable bacula_dir.
+# bacula_dir_flags (params):   Set params used to start bacula_dir.
+#
+
+. /etc/rc.subr
+. /var/db/bacula/psql_env.sh
+</code></pre>
+
+<h3>bconsole access</h3>
+
+<p>To test that the catalog works correctly with the director we need to setup bconsole access.
+Open the bacula director configuration file.</p>
+
+<pre><code>[root@stafbacula /usr/local/etc/bacula]# vim bacula-dir.conf
+</code></pre>
+
+<p>And defined and Password</p>
+
+<pre><code>Director {                            # define myself
+  Name = MyBaculaDirector
+  DIRport = 9101                # where we listen for UA connections
+  QueryFile = "/usr/local/share/bacula/query.sql"
+  WorkingDirectory = "/var/db/bacula"
+  PidDirectory = "/var/run"
+  Maximum Concurrent Jobs = 20
+  Password = "*******"         # Console password
+  Messages = Daemon
+}
+</code></pre>
+
+<p>Open the bconsole configuration file</p>
+
+<pre><code>[root@stafbacula /usr/local/etc/bacula]# vi bconsole.conf
+</code></pre>
+
+<p>and setup the same password</p>
+
+<pre><code># Bacula User Agent (or Console) Configuration File
+#
+# Copyright (C) 2000-2015 Kern Sibbald
+# License: BSD 2-Clause; see file LICENSE-FOSS
+#
+
+Director {
+  Name = MyBaculaDirector
+  DIRport = 9101
+  address = localhost
+  Password = "*****"
+}
+</code></pre>
+
+<h3>Start the director &amp; test</h3>
+
+<p>Start the bacula-dir service</p>
+
+<pre><code>root@stafbacula /usr/local/etc/bacula]# service bacula-dir start
+Starting bacula_dir.
+[root@stafbacula /usr/local/etc/bacula]# ps aux | grep -i bacula 
+bacula 14416  0.0  0.1 51424 6588  -  SsJ  14:40   0:00.12 /usr/local/sbin/bacula-dir -u bacula -g bacula 
+root   14420  0.0  0.0 14796 1968  0  R+J  14:40   0:00.00 grep -i bacula
+root   13530  0.0  0.0  8300 1596  2  I+J  13:47   0:00.00 tail -f /var/log/bacula.log
+[root@stafbacula /usr/local/etc/bacula]#
+</code></pre>
+
+<p>And test the console access</p>
+
+<pre><code>bacula@stafbacula:/usr/local/etc/bacula % bconsole
+Connecting to Director localhost:9101
+1000 OK: 102 MyBaculaDirector Version: 7.4.7 (16 March 2017)
+Enter a period to cancel a command.
+*version
+MyBaculaDirector Version: 7.4.7 (16 March 2017) amd64-portbld-freebsd11.0 freebsd 11.0-RELEASE-p12 
+You have messages.
+*
+</code></pre>
+
+<p>In a next blog post we&rsquo;ll continue with the bacula configuration.</p>
 
 <p style="font-style: italic;">
 Have fun!
@@ -413,9 +1253,8 @@ Have fun!
 <h1>Links</h1>
 
 <ul>
-<li><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/">https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/</a></li>
-<li><a href="https://cwharton.com/blog/2016/10/postgresql-and-freebsd-quick-start/">https://cwharton.com/blog/2016/10/postgresql-and-freebsd-quick-start/</a></li>
-<li><a href="https://dan.langille.org/2013/07/09/fatal-could-not-create-shared-memory-segment-function-not-implemented/">https://dan.langille.org/2013/07/09/fatal-could-not-create-shared-memory-segment-function-not-implemented/</a></li>
+<li>bacula manual: <a href="http://www.bacula.org/9.0.x-manuals/en/main/"><a href="http://www.bacula.org/9.0.x-manuals/en/main/">http://www.bacula.org/9.0.x-manuals/en/main/</a></a></li>
+<li><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/"><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/">https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/</a></a></li>
 </ul>
 
 ]]></content>
