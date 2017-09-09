@@ -1,10 +1,11 @@
 ---
 layout: post
-title: "Bacula on FreeBSD (part 2 Bacula Catalog over SSL - Why encrypt? Because we can! -)"
-date: 2017-08-17 10:27:03 +0200
+title: "Bacula on FreeBSD (part 2 Bacula Catalog over SSL )"
+date: 2017-09-09 10:27:03 +0200
 comments: true
-categories:  bacula, freebsd, backup, postgresql  
+categories:  bacula, freebsd, backup, postgresql, ssl
 ---
+{% img right /images/postgressl.png 300 300 "PostgreSSL" %} 
 
 In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.
 
@@ -78,7 +79,7 @@ root@rataplan:~ #
 
 ```
 root@rataplan:~ # ezjail-admin console stafbacula
-FreeBSD 11.1-RELEASE-p1 (GENERIC) #0: Wed Aug  9 11:55:48 UTC 2017
+FreeBSD 11.1-RELEASE-p1 (GENERIC) #0: Wed Sep  9 11:55:48 UTC 2017
 
 Welcome to FreeBSD!
 
@@ -306,7 +307,7 @@ root@stafbacula:~ #
 
 # Initialize the bacula catalog
 
-We'll a postgreSQL server running in a FreeBSD jail as our catalog (see <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/</a> howto install PostgreSQL into a FreeBSD jail).
+We'll have a postgreSQL server running in a FreeBSD jail as our catalog (see <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/</a> howto install PostgreSQL into a FreeBSD jail).
 
 ## PostgreSQL setup
 
@@ -412,8 +413,8 @@ $
 ```
 $ openssl req -new -key server.key -days 3650 -out server.crt -x509 -subj '/C=BE/ST=Flanders/L=Antwerp/O=stafnet/CN=stafdb'
 $ ls -ltr                                                                                               total 23
--rw-------   1 postgres  postgres  3247 Aug 23 11:47 server.key
--rw-------   1 postgres  postgres  1964 Aug 23 11:52 server.crt
+-rw-------   1 postgres  postgres  3247 Sep  9 11:47 server.key
+-rw-------   1 postgres  postgres  1964 Sep  9 11:52 server.crt
 $ 
 ```
 
@@ -425,9 +426,9 @@ We created a self signed certificate so the server certificate is our trusted ca
 $ ln -s server.crt root.crt
 $ ls -ltr
 total 24
--rw-------   1 postgres  postgres  3247 Aug 23 11:47 server.key
--rw-------   1 postgres  postgres  1964 Aug 23 11:52 server.crt
-lrwx------   1 postgres  postgres    10 Aug 23 11:53 root.crt -> server.crt
+-rw-------   1 postgres  postgres  3247 Sep  9 11:47 server.key
+-rw-------   1 postgres  postgres  1964 Sep  9 11:52 server.crt
+lrwx------   1 postgres  postgres    10 Sep  9 11:53 root.crt -> server.crt
 $ 
 ```
 
@@ -466,8 +467,8 @@ Logon to the bacula jail and become the bacula user. We use "su -m ..." to logon
 
 ```
 root@rataplan:~ # ezjail-admin console stafbacula
-Last login: Wed Aug 23 09:33:16 on pts/0
-FreeBSD 11.1-RELEASE-p1 (GENERIC) #0: Wed Aug  9 11:55:48 UTC 2017
+Last login: Wed Sep  9 09:33:16 on pts/0
+FreeBSD 11.1-RELEASE-p1 (GENERIC) #0: Wed Sep  9 11:55:48 UTC 2017
 
 Welcome to FreeBSD!
 
@@ -518,9 +519,9 @@ $ cd /var/db/bacula
 $ mkdir .postgres
 $ ls -la
 total 12
-drwxrwx---   3 bacula  bacula   3 Aug 24 09:41 .
-drwxr-xr-x  14 root    wheel   18 Aug 23 14:41 ..
-drwx------   2 bacula  bacula   2 Aug 24 09:41 .postgres
+drwxrwx---   3 bacula  bacula   3 Sep  9 09:41 .
+drwxr-xr-x  14 root    wheel   18 Sep  9 14:41 ..
+drwx------   2 bacula  bacula   2 Sep  9 09:41 .postgres
 $ cd .postgres/
 $ 
 ```
@@ -571,15 +572,15 @@ Getting CA Private Key
 
 ```
 $ uname -a
-FreeBSD stafbacula 11.1-RELEASE-p1 FreeBSD 11.1-RELEASE-p1 #0: Wed Aug  9 11:55:48 UTC 2017     root@amd64-builder.daemonology.net:/usr/obj/usr/src/sys/GENERIC  amd64
+FreeBSD stafbacula 11.1-RELEASE-p1 FreeBSD 11.1-RELEASE-p1 #0: Wed Sep  9 11:55:48 UTC 2017     root@amd64-builder.daemonology.net:/usr/obj/usr/src/sys/GENERIC  amd64
 $ pwd
 /var/db/bacula/.postgres
 $ ls -ltr
 total 24
--rw-------  1 bacula  bacula  3243 Aug 24 09:47 stafbacula.key
--rw-------  1 bacula  bacula  1679 Aug 24 09:54 stafbacula.csr
--rw-------  1 bacula  bacula  1964 Aug 24 10:04 root.crt
--rw-------  1 bacula  bacula  1850 Aug 24 10:06 stafbacula.crt
+-rw-------  1 bacula  bacula  3243 Sep  9 09:47 stafbacula.key
+-rw-------  1 bacula  bacula  1679 Sep  9 09:54 stafbacula.csr
+-rw-------  1 bacula  bacula  1964 Sep  9 10:04 root.crt
+-rw-------  1 bacula  bacula  1850 Sep  9 10:06 stafbacula.crt
 $ 
 ```
 
@@ -642,8 +643,33 @@ postgres=# \du
 
 postgres=# 
 ```
+### Allow the bacula user to create databases
+
+The bacula database script will try to create the bacula catalog database.
+We'll allow the bacula user to create databases, 
+
+```
+postgres=# alter user bacula CREATEDB;
+ALTER ROLE
+postgres=# select * from pg_user where usename = 'bacula';
+ usename | usesysid | usecreatedb | usesuper | userepl | usebypassrls |  passwd  | valuntil | useconfig 
+---------+----------+-------------+----------+---------+--------------+----------+----------+-----------
+ bacula  |    16386 | t           | f        | f       | f            | ******** |          | 
+(1 row)
+
+postgres=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of 
+-----------+------------------------------------------------------------+-----------
+ bacula    | Create DB                                                  | {}
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+postgres=# 
+```
 
 ### Create the bacula database
+
+We'll create a bacula database so we can verify the database connection from the bacula user to the bacula database.
 
 Create a new bacula database
 
@@ -678,12 +704,16 @@ And add the next lines;
 ```
 # TYPE  DATABASE        USER            ADDRESS                 METHOD
 hostssl bacula          bacula          192.168.1.52/32         md5 clientcert=1
+hostssl template0       bacula          192.168.1.52/32         md5 clientcert=1
 hostssl template1       bacula          192.168.1.52/32         md5 clientcert=1
+hostssl postgres        bacula          192.168.1.52/32         md5 clientcert=1
 ```
 
 Our bacula jail ***192.168.1.52*** only needs to have to the ***bacula*** database with the ***bacula*** user over ssl ***hostssl*** passwords will be send as a ***md5*** hash and a client certificate is required ***clientcert=1***.
 
 We could also used the ***cert*** method and ***map*** the client certificate to postgresql user so we could authenticate with the client certificate only...
+
+We allow access to the template\* and the postgres database because it's required for the bacula database xcreate script. We can remove them ( only allow access to the bacula database ) after the catalog database is created.
 
 
 ## Restart postgresql 
@@ -793,7 +823,7 @@ bacula=>
 
 ### Configuration directives
 
-I found the bacula documention not very clear howto setup the catalog connection with certificate authentication, so I downloaded the bacula source code ( version 7.4.7 )to verify the required directives. ./src/dird/d/dird_conf.c
+I found the bacula documention not very clear howto setup the catalog connection with certificate authentication - or I looked at the wrong place - so I downloaded the bacula source code ( version 7.4.7 )to verify the required directives. ./src/dird/d/dird_conf.c
 
 
 ```
@@ -854,10 +884,436 @@ static RES_ITEM cat_items[] = {
 
 ```
 
+The ssl directives didn't seem to work with postgresql :-( If we feed the postgresql environment variables with the correct ssl settings to the bacula director it seems to work.  
+
 ## Initialize the database
 
+### Drop the existing bacula database
+
+The bacacla create script will try to create a new bacaula database so we'll to drop or test database on our database server.
+
 ```
+root@stafdb:~ # su - postgres
+$ psql
+psql (9.6.4)
+Type "help" for help.
+
+postgres=# drop database bacula ;
+DROP DATABASE
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(3 rows)
+
+postgres=# 
 ```
+
+### Create the database
+
+Logon the bacula jail and create the bacula database.
+
+```
+$ . /var/db/bacula/psql_env.sh
+$ ./create_bacula_database
+Creating postgresql database
+Password: 
+Password: 
+CREATE DATABASE
+ALTER DATABASE
+Creation of bacula database succeeded.
+Password: 
+Password: 
+Database encoding OK
+```
+
+### Populate the bacula tables
+
+```
+$ ./make_bacula_tables 
+Making postgresql tables
+Password: 
+CREATE TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE TABLE
+ALTER TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+CREATE TABLE
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+CREATE TABLE
+CREATE INDEX
+INSERT 0 1
+Creation of Bacula PostgreSQL tables succeeded.
+$ 
+```
+
+### Verify
+
+Logon the bacula database and verify that the database populated.
+
+```
+$ psql
+Password: 
+psql (9.5.8, server 9.6.4)
+WARNING: psql major version 9.5, server major version 9.6.
+         Some psql features might not work.
+SSL connection (protocol: TLSv1.2, cipher: ECDHE-RSA-AES256-GCM-SHA384, bits: 256, compression: off)
+Type "help" for help.
+
+bacula=> \d
+                       List of relations
+ Schema |               Name                |   Type   | Owner  
+--------+-----------------------------------+----------+--------
+ public | basefiles                         | table    | bacula
+ public | basefiles_baseid_seq              | sequence | bacula
+ public | cdimages                          | table    | bacula
+ public | client                            | table    | bacula
+ public | client_clientid_seq               | sequence | bacula
+ public | counters                          | table    | bacula
+ public | device                            | table    | bacula
+ public | device_deviceid_seq               | sequence | bacula
+ public | file                              | table    | bacula
+ public | file_fileid_seq                   | sequence | bacula
+ public | filename                          | table    | bacula
+ public | filename_filenameid_seq           | sequence | bacula
+ public | fileset                           | table    | bacula
+ public | fileset_filesetid_seq             | sequence | bacula
+ public | job                               | table    | bacula
+ public | job_jobid_seq                     | sequence | bacula
+ public | jobhisto                          | table    | bacula
+ public | jobmedia                          | table    | bacula
+ public | jobmedia_jobmediaid_seq           | sequence | bacula
+ public | location                          | table    | bacula
+ public | location_locationid_seq           | sequence | bacula
+ public | locationlog                       | table    | bacula
+ public | locationlog_loclogid_seq          | sequence | bacula
+ public | log                               | table    | bacula
+ public | log_logid_seq                     | sequence | bacula
+ public | media                             | table    | bacula
+ public | media_mediaid_seq                 | sequence | bacula
+ public | mediatype                         | table    | bacula
+ public | mediatype_mediatypeid_seq         | sequence | bacula
+ public | path                              | table    | bacula
+ public | path_pathid_seq                   | sequence | bacula
+ public | pathhierarchy                     | table    | bacula
+ public | pathvisibility                    | table    | bacula
+ public | pool                              | table    | bacula
+ public | pool_poolid_seq                   | sequence | bacula
+ public | restoreobject                     | table    | bacula
+ public | restoreobject_restoreobjectid_seq | sequence | bacula
+ public | snapshot                          | table    | bacula
+ public | snapshot_snapshotid_seq           | sequence | bacula
+--More--(byte 2667)
+```
+
+### Cleanup
+
+Disable the access to template? and postgres databases.
+
+```
+root@stafdb:/var/db/postgres/data96 # vi pg_hba.conf
+```
+
+```
+host    all             all             ::1/128                 trust
+hostssl bacula          bacula          192.168.1.52/32         md5 clientcert=1
+# hostssl       template0       bacula          192.168.1.52/32         md5 clientcert=1
+# hostssl       template1       bacula          192.168.1.52/32         md5 clientcert=1
+# hostssl       postgres        bacula          192.168.1.52/32         md5 clientcert=1
+```
+
+Reload
+
+```
+root@stafdb:/var/db/postgres/data96 # service postgresql reload
+root@stafdb:/var/db/postgres/data96 # 
+```
+
+Test it. Verify that access to the postgres database is denied from the bacula host.
+
+```
+$ psql postgres
+psql: FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "postgres", SSL on
+$ 
+```
+
+## Bacula catalog configuration
+
+### Update the bacula director configuration
+
+```
+root@stafbacula:/usr/local/etc/bacula # vi bacula-dir.conf
+```
+
+```
+# Generic catalog service
+Catalog { 
+  Name = MyCatalog
+  dbname = "bacula"; dbuser = "bacula"; dbpassword = "c99ApA3Z9hzDL" ; dbsslkey = "/var/db/bacula/.postgres
+/postgresql.key"; dbsslcert = "/var/db/bacula/.postgres/postgresql.crt"; dbsslca= "/var/db/bacula/.postgres
+/root.crt"
+
+}
+```
+
+### Test the catalog connection
+
+bacula include a program to verify the bacula catalog "dbcheck", the -c switch select the bacula director configuration file the -B switch print out the configuration.
+
+```
+bacula@stafbacula /usr/local]$ dbcheck -c /usr/local/etc/bacula/bacula-dir.conf -B -v
+catalog=MyCatalog
+db_name=bacula
+db_driver=
+db_user=bacula
+db_password=*******
+db_address=stafdb
+db_port=0
+db_socket=
+db_type=PostgreSQL
+working_dir=/var/db/bacula
+[bacula@stafbacula /usr/local]$ 
+
+```
+
+For some reason the ssl directives aren't include and the connection fails 
+
+```
+[bacula@stafbacula /usr/local/etc/rc.d]$ dbcheck -c /usr/local/etc/bacula/bacula-dir.conf -v
+dbcheck: Fatal Error at dbcheck.c:303 because:
+postgresql.c:271 Unable to connect to PostgreSQL server. Database=bacula User=bacula
+Possible causes: SQL server not running; password incorrect; max_connections exceeded.
+09-Sep 14:22 dbcheck: Fatal Error at dbcheck.c:303 because:
+postgresql.c:271 Unable to connect to PostgreSQL server. Database=bacula User=bacula
+Possible causes: SQL server not running; password incorrect; max_connections exceeded.
+[bacula@stafbacula /usr/local/etc/rc.d]$ 
+
+```
+
+On our postgres host we get the error message that the bacula host tries to connect without SSL.
+
+```
+oot@stafdb:/var/db/postgres/data96 # tail -f /var/log/messages
+Sep  9 14:22:10 stafdb postgres[14183]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:10 stafdb postgres[14184]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:15 stafdb postgres[14185]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:15 stafdb postgres[14186]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:20 stafdb postgres[14187]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:20 stafdb postgres[14188]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:25 stafdb postgres[14190]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:25 stafdb postgres[14191]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+Sep  9 14:22:30 stafdb postgres[14193]: [10-1] FATAL:  connection requires a valid client certificate
+Sep  9 14:22:30 stafdb postgres[14194]: [10-1] FATAL:  no pg_hba.conf entry for host "192.168.1.52", user "bacula", database "bacula", SSL off
+```
+When set the postgresql varialables with the correct ssl settings the connnection works fine.
+
+```
+[bacula@stafbacula /usr/local/etc/rc.d]$ dbcheck -c /usr/local/etc/bacula/bacula-dir.conf -v
+Hello, this is the database check/correct program.
+Modify database is off. Verbose is on.
+Please select the function you want to perform.
+
+     1) Toggle modify database flag
+     2) Toggle verbose flag
+     3) Check for bad Filename records
+     4) Check for bad Path records
+     5) Check for duplicate Filename records
+     6) Check for duplicate Path records
+     7) Check for orphaned Jobmedia records
+     8) Check for orphaned File records
+     9) Check for orphaned Path records
+    10) Check for orphaned Filename records
+    11) Check for orphaned FileSet records
+    12) Check for orphaned Client records
+    13) Check for orphaned Job records
+    14) Check for all Admin records
+    15) Check for all Restore records
+    16) All (3-15)
+    17) Quit
+Select function number: 
+
+```
+
+
+## Bacula director
+
+### Enable the  bacula director
+
+```
+root@stafbacula:/usr/local/etc/rc.d # sysrc bacula_dir_enable=yes
+bacula_dir_enable:  -> yes
+root@stafbacula:/usr/local/etc/rc.d # 
+
+```
+
+#### Create the bacula.log
+
+```
+root@stafbacula:/var/log # touch /var/log/bacula.log
+root@stafbacula:/var/log # chown bacula:bacula /var/log/bacula.log
+```
+
+#### Include the postgreSQL ssl settings in the bacula director startup script
+
+Update the bacula-dir startup sript to include the ssl settings. 
+
+```
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# bacula_dir_enable  (bool):   Set to NO by default.
+#                Set it to YES to enable bacula_dir.
+# bacula_dir_flags (params):   Set params used to start bacula_dir.
+#
+
+. /etc/rc.subr
+. /var/db/bacula/psql_env.sh
+
+```
+
+### bconsole access
+
+To test that the catalog works correctly with the director we need to setup bconsole access.
+Open the bacula director configuration file.
+
+```
+[root@stafbacula /usr/local/etc/bacula]# vim bacula-dir.conf
+```
+
+And defined and Password
+
+```
+Director {                            # define myself
+  Name = MyBaculaDirector
+  DIRport = 9101                # where we listen for UA connections
+  QueryFile = "/usr/local/share/bacula/query.sql"
+  WorkingDirectory = "/var/db/bacula"
+  PidDirectory = "/var/run"
+  Maximum Concurrent Jobs = 20
+  Password = "*******"         # Console password
+  Messages = Daemon
+}
+```
+
+Open the bconsole configuration file
+
+```
+[root@stafbacula /usr/local/etc/bacula]# vi bconsole.conf
+```
+
+and setup the same password
+
+```
+# Bacula User Agent (or Console) Configuration File
+#
+# Copyright (C) 2000-2015 Kern Sibbald
+# License: BSD 2-Clause; see file LICENSE-FOSS
+#
+
+Director {
+  Name = MyBaculaDirector
+  DIRport = 9101
+  address = localhost
+  Password = "*****"
+}
+
+```
+
+### Start the director & test
+
+Start the bacula-dir service 
+
+```
+root@stafbacula /usr/local/etc/bacula]# service bacula-dir start
+Starting bacula_dir.
+[root@stafbacula /usr/local/etc/bacula]# ps aux | grep -i bacula 
+bacula 14416  0.0  0.1 51424 6588  -  SsJ  14:40   0:00.12 /usr/local/sbin/bacula-dir -u bacula -g bacula 
+root   14420  0.0  0.0 14796 1968  0  R+J  14:40   0:00.00 grep -i bacula
+root   13530  0.0  0.0  8300 1596  2  I+J  13:47   0:00.00 tail -f /var/log/bacula.log
+[root@stafbacula /usr/local/etc/bacula]#
+
+``` 
+
+And test the console access
+
+```
+bacula@stafbacula:/usr/local/etc/bacula % bconsole
+Connecting to Director localhost:9101
+1000 OK: 102 MyBaculaDirector Version: 7.4.7 (16 March 2017)
+Enter a period to cancel a command.
+*version
+MyBaculaDirector Version: 7.4.7 (16 March 2017) amd64-portbld-freebsd11.0 freebsd 11.0-RELEASE-p12 
+You have messages.
+*
+```
+
+
+
 
 # Links
 
