@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ssl | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/ssl/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-09-09T17:02:16+02:00</updated>
+  <updated>2017-09-10T10:51:42+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -1065,7 +1065,7 @@ $
 <pre><code># Generic catalog service
 Catalog { 
   Name = MyCatalog
-  dbname = "bacula"; dbuser = "bacula"; dbpassword = "c99ApA3Z9hzDL" ; dbsslkey = "/var/db/bacula/.postgres
+  dbname = "bacula"; dbuser = "bacula"; dbpassword = "********" ; dbsslkey = "/var/db/bacula/.postgres
 /postgresql.key"; dbsslcert = "/var/db/bacula/.postgres/postgresql.crt"; dbsslca= "/var/db/bacula/.postgres
 /root.crt"
 
