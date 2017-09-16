@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Happy_new_year_2015 Jan 1st, 2015 12:20 pm Happy new year! CGIpaf 1.3.4 Released Nov 23rd, 2014 10:16 am CGIpaf 1.3.4 has been released ChangeLog &hellip;">
+  <meta name="description" content="Run Google Chrome Inside a Fedora Docker Container Over Ssh May 12th, 2015 2:55 pm Update (Mon Jun 8 2015): Running google-chrome inside a docker &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,117 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/">Run Google Chrome Inside a Fedora Docker Container Over Ssh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-05-12T14:55:00+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>2:55 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong></p>
+
+<hr />
+
+
+<p>Update (Mon Jun  8 2015):</p>
+
+<p>Running google-chrome inside a docker container isn&rsquo;t stable for me.
+I switched back to LXC to run google-chrome which seems to be more stable.</p>
+
+<hr />
+
+
+<p></strong></p>
+
+<p>Created a docker image to start a docker container with chrome.
+Destroying the container each time that you start a browser is a easy way to get rid of your cookies and browser history.</p>
+
+<h2>Run google chrome inside a fedora docker container over ssh</h2>
+
+<h3>Installation instructions</h3>
+
+<p>1/ Clone the git repo</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ git clone https://github.com/stafwag/docker-fedora-chrome-ssh.git</span></code></pre></td></tr></table></div></figure>
+
+
+<p>2/ Copy your public ssh to id_rsa.pub</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ cd docker-fedora-chrome-ssh
+</span><span class='line'>$ cp ~/.ssh/id_rsa.pub .</span></code></pre></td></tr></table></div></figure>
+
+
+<p>3/ Build the docker image</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ docker build -t stafwag/docker-fedora-chrome-ssh .</span></code></pre></td></tr></table></div></figure>
+
+
+<p>4/ Update your ssh config</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vi ~/.ssh/config</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Host mychrome
+</span><span class='line'>          User      chrome
+</span><span class='line'>          Port      8022
+</span><span class='line'>          HostName  127.0.0.1
+</span><span class='line'>          StrictHostKeyChecking no
+</span><span class='line'>          UserKnownHostsFile=/dev/null
+</span><span class='line'>          ForwardX11 yes</span></code></pre></td></tr></table></div></figure>
+
+
+<p>5/ Start chrome</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./startchrome.sh</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -1962,287 +2073,6 @@ Best wishes 2014
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/">Yum Update on Fedora 19 and Zfs on Linux</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-10-13T17:51:00+02:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>5:51 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="left" src="http://zfsonlinux.org/images/zfs-linux.png" width="200" height="125" title="&#34;zfs on linux&#34;" alt="&#34;zfs on linux&#34;"></p>
-
-<p>I use  <a href="http://zfsonlinux.org/"> zfs on linux</a> on <a href="http://fedoraproject.org/">fedora</a> now.</p>
-
-<p><a href="http://zfsonlinux.org/fedora.html">The installation</a> was pretty straightforward but after the installation of <a href="http://open-zfs.org/">zfs</a> <code>yum update</code> failed.</p>
-
-<p><br /></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky etc]# yum update -y
-</span><span class='line'>Loaded plugins: langpacks, refresh-packagekit
-</span><span class='line'>Repository google-chrome is listed more than once in the configuration
-</span><span class='line'>fedora/19/x86_64/metalink                                                                                                                                                                   |  33 kB  00:00:00     
-</span><span class='line'>fedora                                                                                                                                                                                      | 4.2 kB  00:00:00     
-</span><span class='line'>fedora-chromium-stable                                                                                                                                                                      | 3.4 kB  00:00:00     
-</span><span class='line'>google-chrome                                                                                                                                                                               |  951 B  00:00:00     
-</span><span class='line'>rpmfusion-free                                                                                                                                                                              | 3.3 kB  00:00:00     
-</span><span class='line'>rpmfusion-free-updates                                                                                                                                                                      | 3.3 kB  00:00:00     
-</span><span class='line'>rpmfusion-nonfree                                                                                                                                                                           | 3.3 kB  00:00:00     
-</span><span class='line'>rpmfusion-nonfree-updates                                                                                                                                                                   | 3.3 kB  00:00:00     
-</span><span class='line'>updates/19/x86_64/metalink                                                                                                                                                                  |  30 kB  00:00:00     
-</span><span class='line'>updates                                                                                                                                                                                     | 4.4 kB  00:00:00     
-</span><span class='line'>zfs                                                                                                                                                                                         | 2.9 kB  00:00:00     
-</span><span class='line'>(1/6): fedora-chromium-stable/19/x86_64/primary_db                                                                                                                                          |  20 kB  00:00:00     
-</span><span class='line'>(2/6): zfs/19/x86_64/primary_db                                                                                                                                                             | 6.7 kB  00:00:00     
-</span><span class='line'>(3/6): updates/19/x86_64/group_gz                                                                                                                                                           | 385 kB  00:00:02     
-</span><span class='line'>(4/6): fedora/19/x86_64/group_gz                                                                                                                                                            | 384 kB  00:00:06     
-</span><span class='line'>(5/6): updates/19/x86_64/primary_db                                                                                                                                                         | 8.8 MB  00:01:53     
-</span><span class='line'>(6/6): fedora/19/x86_64/primary_db                                                                                                                                                          |  17 MB  00:03:34     
-</span><span class='line'>(1/10): google-chrome/primary                                                                                                                                                               | 1.9 kB  00:00:00     
-</span><span class='line'>(2/10): rpmfusion-free-updates/19/x86_64/primary_db                                                                                                                                         | 217 kB  00:00:01     
-</span><span class='line'>(3/10): rpmfusion-nonfree/19/x86_64/primary_db                                                                                                                                              | 149 kB  00:00:00     
-</span><span class='line'>(4/10): rpmfusion-free/19/x86_64/primary_db                                                                                                                                                 | 440 kB  00:00:03     
-</span><span class='line'>(5/10): rpmfusion-nonfree-updates/19/x86_64/primary_db                                                                              b                                                       |  97 kB  00:00:00     
-</span><span class='line'>(6/10): rpmfusion-nonfree-updates/19/x86_64/group_gz                                                                                                                                        |  990 B  00:00:05     
-</span><span class='line'>(7/10): rpmfusion-nonfree/19/x86_64/group_gz                                                                                                                                                |  993 B  00:00:07     
-</span><span class='line'>(8/10): rpmfusion-free/19/x86_64/group_gz                                                                                                                                                   | 1.6 kB  00:00:07     
-</span><span class='line'>(9/10): rpmfusion-free-updates/19/x86_64/group_gz                                                                                                                                           | 1.6 kB  00:00:07     
-</span><span class='line'>(10/10): updates/19/x86_64/updateinfo                                                                                                                                                       | 861 kB  00:00:09     
-</span><span class='line'>google-chrome                                                                                                                                                                                                  3/3
-</span><span class='line'>Resolving Dependencies
-</span><span class='line'>--&gt; Running transaction check
-</span><span class='line'>---&gt; Package dkms.noarch 0:2.2.0.3-14.zfs1.fc19 will be updated
-</span><span class='line'>--&gt; Processing Dependency: dkms = 2.2.0.3-14.zfs1.fc19 for package: zfs-dkms-0.6.2-1.fc19.noarch
-</span><span class='line'>---&gt; Package dkms.noarch 0:2.2.0.3-17.fc19 will be an update
-</span><span class='line'>--&gt; Finished Dependency Resolution
-</span><span class='line'>Error: Package: zfs-dkms-0.6.2-1.fc19.noarch (@zfs)
-</span><span class='line'>           Requires: dkms = 2.2.0.3-14.zfs1.fc19
-</span><span class='line'>           Removing: dkms-2.2.0.3-14.zfs1.fc19.noarch (@zfs)
-</span><span class='line'>               dkms = 2.2.0.3-14.zfs1.fc19
-</span><span class='line'>           Updated By: dkms-2.2.0.3-17.fc19.noarch (updates)
-</span><span class='line'>               dkms = 2.2.0.3-17.fc19
-</span><span class='line'>           Available: dkms-2.2.0.3-5.fc19.noarch (fedora)
-</span><span class='line'>               dkms = 2.2.0.3-5.fc19
-</span><span class='line'> You could try using --skip-broken to work around the problem
-</span><span class='line'> You could try running: rpm -Va --nofiles --nodigest
-</span><span class='line'>[root@vicky etc]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&rsquo;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky etc]# yum install yum-plugin-priorities
-</span><span class='line'>Loaded plugins: langpacks, refresh-packagekit
-</span><span class='line'>Repository google-chrome is listed more than once in the configuration
-</span><span class='line'>Resolving Dependencies
-</span><span class='line'>--&gt; Running transaction check
-</span><span class='line'>---&gt; Package yum-plugin-priorities.noarch 0:1.1.31-18.fc19 will be installed
-</span><span class='line'>--&gt; Finished Dependency Resolution
-</span><span class='line'>
-</span><span class='line'>Dependencies Resolved
-</span><span class='line'>
-</span><span class='line'>===================================================================================================================================================================================================================
-</span><span class='line'> Package                                                     Arch                                         Version                                              Repository                                     Size
-</span><span class='line'>===================================================================================================================================================================================================================
-</span><span class='line'>Installing:
-</span><span class='line'> yum-plugin-priorities                                       noarch                                       1.1.31-18.fc19                                       updates                                        22 k
-</span><span class='line'>
-</span><span class='line'>Transaction Summary
-</span><span class='line'>===================================================================================================================================================================================================================
-</span><span class='line'>Install  1 Package
-</span><span class='line'>
-</span><span class='line'>Total download size: 22 k
-</span><span class='line'>Installed size: 28 k
-</span><span class='line'>Is this ok [y/d/N]: y
-</span><span class='line'>Downloading packages:
-</span><span class='line'>yum-plugin-priorities-1.1.31-18.fc19.noarch.rpm                                                                                                                                             |  22 kB  00:00:01     
-</span><span class='line'>Running transaction check
-</span><span class='line'>Running transaction test
-</span><span class='line'>Transaction test succeeded
-</span><span class='line'>Running transaction
-</span><span class='line'>  Installing : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
-</span><span class='line'>  Verifying  : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
-</span><span class='line'>
-</span><span class='line'>Installed:
-</span><span class='line'>  yum-plugin-priorities.noarch 0:1.1.31-18.fc19                                                                                                                                                                    
-</span><span class='line'>
-</span><span class='line'>Complete!
-</span><span class='line'>[root@vicky etc]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>And make sure that the zfs has the priority</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost etc]# cat yum.repos.d/zfs.repo
-</span><span class='line'>[zfs]
-</span><span class='line'>name=ZFS of Linux for Fedora $releasever
-</span><span class='line'>baseurl=http://archive.zfsonlinux.org/fedora/$releasever/$basearch/
-</span><span class='line'>enabled=1
-</span><span class='line'>priority=1
-</span><span class='line'>metadata_expire=7d
-</span><span class='line'>gpgcheck=1
-</span><span class='line'>gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-</span><span class='line'>Requires:       yum-plugin-priorities
-</span><span class='line'>
-</span><span class='line'>[zfs-source]
-</span><span class='line'>name=ZFS of Linux for Fedora $releasever - Source
-</span><span class='line'>baseurl=http://archive.zfsonlinux.org/fedora/$releasever/SRPMS/
-</span><span class='line'>enabled=0
-</span><span class='line'>metadata_expire=7d
-</span><span class='line'>gpgcheck=1
-</span><span class='line'>gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-</span><span class='line'>[root@vicky etc]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p> <code>yum update</code> works again.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky etc]# yum update -y
-</span><span class='line'>Loaded plugins: langpacks, priorities, refresh-packagekit
-</span><span class='line'>Repository google-chrome is listed more than once in the configuration
-</span><span class='line'>2 packages excluded due to repository priority protections
-</span><span class='line'>No packages marked for update
-</span><span class='line'>[root@vicky etc]# </span></code></pre></td></tr></table></div></figure>
-
-
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/4">&larr; Older</a>
@@ -2278,6 +2108,10 @@ Best wishes 2014
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2017/09/09/bacula-on-freebsd-part2/">Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL )</a>
       </li>
     
@@ -2291,10 +2125,6 @@ Best wishes 2014
     
       <li class="post">
         <a href="/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">How to Install Libreboot on a ThinkPad X60</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2017/01/01/best-wishes-2017/">Best Wishes 2017!</a>
       </li>
     
   </ul>

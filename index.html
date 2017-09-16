@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL ) Sep 9th, 2017 10:27 am In my previous post, I setup on my PostgresSQL FreeBSD jail, In this post &hellip;">
+  <meta name="description" content="20 Core Dual Processor Jenkins Build Workstation Sep 16th, 2017 2:29 pm My jenkins builds are taking too long mainly due the lack of memory. I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-09-16T14:29:51+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>2:29 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="left" src="/blog/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&#34;Xeon CPU Side&#34;" alt="&#34;Xeon CPU Side&#34;"></p>
+
+<p><br /></p>
+
+<p>My jenkins builds are taking too long mainly due the lack of memory. I mainly use jenkins to verify that my software work on different operation systems (GNU/Linux distributions / *BSD / Solaris).</p>
+
+<p>Looking for a solution that is still affordable I ended up with building a dual Xeon workstation. CPU and memory comes from <a href="http://www.ebay.be">www.ebay.be</a></p>
+
+<p><br />&nbsp;<br />
+<br /></p>
+
+<h3>Part list:</h3>
+
+<ul>
+<li><strong>CPU:</strong> 2 * <a href=\"http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz\">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
+<li><strong>Motherboard:</strong> <a href="http://www.asrockrack.com/general/productdetail.asp?Model=EP2C602-4L/D16#Specifications">Asrock EP2C602-4L/D16</a> I choose this motherboard because it has a lot of DIMM slots so I can upgrade the memory in the further. Downside is that layout is SSI EEB that limits the case choose.</li>
+<li><strong>Memory:</strong> 4 * SAMSUNG M393B2G70BH0-CK0 16GB which gives me 64 GB <a href="https://en.wikipedia.org/wiki/ECC_memory">ECC memory</a></li>
+<li><strong>CPU Cooler</strong> 2 * <a href="http://www.thermaltake.com/products-model.aspx?id=C_00002470">Thermaltake Water 3.0 Performer C</a> For the first I used watercooling mainly because I wanted to make sure that the cooling will not block the access to the DIMM slots.</li>
+<li><strong>PSU:</strong> <a href="https://seasonic.com/product/focus-plus-750-gold/">Seasonic FOCUS Plus 750 Gold</a> I needed a power supply with 2 * 8 pins CPU connectors.</li>
+<li><strong>Case:</strong> <a href="http://www.phanteks.com/Enthoo-Pro.html">Phanteks Enthoo Pro</a> This case supports SSI EEB and is not too expensive.</li>
+</ul>
+
+
+<h3>Pictures</h3>
+
+<p><a href="/blog/images/201709_xeon_cpu_side.jpg"><img src="/blog/images/201709_xeon_cpu_side.jpg" height="291" width="300" alt="Xeon CPU side" /></a>
+<a href="/blog/images/201709_xeon_hd_side.jpg"><img src="/blog/images/201709_xeon_hd_side.jpg" height="291" width="317" alt="Xeon CPU side" /></a>
+<a href="/blog/images/201709_xeon_front_side.jpg"><img src="/blog/images/201709_xeon_front_side.jpg" height="291" width="151" alt="Xeon CPU side" /></a></p>
+
+<p><strong><em>Still need to verify if jenkins works on this system :-) </em></strong></p>
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -6754,65 +6822,6 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2015/12/28/lookat-1-dot-4-4-released/">Lookat 1.4.4 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-12-28T15:48:50+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>28</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>3:48 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
-
-<h3>ChangeLog</h3>
-
-<ul>
-<li>NetBSD support</li>
-<li>OpenBSD support</li>
-<li>English translation issues corrected</li>
-<li>autoconf updated to 2.69</li>
-<li>Corrected minor compile warnings</li>
-</ul>
-
-
-<h3>Lookat 1.4.4 is available at:</h3>
-
-<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
-, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4.tar.gz">Download latest stable release (1.4.4)</a>.</p>
-
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
-
-<p><strong><em> Have fun </em></strong></p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -6846,6 +6855,10 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2017/09/09/bacula-on-freebsd-part2/">Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL )</a>
       </li>
     
@@ -6859,10 +6872,6 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
     
       <li class="post">
         <a href="/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">How to Install Libreboot on a ThinkPad X60</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2017/01/01/best-wishes-2017/">Best Wishes 2017!</a>
       </li>
     
   </ul>
