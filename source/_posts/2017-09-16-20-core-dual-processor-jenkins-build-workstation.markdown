@@ -3,14 +3,14 @@ layout: post
 title: "20 core Dual Processor jenkins build workstation"
 date: 2017-09-16 14:29:51 +0200
 comments: true
-categories: [ Xeon, Jenkins ] 
+categories: [ Xeon, Jenkins,Linux, BSD, Solaris ] 
 ---
 
 {% img left /images/201709_xeon_cpu_side.jpg 400 388 "Xeon CPU Side" %} 
 
 <br />
 
-My jenkins builds are taking too long mainly due the lack of memory. I mainly use jenkins to verify that my software work on different operation systems (GNU/Linux distributions / *BSD).
+My jenkins builds are taking too long mainly due the lack of memory. I mainly use jenkins to verify that my software work on different operation systems (GNU/Linux distributions / *BSD / Solaris).
 
 Looking for a solution that is still affordable I ended up with building a dual Xeon workstation. CPU and memory comes from <a href="http://www.ebay.be">www.ebay.be</a>
 
@@ -29,8 +29,8 @@ Looking for a solution that is still affordable I ended up with building a dual 
 ### Pictures
 
 [![Xeon CPU side](/images/201709_xeon_cpu_side.jpg =300x291)](/images/201709_xeon_cpu_side.jpg)
-[![Xeon CPU side](/images/201709_xeon_hd_side.jpg =317x291)](/images/201709_xeon_cpu_side.jpg)
-[![Xeon CPU side](/images/201709_xeon_front_side.jpg =151x291)](/images/201709_xeon_cpu_side.jpg)
+[![Xeon CPU side](/images/201709_xeon_hd_side.jpg =317x291)](/images/201709_xeon_hd_side.jpg)
+[![Xeon CPU side](/images/201709_xeon_front_side.jpg =151x291)](/images/201709_xeon_front_side.jpg)
 
 ***Still need to verify if jenkins works on this system :-) ***
 
