@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-09-16T16:34:58+02:00</updated>
+  <updated>2017-10-01T09:32:04+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,22 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Build With 20 Cores]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores/"/>
+    <updated>2017-09-30T19:18:14+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores</id>
+    <content type="html"><![CDATA[<p>I finally got the time to try out my jenkins build on my new <a href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a></p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/BNn9absXkE8 "></iframe></div>
+
+
+<p>I&rsquo;m able to run all test on multiple operation systems now. I still need to review this setup and perhaps move some tests to <a href="https://www.docker.io">docker</a> instead of the virtual machines to save some memory. &hellip;but this jenkins setup was configured before docker was a thing.</p>
+
+<p><strong><em>Have fun</em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
@@ -32,7 +48,7 @@
 <h3>Part list:</h3>
 
 <ul>
-<li><strong>CPU:</strong> 2 * <a href=\"http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz\">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
+<li><strong>CPU:</strong> 2 * <a href="http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
 <li><strong>Motherboard:</strong> <a href="http://www.asrockrack.com/general/productdetail.asp?Model=EP2C602-4L/D16#Specifications">Asrock EP2C602-4L/D16</a> I choose this motherboard because it has a lot of DIMM slots so I can upgrade the memory in the further. Downside is that layout is SSI EEB that limits the case choose.</li>
 <li><strong>Memory:</strong> 4 * SAMSUNG M393B2G70BH0-CK0 16GB which gives me 64 GB <a href="https://en.wikipedia.org/wiki/ECC_memory">ECC memory</a></li>
 <li><strong>CPU Cooler</strong> 2 * <a href="http://www.thermaltake.com/products-model.aspx?id=C_00002470">Thermaltake Water 3.0 Performer C</a> For the first I used watercooling mainly because I wanted to make sure that the cooling will not block the access to the DIMM slots.</li>
@@ -11549,81 +11565,6 @@ create a polkit rule for the user that will use the smartcard.</p>
 <li><a href="https://wiki.archlinux.org/index.php/Udev"><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></a></li>
 <li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/"><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></a></li>
 </ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Openvas 7: Adding Credentials Failed]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/"/>
-    <updated>2015-05-14T16:56:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed</id>
-    <content type="html"><![CDATA[<p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
-
-<p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>
-
-<p>I had a similar issue with my openvas 6 installation, this was resolved by creating the  <code>/etc/openvas/gnupg</code> directory and creating the key  <code>openvasmd --create-credentials-encryption-key</code></p>
-
-<p>But on my openvas 7 installation a creation of the encryption key was slooooow.
-As always Good Randomness is important for creating keys. So I decided to install haveged to get more randomness and hopefully this would speed up key creation.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# yum install haveged
-</span><span class='line'>
-</span><span class='line'>Loaded plugins: fastestmirror
-</span><span class='line'>Loading mirror speeds from cached hostfile
-</span><span class='line'> * atomic: www6.atomicorp.com
-</span><span class='line'> * base: centos.cu.be
-</span><span class='line'> * extras: centos.cu.be
-</span><span class='line'> * updates: centos.cu.be
-</span><span class='line'>Package haveged-1.9.1-2.el7.art.x86_64 already installed and latest version
-</span><span class='line'>Nothing to do
-</span><span class='line'>[root@localhost ~]# 
-</span><span class='line'>[root@localhost ~]# systemct list-unit-files --type=service | grep haveged
-</span><span class='line'>-bash: systemct: command not found
-</span><span class='line'>[root@localhost ~]# systemctl list-unit-files --type=service | grep haveged
-</span><span class='line'>haveged.service                             disabled
-</span><span class='line'>[root@localhost ~]# systemctl enable haveged
-</span><span class='line'>ln -s '/usr/lib/systemd/system/haveged.service' '/etc/systemd/system/multi-user.target.wants/haveged.service'
-</span><span class='line'>[root@localhost ~]# systemctl start haveged
-</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>The key creation took a only sec.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@localhost ~]# openvasmd --create-credentials-encryption-key
-</span><span class='line'>Key creation succeeded.
-</span><span class='line'>[root@localhost ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Adding new credentials works like a charm now.</p>
-
-<p style="font-style: italic;">
-Happy hacking!
-</p>
-
-
 
 ]]></content>
   </entry>

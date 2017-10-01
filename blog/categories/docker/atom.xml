@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Docker | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/docker/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-09-16T16:34:58+02:00</updated>
+  <updated>2017-10-01T09:32:04+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Jenkins Build With 20 Cores]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores/"/>
+    <updated>2017-09-30T19:18:14+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores</id>
+    <content type="html"><![CDATA[<p>I finally got the time to try out my jenkins build on my new <a href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a></p>
+
+<p><div class="embed-video-container"><iframe src="http://www.youtube.com/embed/BNn9absXkE8 "></iframe></div></p>
+
+<p>I&rsquo;m able to run all test on multiple operation systems now. I still need to review this setup and perhaps move some tests to <a href="https://www.docker.io">docker</a> instead of the virtual machines to save some memory. &hellip;but this jenkins setup was configured before docker was a thing.</p>
+
+<p><strong><em>Have fun</em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Running Docker on ARM]]></title>

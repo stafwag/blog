@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Yum Update on Fedora 19 and Zfs on Linux Oct 13th, 2013 5:51 pm I use zfs on linux on fedora now. The installation was pretty straightforward but &hellip;">
+  <meta name="description" content="Bash Saved My Day Oct 20th, 2013 10:04 am I was creating an ugly quick-and-dirty script to setup the squid cache_dir automatically with puppet based &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/10/20/bash-saved-my-day/">Bash Saved My Day</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-10-20T10:04:00+02:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>10:04 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
+
+<p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
+
+<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./create_cache_entries.sh  &gt; create_cache_entries.sh 
+</span><span class='line'>-bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
+</span><span class='line'>$ vi create_cache_entries.sh </span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -563,78 +614,136 @@ It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wik
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'># yum install iptables-services
 </span><span class='line'># systemctl mask firewalld.service
 </span><span class='line'># systemctl enable iptables.service
-</span><span class='line'># systemctl enable ip6tables.service
-</span><span class='line'>``
-</span><span class='line'>My /home was still on a  regular harddisk I move it to the ssd
+</span><span class='line'># systemctl enable ip6tables.service</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My /home was still on a regular harddisk I move it to the ssd.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>$ systemd-analyze 
+</span><span class='line'>Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
+</span><span class='line'>$ systemd-analyze blame
+</span><span class='line'>           546ms postfix.service
+</span><span class='line'>           537ms NetworkManager.service
+</span><span class='line'>           508ms accounts-daemon.service
+</span><span class='line'>           102ms nfs-lock.service
+</span><span class='line'>            62ms proc-fs-nfsd.mount
+</span><span class='line'>            59ms polkit.service
+</span><span class='line'>            55ms lvm2-monitor.service
+</span><span class='line'>            54ms NetworkManager-dispatcher.service
+</span><span class='line'>            54ms abrt-ccpp.service
+</span><span class='line'>            54ms jexec.service
+</span><span class='line'>            53ms udisks2.service
+</span><span class='line'>            52ms autofs.service
+</span><span class='line'>            49ms var-lib-nfs-rpc_pipefs.mount
+</span><span class='line'>            45ms avahi-daemon.service
+</span><span class='line'>            43ms colord.service
+</span><span class='line'>            41ms systemd-logind.service
+</span><span class='line'>            41ms rtkit-daemon.service
+</span><span class='line'>            40ms gdm.service
+</span><span class='line'>            37ms systemd-fsck-root.service
+</span><span class='line'>            33ms systemd-vconsole-setup.service
+</span><span class='line'>            32ms fedora-loadmodules.service
+</span><span class='line'>            28ms chronyd.service
+</span><span class='line'>            28ms systemd-udev-trigger.service
+</span><span class='line'>            26ms dev-hugepages.mount
+</span><span class='line'>            26ms dev-mqueue.mount
+</span><span class='line'>            26ms sys-kernel-debug.mount
+</span><span class='line'>            25ms lm_sensors.service
+</span><span class='line'>            24ms systemd-fsck@dev-disk-by\x2duuid-16608012\x2d1711\x2d42d7\x2d8652\x2d900e2d22ed40.service
+</span><span class='line'>            23ms tmp.mount
+</span><span class='line'>            22ms sys-kernel-config.mount
+</span><span class='line'>            19ms systemd-user-sessions.service
+</span><span class='line'>            16ms systemd-journal-flush.service
+</span><span class='line'>            16ms mcelog.service
+</span><span class='line'>            15ms proc-sys-fs-binfmt_misc.mount
+</span><span class='line'>            14ms bluetooth.service
+</span><span class='line'>            12ms systemd-sysctl.service
+</span><span class='line'>            12ms systemd-tmpfiles-setup-dev.service
+</span><span class='line'>            12ms rpcbind.service
+</span><span class='line'>            12ms xinetd.service
+</span><span class='line'>             8ms systemd-udevd.service
+</span><span class='line'>             7ms fedora-readonly.service
+</span><span class='line'>             7ms lvm2-lvmetad.service
+</span><span class='line'>             6ms sshd.service
+</span><span class='line'>             5ms systemd-readahead-collect.service
+</span><span class='line'>             5ms boot.mount
+</span><span class='line'>             5ms upower.service
+</span><span class='line'>             4ms dev-mapper-fedora_vicky\x2dswap.swap
+</span><span class='line'>             4ms systemd-remount-fs.service
+</span><span class='line'>             3ms systemd-tmpfiles-setup.service
+</span><span class='line'>             3ms systemd-update-utmp-runlevel.service
+</span><span class='line'>             2ms auditd.service
+</span><span class='line'>             1ms systemd-random-seed-load.service
+</span><span class='line'>             1ms systemd-readahead-done.service
+</span><span class='line'>             1ms sys-fs-fuse-connections.mount
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>[staf@vicky~]$ systemd-analyze
-Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
-[staf@vicky~]$ systemd-analyze blame
-           546ms postfix.service
-           537ms NetworkManager.service
-           508ms accounts-daemon.service
-           102ms nfs-lock.service
-            62ms proc-fs-nfsd.mount
-            59ms polkit.service
-            55ms lvm2-monitor.service
-            54ms NetworkManager-dispatcher.service
-            54ms abrt-ccpp.service
-            54ms jexec.service
-            53ms udisks2.service
-            52ms autofs.service
-            49ms var-lib-nfs-rpc_pipefs.mount
-            45ms avahi-daemon.service
-            43ms colord.service
-            41ms systemd-logind.service
-            41ms rtkit-daemon.service
-            40ms gdm.service
-            37ms systemd-fsck-root.service
-            33ms systemd-vconsole-setup.service
-            32ms fedora-loadmodules.service
-            28ms chronyd.service
-            28ms systemd-udev-trigger.service
-            26ms dev-hugepages.mount
-            26ms dev-mqueue.mount
-            26ms sys-kernel-debug.mount
-            25ms lm_sensors.service
-            24ms systemd-fsck@dev-disk-by\x2duuid-16608012\x2d1711\x2d42d7\x2d8652\x2d900e2d22ed40.service
-            23ms tmp.mount
-            22ms sys-kernel-config.mount
-            19ms systemd-user-sessions.service
-            16ms systemd-journal-flush.service
-            16ms mcelog.service
-            15ms proc-sys-fs-binfmt_misc.mount
-            14ms bluetooth.service
-            12ms systemd-sysctl.service
-            12ms systemd-tmpfiles-setup-dev.service
-            12ms rpcbind.service
-            12ms xinetd.service
-             8ms systemd-udevd.service
-             7ms fedora-readonly.service
-             7ms lvm2-lvmetad.service
-             6ms sshd.service
-             5ms systemd-readahead-collect.service
-             5ms boot.mount
-             5ms upower.service
-             4ms dev-mapper-fedora_vicky\x2dswap.swap
-             4ms systemd-remount-fs.service
-             3ms systemd-tmpfiles-setup.service
-             3ms systemd-update-utmp-runlevel.service
-             2ms auditd.service
-             1ms systemd-random-seed-load.service
-             1ms systemd-readahead-done.service
-             1ms sys-fs-fuse-connections.mount</p>
-
 <p>Result:</p>
 
-<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM  "></iframe></div>
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM "></iframe></div>
 
 </div>
   
@@ -988,61 +1097,6 @@ After a quick test it seems to work like a charm. I might install <a href="http:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/">Lookat/Bekijk 1.4.3rc1 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-04-27T09:21:00+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>9:21 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Trying to release more often&hellip;</p>
-
-<p>The first release candicate of lookat 1.4.3 has been released.</p>
-
-<h3>ChangeLog</h3>
-
-<h5>Lookat / Bekijk 1.4.3rc1  ( 27 Apr 2013 )</h5>
-
-<blockquote><ul>
-<li>Fixed compile issue with llvm clang</li>
-</ul>
-</blockquote>
-
-<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
-, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.3rc1.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
-
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/5">&larr; Older</a>
@@ -1078,6 +1132,10 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2017/09/30/jenkins-build-with-20-cores/">Jenkins Build With 20 Cores</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a>
       </li>
     
@@ -1091,10 +1149,6 @@ After a quick test it seems to work like a charm. I might install <a href="http:
     
       <li class="post">
         <a href="/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/">Install Parabola GNU/Linux on an Encrypted Btrfs Logical Volume</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">How to Install Libreboot on a ThinkPad X60</a>
       </li>
     
   </ul>

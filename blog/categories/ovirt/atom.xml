@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Ovirt | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/ovirt/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-09-16T16:34:58+02:00</updated>
+  <updated>2017-10-01T09:32:04+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -47,13 +47,13 @@
 
 <h1>systemctl enable ip6tables.service</h1>
 
-<p>``
-My /home was still on a  regular harddisk I move it to the ssd</p>
+<pre><code>
+My /home was still on a regular harddisk I move it to the ssd.
+</code></pre>
 
-<p>```
-[staf@vicky~]$ systemd-analyze
+<p>$ systemd-analyze
 Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
-[staf@vicky~]$ systemd-analyze blame
+$ systemd-analyze blame
            546ms postfix.service
            537ms NetworkManager.service
            508ms accounts-daemon.service
@@ -109,8 +109,10 @@ Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721
              1ms systemd-readahead-done.service
              1ms sys-fs-fuse-connections.mount</p>
 
+<p>```</p>
+
 <p>Result:
-<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM  "></iframe></div></p>
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM "></iframe></div></p>
 ]]></content>
   </entry>
   

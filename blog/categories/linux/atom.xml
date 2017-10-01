@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-09-16T16:34:58+02:00</updated>
+  <updated>2017-10-01T09:32:04+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -32,7 +32,7 @@
 <h3>Part list:</h3>
 
 <ul>
-<li><strong>CPU:</strong> 2 * <a href=\"http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz\">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
+<li><strong>CPU:</strong> 2 * <a href="http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
 <li><strong>Motherboard:</strong> <a href="http://www.asrockrack.com/general/productdetail.asp?Model=EP2C602-4L/D16#Specifications">Asrock EP2C602-4L/D16</a> I choose this motherboard because it has a lot of DIMM slots so I can upgrade the memory in the further. Downside is that layout is SSI EEB that limits the case choose.</li>
 <li><strong>Memory:</strong> 4 * SAMSUNG M393B2G70BH0-CK0 16GB which gives me 64 GB <a href="https://en.wikipedia.org/wiki/ECC_memory">ECC memory</a></li>
 <li><strong>CPU Cooler</strong> 2 * <a href="http://www.thermaltake.com/products-model.aspx?id=C_00002470">Thermaltake Water 3.0 Performer C</a> For the first I used watercooling mainly because I wanted to make sure that the cooling will not block the access to the DIMM slots.</li>
