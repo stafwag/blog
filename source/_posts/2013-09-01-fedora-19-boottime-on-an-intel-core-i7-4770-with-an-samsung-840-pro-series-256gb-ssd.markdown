@@ -36,9 +36,10 @@ replaced firewalld by "static" iptables;
 # systemctl enable ip6tables.service
 ```
 
-My /home was still on a  regular harddisk I move it to the ssd.
+My /home was still on a regular harddisk I move it to the ssd.
 
 ```
+
 $ systemd-analyze 
 Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
 $ systemd-analyze blame
@@ -96,7 +97,8 @@ $ systemd-analyze blame
              1ms systemd-random-seed-load.service
              1ms systemd-readahead-done.service
              1ms sys-fs-fuse-connections.mount
+
 ```
 
 Result:
-youtube gp96Tt349DM
+{% youtube gp96Tt349DM %}
