@@ -3,7 +3,7 @@ layout: post
 title: "20 core Dual Processor jenkins build workstation"
 date: 2017-09-16 14:29:51 +0200
 comments: true
-categories: [ Xeon, Jenkins,Linux, BSD, Solaris ] 
+categories: [ xeon, jenkins, linux, bsd, solaris ] 
 ---
 
 {% img left /images/201709_xeon_cpu_side.jpg 400 388 "Xeon CPU Side" %} 
@@ -19,7 +19,7 @@ Looking for a solution that is still affordable I ended up with building a dual 
 
 ### Part list:
 
-* **CPU:** 2 \* <a href=\"http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz\">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.
+* **CPU:** 2 \* <a href="http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.
 * **Motherboard:** <a href="http://www.asrockrack.com/general/productdetail.asp?Model=EP2C602-4L/D16#Specifications">Asrock EP2C602-4L/D16</a> I choose this motherboard because it has a lot of DIMM slots so I can upgrade the memory in the further. Downside is that layout is SSI EEB that limits the case choose.
 * **Memory:** 4 \* SAMSUNG M393B2G70BH0-CK0 16GB which gives me 64 GB <a href="https://en.wikipedia.org/wiki/ECC_memory">ECC memory</a> 
 * **CPU Cooler** 2 \* <a href="http://www.thermaltake.com/products-model.aspx?id=C_00002470">Thermaltake Water 3.0 Performer C</a> For the first I used watercooling mainly because I wanted to make sure that the cooling will not block the access to the DIMM slots.
