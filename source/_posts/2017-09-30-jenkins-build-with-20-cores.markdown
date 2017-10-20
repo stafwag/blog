@@ -5,7 +5,7 @@ date: 2017-09-30 19:18:14 +0200
 comments: true
 categories: [ jenkins, docker ] 
 ---
-I finally got the time to try out my jenkins build on my new <a href="/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a>
+I finally got the time to try out my jenkins build on my new <a href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a>
 
 {% youtube BNn9absXkE8 %}
 
