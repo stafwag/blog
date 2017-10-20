@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-10-01T09:32:04+02:00</updated>
+  <updated>2017-10-20T20:02:57+02:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,28 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Model-m Tux Update...]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
+    <updated>2017-10-20T17:27:41+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/modelm_tux_only.jpg" width="400" height="266" title="&ldquo;modelm_tux_only.jpg&rdquo;" ></p>
+
+<p>I own a <a href="https://en.wikipedia.org/wiki/Unicomp">Unicomp</a> <a herf="https://en.wikipedia.org/wiki/Model_M_keyboard">model-m keyboard</a>. The keyboard has a nice key feel but it has windows super key(s).</p>
+
+<p><br /></p>
+
+<p>I don&rsquo;t use super key(s), and would prefer to have a keyboard without it.  But when it has super keys  I&rsquo;d rather have it without the windows logo on it so it was time  to replace them with <a href="http://www.keyboardco.com/product/unicomp-gray-linux-tux-keyset.asp">the tux version</a></p>
+
+<h3>Pictures</h3>
+
+<p><a href="/images/modelm_tux_package.jpg"><img src="/images/modelm_tux_package.jpg" height="250" width="375" alt="modelm_tux_package.jpg" /></a>
+<a href="/images/modelm_all_keys.jpg"><img src="/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
+<a href="/images/modelm_tux_only.jpg"><img src="/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
+<a href="/images/modelm_with_tux_keys.jpg"><img src="/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
@@ -922,145 +944,6 @@ Unknown operation 'zfs'.
 Have fun...
 </p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Yum Update on Fedora 19 and Zfs on Linux]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/"/>
-    <updated>2013-10-13T17:51:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux</id>
-    <content type="html"><![CDATA[<p><img class="left <a" src="href="http://zfsonlinux.org/images/zfs-linux.png">http://zfsonlinux.org/images/zfs-linux.png</a>" width="200" height="125" title="&ldquo;zfs on linux&rdquo;" ></p>
-
-<p>I use  <a href="http://zfsonlinux.org/"> zfs on linux</a> on <a href="http://fedoraproject.org/">fedora</a> now.</p>
-
-<p><a href="http://zfsonlinux.org/fedora.html">The installation</a> was pretty straightforward but after the installation of <a href="http://open-zfs.org/">zfs</a> <code>yum update</code> failed.</p>
-
-<p><br /></p>
-
-<pre><code>[root@vicky etc]# yum update -y
-Loaded plugins: langpacks, refresh-packagekit
-Repository google-chrome is listed more than once in the configuration
-fedora/19/x86_64/metalink                                                                                                                                                                   |  33 kB  00:00:00     
-fedora                                                                                                                                                                                      | 4.2 kB  00:00:00     
-fedora-chromium-stable                                                                                                                                                                      | 3.4 kB  00:00:00     
-google-chrome                                                                                                                                                                               |  951 B  00:00:00     
-rpmfusion-free                                                                                                                                                                              | 3.3 kB  00:00:00     
-rpmfusion-free-updates                                                                                                                                                                      | 3.3 kB  00:00:00     
-rpmfusion-nonfree                                                                                                                                                                           | 3.3 kB  00:00:00     
-rpmfusion-nonfree-updates                                                                                                                                                                   | 3.3 kB  00:00:00     
-updates/19/x86_64/metalink                                                                                                                                                                  |  30 kB  00:00:00     
-updates                                                                                                                                                                                     | 4.4 kB  00:00:00     
-zfs                                                                                                                                                                                         | 2.9 kB  00:00:00     
-(1/6): fedora-chromium-stable/19/x86_64/primary_db                                                                                                                                          |  20 kB  00:00:00     
-(2/6): zfs/19/x86_64/primary_db                                                                                                                                                             | 6.7 kB  00:00:00     
-(3/6): updates/19/x86_64/group_gz                                                                                                                                                           | 385 kB  00:00:02     
-(4/6): fedora/19/x86_64/group_gz                                                                                                                                                            | 384 kB  00:00:06     
-(5/6): updates/19/x86_64/primary_db                                                                                                                                                         | 8.8 MB  00:01:53     
-(6/6): fedora/19/x86_64/primary_db                                                                                                                                                          |  17 MB  00:03:34     
-(1/10): google-chrome/primary                                                                                                                                                               | 1.9 kB  00:00:00     
-(2/10): rpmfusion-free-updates/19/x86_64/primary_db                                                                                                                                         | 217 kB  00:00:01     
-(3/10): rpmfusion-nonfree/19/x86_64/primary_db                                                                                                                                              | 149 kB  00:00:00     
-(4/10): rpmfusion-free/19/x86_64/primary_db                                                                                                                                                 | 440 kB  00:00:03     
-(5/10): rpmfusion-nonfree-updates/19/x86_64/primary_db                                                                              b                                                       |  97 kB  00:00:00     
-(6/10): rpmfusion-nonfree-updates/19/x86_64/group_gz                                                                                                                                        |  990 B  00:00:05     
-(7/10): rpmfusion-nonfree/19/x86_64/group_gz                                                                                                                                                |  993 B  00:00:07     
-(8/10): rpmfusion-free/19/x86_64/group_gz                                                                                                                                                   | 1.6 kB  00:00:07     
-(9/10): rpmfusion-free-updates/19/x86_64/group_gz                                                                                                                                           | 1.6 kB  00:00:07     
-(10/10): updates/19/x86_64/updateinfo                                                                                                                                                       | 861 kB  00:00:09     
-google-chrome                                                                                                                                                                                                  3/3
-Resolving Dependencies
---&gt; Running transaction check
----&gt; Package dkms.noarch 0:2.2.0.3-14.zfs1.fc19 will be updated
---&gt; Processing Dependency: dkms = 2.2.0.3-14.zfs1.fc19 for package: zfs-dkms-0.6.2-1.fc19.noarch
----&gt; Package dkms.noarch 0:2.2.0.3-17.fc19 will be an update
---&gt; Finished Dependency Resolution
-Error: Package: zfs-dkms-0.6.2-1.fc19.noarch (@zfs)
-           Requires: dkms = 2.2.0.3-14.zfs1.fc19
-           Removing: dkms-2.2.0.3-14.zfs1.fc19.noarch (@zfs)
-               dkms = 2.2.0.3-14.zfs1.fc19
-           Updated By: dkms-2.2.0.3-17.fc19.noarch (updates)
-               dkms = 2.2.0.3-17.fc19
-           Available: dkms-2.2.0.3-5.fc19.noarch (fedora)
-               dkms = 2.2.0.3-5.fc19
- You could try using --skip-broken to work around the problem
- You could try running: rpm -Va --nofiles --nodigest
-[root@vicky etc]# 
-</code></pre>
-
-<p>On another fedora system <code>yum update</code> worked fine, after reviewing the differences in the yum configuration it seems that <code>yum-plugin-priorities</code> wasn&rsquo;t installed on my box. After installing <code>yum-plugin-priorities</code></p>
-
-<pre><code>[root@vicky etc]# yum install yum-plugin-priorities
-Loaded plugins: langpacks, refresh-packagekit
-Repository google-chrome is listed more than once in the configuration
-Resolving Dependencies
---&gt; Running transaction check
----&gt; Package yum-plugin-priorities.noarch 0:1.1.31-18.fc19 will be installed
---&gt; Finished Dependency Resolution
-
-Dependencies Resolved
-
-===================================================================================================================================================================================================================
- Package                                                     Arch                                         Version                                              Repository                                     Size
-===================================================================================================================================================================================================================
-Installing:
- yum-plugin-priorities                                       noarch                                       1.1.31-18.fc19                                       updates                                        22 k
-
-Transaction Summary
-===================================================================================================================================================================================================================
-Install  1 Package
-
-Total download size: 22 k
-Installed size: 28 k
-Is this ok [y/d/N]: y
-Downloading packages:
-yum-plugin-priorities-1.1.31-18.fc19.noarch.rpm                                                                                                                                             |  22 kB  00:00:01     
-Running transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-  Installing : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
-  Verifying  : yum-plugin-priorities-1.1.31-18.fc19.noarch                                                                                                                                                     1/1 
-
-Installed:
-  yum-plugin-priorities.noarch 0:1.1.31-18.fc19                                                                                                                                                                    
-
-Complete!
-[root@vicky etc]# 
-</code></pre>
-
-<p>And make sure that the zfs has the priority</p>
-
-<pre><code>[root@localhost etc]# cat yum.repos.d/zfs.repo
-[zfs]
-name=ZFS of Linux for Fedora $releasever
-baseurl=http://archive.zfsonlinux.org/fedora/$releasever/$basearch/
-enabled=1
-priority=1
-metadata_expire=7d
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-Requires:       yum-plugin-priorities
-
-[zfs-source]
-name=ZFS of Linux for Fedora $releasever - Source
-baseurl=http://archive.zfsonlinux.org/fedora/$releasever/SRPMS/
-enabled=0
-metadata_expire=7d
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-zfsonlinux
-[root@vicky etc]# 
-</code></pre>
-
-<p> <code>yum update</code> works again.</p>
-
-<pre><code>[root@vicky etc]# yum update -y
-Loaded plugins: langpacks, priorities, refresh-packagekit
-Repository google-chrome is listed more than once in the configuration
-2 packages excluded due to repository priority protections
-No packages marked for update
-[root@vicky etc]# 
-</code></pre>
 ]]></content>
   </entry>
   

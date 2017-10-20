@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/</loc>
+    <lastmod>2017-10-20T17:27:41+02:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores/</loc>
     <lastmod>2017-09-30T19:18:14+02:00</lastmod>
   </url>
@@ -463,5 +467,11 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/jenkins/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/keyboard/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/modelm/</loc>
   </url>
 </urlset>

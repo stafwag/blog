@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Keyboard | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/keyboard/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2017-10-20T20:02:57+02:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Model-m Tux Update...]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
+    <updated>2017-10-20T17:27:41+02:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/modelm_tux_only.jpg" width="400" height="266" title="&ldquo;modelm_tux_only.jpg&rdquo;" ></p>
+
+<p>I own a <a href="https://en.wikipedia.org/wiki/Unicomp">Unicomp</a> <a herf="https://en.wikipedia.org/wiki/Model_M_keyboard">model-m keyboard</a>. The keyboard has a nice key feel but it has windows super key(s).</p>
+
+<p><br /></p>
+
+<p>I don&rsquo;t use super key(s), and would prefer to have a keyboard without it.  But when it has super keys  I&rsquo;d rather have it without the windows logo on it so it was time  to replace them with <a href="http://www.keyboardco.com/product/unicomp-gray-linux-tux-keyset.asp">the tux version</a></p>
+
+<h3>Pictures</h3>
+
+<p><a href="/images/modelm_tux_package.jpg"><img src="/images/modelm_tux_package.jpg" height="250" width="375" alt="modelm_tux_package.jpg" /></a>
+<a href="/images/modelm_all_keys.jpg"><img src="/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
+<a href="/images/modelm_tux_only.jpg"><img src="/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
+<a href="/images/modelm_with_tux_keys.jpg"><img src="/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
+]]></content>
+  </entry>
+  
+</feed>
