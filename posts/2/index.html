@@ -9,8 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Thunderbird: Importing S/mime Certificate Failed Jan 17th, 2016 9:03 am On http://kb.mozillazine.org/Getting_an_SMIME_certificate
-you get a list of &hellip;">
+  <meta name="description" content="CGIpaf 1.3.5 Released Apr 13th, 2016 11:00 am CGIpaf 1.3.5 has been released ChangeLog version 1.3.5 ( 13 Apr 2016 ) pwd_mkdb errors were not &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,68 @@ you get a list of &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released/">CGIpaf 1.3.5 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2016-04-13T11:00:13+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:00 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CGIpaf 1.3.5 has been released</p>
+
+<h3>ChangeLog</h3>
+
+<h5>version 1.3.5         ( 13 Apr 2016 )</h5>
+
+<blockquote><ul>
+<li>pwd_mkdb errors were not handled correctly on BSD</li>
+<li>kyua test scripts added</li>
+</ul>
+</blockquote>
+
+<p>CGIpaf 1.3.5 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
+
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
+
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
+
+<p style="font-style: italic;">
+Have fun...
+</p>
+
+
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -3887,479 +3948,6 @@ Thanks to Brian Callahan for the port!</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/">Using Squid to Cache FreeBSD Packages</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-06-23T08:43:00+02:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2015</span></span> <span class='time'>8:43 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>PKGNG config</h2>
-
-<p>I manage a few <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a> behind a <a href="http://www.squid-cache.org/">squid proxy</a>. <a href="https://wiki.freebsd.org/pkgng">pkgng</a> is configured to use the proxy:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/root # cat /etc/pkg/FreeBSD.conf 
-</span><span class='line'># $FreeBSD: releng/10.1/etc/pkg/FreeBSD.conf 263938 2014-03-30 15:29:54Z bdrewery $
-</span><span class='line'>#
-</span><span class='line'># To disable this repository, instead of modifying or removing this file,
-</span><span class='line'># create a /usr/local/etc/pkg/repos/FreeBSD.conf file:
-</span><span class='line'>#
-</span><span class='line'>#   mkdir -p /usr/local/etc/pkg/repos
-</span><span class='line'>#   echo "FreeBSD: { enabled: no }" &gt; /usr/local/etc/pkg/repos/FreeBSD.conf
-</span><span class='line'>#
-</span><span class='line'>
-</span><span class='line'>pkg_env: {
-</span><span class='line'>
-</span><span class='line'>        http_proxy: "http://xxx.xxx.xxx.xxx:3128"
-</span><span class='line'>
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>FreeBSD: {
-</span><span class='line'>  url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest",
-</span><span class='line'>  mirror_type: "srv",
-</span><span class='line'>  signature_type: "fingerprints",
-</span><span class='line'>  fingerprints: "/usr/share/keys/pkg",
-</span><span class='line'>  enabled: yes
-</span><span class='line'>}
-</span><span class='line'>root@rataplan:/root # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>SQUID config</h2>
-
-<h3>Recompile</h3>
-
-<p>The squid proxy doesn&rsquo;t cache to the FreeBSD packages. The squid pkgng package  is compiled with
-&ldquo;LAX_HTTP  Do not enforce strict HTTP compliance&rdquo; option disabled. which doesn&rsquo;t allow you to override the cache headers sent by the remote site.</p>
-
-<p>In order to cache the FreeBSD packages we need to recompile squid with &ldquo;LAX_HTTPD&rdquo; enabled.</p>
-
-<h4>Updating the ports</h4>
-
-<h5>Physical system</h5>
-
-<p>If you use a physical FreeBSD system as your proxy run the &ldquo;portsnap fetch&rdquo; command.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# portsnap fetch
-</span><span class='line'>Looking up portsnap.FreeBSD.org mirrors... 7 mirrors found.
-</span><span class='line'>Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
-</span><span class='line'>Fetching snapshot metadata... done.
-</span><span class='line'>Updating from Mon Jun 22 14:30:21 CEST 2015 to Tue Jun 23 08:39:41 CEST 2015.
-</span><span class='line'>Fetching 4 metadata patches... done.
-</span><span class='line'>Applying metadata patches... done.
-</span><span class='line'>Fetching 0 metadata files... done.
-</span><span class='line'>Fetching 417 patches. 
-</span><span class='line'>(417/417) 100.00%  done.                                       
-</span><span class='line'>done.
-</span><span class='line'>Applying patches... 
-</span><span class='line'>done.
-</span><span class='line'>Fetching 3 new ports or files... done.
-</span><span class='line'>[root@rataplan ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@rataplan ~]# portsnap extract
-</span><span class='line'>/usr/ports/.arcconfig
-</span><span class='line'>/usr/ports/.gitignore
-</span><span class='line'>/usr/ports/CHANGES
-</span><span class='line'>/usr/ports/CONTRIBUTING.md
-</span><span class='line'>/usr/ports/COPYRIGHT
-</span><span class='line'>/usr/ports/GIDs
-</span><span class='line'>
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>
-</span><span class='line'>/usr/ports/x11/zenity/
-</span><span class='line'>Building new INDEX files... done.
-</span><span class='line'>[root@rataplan ~]# 
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>Jail</h5>
-
-<p>If you use an <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> as your proxy run the &ldquo;ezjail-admin update -P&rdquo; command.</p>
-
-<h4>Build</h4>
-
-<h5>Stop SQUID</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # /usr/local/etc/rc.d/squid stop
-</span><span class='line'>squid not running? (check /var/run/squid/squid.pid).
-</span><span class='line'>root@stafproxy:/usr/ports/www/squid # </span></code></pre></td></tr></table></div></figure>
-
-
-<h5>Make config</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # cd
-</span><span class='line'>root@stafproxy:/root # cd /usr/ports/www/squid
-</span><span class='line'>root@stafproxy:/usr/ports/www/squid # make config</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>       ┌─────────────────────────────── squid-3.5.5 ──────────────────────────────────┐
-</span><span class='line'>       │ ┌──────────────────────────────────────────────────────────────────────────┐ │  
-</span><span class='line'>       │ │ [ ] ARP_ACL         ARP/MAC/EUI based authentification                   │ │  
-</span><span class='line'>       │ │ [ ] AUTH_LDAP       Install LDAP authentication helpers                  │ │  
-</span><span class='line'>       │ │ [x] AUTH_NIS        Install NIS/YP authentication helpers                │ │  
-</span><span class='line'>       │ │ [ ] AUTH_SASL       Install SASL authentication helpers                  │ │  
-</span><span class='line'>       │ │ [ ] AUTH_SMB        Install SMB auth. helpers (req. Samba)               │ │  
-</span><span class='line'>       │ │ [ ] AUTH_SQL        Install SQL based auth (uses MySQL)                  │ │  
-</span><span class='line'>       │ │ [ ] CACHE_DIGESTS   Use cache digests                                    │ │  
-</span><span class='line'>       │ │ [ ] DEBUG           Build with extended debugging support                │ │  
-</span><span class='line'>       │ │ [ ] DELAY_POOLS     Delay pools (bandwidth limiting)                     │ │  
-</span><span class='line'>       │ │ [x] DOCS            Build and/or install documentation                   │ │  
-</span><span class='line'>       │ │ [ ] ECAP            Loadable content adaptation modules                  │ │  
-</span><span class='line'>       │ │ [ ] ESI             ESI support                                          │ │  
-</span><span class='line'>       │ │ [x] EXAMPLES        Build and/or install examples                        │ │  
-</span><span class='line'>       │ │ [ ] FOLLOW_XFF      Support for the X-Following-For header               │ │  
-</span><span class='line'>       │ │ [x] FS_AUFS         AUFS (threaded-io) support                           │ │  
-</span><span class='line'>       │ │ [x] FS_DISKD        DISKD storage engine controlled by separate service  │ │  
-</span><span class='line'>       │ │ [ ] FS_ROCK         ROCK storage engine                                  │ │  
-</span><span class='line'>       │ │ [x] HTCP            HTCP support                                         │ │  
-</span><span class='line'>       │ │ [ ] ICAP            the ICAP client                                      │ │  
-</span><span class='line'>       │ │ [ ] ICMP            ICMP pinging and network measurement                 │ │  
-</span><span class='line'>       │ │ [x] IDENT           Ident lookups (RFC 931)                              │ │  
-</span><span class='line'>       │ │ [x] IPV6            IPv6 protocol support                                │ │  
-</span><span class='line'>       │ │ [x] KQUEUE          Kqueue(2) support                                    │ │  
-</span><span class='line'>       │ │ [ ] LARGEFILE       Support large (&gt;2GB) cache and log files             │ │  
-</span><span class='line'>       │ │ [x] LAX_HTTP        Do not enforce strict HTTP compliance                │ │  
-</span><span class='line'>       │ │ [ ] NETTLE          Nettle MD5 algorithm support                         │ │  
-</span><span class='line'>       │ │ [x] SNMP            SNMP support                                         │ │  
-</span><span class='line'>       │ │ [ ] SSL             SSL gatewaying support                               │ │  
-</span><span class='line'>       │ │ [ ] SSL_CRTD        Use ssl_crtd to handle SSL cert requests             │ │  
-</span><span class='line'>       │ │ [ ] STACKTRACES     Enable automatic backtraces on fatal errors          │ │  
-</span><span class='line'>       │ │ [ ] TP_IPF          Transparent proxying with IPFilter                   │ │  
-</span><span class='line'>       │ │ [ ] TP_IPFW         Transparent proxying with IPFW                       │ │  
-</span><span class='line'>       │ │ [ ] TP_PF           Transparent proxying with PF                         │ │  
-</span><span class='line'>       │ │ [ ] VIA_DB          Forward/Via database                                 │ │  
-</span><span class='line'>       │ └─────v(+)─────────────────────────────────────────────────────────82%─────┘ │  
-</span><span class='line'>       ├──────────────────────────────────────────────────────────────────────────────┤  
-</span><span class='line'>       │                       &lt;  OK  &gt;            &lt;Cancel&gt;                           │  
-</span><span class='line'>       └──────────────────────────────────────────────────────────────────────────────┘  
-</span><span class='line'>                                                                                         
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>Make install</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # make
-</span><span class='line'>===&gt;  License GPLv2 accepted by the user
-</span><span class='line'>===&gt;  Found saved configuration for squid-3.5.5
-</span><span class='line'>===&gt;   squid-3.5.5 depends on file: /usr/local/sbin/pkg - found
-</span><span class='line'>===&gt; Fetching all distfiles required by squid-3.5.5 for building
-</span><span class='line'>===&gt;  Extracting for squid-3.5.5
-</span><span class='line'>=&gt; SHA256 Checksum OK for squid3.5/squid-3.5.5.tar.xz.
-</span><span class='line'>
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>
-</span><span class='line'>Making install in test-suite
-</span><span class='line'>install  -m 0644 /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5/helpers/basic_auth/DB/passwd.sql  /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/examples/squid
-</span><span class='line'>(cd /var/ports/basejail/usr/ports/www/squid/work/squid-3.5.5 && install  -m 0644 QUICKSTART README RELEASENOTES.html doc/debug-sections.txt /var/ports/basejail/usr/ports/www/squid/work/stage/usr/local/share/doc/squid)
-</span><span class='line'>/bin/mkdir -p /var/ports/basejail/usr/ports/www/squid/work/stage/var/squid/logs
-</span><span class='line'>/bin/rmdir /var/ports/basejail/usr/ports/www/squid/work/stage/var/run/squid
-</span><span class='line'>====&gt; Compressing man pages (compress-man)
-</span><span class='line'>===&gt; Staging rc.d startup script(s)</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # make install clean
-</span><span class='line'>===&gt;  Installing for squid-3.5.5                                                                                                                                                                                                             
-</span><span class='line'>===&gt;   squid-3.5.5 depends on file: /usr/local/bin/perl5.20.2 - found                                                                                                                                                                        
-</span><span class='line'>===&gt;  Checking if squid already installed                                                                                                                                                                                                    
-</span><span class='line'>===&gt;   Registering installation for squid-3.5.5                                                                                                                                                                                              
-</span><span class='line'>
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>
-</span><span class='line'>===&gt; SECURITY REPORT: 
-</span><span class='line'>      This port has installed the following files which may act as network
-</span><span class='line'>      servers and may therefore pose a remote security risk to the system.
-</span><span class='line'>/usr/local/libexec/squid/basic_radius_auth
-</span><span class='line'>/usr/local/sbin/squid
-</span><span class='line'>
-</span><span class='line'>      This port has installed the following startup scripts which may cause
-</span><span class='line'>      these network services to be started at boot time.
-</span><span class='line'>/usr/local/etc/rc.d/squid
-</span><span class='line'>
-</span><span class='line'>      If there are vulnerabilities in these programs there may be a security
-</span><span class='line'>      risk to the system. FreeBSD makes no guarantee about the security of
-</span><span class='line'>      ports included in the Ports Collection. Please type 'make deinstall'
-</span><span class='line'>      to deinstall the port if this is a concern.
-</span><span class='line'>
-</span><span class='line'>      For more information, and contact details about the security
-</span><span class='line'>      status of this software, see the following webpage: 
-</span><span class='line'>http://www.squid-cache.org/
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>pkg lock</h5>
-
-<p>Lock the squid package to prevent the upgrade from pkgng tree.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # pkg lock squid
-</span><span class='line'>squid-3.5.5: lock this package? [y/N]: y
-</span><span class='line'>Locking squid-3.5.5
-</span><span class='line'>root@stafproxy:/usr/ports/www/squid #
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>View the locked pkgng packages</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # pkg lock -l
-</span><span class='line'>Currently locked packages:
-</span><span class='line'>squid-3.5.5
-</span><span class='line'>root@stafproxy:/usr/ports/www/squid # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>SQUID config</h3>
-
-<h4>Update squid.conf</h4>
-
-<p>Edit the squid config:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/www/squid # cd /usr/local/etc/squid/
-</span><span class='line'>root@stafproxy:/usr/local/etc/squid # vi squid.conf
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Add a &ldquo;refresh_pattern&rdquo; for &ldquo;pkgmir.pkg.freebsd.org&rdquo;:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>refresh_pattern ^ftp:           1440    20%     10080
-</span><span class='line'>refresh_pattern ^http://pkgmir.pkg.freebsd.org/.*\.txz          1440    100%    10080 ignore-private ignore-must-revalidate override-expire ignore-no-cache
-</span><span class='line'>refresh_pattern ^gopher:        1440    0%      1440
-</span><span class='line'>refresh_pattern -i (/cgi-bin/|\?) 0     0%      0
-</span><span class='line'>refresh_pattern .               0       20%     4320</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Start squid</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc/squid # ../rc.d/squid start
-</span><span class='line'>Starting squid.
-</span><span class='line'>root@stafproxy:/usr/local/etc/squid # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>rc.conf</h4>
-
-<p>Make sure that the system is configured to start squid during the system startup.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc/squid # cat /etc/rc.conf 
-</span><span class='line'>#
-</span><span class='line'># squid
-</span><span class='line'>#
-</span><span class='line'>
-</span><span class='line'>squid_enable="YES"
-</span><span class='line'>
-</span><span class='line'>root@stafproxy:/usr/local/etc/squid # </span></code></pre></td></tr></table></div></figure>
-
-
-<p>SQUID should cache the pkgng downloads now.</p>
-
-<p><em>Have fun</em></p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/3">&larr; Older</a>
@@ -4395,6 +3983,10 @@ Thanks to Brian Callahan for the port!</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2017/12/27/bacula-on-freebsd-part3/">Bacula on FreeBSD (Part 3 Storage Setup)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/">Model-m Tux Update...</a>
       </li>
     
@@ -4408,10 +4000,6 @@ Thanks to Brian Callahan for the port!</p>
     
       <li class="post">
         <a href="/blog/blog/2017/09/09/bacula-on-freebsd-part2/">Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL )</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">Bacula on FreeBSD (Part 1 PostgresSQL in a Jail)</a>
       </li>
     
   </ul>

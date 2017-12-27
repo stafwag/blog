@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/</loc>
+    <lastmod>2017-12-27T11:25:25+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/</loc>
     <lastmod>2017-10-20T17:27:41+02:00</lastmod>
   </url>
@@ -457,7 +461,10 @@
     <loc>http://stafwag.github.io/blog/blog/categories/postgresql/</loc>
   </url>
   <url>
-    <loc>http://stafwag.github.io/blog/blog/categories/postgresql/</loc>
+    <loc>http://stafwag.github.io/blog/blog/categories/bacula/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/backup/</loc>
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/ssl/</loc>
