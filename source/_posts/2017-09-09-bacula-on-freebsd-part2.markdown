@@ -3,7 +3,7 @@ layout: post
 title: "Bacula on FreeBSD (part 2 Bacula Catalog over SSL )"
 date: 2017-09-09 10:27:03 +0200
 comments: true
-categories:  bacula, freebsd, backup, postgresql, ssl
+categories:  [ bacula, freebsd, backup, postgresql, ssl ]
 ---
 {% img right /images/postgressl.png 300 300 "PostgreSSL" %} 
 
