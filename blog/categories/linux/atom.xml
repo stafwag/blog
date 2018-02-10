@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-12-27T13:58:27+01:00</updated>
+  <updated>2018-02-10T09:26:01+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,410 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Update Your CPU Microcode on Arch Linux]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/"/>
+    <updated>2018-02-10T08:33:01+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux</id>
+    <content type="html"><![CDATA[<h1>Meltdown &amp; spectre</h1>
+
+<p>With Meldown <a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754"><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754">https://nvd.nist.gov/vuln/detail/CVE-2017-5754</a></a>, Spectre Variant 1 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> and Spectre Variant 2 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> out in the wild there is a lot of confusing going about updating microcode.</p>
+
+<p>There is a &ldquo;Spectre &amp; Meltdown Checker&rdquo; available at <a href="https://github.com/speed47/spectre-meltdown-checker"><a href="https://github.com/speed47/spectre-meltdown-checker">https://github.com/speed47/spectre-meltdown-checker</a></a></p>
+
+<p>Usage is very easy just clone the git repository and run the script.</p>
+
+<h1>Microcode</h1>
+
+<p>Microcode isn&rsquo;t uploaded to the CPU but loaded during the boot strap of the CPU.
+Normally the BIOS upload the microcode to the CPU but this can also be done by the by the bootloader, or the operating system kernel.</p>
+
+<h2>Grub</h2>
+
+<p>Normally you get an updated bios for your motherboard or computer vendor to get new microcode for your CPU.</p>
+
+<p>But when your vendor hasn&rsquo;t released a new Bios yet or when you are using old hardware you might not get a new BIOS with updated microcode.</p>
+
+<p>Lucky microcode can also loaded by bootloader this way you can get new microcode without a BIOS update if the new microcode cuase issues you disable it in the bootloader.</p>
+
+<p>The process for Arch Linux is describe at the Arch Wiki <a href="https://wiki.archlinux.org/index.php/Microcode"><a href="https://wiki.archlinux.org/index.php/Microcode">https://wiki.archlinux.org/index.php/Microcode</a></a></p>
+
+<p>You&rsquo;ll find journey how to update the microcode on my Arch GNU/Linux system below.</p>
+
+<h3>Current microcode</h3>
+
+<pre><code>[staf@frija ~]$ dmesg | grep -i microcode
+[    2.102649] microcode: sig=0x40661, pf=0x20, revision=0xa
+[    2.102981] microcode: Microcode Update Driver: v2.01 &lt;tigran@aivazian.fsnet.co.uk&gt;, Peter Oruba
+[staf@frija ~]$ 
+</code></pre>
+
+<h3>Install intel-ucode</h3>
+
+<pre><code>[root@vicky ~]# pacman -Syy intel-ucode
+:: Synchronizing package databases...
+ core                     126.8 KiB  12.4M/s 00:00 [######################] 100%
+ extra                   1629.4 KiB  11.4M/s 00:00 [######################] 100%
+ community                  4.1 MiB  11.0M/s 00:00 [######################] 100%
+ multilib                 167.2 KiB  8.16M/s 00:00 [######################] 100%
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) intel-ucode-20180108-1
+
+Total Download Size:   1.12 MiB
+Total Installed Size:  1.55 MiB
+
+:: Proceed with installation? [Y/n] y
+:: Retrieving packages...
+ intel-ucode-2018010...  1145.0 KiB   916K/s 00:01 [######################] 100%
+(1/1) checking keys in keyring                     [######################] 100%
+(1/1) checking package integrity                   [######################] 100%
+(1/1) loading package files                        [######################] 100%
+(1/1) checking for file conflicts                  [######################] 100%
+(1/1) checking available disk space                [######################] 100%
+:: Processing package changes...
+(1/1) installing intel-ucode                       [######################] 100%
+:: Running post-transaction hooks...
+(1/1) Arming ConditionNeedsUpdate...
+[root@vicky ~]# 
+</code></pre>
+
+<h3>Verify the available microcode for your CPU</h3>
+
+<pre><code>[staf@frija ~]$ yaourt  iucode-tool
+1 aur/iucode-tool 2.2-1 (59) (4.87)
+    Tool to manipulate Intel® IA-32/X86-64 microcode bundles
+==&gt; Enter n° of packages to be installed (e.g., 1 2 3 or 1-3)
+==&gt; ----------------------------------------------------------
+==&gt; 1
+
+
+==&gt; Downloading iucode-tool PKGBUILD from AUR...
+x .SRCINFO
+x PKGBUILD
+oxe commented on 2017-10-01 17:50            
+issue with pgp key and have tried various times and not sure what I might be doing wrong but why do you have so many self-signed sigs?
+
+gpg --keyserver hkps.pool.sks-keyservers.net  --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+
+uid  Henrique de Moraes Holschuh hmh@debian.org
+sig!3        0BD9E81139CB4807 2012-06-26  [self-signature]
+uid  Henrique de Moraes Holschuh hmh@hmh.eng.br
+sig!3        0BD9E81139CB4807 2012-06-26  [self-signature]
+sub  A4B9D9AFC03142CD
+sig!         0BD9E81139CB4807 2012-06-26  [self-signature]
+sub  981C05C79F47CF26
+sig!         0BD9E81139CB4807 2012-06-26  [self-signature]
+sub  9137FBD3DE6F0A93
+sig!         0BD9E81139CB4807 2014-03-23  [self-signature]
+sub  FFDB99C00EABDE2E
+sig!         0BD9E81139CB4807 2014-03-23  [self-signature]
+sub  FE11BFA68B158E98
+sig!         0BD9E81139CB4807 2016-03-26  [self-signature]
+sub  A4B1618F7F267286
+sig!         0BD9E81139CB4807 2016-03-26  [self-signature]
+key 0BD9E81139CB4807:
+6 duplicate signatures removed
+45 signatures not checked due to missing keys
+gpg: key 0BD9E81139CB4807: "Henrique de Moraes Holschuh hmh@hmh.eng.br" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+
+please advise
+
+progandy commented on 2017-10-01 18:19           
+@oxe: I am not Henrique, so I don't know what he did with his key that it looks this strange, but it doesn't affect the package. The build works, and the signature is properly validated.
+
+Cbhihe commented on 2017-10-10 19:12             
+Hi:
+During install with '$ makepkg -sric ' I got: a PGP signature error: 
+
+A simplified output follows because I am typing (not copy/pasting) this on a different box than the one (4.13.4.-1-ARCH) where the install took place:
+
+== making package: iucode-tool 2.2-1 (Tue Oct 10...2017)
+== Checking runtime dependencies...
+== Checking buildtime dependencies...
+== Retrieving sources...
+downloads ok [...]
+== Validating source files with sha256sums...
+passed [...]
+== Verifying source files with gpg...
+iucode-tool_2.2.tar.xz ... FAILED (unknown public key FE11BFA68B158E98)
+== ERROR: One or more PGP signatures could not be verified !
+
+Can you explain that unknown PGP public key error ? 
+Is it a problem on my side ? 
+Please advise. I will be waiting for your response before I actually execute that code. Cheers.
+
+progandy commented on 2017-10-13 15:28           
+@Cbhihe: I did not have time and then forgot, sorry. Still, it should be obvious from the previous comments that you need to import the key in your gpg keyring with gpg, as described in the wiki for makepkg [1],[2]
+
+gpg --recv-keys FE11BFA68B158E98
+or
+gpg --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+or
+gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+
+Cbhihe commented on 2017-10-14 17:40             
+Thank you. Yes it WAS obvious and I had tried 
+gpg --recv-keys FE11BFA68B158E98
+already, but for some reason I do not get, either the keyring did not register correctly or I screwed up something, or both. 
+
+I have reinstalled the Gnome keyring, re-imported my saved signatures and  
+gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+worked this time. :-)
+Cheers.
+
+iucode-tool 2.2-1  (2017-09-13 07:49)
+( Unsupported package: Potentially dangerous ! )
+==&gt; Edit PKGBUILD ? [Y/n] ("A" to abort)
+==&gt; ------------------------------------
+==&gt; n
+
+==&gt; iucode-tool dependencies:
+
+
+==&gt; Continue building iucode-tool ? [Y/n]
+==&gt; -------------------------------------
+==&gt; 
+
+==&gt; Building and installing package
+==&gt; Making package: iucode-tool 2.2-1 (Sun Jan 21 12:48:37 CET 2018)
+==&gt; Checking runtime dependencies...
+==&gt; Checking buildtime dependencies...
+==&gt; Retrieving sources...
+  -&gt; Downloading iucode-tool_2.2.tar.xz...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  146k  100  146k    0     0  74948      0  0:00:02  0:00:02 --:--:-- 63193
+  -&gt; Downloading iucode-tool_2.2.tar.xz.asc...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   833  100   833    0     0    833      0  0:00:01  0:00:01 --:--:--   478
+==&gt; Validating source files with sha256sums...
+    iucode-tool_2.2.tar.xz ... Passed
+    iucode-tool_2.2.tar.xz.asc ... Skipped
+==&gt; Verifying source file signatures with gpg...
+    iucode-tool_2.2.tar.xz ... Passed
+==&gt; Extracting sources...
+  -&gt; Extracting iucode-tool_2.2.tar.xz with bsdtar
+==&gt; Starting build()...
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+checking for gawk... gawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether configure.ac should try to override CFLAGS... no
+checking whether configure.ac should try to override LDFLAGS... no
+checking for style of include used by make... GNU
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking dependency style of gcc... gcc3
+checking how to run the C preprocessor... gcc -E
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking minix/config.h usability... no
+checking minix/config.h presence... no
+checking for minix/config.h... no
+checking whether it is safe to define __EXTENSIONS__... yes
+checking for gcc... (cached) gcc
+checking whether we are using the GNU C compiler... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking for gcc option to accept ISO C89... (cached) none needed
+checking whether gcc understands -c and -o together... (cached) yes
+checking dependency style of gcc... (cached) gcc3
+checking for ANSI C header files... (cached) yes
+checking fcntl.h usability... yes
+checking fcntl.h presence... yes
+checking for fcntl.h... yes
+checking for stdint.h... (cached) yes
+checking for stdlib.h... (cached) yes
+checking for string.h... (cached) yes
+checking for unistd.h... (cached) yes
+checking time.h usability... yes
+checking time.h presence... yes
+checking for time.h... yes
+checking cpuid.h usability... yes
+checking cpuid.h presence... yes
+checking for cpuid.h... yes
+checking whether byte ordering is bigendian... no
+checking for inline... inline
+checking for int32_t... yes
+checking for size_t... yes
+checking for ssize_t... yes
+checking for uint16_t... yes
+checking for uint32_t... yes
+checking for uint8_t... yes
+checking for stdlib.h... (cached) yes
+checking for GNU libc compatible malloc... yes
+checking for stdlib.h... (cached) yes
+checking for GNU libc compatible realloc... yes
+checking whether lstat correctly handles trailing slash... yes
+checking whether stat accepts an empty string... no
+checking for memset... yes
+checking for strcasecmp... yes
+checking for strdup... yes
+checking for strerror... yes
+checking for strrchr... yes
+checking for strtoul... yes
+checking for timegm... yes
+checking for library containing argp_parse... none required
+checking for special C compiler options needed for large files... no
+checking for _FILE_OFFSET_BITS value needed for large files... no
+checking for flockfile... yes
+checking for fgets_unlocked... yes
+configure: project-wide base CPPFLAGS: -D_FORTIFY_SOURCE=2
+configure: project-wide base CFLAGS:   -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt
+configure: project-wide base LDFLAGS:  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating iucode_tool.8
+config.status: creating iucode_tool_config.h
+config.status: executing depfiles commands
+make  all-am
+make[1]: Entering directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+gcc -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -MT intel_microcode.o -MD -MP -MF .deps/intel_microcode.Tpo -c -o intel_microcode.o intel_microcode.c
+gcc -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -MT iucode_tool.o -MD -MP -MF .deps/iucode_tool.Tpo -c -o iucode_tool.o iucode_tool.c
+mv -f .deps/intel_microcode.Tpo .deps/intel_microcode.Po
+mv -f .deps/iucode_tool.Tpo .deps/iucode_tool.Po
+gcc  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -o iucode_tool intel_microcode.o iucode_tool.o  
+make[1]: Leaving directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+==&gt; Entering fakeroot environment...
+==&gt; Starting package()...
+make[1]: Entering directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+ /usr/bin/mkdir -p '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/bin'
+ /usr/bin/mkdir -p '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/share/man/man8'
+  /usr/bin/install -c iucode_tool '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/bin'
+ /usr/bin/install -c -m 644 iucode_tool.8 '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/share/man/man8'
+make[1]: Leaving directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+==&gt; Tidying install...
+  -&gt; Removing libtool files...
+  -&gt; Purging unwanted files...
+  -&gt; Removing static library files...
+  -&gt; Stripping unneeded symbols from binaries and libraries...
+  -&gt; Compressing man and info pages...
+==&gt; Checking for packaging issue...
+==&gt; Creating package "iucode-tool"...
+  -&gt; Generating .PKGINFO file...
+  -&gt; Generating .BUILDINFO file...
+  -&gt; Generating .MTREE file...
+  -&gt; Compressing package...
+==&gt; Leaving fakeroot environment.
+==&gt; Finished making: iucode-tool 2.2-1 (Sun Jan 21 12:48:44 CET 2018)
+==&gt; Cleaning up...
+
+==&gt; Continue installing iucode-tool ? [Y/n]
+==&gt; [v]iew package contents [c]heck package with namcap
+==&gt; ---------------------------------------------------
+==&gt; y
+
+loading packages...
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) iucode-tool-2.2-1
+
+Total Installed Size:  0.06 MiB
+
+:: Proceed with installation? [Y/n] y
+(1/1) checking keys in keyring                                   [####################################] 100%
+(1/1) checking package integrity                                 [####################################] 100%
+(1/1) loading package files                                      [####################################] 100%
+(1/1) checking for file conflicts                                [####################################] 100%
+(1/1) checking available disk space                              [####################################] 100%
+:: Processing package changes...
+(1/1) installing iucode-tool                                     [####################################] 100%
+ldconfig: File /usr/lib/libmlt.so.6.4.0 is empty, not checked.
+ldconfig: File /usr/lib/libmlt++.so.6.4.0 is empty, not checked.
+ldconfig: File /usr/lib32/libmng.so.2 is empty, not checked.
+ldconfig: File /usr/lib32/libmng.so is empty, not checked.
+ldconfig: File /usr/lib32/libmng.so.2.0.2 is empty, not checked.
+:: Running post-transaction hooks...
+(1/1) Arming ConditionNeedsUpdate...
+[staf@frija ~]$ 
+</code></pre>
+
+<pre><code>[root@frija ~]# bsdtar -Oxf /boot/intel-ucode.img | iucode_tool -tb -lS - 
+iucode_tool: system has processor(s) with signature 0x00040661
+microcode bundle 1: (stdin)
+selected microcodes:
+  001/143: sig 0x00040661, pf_mask 0x32, 2017-11-20, rev 0x0018, size 25600
+[root@frija ~]# 
+</code></pre>
+
+<h3>Recreate grub.cfg</h3>
+
+<p>grub-mkconfig will detect the microcode and add it the grub configuration.</p>
+
+<pre><code>[root@vicky ~]# grub-mkconfig -o /boot/grub/grub.cfg
+Generating grub configuration file ...
+Found linux image: /boot/vmlinuz-linux-lts
+Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-lts.img
+Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-lts-fallback.img
+Found linux image: /boot/vmlinuz-linux-hardened
+Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-hardened.img
+Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-hardened-fallback.img
+Found linux image: /boot/vmlinuz-linux-ck
+Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-ck.img
+Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-ck-fallback.img
+Found linux image: /boot/vmlinuz-linux
+Found initrd image(s) in /boot: intel-ucode.img initramfs-linux.img
+Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-fallback.img
+done
+[root@vicky ~]# 
+</code></pre>
+
+<p>When take a look at the newly created grub.cfg you see that microcode image is added to the initrd image.
+If you new micro code cause issue you can just remove the entry in grub configuration</p>
+
+<pre><code>[root@vicky ~]# cat /boot/grub/grub.cfg | grep initrd
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-lts.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-lts-fallback.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-hardened.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-hardened-fallback.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-ck.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-ck-fallback.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux.img
+    initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-fallback.img
+[root@vicky ~]# 
+</code></pre>
+
+<h2>Reboot your system and verify</h2>
+
+<pre><code>[staf@frija ~]$ dmesg | grep -i microcode
+[    0.000000] microcode: microcode updated early to revision 0x18, date = 2017-11-20
+[    1.852726] microcode: sig=0x40661, pf=0x20, revision=0x18
+[    1.853029] microcode: Microcode Update Driver: v2.2.
+[staf@frija ~]$ 
+</code></pre>
+
+<p><strong><em>Have fun</em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Model-m Tux Update...]]></title>
@@ -566,384 +970,6 @@ PING 8.8.8.8 (8.8.8.8): 56 data bytes
 round-trip min/avg/max/stddev = 111.011/141.558/172.105/30.547 ms
 root@mydebian:~# 
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Zfs on Fedora 20]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20/"/>
-    <updated>2014-01-14T08:03:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/01/14/zfs-on-fedora-20</id>
-    <content type="html"><![CDATA[<p>With <a href="http://docs.fedoraproject.org/en-US/Fedora/20/html/Release_Notes/index.html">Fedora 20</a> being released a few weeks ago and no official zfsonlinux support for Fedora 20. It time to get zfs on linux working on Fedora 20.</p>
-
-<p>Zfs on linux 2.6.2 required a custom DKMS package. Lucky the patches that were required for zfs on linux are already integrated into Fedora: <a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/"><a href="http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/">http://negativo17.org/dkms-patches-for-zfs-on-linux-merged/</a></a></p>
-
-<p>So lets try to build the rpm packages for Fedora 20 from the source.</p>
-
-<h4>Solaris Portability Layer (SPL)</h4>
-
-<h5>clone the spl git repository</h5>
-
-<pre><code>[root@vicky ]# cd /usr/src/zfsfed20
-[root@vicky zfsfed20]# git clone https://github.com/zfsonlinux/spl.git
-Cloning into 'spl'...
-remote: Reusing existing pack: 6430, done.
-remote: Total 6430 (delta 0), reused 0 (delta 0)
-Receiving objects: 100% (6430/6430), 3.65 MiB | 60.00 KiB/s, done.
-Resolving deltas: 100% (3750/3750), done.
-Checking connectivity... done
-[root@vicky zfsfed20]# 
-</code></pre>
-
-<h5>create the configure script</h5>
-
-<pre><code>[root@vicky spl]# autoreconf -i
-libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
-libtoolize: copying file `config/ltmain.sh'
-libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `config'.
-libtoolize: copying file `config/libtool.m4'
-libtoolize: copying file `config/ltoptions.m4'
-libtoolize: copying file `config/ltsugar.m4'
-libtoolize: copying file `config/ltversion.m4'
-libtoolize: copying file `config/lt~obsolete.m4'
-configure.ac:35: warning: AM_INIT_AUTOMAKE: two- and three-arguments forms are deprecated.  For more info, see:
-configure.ac:35: http://www.gnu.org/software/automake/manual/automake.html#Modernize-AM_005fINIT_005fAUTOMAKE-invocation
-configure.ac:32: installing 'config/config.guess'
-configure.ac:32: installing 'config/config.sub'
-configure.ac:35: installing 'config/install-sh'
-configure.ac:35: installing 'config/missing'
-cmd/Makefile.am: installing 'config/depcomp'
-[root@vicky spl]# 
-</code></pre>
-
-<h5>run configure</h5>
-
-<pre><code>[root@vicky spl]# ./configure 
-checking for gawk... gawk
-checking metadata... git describe
-checking build system type... x86_64-unknown-linux-gnu
-checking host system type... x86_64-unknown-linux-gnu
-checking target system type... x86_64-unknown-linux-gnu
-checking whether to enable maintainer-specific portions of Makefiles... no
-checking whether make supports nested variables... yes
-checking for a BSD-compatible install... /bin/install -c
-checking whether build environment is sane... yes
-checking for a thread-safe mkdir -p... /bin/mkdir -p
-checking whether make sets $(MAKE)... yes
-checking for gcc... gcc
-checking whether the C compiler works... yes
-config.status: executing depfiles commands
-
-&amp;lt; snip &amp;gt;
-
-config.status: executing libtool commands
-[root@vicky spl]# 
-</code></pre>
-
-<h5>build the packages</h5>
-
-<pre><code>[root@vicky spl]# make rpm-utils rpm-dkms
-make  pkg="spl" \
-    def='--define "build_src_rpm 1" ' srpm-common
-make[1]: Entering directory `/usr/src/zfsfed20/spl'
-make  dist-gzip am__post_remove_distdir='@:'
-make[2]: Entering directory `/usr/src/zfsfed20/spl'
-if test -d "spl-0.6.2"; then find "spl-0.6.2" -type d ! -perm -200 -exec chmod u+w {} ';' &amp;&amp; rm -rf "spl-0.6.2" || { sleep 5 &amp;&amp; rm -rf "spl-0.6.2"; }; else :; fi
-test -d "spl-0.6.2" || mkdir "spl-0.6.2"
- (cd include &amp;&amp; make  top_distdir=../spl-0.6.2 distdir=../spl-0.6.2/include \
-     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
-make[3]: Entering directory `/usr/src/zfsfed20/spl/include'
- (cd fs &amp;&amp; make  top_distdir=../../spl-0.6.2 distdir=../../spl-0.6.2/include/fs \
-     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)
-make[4]: Entering directory `/usr/src/zfsfed20/spl/include/fs'
-make[4]: Leaving directory `/usr/src/zfsfed20/spl/include/fs'
-
-&amp;lt; snip &amp;gt;
-
-+ umask 022
-+ cd /tmp/spl-build-root-CJV0xR9u/BUILD
-+ cd spl-0.6.2
-+ '[' /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64 '!=' / ']'
-+ rm -rf /tmp/spl-build-root-CJV0xR9u/BUILDROOT/spl-dkms-0.6.2-22_gd58a99a.fc20.x86_64
-+ exit 0
-Executing(--clean): /bin/sh -e /tmp/spl-build-root-CJV0xR9u/TMP/rpm-tmp.E1YvyO
-+ umask 022
-+ cd /tmp/spl-build-root-CJV0xR9u/BUILD
-+ rm -rf spl-0.6.2
-+ exit 0
-make[1]: Leaving directory `/usr/src/zfsfed20/spl'
-[root@vicky spl]# ls
-aclocal.m4      config         copy-builtin  libtool      META             scripts                                spl_config.h.in                                  spl.release.in
-AUTHORS         config.log     COPYING       Makefile     module           spl-0.6.2-22_gd58a99a.fc20.src.rpm     spl-debuginfo-0.6.2-22_gd58a99a.fc20.x86_64.rpm  stamp-h1
-autogen.sh      config.status  DISCLAIMER    Makefile.am  patches          spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm  spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
-autom4te.cache  configure      include       Makefile.in  README.markdown  spl-0.6.2.tar.gz                       spl-dkms-0.6.2-22_gd58a99a.fc20.src.rpm
-cmd             configure.ac   lib           man          rpm              spl_config.h                           spl.release
-[root@vicky spl]# 
-</code></pre>
-
-<h5>install the packages</h5>
-
-<pre><code>[root@vicky spl]# rpm -Uvh spl-0.6.2-22_gd58a99a.fc20.x86_64.rpm spl-dkms-0.6.2-22_gd58a99a.fc20.noarch.rpm
-Preparing...                          ################################# [100%]
-Updating / installing...
-   1:spl-dkms-0.6.2-22_gd58a99a.fc20  ################################# [ 25%]
-Removing old spl-0.6.2 DKMS files...
-
-------------------------------
-Deleting module version: 0.6.2
-completely from the DKMS tree.
-------------------------------
-Done.
-Loading new spl-0.6.2 DKMS files...
-First Installation: checking all kernels...
-Building only for 3.11.10-301.fc20.x86_64
-Module build for the currently running kernel was skipped since the
-kernel source for this kernel does not seem to be installed.
-   2:spl-0.6.2-22_gd58a99a.fc20       ################################# [ 50%]
-Cleaning up / removing...
-   3:spl-0.6.2-1.el6                  ################################# [ 75%]
-
-------------------------------
-Deleting module version: 0.6.2
-completely from the DKMS tree.
-------------------------------
-Done.
-   4:spl-dkms-0.6.2-1.el6             ################################# [100%]
-[root@vicky spl]# 
-</code></pre>
-
-<h4>zfsonlinux</h4>
-
-<h5>clone the zfs git repository</h5>
-
-<pre><code>[root@vicky ]# cd /usr/src/zfsfed20
-[root@vicky ~]# cd /usr/src/zfsfed20/
-[root@vicky zfsfed20]# git clone https://github.com/zfsonlinux/zfs.git
-Cloning into 'zfs'...
-remote: Reusing existing pack: 80616, done.
-remote: Counting objects: 47, done.
-remote: Compressing objects: 100% (41/41), done.
-remote: Total 80663 (delta 15), reused 20 (delta 6)
-Receiving objects: 100% (80663/80663), 18.05 MiB | 105.00 KiB/s, done.
-Resolving deltas: 100% (55857/55857), done.
-Checking connectivity... done
-[root@vicky zfsfed20]# 
-</code></pre>
-
-<h5>create the configure script</h5>
-
-<pre><code>[root@vicky zfs]# autoreconf -i
-libtoolize: putting auxiliary files in AC_CONFIG_AUX_DIR, `config'.
-libtoolize: copying file `config/ltmain.sh'
-libtoolize: putting macros in AC_CONFIG_MACRO_DIR, `config'.
-libtoolize: copying file `config/libtool.m4'
-libtoolize: copying file `config/ltoptions.m4'
-libtoolize: copying file `config/ltsugar.m4'
-libtoolize: copying file `config/ltversion.m4'
-libtoolize: copying file `config/lt~obsolete.m4'
-configure.ac:41: warning: AM_INIT_AUTOMAKE: two- and three-arguments forms are deprecated.  For more info, see:
-configure.ac:41: http://www.gnu.org/software/automake/manual/automake.html#Modernize-AM_005fINIT_005fAUTOMAKE-invocation
-configure.ac:38: installing 'config/config.guess'
-configure.ac:38: installing 'config/config.sub'
-configure.ac:41: installing 'config/install-sh'
-configure.ac:41: installing 'config/missing'
-cmd/mount_zfs/Makefile.am: installing 'config/depcomp'
-[root@vicky zfs]# 
-</code></pre>
-
-<h5>run configure</h5>
-
-<pre><code>[root@vicky zfs]# ./configure 
-checking for gawk... gawk
-checking metadata... git describe
-checking build system type... x86_64-unknown-linux-gnu
-checking host system type... x86_64-unknown-linux-gnu
-checking target system type... x86_64-unknown-linux-gnu
-checking whether to enable maintainer-specific portions of Makefiles... no
-checking whether make supports nested variables... yes
-checking for a BSD-compatible install... /bin/install -c
-checking whether build environment is sane... yes
-checking for a thread-safe mkdir -p... /bin/mkdir -p
-checking whether make sets $(MAKE)... yes
-checking for gcc... gcc
-checking whether the C compiler works... yes
-checking for C compiler default output file name... a.out
-checking for suffix of executables... 
-checking whether we are cross compiling... no
-checking for suffix of object files... o
-checking whether we are using the GNU C compiler... yes
-
-&amp;lt; snip &amp;gt;
-
-config.status: creating rpm/generic/zfs-kmod.spec
-config.status: creating rpm/generic/zfs-dkms.spec
-config.status: creating zfs-script-config.sh
-config.status: creating zfs.release
-config.status: creating zfs_config.h
-config.status: executing depfiles commands
-config.status: executing libtool commands
-[root@vicky zfs]# 
-</code></pre>
-
-<h5>build the packages</h5>
-
-<pre><code>[root@vicky zfs]# make rpm-utils rpm-dkms
-make  pkg="zfs" \
-    def='--define "build_src_rpm 1" ' srpm-common
-make[1]: Entering directory `/usr/src/zfsfed20/zfs'
-make  dist-gzip am__post_remove_distdir='@:'
-make[2]: Entering directory `/usr/src/zfsfed20/zfs'
-if test -d "zfs-0.6.2"; then find "zfs-0.6.2" -type d ! -perm -200 -exec chmod u+w {} ';' &amp;&amp; rm -rf "zfs-0.6.2" || { sleep 5 &amp;&amp; rm -rf "zfs-0.6.2"; }; else :; fi
-test -d "zfs-0.6.2" || mkdir "zfs-0.6.2"
-
-&amp;lt; snip &amp;gt;
-
-make[4]: Leaving directory `/usr/src/zfsfed20/zfs/udev/rules.d'
-make[3]: Leaving directory `/usr/src/zfsfed20/zfs/udev'
-+ exit 0
-Executing(--clean): /bin/sh -e /tmp/zfs-build-root-pzSqKnEH/TMP/rpm-tmp.2uRZ1C
-+ umask 022
-+ cd /tmp/zfs-build-root-pzSqKnEH/BUILD
-+ rm -rf zfs-0.6.2
-+ exit 0
-make[1]: Leaving directory `/usr/src/zfsfed20/zfs'
-[root@vicky zfs]# 
-</code></pre>
-
-<h5>install the packages</h5>
-
-<pre><code>[root@vicky zfsfed20]# yum localinstall zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm
-Loaded plugins: langpacks, priorities, refresh-packagekit
-Repository google-chrome is listed more than once in the configuration
-Cannot open: zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm. Skipping.
-Cannot open: zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm. Skipping.
-Cannot open: zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm. Skipping.
-Nothing to do
-[root@vicky zfsfed20]# cd zfs
-[root@vicky zfs]# yum localinstall zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm
-Loaded plugins: langpacks, priorities, refresh-packagekit
-Repository google-chrome is listed more than once in the configuration
-Examining zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm: zfs-0.6.2-158_gcbe8e61.fc20.x86_64
-Marking zfs-0.6.2-158_gcbe8e61.fc20.x86_64.rpm to be installed
-Examining zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm: zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch
-Marking zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch.rpm to be installed
-Examining zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm: zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64
-Marking zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64.rpm to be installed
-Resolving Dependencies
---&gt; Running transaction check
----&gt; Package zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
----&gt; Package zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20 will be installed
----&gt; Package zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20 will be installed
---&gt; Finished Dependency Resolution
-http://negativo17.org/repos/HandBrake/epel-20/x86_64/repodata/repomd.xml: [Errno 14] HTTP Error 404 - Not Found
-Trying other mirror.
-
-Dependencies Resolved
-
-===================================================================================================================================
- Package             Arch            Version                             Repository                                           Size
-===================================================================================================================================
-Installing:
- zfs                 x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-0.6.2-158_gcbe8e61.fc20.x86_64                 2.2 M
- zfs-dkms            noarch          0.6.2-158_gcbe8e61.fc20             /zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch             11 M
- zfs-dracut          x86_64          0.6.2-158_gcbe8e61.fc20             /zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64           13 k
-
-Transaction Summary
-===================================================================================================================================
-Install  3 Packages
-
-Total size: 13 M
-Installed size: 13 M
-Is this ok [y/d/N]: y
-Downloading packages:
-Running transaction check
-Running transaction test
-Transaction test succeeded
-Running transaction
-Warning: RPMDB altered outside of yum.
-** Found 1 pre-existing rpmdb problem(s), 'yum check' output follows:
-libvpx-1.2.0-2.git5e3439b.fc19.x86_64 is a duplicate with libvpx-1.2.0-2.fc20.i686
-  Installing : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         1/3 
-Loading new zfs-0.6.2 DKMS files...
-First Installation: checking all kernels...
-Building only for 3.12.7-300.fc20.x86_64
-Building initial module for 3.12.7-300.fc20.x86_64
-Done.
-
-zavl:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-
-znvpair.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-
-zunicode.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-
-zcommon.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-
-zfs.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-
-zpios.ko:
-Running module version sanity check.
- - Original module
-   - No original module exists within this kernel
- - Installation
-   - Installing to /lib/modules/3.12.7-300.fc20.x86_64/extra/
-Adding any weak-modules
-
-Running the post_install script:
-
-depmod...
-
-DKMS: install completed.
-  Installing : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3 
-  Installing : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       3/3 
-  Verifying  : zfs-dracut-0.6.2-158_gcbe8e61.fc20.x86_64                                                                       1/3 
-  Verifying  : zfs-0.6.2-158_gcbe8e61.fc20.x86_64                                                                              2/3 
-  Verifying  : zfs-dkms-0.6.2-158_gcbe8e61.fc20.noarch                                                                         3/3 
-
-Installed:
-  zfs.x86_64 0:0.6.2-158_gcbe8e61.fc20   zfs-dkms.noarch 0:0.6.2-158_gcbe8e61.fc20   zfs-dracut.x86_64 0:0.6.2-158_gcbe8e61.fc20  
-
-Complete!
-[root@vicky zfs]# 
-</code></pre>
-
-<h4>Enable zfs</h4>
-
-<pre><code>[root@vicky zfs]# chkconfig zfs on
-[root@vicky zfs]# systemctl zfs start
-Unknown operation 'zfs'.
-[root@vicky zfs]# systemctl start zfs
-[root@vicky zfs]# 
-</code></pre>
-
-<p style="font-style: italic;">
-Have fun...
-</p>
-
 ]]></content>
   </entry>
   

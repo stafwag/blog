@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Backup | stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/blog/categories/backup/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-12-27T13:58:27+01:00</updated>
+  <updated>2018-02-10T09:26:01+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Bacula on FreeBSD (Part 4)]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2018/01/07/bacula-on-freebsd-part-4/"/>
+    <updated>2018-01-07T10:11:57+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2018/01/07/bacula-on-freebsd-part-4</id>
+    <content type="html"><![CDATA[<p>In the session we&rsquo;ll continue with my new bacula backup setup</p>
+
+<ul>
+<li><a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">bacula on freebsd_part 1</a></li>
+<li><a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a></li>
+<li><a href="http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/">bacula on freebsd part 3</a></li>
+</ul>
+
+
+<h1>Bacula Components</h1>
+
+<ul>
+<li><p><strong>Bacula Director</strong> (bacula-dir)<br />
+The Bacula Director is daemon that runs in the backgroud that control all backup operations.</p></li>
+<li><p><strong>Bacula Console</strong> (bconsole) <br />
+The Bacula console is an administrator program that allows an system administrator to control the Bacula director.</p></li>
+<li><p><strong>Bacula File</strong> <br />
+The Bacula File is a backup client install on the backup client.</p></li>
+<li><p><strong>Bacula Storage</strong> (bacula-sd) <br />
+The backup media.</p></li>
+<li><p><strong>Catalog</strong> <br />
+The Catalog is the index of the backups. Bacula supports three types of index databases mySQL ( <a href="https://mariadb.org/">mariaDB</a>), <a href="https://www.postgresql.org/">PostgreSQL</a> and <a href="https://sqlite.org/">SQLite</a>. We will use postgresql (see <a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a>)</p></li>
+<li><p><strong>Bacula monitor</strong> <br />
+A Bacula monitor service is a program that allows the system administrator to cerify the status of the bacula Directors, Bacula File Daemons and Bacula Storage Daemons.</p></li>
+</ul>
+
+
+<h1>Bacula Configuration</h1>
+
+<h2>bacula-dir.conf</h2>
+
+<p>bacula-dir is the configuration file for the Bacula Director (bacula-dir)</p>
+
+<h3>The Director Resource</h3>
+
+<p>The Director resource defines the attributes for the Bacula Directors running on the network. In the current implementation only 1 director can be running on the network.</p>
+
+<p>You&rsquo;ll find my bacula Director configuration below.</p>
+
+<pre><code>Director {                            # define myself
+  Name = MyBaculaDirector
+  DIRport = 9101                # where we listen for UA connections
+  QueryFile = "/usr/local/share/bacula/query.sql"
+  WorkingDirectory = "/var/db/bacula"
+  PidDirectory = "/var/run"
+  Maximum Concurrent Jobs = 20
+  Password = "********"         # Console password
+  Messages = Daemon
+}
+</code></pre>
+
+<h1>Links</h1>
+
+<ul>
+<li>bacula manual: <a href="http://www.bacula.org/9.0.x-manuals/en/main/"><a href="http://www.bacula.org/9.0.x-manuals/en/main/">http://www.bacula.org/9.0.x-manuals/en/main/</a></a></li>
+<li><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/"><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/">https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/</a></a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 3 Storage Setup)]]></title>

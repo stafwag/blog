@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2017-12-27T13:58:27+01:00</updated>
+  <updated>2018-02-10T09:26:01+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,837 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Update Your CPU Microcode on Arch Linux]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/"/>
+    <updated>2018-02-10T08:33:01+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux</id>
+    <content type="html"><![CDATA[<h1>Meltdown &amp; spectre</h1>
+
+<p>With Meldown <a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754"><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754">https://nvd.nist.gov/vuln/detail/CVE-2017-5754</a></a>, Spectre Variant 1 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> and Spectre Variant 2 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> out in the wild there is a lot of confusing going about updating microcode.</p>
+
+<p>There is a &ldquo;Spectre &amp; Meltdown Checker&rdquo; available at <a href="https://github.com/speed47/spectre-meltdown-checker"><a href="https://github.com/speed47/spectre-meltdown-checker">https://github.com/speed47/spectre-meltdown-checker</a></a></p>
+
+<p>Usage is very easy just clone the git repository and run the script.</p>
+
+<h1>Microcode</h1>
+
+<p>Microcode isn&rsquo;t uploaded to the CPU but loaded during the boot strap of the CPU.
+Normally the BIOS upload the microcode to the CPU but this can also be done by the by the bootloader, or the operating system kernel.</p>
+
+<h2>Grub</h2>
+
+<p>Normally you get an updated bios for your motherboard or computer vendor to get new microcode for your CPU.</p>
+
+<p>But when your vendor hasn&rsquo;t released a new Bios yet or when you are using old hardware you might not get a new BIOS with updated microcode.</p>
+
+<p>Lucky microcode can also loaded by bootloader this way you can get new microcode without a BIOS update if the new microcode cuase issues you disable it in the bootloader.</p>
+
+<p>The process for Arch Linux is describe at the Arch Wiki <a href="https://wiki.archlinux.org/index.php/Microcode"><a href="https://wiki.archlinux.org/index.php/Microcode">https://wiki.archlinux.org/index.php/Microcode</a></a></p>
+
+<p>You&rsquo;ll find journey how to update the microcode on my Arch GNU/Linux system below.</p>
+
+<h3>Current microcode</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ dmesg | grep -i microcode
+</span><span class='line'>[    2.102649] microcode: sig=0x40661, pf=0x20, revision=0xa
+</span><span class='line'>[    2.102981] microcode: Microcode Update Driver: v2.01 &lt;tigran@aivazian.fsnet.co.uk&gt;, Peter Oruba
+</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Install intel-ucode</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# pacman -Syy intel-ucode
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> core                     126.8 KiB  12.4M/s 00:00 [######################] 100%
+</span><span class='line'> extra                   1629.4 KiB  11.4M/s 00:00 [######################] 100%
+</span><span class='line'> community                  4.1 MiB  11.0M/s 00:00 [######################] 100%
+</span><span class='line'> multilib                 167.2 KiB  8.16M/s 00:00 [######################] 100%
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) intel-ucode-20180108-1
+</span><span class='line'>
+</span><span class='line'>Total Download Size:   1.12 MiB
+</span><span class='line'>Total Installed Size:  1.55 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] y
+</span><span class='line'>:: Retrieving packages...
+</span><span class='line'> intel-ucode-2018010...  1145.0 KiB   916K/s 00:01 [######################] 100%
+</span><span class='line'>(1/1) checking keys in keyring                     [######################] 100%
+</span><span class='line'>(1/1) checking package integrity                   [######################] 100%
+</span><span class='line'>(1/1) loading package files                        [######################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                  [######################] 100%
+</span><span class='line'>(1/1) checking available disk space                [######################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing intel-ucode                       [######################] 100%
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/1) Arming ConditionNeedsUpdate...
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Verify the available microcode for your CPU</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+<span class='line-number'>182</span>
+<span class='line-number'>183</span>
+<span class='line-number'>184</span>
+<span class='line-number'>185</span>
+<span class='line-number'>186</span>
+<span class='line-number'>187</span>
+<span class='line-number'>188</span>
+<span class='line-number'>189</span>
+<span class='line-number'>190</span>
+<span class='line-number'>191</span>
+<span class='line-number'>192</span>
+<span class='line-number'>193</span>
+<span class='line-number'>194</span>
+<span class='line-number'>195</span>
+<span class='line-number'>196</span>
+<span class='line-number'>197</span>
+<span class='line-number'>198</span>
+<span class='line-number'>199</span>
+<span class='line-number'>200</span>
+<span class='line-number'>201</span>
+<span class='line-number'>202</span>
+<span class='line-number'>203</span>
+<span class='line-number'>204</span>
+<span class='line-number'>205</span>
+<span class='line-number'>206</span>
+<span class='line-number'>207</span>
+<span class='line-number'>208</span>
+<span class='line-number'>209</span>
+<span class='line-number'>210</span>
+<span class='line-number'>211</span>
+<span class='line-number'>212</span>
+<span class='line-number'>213</span>
+<span class='line-number'>214</span>
+<span class='line-number'>215</span>
+<span class='line-number'>216</span>
+<span class='line-number'>217</span>
+<span class='line-number'>218</span>
+<span class='line-number'>219</span>
+<span class='line-number'>220</span>
+<span class='line-number'>221</span>
+<span class='line-number'>222</span>
+<span class='line-number'>223</span>
+<span class='line-number'>224</span>
+<span class='line-number'>225</span>
+<span class='line-number'>226</span>
+<span class='line-number'>227</span>
+<span class='line-number'>228</span>
+<span class='line-number'>229</span>
+<span class='line-number'>230</span>
+<span class='line-number'>231</span>
+<span class='line-number'>232</span>
+<span class='line-number'>233</span>
+<span class='line-number'>234</span>
+<span class='line-number'>235</span>
+<span class='line-number'>236</span>
+<span class='line-number'>237</span>
+<span class='line-number'>238</span>
+<span class='line-number'>239</span>
+<span class='line-number'>240</span>
+<span class='line-number'>241</span>
+<span class='line-number'>242</span>
+<span class='line-number'>243</span>
+<span class='line-number'>244</span>
+<span class='line-number'>245</span>
+<span class='line-number'>246</span>
+<span class='line-number'>247</span>
+<span class='line-number'>248</span>
+<span class='line-number'>249</span>
+<span class='line-number'>250</span>
+<span class='line-number'>251</span>
+<span class='line-number'>252</span>
+<span class='line-number'>253</span>
+<span class='line-number'>254</span>
+<span class='line-number'>255</span>
+<span class='line-number'>256</span>
+<span class='line-number'>257</span>
+<span class='line-number'>258</span>
+<span class='line-number'>259</span>
+<span class='line-number'>260</span>
+<span class='line-number'>261</span>
+<span class='line-number'>262</span>
+<span class='line-number'>263</span>
+<span class='line-number'>264</span>
+<span class='line-number'>265</span>
+<span class='line-number'>266</span>
+<span class='line-number'>267</span>
+<span class='line-number'>268</span>
+<span class='line-number'>269</span>
+<span class='line-number'>270</span>
+<span class='line-number'>271</span>
+<span class='line-number'>272</span>
+<span class='line-number'>273</span>
+<span class='line-number'>274</span>
+<span class='line-number'>275</span>
+<span class='line-number'>276</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ yaourt  iucode-tool
+</span><span class='line'>1 aur/iucode-tool 2.2-1 (59) (4.87)
+</span><span class='line'>    Tool to manipulate Intel® IA-32/X86-64 microcode bundles
+</span><span class='line'>==&gt; Enter n° of packages to be installed (e.g., 1 2 3 or 1-3)
+</span><span class='line'>==&gt; ----------------------------------------------------------
+</span><span class='line'>==&gt; 1
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>==&gt; Downloading iucode-tool PKGBUILD from AUR...
+</span><span class='line'>x .SRCINFO
+</span><span class='line'>x PKGBUILD
+</span><span class='line'>oxe commented on 2017-10-01 17:50          
+</span><span class='line'>issue with pgp key and have tried various times and not sure what I might be doing wrong but why do you have so many self-signed sigs?
+</span><span class='line'>
+</span><span class='line'>gpg --keyserver hkps.pool.sks-keyservers.net  --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>
+</span><span class='line'>uid  Henrique de Moraes Holschuh hmh@debian.org
+</span><span class='line'>sig!3        0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>uid  Henrique de Moraes Holschuh hmh@hmh.eng.br
+</span><span class='line'>sig!3        0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>sub  A4B9D9AFC03142CD
+</span><span class='line'>sig!         0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>sub  981C05C79F47CF26
+</span><span class='line'>sig!         0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>sub  9137FBD3DE6F0A93
+</span><span class='line'>sig!         0BD9E81139CB4807 2014-03-23  [self-signature]
+</span><span class='line'>sub  FFDB99C00EABDE2E
+</span><span class='line'>sig!         0BD9E81139CB4807 2014-03-23  [self-signature]
+</span><span class='line'>sub  FE11BFA68B158E98
+</span><span class='line'>sig!         0BD9E81139CB4807 2016-03-26  [self-signature]
+</span><span class='line'>sub  A4B1618F7F267286
+</span><span class='line'>sig!         0BD9E81139CB4807 2016-03-26  [self-signature]
+</span><span class='line'>key 0BD9E81139CB4807:
+</span><span class='line'>6 duplicate signatures removed
+</span><span class='line'>45 signatures not checked due to missing keys
+</span><span class='line'>gpg: key 0BD9E81139CB4807: "Henrique de Moraes Holschuh hmh@hmh.eng.br" not changed
+</span><span class='line'>gpg: Total number processed: 1
+</span><span class='line'>gpg:              unchanged: 1
+</span><span class='line'>
+</span><span class='line'>please advise
+</span><span class='line'>
+</span><span class='line'>progandy commented on 2017-10-01 18:19             
+</span><span class='line'>@oxe: I am not Henrique, so I don't know what he did with his key that it looks this strange, but it doesn't affect the package. The build works, and the signature is properly validated.
+</span><span class='line'>
+</span><span class='line'>Cbhihe commented on 2017-10-10 19:12           
+</span><span class='line'>Hi:
+</span><span class='line'>During install with '$ makepkg -sric ' I got: a PGP signature error: 
+</span><span class='line'>
+</span><span class='line'>A simplified output follows because I am typing (not copy/pasting) this on a different box than the one (4.13.4.-1-ARCH) where the install took place:
+</span><span class='line'>
+</span><span class='line'>== making package: iucode-tool 2.2-1 (Tue Oct 10...2017)
+</span><span class='line'>== Checking runtime dependencies...
+</span><span class='line'>== Checking buildtime dependencies...
+</span><span class='line'>== Retrieving sources...
+</span><span class='line'>downloads ok [...]
+</span><span class='line'>== Validating source files with sha256sums...
+</span><span class='line'>passed [...]
+</span><span class='line'>== Verifying source files with gpg...
+</span><span class='line'>iucode-tool_2.2.tar.xz ... FAILED (unknown public key FE11BFA68B158E98)
+</span><span class='line'>== ERROR: One or more PGP signatures could not be verified !
+</span><span class='line'>
+</span><span class='line'>Can you explain that unknown PGP public key error ? 
+</span><span class='line'>Is it a problem on my side ? 
+</span><span class='line'>Please advise. I will be waiting for your response before I actually execute that code. Cheers.
+</span><span class='line'>
+</span><span class='line'>progandy commented on 2017-10-13 15:28             
+</span><span class='line'>@Cbhihe: I did not have time and then forgot, sorry. Still, it should be obvious from the previous comments that you need to import the key in your gpg keyring with gpg, as described in the wiki for makepkg [1],[2]
+</span><span class='line'>
+</span><span class='line'>gpg --recv-keys FE11BFA68B158E98
+</span><span class='line'>or
+</span><span class='line'>gpg --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>or
+</span><span class='line'>gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>
+</span><span class='line'>[1]: https://wiki.archlinux.org/index.php/Makepkg#Signature_checking
+</span><span class='line'>[2]: https://wiki.archlinux.org/index.php/GnuPG#Use_a_keyserver
+</span><span class='line'>
+</span><span class='line'>Cbhihe commented on 2017-10-14 17:40           
+</span><span class='line'>Thank you. Yes it WAS obvious and I had tried 
+</span><span class='line'>gpg --recv-keys FE11BFA68B158E98
+</span><span class='line'>already, but for some reason I do not get, either the keyring did not register correctly or I screwed up something, or both. 
+</span><span class='line'>
+</span><span class='line'>I have reinstalled the Gnome keyring, re-imported my saved signatures and  
+</span><span class='line'>gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>worked this time. :-)
+</span><span class='line'>Cheers.
+</span><span class='line'>
+</span><span class='line'>iucode-tool 2.2-1  (2017-09-13 07:49)
+</span><span class='line'>( Unsupported package: Potentially dangerous ! )
+</span><span class='line'>==&gt; Edit PKGBUILD ? [Y/n] ("A" to abort)
+</span><span class='line'>==&gt; ------------------------------------
+</span><span class='line'>==&gt; n
+</span><span class='line'>
+</span><span class='line'>==&gt; iucode-tool dependencies:
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>==&gt; Continue building iucode-tool ? [Y/n]
+</span><span class='line'>==&gt; -------------------------------------
+</span><span class='line'>==&gt; 
+</span><span class='line'>
+</span><span class='line'>==&gt; Building and installing package
+</span><span class='line'>==&gt; Making package: iucode-tool 2.2-1 (Sun Jan 21 12:48:37 CET 2018)
+</span><span class='line'>==&gt; Checking runtime dependencies...
+</span><span class='line'>==&gt; Checking buildtime dependencies...
+</span><span class='line'>==&gt; Retrieving sources...
+</span><span class='line'>  -&gt; Downloading iucode-tool_2.2.tar.xz...
+</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
+</span><span class='line'>100  146k  100  146k    0     0  74948      0  0:00:02  0:00:02 --:--:-- 63193
+</span><span class='line'>  -&gt; Downloading iucode-tool_2.2.tar.xz.asc...
+</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
+</span><span class='line'>100   833  100   833    0     0    833      0  0:00:01  0:00:01 --:--:--   478
+</span><span class='line'>==&gt; Validating source files with sha256sums...
+</span><span class='line'>    iucode-tool_2.2.tar.xz ... Passed
+</span><span class='line'>    iucode-tool_2.2.tar.xz.asc ... Skipped
+</span><span class='line'>==&gt; Verifying source file signatures with gpg...
+</span><span class='line'>    iucode-tool_2.2.tar.xz ... Passed
+</span><span class='line'>==&gt; Extracting sources...
+</span><span class='line'>  -&gt; Extracting iucode-tool_2.2.tar.xz with bsdtar
+</span><span class='line'>==&gt; Starting build()...
+</span><span class='line'>checking build system type... x86_64-pc-linux-gnu
+</span><span class='line'>checking host system type... x86_64-pc-linux-gnu
+</span><span class='line'>checking for a BSD-compatible install... /usr/bin/install -c
+</span><span class='line'>checking whether build environment is sane... yes
+</span><span class='line'>checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+</span><span class='line'>checking for gawk... gawk
+</span><span class='line'>checking whether make sets $(MAKE)... yes
+</span><span class='line'>checking whether make supports nested variables... yes
+</span><span class='line'>checking whether configure.ac should try to override CFLAGS... no
+</span><span class='line'>checking whether configure.ac should try to override LDFLAGS... no
+</span><span class='line'>checking for style of include used by make... GNU
+</span><span class='line'>checking for gcc... gcc
+</span><span class='line'>checking whether the C compiler works... yes
+</span><span class='line'>checking for C compiler default output file name... a.out
+</span><span class='line'>checking for suffix of executables... 
+</span><span class='line'>checking whether we are cross compiling... no
+</span><span class='line'>checking for suffix of object files... o
+</span><span class='line'>checking whether we are using the GNU C compiler... yes
+</span><span class='line'>checking whether gcc accepts -g... yes
+</span><span class='line'>checking for gcc option to accept ISO C89... none needed
+</span><span class='line'>checking whether gcc understands -c and -o together... yes
+</span><span class='line'>checking dependency style of gcc... gcc3
+</span><span class='line'>checking how to run the C preprocessor... gcc -E
+</span><span class='line'>checking for grep that handles long lines and -e... /usr/bin/grep
+</span><span class='line'>checking for egrep... /usr/bin/grep -E
+</span><span class='line'>checking for ANSI C header files... yes
+</span><span class='line'>checking for sys/types.h... yes
+</span><span class='line'>checking for sys/stat.h... yes
+</span><span class='line'>checking for stdlib.h... yes
+</span><span class='line'>checking for string.h... yes
+</span><span class='line'>checking for memory.h... yes
+</span><span class='line'>checking for strings.h... yes
+</span><span class='line'>checking for inttypes.h... yes
+</span><span class='line'>checking for stdint.h... yes
+</span><span class='line'>checking for unistd.h... yes
+</span><span class='line'>checking minix/config.h usability... no
+</span><span class='line'>checking minix/config.h presence... no
+</span><span class='line'>checking for minix/config.h... no
+</span><span class='line'>checking whether it is safe to define __EXTENSIONS__... yes
+</span><span class='line'>checking for gcc... (cached) gcc
+</span><span class='line'>checking whether we are using the GNU C compiler... (cached) yes
+</span><span class='line'>checking whether gcc accepts -g... (cached) yes
+</span><span class='line'>checking for gcc option to accept ISO C89... (cached) none needed
+</span><span class='line'>checking whether gcc understands -c and -o together... (cached) yes
+</span><span class='line'>checking dependency style of gcc... (cached) gcc3
+</span><span class='line'>checking for ANSI C header files... (cached) yes
+</span><span class='line'>checking fcntl.h usability... yes
+</span><span class='line'>checking fcntl.h presence... yes
+</span><span class='line'>checking for fcntl.h... yes
+</span><span class='line'>checking for stdint.h... (cached) yes
+</span><span class='line'>checking for stdlib.h... (cached) yes
+</span><span class='line'>checking for string.h... (cached) yes
+</span><span class='line'>checking for unistd.h... (cached) yes
+</span><span class='line'>checking time.h usability... yes
+</span><span class='line'>checking time.h presence... yes
+</span><span class='line'>checking for time.h... yes
+</span><span class='line'>checking cpuid.h usability... yes
+</span><span class='line'>checking cpuid.h presence... yes
+</span><span class='line'>checking for cpuid.h... yes
+</span><span class='line'>checking whether byte ordering is bigendian... no
+</span><span class='line'>checking for inline... inline
+</span><span class='line'>checking for int32_t... yes
+</span><span class='line'>checking for size_t... yes
+</span><span class='line'>checking for ssize_t... yes
+</span><span class='line'>checking for uint16_t... yes
+</span><span class='line'>checking for uint32_t... yes
+</span><span class='line'>checking for uint8_t... yes
+</span><span class='line'>checking for stdlib.h... (cached) yes
+</span><span class='line'>checking for GNU libc compatible malloc... yes
+</span><span class='line'>checking for stdlib.h... (cached) yes
+</span><span class='line'>checking for GNU libc compatible realloc... yes
+</span><span class='line'>checking whether lstat correctly handles trailing slash... yes
+</span><span class='line'>checking whether stat accepts an empty string... no
+</span><span class='line'>checking for memset... yes
+</span><span class='line'>checking for strcasecmp... yes
+</span><span class='line'>checking for strdup... yes
+</span><span class='line'>checking for strerror... yes
+</span><span class='line'>checking for strrchr... yes
+</span><span class='line'>checking for strtoul... yes
+</span><span class='line'>checking for timegm... yes
+</span><span class='line'>checking for library containing argp_parse... none required
+</span><span class='line'>checking for special C compiler options needed for large files... no
+</span><span class='line'>checking for _FILE_OFFSET_BITS value needed for large files... no
+</span><span class='line'>checking for flockfile... yes
+</span><span class='line'>checking for fgets_unlocked... yes
+</span><span class='line'>configure: project-wide base CPPFLAGS: -D_FORTIFY_SOURCE=2
+</span><span class='line'>configure: project-wide base CFLAGS:   -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt
+</span><span class='line'>configure: project-wide base LDFLAGS:  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now
+</span><span class='line'>checking that generated files are newer than configure... done
+</span><span class='line'>configure: creating ./config.status
+</span><span class='line'>config.status: creating Makefile
+</span><span class='line'>config.status: creating iucode_tool.8
+</span><span class='line'>config.status: creating iucode_tool_config.h
+</span><span class='line'>config.status: executing depfiles commands
+</span><span class='line'>make  all-am
+</span><span class='line'>make[1]: Entering directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'>gcc -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -MT intel_microcode.o -MD -MP -MF .deps/intel_microcode.Tpo -c -o intel_microcode.o intel_microcode.c
+</span><span class='line'>gcc -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -MT iucode_tool.o -MD -MP -MF .deps/iucode_tool.Tpo -c -o iucode_tool.o iucode_tool.c
+</span><span class='line'>mv -f .deps/intel_microcode.Tpo .deps/intel_microcode.Po
+</span><span class='line'>mv -f .deps/iucode_tool.Tpo .deps/iucode_tool.Po
+</span><span class='line'>gcc  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -o iucode_tool intel_microcode.o iucode_tool.o  
+</span><span class='line'>make[1]: Leaving directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'>==&gt; Entering fakeroot environment...
+</span><span class='line'>==&gt; Starting package()...
+</span><span class='line'>make[1]: Entering directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'> /usr/bin/mkdir -p '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/bin'
+</span><span class='line'> /usr/bin/mkdir -p '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/share/man/man8'
+</span><span class='line'>  /usr/bin/install -c iucode_tool '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/bin'
+</span><span class='line'> /usr/bin/install -c -m 644 iucode_tool.8 '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/share/man/man8'
+</span><span class='line'>make[1]: Leaving directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'>==&gt; Tidying install...
+</span><span class='line'>  -&gt; Removing libtool files...
+</span><span class='line'>  -&gt; Purging unwanted files...
+</span><span class='line'>  -&gt; Removing static library files...
+</span><span class='line'>  -&gt; Stripping unneeded symbols from binaries and libraries...
+</span><span class='line'>  -&gt; Compressing man and info pages...
+</span><span class='line'>==&gt; Checking for packaging issue...
+</span><span class='line'>==&gt; Creating package "iucode-tool"...
+</span><span class='line'>  -&gt; Generating .PKGINFO file...
+</span><span class='line'>  -&gt; Generating .BUILDINFO file...
+</span><span class='line'>  -&gt; Generating .MTREE file...
+</span><span class='line'>  -&gt; Compressing package...
+</span><span class='line'>==&gt; Leaving fakeroot environment.
+</span><span class='line'>==&gt; Finished making: iucode-tool 2.2-1 (Sun Jan 21 12:48:44 CET 2018)
+</span><span class='line'>==&gt; Cleaning up...
+</span><span class='line'>
+</span><span class='line'>==&gt; Continue installing iucode-tool ? [Y/n]
+</span><span class='line'>==&gt; [v]iew package contents [c]heck package with namcap
+</span><span class='line'>==&gt; ---------------------------------------------------
+</span><span class='line'>==&gt; y
+</span><span class='line'>
+</span><span class='line'>loading packages...
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) iucode-tool-2.2-1
+</span><span class='line'>
+</span><span class='line'>Total Installed Size:  0.06 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] y
+</span><span class='line'>(1/1) checking keys in keyring                                   [####################################] 100%
+</span><span class='line'>(1/1) checking package integrity                                 [####################################] 100%
+</span><span class='line'>(1/1) loading package files                                      [####################################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                                [####################################] 100%
+</span><span class='line'>(1/1) checking available disk space                              [####################################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing iucode-tool                                     [####################################] 100%
+</span><span class='line'>ldconfig: File /usr/lib/libmlt.so.6.4.0 is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib/libmlt++.so.6.4.0 is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib32/libmng.so.2 is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib32/libmng.so is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib32/libmng.so.2.0.2 is empty, not checked.
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/1) Arming ConditionNeedsUpdate...
+</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# bsdtar -Oxf /boot/intel-ucode.img | iucode_tool -tb -lS - 
+</span><span class='line'>iucode_tool: system has processor(s) with signature 0x00040661
+</span><span class='line'>microcode bundle 1: (stdin)
+</span><span class='line'>selected microcodes:
+</span><span class='line'>  001/143: sig 0x00040661, pf_mask 0x32, 2017-11-20, rev 0x0018, size 25600
+</span><span class='line'>[root@frija ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Recreate grub.cfg</h3>
+
+<p>grub-mkconfig will detect the microcode and add it the grub configuration.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# grub-mkconfig -o /boot/grub/grub.cfg
+</span><span class='line'>Generating grub configuration file ...
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-lts
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-lts.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-lts-fallback.img
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-hardened
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-hardened.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-hardened-fallback.img
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-ck
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-ck.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-ck-fallback.img
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-fallback.img
+</span><span class='line'>done
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>When take a look at the newly created grub.cfg you see that microcode image is added to the initrd image.
+If you new micro code cause issue you can just remove the entry in grub configuration</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# cat /boot/grub/grub.cfg | grep initrd
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-lts.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-lts-fallback.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-hardened.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-hardened-fallback.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-ck.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-ck-fallback.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-fallback.img
+</span><span class='line'>[root@vicky ~]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reboot your system and verify</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ dmesg | grep -i microcode
+</span><span class='line'>[    0.000000] microcode: microcode updated early to revision 0x18, date = 2017-11-20
+</span><span class='line'>[    1.852726] microcode: sig=0x40661, pf=0x20, revision=0x18
+</span><span class='line'>[    1.853029] microcode: Microcode Update Driver: v2.2.
+</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em>Have fun</em></strong></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bacula on FreeBSD (Part 4)]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2018/01/07/bacula-on-freebsd-part-4/"/>
+    <updated>2018-01-07T10:11:57+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2018/01/07/bacula-on-freebsd-part-4</id>
+    <content type="html"><![CDATA[<p>In the session we&rsquo;ll continue with my new bacula backup setup</p>
+
+<ul>
+<li><a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">bacula on freebsd_part 1</a></li>
+<li><a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a></li>
+<li><a href="http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/">bacula on freebsd part 3</a></li>
+</ul>
+
+
+<h1>Bacula Components</h1>
+
+<ul>
+<li><p><strong>Bacula Director</strong> (bacula-dir)<br />
+The Bacula Director is daemon that runs in the backgroud that control all backup operations.</p></li>
+<li><p><strong>Bacula Console</strong> (bconsole) <br />
+The Bacula console is an administrator program that allows an system administrator to control the Bacula director.</p></li>
+<li><p><strong>Bacula File</strong> <br />
+The Bacula File is a backup client install on the backup client.</p></li>
+<li><p><strong>Bacula Storage</strong> (bacula-sd) <br />
+The backup media.</p></li>
+<li><p><strong>Catalog</strong> <br />
+The Catalog is the index of the backups. Bacula supports three types of index databases mySQL ( <a href="https://mariadb.org/">mariaDB</a>), <a href="https://www.postgresql.org/">PostgreSQL</a> and <a href="https://sqlite.org/">SQLite</a>. We will use postgresql (see <a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a>)</p></li>
+<li><p><strong>Bacula monitor</strong> <br />
+A Bacula monitor service is a program that allows the system administrator to cerify the status of the bacula Directors, Bacula File Daemons and Bacula Storage Daemons.</p></li>
+</ul>
+
+
+<h1>Bacula Configuration</h1>
+
+<h2>bacula-dir.conf</h2>
+
+<p>bacula-dir is the configuration file for the Bacula Director (bacula-dir)</p>
+
+<h3>The Director Resource</h3>
+
+<p>The Director resource defines the attributes for the Bacula Directors running on the network. In the current implementation only 1 director can be running on the network.</p>
+
+<p>You&rsquo;ll find my bacula Director configuration below.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Director {                            # define myself
+</span><span class='line'>  Name = MyBaculaDirector
+</span><span class='line'>  DIRport = 9101                # where we listen for UA connections
+</span><span class='line'>  QueryFile = "/usr/local/share/bacula/query.sql"
+</span><span class='line'>  WorkingDirectory = "/var/db/bacula"
+</span><span class='line'>  PidDirectory = "/var/run"
+</span><span class='line'>  Maximum Concurrent Jobs = 20
+</span><span class='line'>  Password = "********"         # Console password
+</span><span class='line'>  Messages = Daemon
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Links</h1>
+
+<ul>
+<li>bacula manual: <a href="http://www.bacula.org/9.0.x-manuals/en/main/"><a href="http://www.bacula.org/9.0.x-manuals/en/main/">http://www.bacula.org/9.0.x-manuals/en/main/</a></a></li>
+<li><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/"><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/">https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/</a></a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 3 Storage Setup)]]></title>
@@ -10095,55 +10926,6 @@ For the convenience we&rsquo;ll store everything on an encrypted USB stick.</p>
 , download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc2.tar.gz">Download latest development release (1.4.4rc2)</a>.</p>
 
 <p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
-
-<p><strong><em> Have fun </em></strong></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rataplan Becomes a Watchdog]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/09/05/rataplan-becomes-a-watchdog/"/>
-    <updated>2015-09-05T14:47:54+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/09/05/rataplan-becomes-a-watchdog</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/watchdog_rataplan.jpg">
-<a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">My NAS</a> runs on <a href="http://www.freebsd.org">FreeBSD</a> I&rsquo;m quiet happy with it. It&rsquo;s named after the dog <a href="https://nl.wikipedia.org/wiki/Rataplan">rataplan</a> from the <a href="https://en.wikipedia.org/wiki/Lucky_Luke">Lucky Luke comic</a></p>
-
-<p>However transferring large data files to it causes the network to hang. The realtek network interface had issues with freebsd from the <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">beginning</a>. On the screen and in syslog the entry &ldquo;re0: watchdog timeout&rdquo; is printed.</p>
-
-<p>Most FreeBSD people recommends to use Intel nics, I ordered <a href="http://www.dx.com/nl/p/winyao-wy574t-intel-wg82574l-chipset-pci-e-x1-server-gigabit-network-card-adapter-green-280966">a new Intel nic at dx.com</a>. After the installation of the new NIC the network seems to be stable again.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lookat 1.4.4rc1 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
-    <updated>2015-07-21T12:24:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
-    <content type="html"><![CDATA[<p>It is a <a href="https://en.wikipedia.org/wiki/July_21">national holiday in Belgium</a> so I have some time to code again.</p>
-
-<p>Lookat 1.4.4rc1 is the first release candicate of Lookat 1.4.4</p>
-
-<h3>ChangeLog</h3>
-
-<ul>
-<li>openBSD support</li>
-<li>English translation issues corrected</li>
-<li>autoconf updated to 2.69</li>
-<li>Corrected mirror compile warnings</li>
-</ul>
-
-
-<h3>Lookat 1.4.4rc1 is available at:</h3>
-
-<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
-, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc1.tar.gz">Download latest development release (1.4.4rc1)</a>.</p>
-
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
-
-<h3>OpenBSD</h3>
-
-<p>I forgot to mention it but Lookat has landed in <a href="http://www.openbsd.org">OpenBSD</a>
-Thanks to Brian Callahan for the port!</p>
 
 <p><strong><em> Have fun </em></strong></p>
 ]]></content>
