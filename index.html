@@ -867,113 +867,6 @@ If you new micro code cause issue you can just remove the entry in grub configur
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/blog/2018/01/07/bacula-on-freebsd-part-4/">Bacula on FreeBSD (Part 4)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2018-01-07T10:11:57+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>7</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>10:11 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In the session we&rsquo;ll continue with my new bacula backup setup</p>
-
-<ul>
-<li><a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">bacula on freebsd_part 1</a></li>
-<li><a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a></li>
-<li><a href="http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/">bacula on freebsd part 3</a></li>
-</ul>
-
-
-<h1>Bacula Components</h1>
-
-<ul>
-<li><p><strong>Bacula Director</strong> (bacula-dir)<br />
-The Bacula Director is daemon that runs in the backgroud that control all backup operations.</p></li>
-<li><p><strong>Bacula Console</strong> (bconsole) <br />
-The Bacula console is an administrator program that allows an system administrator to control the Bacula director.</p></li>
-<li><p><strong>Bacula File</strong> <br />
-The Bacula File is a backup client install on the backup client.</p></li>
-<li><p><strong>Bacula Storage</strong> (bacula-sd) <br />
-The backup media.</p></li>
-<li><p><strong>Catalog</strong> <br />
-The Catalog is the index of the backups. Bacula supports three types of index databases mySQL ( <a href="https://mariadb.org/">mariaDB</a>), <a href="https://www.postgresql.org/">PostgreSQL</a> and <a href="https://sqlite.org/">SQLite</a>. We will use postgresql (see <a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a>)</p></li>
-<li><p><strong>Bacula monitor</strong> <br />
-A Bacula monitor service is a program that allows the system administrator to cerify the status of the bacula Directors, Bacula File Daemons and Bacula Storage Daemons.</p></li>
-</ul>
-
-
-<h1>Bacula Configuration</h1>
-
-<h2>bacula-dir.conf</h2>
-
-<p>bacula-dir is the configuration file for the Bacula Director (bacula-dir)</p>
-
-<h3>The Director Resource</h3>
-
-<p>The Director resource defines the attributes for the Bacula Directors running on the network. In the current implementation only 1 director can be running on the network.</p>
-
-<p>You&rsquo;ll find my bacula Director configuration below.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Director {                            # define myself
-</span><span class='line'>  Name = MyBaculaDirector
-</span><span class='line'>  DIRport = 9101                # where we listen for UA connections
-</span><span class='line'>  QueryFile = "/usr/local/share/bacula/query.sql"
-</span><span class='line'>  WorkingDirectory = "/var/db/bacula"
-</span><span class='line'>  PidDirectory = "/var/run"
-</span><span class='line'>  Maximum Concurrent Jobs = 20
-</span><span class='line'>  Password = "********"         # Console password
-</span><span class='line'>  Messages = Daemon
-</span><span class='line'>}
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>Links</h1>
-
-<ul>
-<li>bacula manual: <a href="http://www.bacula.org/9.0.x-manuals/en/main/"><a href="http://www.bacula.org/9.0.x-manuals/en/main/">http://www.bacula.org/9.0.x-manuals/en/main/</a></a></li>
-<li><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/"><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/">https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/</a></a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
       <h1 class="entry-title"><a href="/blog/blog/2017/12/27/bacula-on-freebsd-part3/">Bacula on FreeBSD (Part 3 Storage Setup)</a></h1>
     
     
@@ -6584,6 +6477,47 @@ Have fun
 
     </article>
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2017/01/01/best-wishes-2017/">Best Wishes 2017!</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-01-01T09:43:34+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2017</span></span> <span class='time'>9:43 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong><em> Best Wishes 2017! </em></strong></p>
+
+<p><img class="center" src="/blog/images/best_wishes_2017_scaled.jpg" width="1000" height="667" title="&#34;best_wishes_2017_scaled.jpg&#34;" alt="&#34;best_wishes_2017_scaled.jpg&#34;"></p>
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
+  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -6621,10 +6555,6 @@ Have fun
       </li>
     
       <li class="post">
-        <a href="/blog/blog/2018/01/07/bacula-on-freebsd-part-4/">Bacula on FreeBSD (Part 4)</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/blog/2017/12/27/bacula-on-freebsd-part3/">Bacula on FreeBSD (Part 3 Storage Setup)</a>
       </li>
     
@@ -6634,6 +6564,10 @@ Have fun
     
       <li class="post">
         <a href="/blog/blog/2017/09/30/jenkins-build-with-20-cores/">Jenkins Build With 20 Cores</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a>
       </li>
     
   </ul>
