@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:01:27+01:00</updated>
+  <updated>2018-03-04T08:58:52+01:00</updated>
   <id>http://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,99 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Postfix Smarthost With Authentication]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication/"/>
+    <updated>2018-03-04T08:05:29+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication</id>
+    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/postfix.png" width="400" height="266" title="&#34;postfix&#34;" alt="&#34;postfix&#34;"></p>
+
+<p>I used the relay host of my internet provider but this was causing issues since my email was getting mark as <a href="https://en.wikipedia.org/wiki/Email_spam">SPAM</a> in <a href="https://en.wikipedia.org/wiki/Gmail">gmail</a>.
+<br />&nbsp;<br />
+It was already on my to-do list to move my outgoing mail to my mail provider also to make it easier to move to another <a href="https://en.wikipedia.org/wiki/Internet_service_provider">ISP</a> or to implement <a href="https://en.wikipedia.org/wiki/Sender_Policy_Framework">SPF</a> but was not on the top of my to-do list.
+<br />&nbsp;<br />
+My email provider requires authentication, so I needed to reconfigure postfix in my FreeBSD mail jail to use a relay host with authentication.</p>
+
+<h3>Install postfix-sasl</h3>
+
+<p>To use authentication with postfix the postfix-sasl package is required.
+If postfix is already installed it&rsquo;ll be replace by postfix-sasl.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafmail:/root # pkg install postfix-sasl</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Configuration</h3>
+
+<h4>Update the relay host</h4>
+
+<h4>main.cf</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>relayhost = [smtp.mailprovider.domain]:465
+</span><span class='line'>smtp_use_tls=yes
+</span><span class='line'>smtp_sasl_auth_enable = yes
+</span><span class='line'>smtp_sasl_password_maps = hash:/usr/local/etc/postfix/relay_pass
+</span><span class='line'>smtp_sasl_security_options =
+</span><span class='line'>smtp_tls_wrappermode = yes
+</span><span class='line'>smtp_tls_security_level = encrypt</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>relay_pass</h4>
+
+<p>The credentials are in the relay_pass file the password is in the file as plain-text so we
+it with the correct file permissions.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafmail:/usr/local/etc/postfix # touch relay_pass
+</span><span class='line'>root@stafmail:/usr/local/etc/postfix # chmod 600 relay_pass
+</span><span class='line'>root@stafmail:/usr/local/etc/postfix # vi relay_pass</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[smtp.mailprovider.domain]:465 user:password</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Create the hash file.</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafmail:/usr/local/etc/postfix # postmap relay_pass</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Verify the file permissions.</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafmail:/usr/local/etc/postfix # ls -l relay_pass*
+</span><span class='line'>-rw-------  1 root  wheel      60 Feb 23 22:43 relay_pass
+</span><span class='line'>-rw-------  1 root  wheel  131072 Feb 23 22:43 relay_pass.db
+</span><span class='line'>root@stafmail:/usr/local/etc/postfix # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Restart</h4>
+
+<p>We replaced postfix with postfix-sasl a restart is required.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafmail:/usr/local/etc/postfix # /usr/local/etc/rc.d/postfix restart</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Update Your CPU Microcode on Arch Linux]]></title>
@@ -10851,20 +10944,6 @@ For the convenience we&rsquo;ll store everything on an encrypted USB stick.</p>
 <p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
 
 <p><strong><em> Have fun </em></strong></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rataplan Becomes a Watchdog]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/09/05/rataplan-becomes-a-watchdog/"/>
-    <updated>2015-09-05T14:47:54+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/09/05/rataplan-becomes-a-watchdog</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/watchdog_rataplan.jpg">
-<a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">My NAS</a> runs on <a href="http://www.freebsd.org">FreeBSD</a> I&rsquo;m quiet happy with it. It&rsquo;s named after the dog <a href="https://nl.wikipedia.org/wiki/Rataplan">rataplan</a> from the <a href="https://en.wikipedia.org/wiki/Lucky_Luke">Lucky Luke comic</a></p>
-
-<p>However transferring large data files to it causes the network to hang. The realtek network interface had issues with freebsd from the <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">beginning</a>. On the screen and in syslog the entry &ldquo;re0: watchdog timeout&rdquo; is printed.</p>
-
-<p>Most FreeBSD people recommends to use Intel nics, I ordered <a href="http://www.dx.com/nl/p/winyao-wy574t-intel-wg82574l-chipset-pci-e-x1-server-gigabit-network-card-adapter-green-280966">a new Intel nic at dx.com</a>. After the installation of the new NIC the network seems to be stable again.</p>
 ]]></content>
   </entry>
   

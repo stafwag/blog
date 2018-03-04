@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication/</loc>
+    <lastmod>2018-03-04T08:05:29+01:00</lastmod>
+  </url>
+  <url>
     <loc>http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/</loc>
     <lastmod>2018-02-10T08:33:01+01:00</lastmod>
   </url>
@@ -496,5 +500,11 @@
   </url>
   <url>
     <loc>http://stafwag.github.io/blog/blog/categories/microcode/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/mail/</loc>
+  </url>
+  <url>
+    <loc>http://stafwag.github.io/blog/blog/categories/postfix/</loc>
   </url>
 </urlset>

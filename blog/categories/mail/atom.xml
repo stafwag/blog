@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Mail | stafwag Blog]]></title>
+  <link href="http://stafwag.github.io/blog/blog/categories/mail/atom.xml" rel="self"/>
+  <link href="http://stafwag.github.io/blog/"/>
+  <updated>2018-03-04T08:58:52+01:00</updated>
+  <id>http://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Postfix Smarthost With Authentication]]></title>
+    <link href="http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication/"/>
+    <updated>2018-03-04T08:05:29+01:00</updated>
+    <id>http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/postfix.png" width="400" height="266" title="&ldquo;postfix&rdquo;" ></p>
+
+<p>I used the relay host of my internet provider but this was causing issues since my email was getting mark as <a href="https://en.wikipedia.org/wiki/Email_spam">SPAM</a> in <a href="https://en.wikipedia.org/wiki/Gmail">gmail</a>.
+<br />&nbsp;<br />
+It was already on my to-do list to move my outgoing mail to my mail provider also to make it easier to move to another <a href="https://en.wikipedia.org/wiki/Internet_service_provider">ISP</a> or to implement <a href="https://en.wikipedia.org/wiki/Sender_Policy_Framework">SPF</a> but was not on the top of my to-do list.
+<br />&nbsp;<br />
+My email provider requires authentication, so I needed to reconfigure postfix in my FreeBSD mail jail to use a relay host with authentication.</p>
+
+<h3>Install postfix-sasl</h3>
+
+<p>To use authentication with postfix the postfix-sasl package is required.
+If postfix is already installed it&rsquo;ll be replace by postfix-sasl.</p>
+
+<pre><code>root@stafmail:/root # pkg install postfix-sasl
+</code></pre>
+
+<h3>Configuration</h3>
+
+<h4>Update the relay host</h4>
+
+<h4>main.cf</h4>
+
+<pre><code>relayhost = [smtp.mailprovider.domain]:465
+smtp_use_tls=yes
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/usr/local/etc/postfix/relay_pass
+smtp_sasl_security_options =
+smtp_tls_wrappermode = yes
+smtp_tls_security_level = encrypt
+</code></pre>
+
+<h4>relay_pass</h4>
+
+<p>The credentials are in the relay_pass file the password is in the file as plain-text so we
+it with the correct file permissions.</p>
+
+<pre><code>root@stafmail:/usr/local/etc/postfix # touch relay_pass
+root@stafmail:/usr/local/etc/postfix # chmod 600 relay_pass
+root@stafmail:/usr/local/etc/postfix # vi relay_pass
+</code></pre>
+
+<p><code>
+</code></p>
+
+<h4>Create the hash file.</h4>
+
+<pre><code>root@stafmail:/usr/local/etc/postfix # postmap relay_pass
+</code></pre>
+
+<h4>Verify the file permissions.</h4>
+
+<pre><code>root@stafmail:/usr/local/etc/postfix # ls -l relay_pass*
+-rw-------  1 root  wheel      60 Feb 23 22:43 relay_pass
+-rw-------  1 root  wheel  131072 Feb 23 22:43 relay_pass.db
+root@stafmail:/usr/local/etc/postfix # 
+</code></pre>
+
+<h4>Restart</h4>
+
+<p>We replaced postfix with postfix-sasl a restart is required.</p>
+
+<pre><code>root@stafmail:/usr/local/etc/postfix # /usr/local/etc/rc.d/postfix restart
+</code></pre>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
+  
+</feed>
