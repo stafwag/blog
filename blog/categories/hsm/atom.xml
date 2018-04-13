@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Hsm | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/hsm/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/hsm/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Protecting Your SSH Keys With SmartCard-HSM]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
     <updated>2015-12-05T09:37:41+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
     <content type="html"><![CDATA[<p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
 
 <h2>Create your first ssh keypair</h2>
@@ -201,9 +201,9 @@ PKCS11Provider opensc-pkcs11.so
   
   <entry>
     <title type="html"><![CDATA[Starting to Protect My Private Keys With SmartCard-Hsm]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
     <updated>2015-11-21T10:32:06+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
     <content type="html"><![CDATA[<p>I still have too many private keys on a local filesystem, I started to use the <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubikey neo</a> for <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">my ssh authentication</a>. Mainly because the nice formfactor of the yubikey.</p>
 
 <p>For my other private keys/data I was looking for something cheeper since I need to have a backup of my secured data so I bought a few <a href="http://www.smartcard-hsm.com">Smartcard-HSM smartcards</a> they cost 16 &euro; each while a yubi-key neo cost 54 &euro; at amazon.de</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Intel I7 | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/intel-i7/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/intel-i7/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Fedora 19 Boottime on an Intel Core I7 4770 With a Samsung 840 Pro Series 256GB Ssd]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/"/>
     <updated>2013-09-01T12:21:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
+    <id>https://stafwag.github.io/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd</id>
     <content type="html"><![CDATA[<p>I installed <a href="http://fedoraproject.org/">fedora 19</a> on <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my new pc</a> mainly to play with <a href="http://www.ovirt.org/">ovirt</a> which seems to be easier to install on  <a href="http://fedoraproject.org/">fedora</a> than on <a href="http://www.debian.org">Debian</a>.</p>
 
 <p>Don&rsquo;t worry I still have a debian system at hand&hellip;</p>

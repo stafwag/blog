@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Squid | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/squid/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/squid/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Using Squid to Cache FreeBSD Packages]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages/"/>
     <updated>2015-06-23T08:43:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages</id>
+    <id>https://stafwag.github.io/blog/blog/2015/06/23/using-squid-to-cache-freebsd-packages</id>
     <content type="html"><![CDATA[<h2>PKGNG config</h2>
 
 <p>I manage a few <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a> behind a <a href="http://www.squid-cache.org/">squid proxy</a>. <a href="https://wiki.freebsd.org/pkgng">pkgng</a> is configured to use the proxy:</p>
@@ -273,9 +273,9 @@ root@stafproxy:/usr/local/etc/squid #
   
   <entry>
     <title type="html"><![CDATA[Bash Saved My Day]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
     <updated>2013-10-20T10:04:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
+    <id>https://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
     <content type="html"><![CDATA[<p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
 
 <p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>

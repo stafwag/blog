@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Openbsd | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/openbsd/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/openbsd/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
     <updated>2015-12-28T15:48:50+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
     <content type="html"><![CDATA[<p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
 
 <h3>ChangeLog</h3>
@@ -44,9 +44,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4rc1 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
     <updated>2015-07-21T12:24:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
     <content type="html"><![CDATA[<p>It is a <a href="https://en.wikipedia.org/wiki/July_21">national holiday in Belgium</a> so I have some time to code again.</p>
 
 <p>Lookat 1.4.4rc1 is the first release candicate of Lookat 1.4.4</p>

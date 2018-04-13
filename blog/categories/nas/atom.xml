@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Nas | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/nas/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/nas/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[RIP: Pluto]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
+    <link href="https://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
+    <id>https://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&ldquo;RIP pluto&rdquo;" >
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>

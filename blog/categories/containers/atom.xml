@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Containers | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/containers/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/containers/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Run Google Chrome Inside a Fedora Docker Container Over Ssh]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
+    <id>https://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
     <content type="html"><![CDATA[<p><strong></p>
 
 <hr />
@@ -79,9 +79,9 @@ $ cp ~/.ssh/id_rsa.pub .
   
   <entry>
     <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
+    <link href="https://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
+    <id>https://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
     <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
 <p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Backup | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/backup/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/backup/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 3 Storage Setup)]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/"/>
     <updated>2017-12-27T11:25:25+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3</id>
+    <id>https://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/bacula_setup.jpg" width="500" height="416" title="&ldquo;bacula setup&rdquo;" ></p>
 
 <p>I finally got the time to continue with my <a href="https://blog.bacula.org/">bacula</a> backup setup. See my previous posts about the start of my bacula setup.</p>
@@ -204,9 +204,9 @@ root@stafbacula:~ #
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL )]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/"/>
     <updated>2017-09-09T10:27:03+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2</id>
+    <id>https://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/postgressl.png" width="300" height="300" title="&ldquo;PostgreSSL&rdquo;" ></p>
 
 <p>In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Xeon | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/xeon/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/xeon/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
     <updated>2017-09-16T14:29:51+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
+    <id>https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&ldquo;Xeon CPU Side&rdquo;" ></p>
 
 <p><br /></p>

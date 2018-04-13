@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Openvas | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/openvas/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/openvas/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Openvas 7: Adding Credentials Failed]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed/"/>
     <updated>2015-05-14T16:56:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed</id>
+    <id>https://stafwag.github.io/blog/blog/2015/05/14/openvas-7-adding-credentials-failed</id>
     <content type="html"><![CDATA[<p>I&rsquo;m creating a new <a href="http://www.openvas.org">openvas 7</a> system running <a href="http://www.centos.org">centos 7</a> as a <a href="http://www.linux-kvm.org/">KVM</a> instance.</p>
 
 <p><a href="http://www.openvas.org/install-packages-v7.html">The installation</a> went fine but it was impossible to create new credentials.</p>

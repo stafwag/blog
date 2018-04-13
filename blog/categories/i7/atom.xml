@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: I7 | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/i7/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/i7/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[The Benefits of Stopping Smoking...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/"/>
     <updated>2013-08-25T12:32:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot</id>
+    <id>https://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/i7_internals.jpg" width="500" height="384" title="&ldquo;RIP pluto&rdquo;" >
 Besides the health benefits you save a lot of money.</p>
 

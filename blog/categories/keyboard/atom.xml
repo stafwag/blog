@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Keyboard | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/keyboard/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/keyboard/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Model-m Tux Update...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
     <updated>2017-10-20T17:27:41+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
+    <id>https://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/modelm_tux_only.jpg" width="400" height="266" title="&ldquo;modelm_tux_only.jpg&rdquo;" ></p>
 
 <p>I own a <a href="https://en.wikipedia.org/wiki/Unicomp">Unicomp</a> <a herf="https://en.wikipedia.org/wiki/Model_M_keyboard">model-m keyboard</a>. The keyboard has a nice key feel but it has windows super key(s).</p>

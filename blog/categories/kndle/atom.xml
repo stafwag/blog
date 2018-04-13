@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Kndle | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/kndle/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/kndle/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Running Kindle on GNU/Linux With Wine]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/"/>
     <updated>2013-09-08T11:57:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
+    <id>https://stafwag.github.io/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/i7_desktop.jpg" width="400" height="300" title="&ldquo;desktop&rdquo;" ></p>
 
 <p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>

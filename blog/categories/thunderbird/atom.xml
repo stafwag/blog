@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Thunderbird | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/thunderbird/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/thunderbird/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Thunderbird: Importing S/mime Certificate Failed]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
     <updated>2016-01-17T09:03:53+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
+    <id>https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&ldquo;thunderbird smime failed&rdquo;" ></p>
 
 <p>On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate"><a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a></a>

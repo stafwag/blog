@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Arm | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/arm/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/arm/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Running Docker on ARM]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm/"/>
     <updated>2015-12-26T14:55:59+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/odroid_2_euro.jpg" width="500" height="256" title="&ldquo;odroid u3 2 euro&rdquo;" ></p>
 
 <p>I own an <a href="http://www.hardkernel.com/main/products/prdt_info.php?g_code=g138745696275">odroid u3</a> that I used for my media center with <a href="https://xbmc.org/">xbmc</a> while I like the performance of the <a href="https://en.wikipedia.org/wiki/Exynos">Exynos4412 CPU</a> but the drivers for the <a href="https://en.wikipedia.org/wiki/Mali_%28GPU%29">Mali GPU</a> aren&rsquo;t <a href="https://en.wikipedia.org/wiki/Open_source">opensource</a>.</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Trisquel | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/trisquel/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/trisquel/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[How to Install Libreboot on a ThinkPad X60]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/"/>
     <updated>2017-02-11T16:09:11+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60</id>
+    <id>https://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60</id>
     <content type="html"><![CDATA[<p><br />&nbsp;<br />
 I got a <a href="https://en.wikipedia.org/wiki/ThinkPad_X_Series#X60_Tablet">ThinkPad x60 (tablet version)</a> from <a href="http://ebay.be">ebay.be</a> to install <a href="https://libreboot.org/">libreboot</a> on it.
 <br />&nbsp;<br />

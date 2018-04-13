@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Jails, | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/jails/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/jails/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Migrating From Qjail to Ezjail]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/"/>
     <updated>2013-04-10T12:36:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail</id>
+    <id>https://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail</id>
     <content type="html"><![CDATA[<p>I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I&rsquo;m migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.

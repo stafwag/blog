@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Chrome | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/chrome/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/chrome/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Run Google Chrome Inside a Fedora Docker Container Over Ssh]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh/"/>
     <updated>2015-05-12T14:55:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
+    <id>https://stafwag.github.io/blog/blog/2015/05/12/run-google-chrome-inside-a-fedora-docker-container-over-ssh</id>
     <content type="html"><![CDATA[<p><strong></p>
 
 <hr />

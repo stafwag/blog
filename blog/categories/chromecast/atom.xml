@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Chromecast | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/chromecast/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/chromecast/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Pfsense: Too Secure for Chromecast]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast/"/>
+    <link href="https://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast/"/>
     <updated>2014-06-07T21:05:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast</id>
+    <id>https://stafwag.github.io/blog/blog/2014/06/07/pfsense-too-secure-for-chromecast</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/too_secure2cast.png" width="885" height="469" title="&ldquo;toosecure2cast&rdquo;" ></p>
 
 <p>My internet firewall is a <a href="http://www.pcengines.ch/">pcengines</a> <a href="http://www.pcengines.ch/alix.htm">alix system</a> powered by <a href="https://www.pfsense.org/">pfsense</a>.</p>

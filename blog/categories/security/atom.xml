@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Security | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Update Your CPU Microcode on Arch Linux]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/"/>
+    <link href="https://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/"/>
     <updated>2018-02-10T08:33:01+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux</id>
+    <id>https://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux</id>
     <content type="html"><![CDATA[<h1>Meltdown &amp; spectre</h1>
 
 <p>With Meldown <a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754"><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754">https://nvd.nist.gov/vuln/detail/CVE-2017-5754</a></a>, Spectre Variant 1 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> and Spectre Variant 2 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> out in the wild there is a lot of confusing going about updating microcode.</p>
@@ -419,9 +419,9 @@ If you new micro code cause issue you can just remove the entry in grub configur
   
   <entry>
     <title type="html"><![CDATA[Thunderbird: Importing S/mime Certificate Failed]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
     <updated>2016-01-17T09:03:53+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
+    <id>https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&ldquo;thunderbird smime failed&rdquo;" ></p>
 
 <p>On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate"><a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a></a>
@@ -549,9 +549,9 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   
   <entry>
     <title type="html"><![CDATA[Protecting Your SSH Keys With SmartCard-HSM]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
     <updated>2015-12-05T09:37:41+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
     <content type="html"><![CDATA[<p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
 
 <h2>Create your first ssh keypair</h2>
@@ -735,9 +735,9 @@ PKCS11Provider opensc-pkcs11.so
   
   <entry>
     <title type="html"><![CDATA[Starting to Protect My Private Keys With SmartCard-Hsm]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
     <updated>2015-11-21T10:32:06+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
     <content type="html"><![CDATA[<p>I still have too many private keys on a local filesystem, I started to use the <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubikey neo</a> for <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">my ssh authentication</a>. Mainly because the nice formfactor of the yubikey.</p>
 
 <p>For my other private keys/data I was looking for something cheeper since I need to have a backup of my secured data so I bought a few <a href="http://www.smartcard-hsm.com">Smartcard-HSM smartcards</a> they cost 16 &euro; each while a yubi-key neo cost 54 &euro; at amazon.de</p>
@@ -1401,9 +1401,9 @@ umount: /mnt: umount failed: Operation not permitted
   
   <entry>
     <title type="html"><![CDATA[Using YubiKey Neo as Gpg Smartcard for SSH Authentication]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
     <updated>2015-06-16T10:32:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
+    <id>https://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
     <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
 
 <p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>

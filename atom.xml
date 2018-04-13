@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,10 +15,10 @@
   
   <entry>
     <title type="html"><![CDATA[Postfix Smarthost With Authentication]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication/"/>
+    <link href="https://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication/"/>
     <updated>2018-03-04T08:05:29+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/postfix.png" width="400" height="266" title="&#34;postfix&#34;" alt="&#34;postfix&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2018/03/04/postfix-smarthost-with-authentication</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/postfix.png" width="400" height="266" title="&#34;postfix&#34;" alt="&#34;postfix&#34;"></p>
 
 <p>I used the relay host of my internet provider but this was causing issues since my email was getting mark as <a href="https://en.wikipedia.org/wiki/Email_spam">SPAM</a> in <a href="https://en.wikipedia.org/wiki/Gmail">gmail</a>.
 <br />&nbsp;<br />
@@ -108,9 +108,9 @@ it with the correct file permissions.</p>
   
   <entry>
     <title type="html"><![CDATA[Update Your CPU Microcode on Arch Linux]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/"/>
+    <link href="https://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/"/>
     <updated>2018-02-10T08:33:01+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux</id>
+    <id>https://stafwag.github.io/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux</id>
     <content type="html"><![CDATA[<h1>Meltdown &amp; spectre</h1>
 
 <p>With Meldown <a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754"><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754">https://nvd.nist.gov/vuln/detail/CVE-2017-5754</a></a>, Spectre Variant 1 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> and Spectre Variant 2 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> out in the wild there is a lot of confusing going about updating microcode.</p>
@@ -862,10 +862,10 @@ If you new micro code cause issue you can just remove the entry in grub configur
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 3 Storage Setup)]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3/"/>
     <updated>2017-12-27T11:25:25+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/bacula_setup.jpg" width="500" height="416" title="&#34;bacula setup&#34;" alt="&#34;bacula setup&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2017/12/27/bacula-on-freebsd-part3</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/bacula_setup.jpg" width="500" height="416" title="&#34;bacula setup&#34;" alt="&#34;bacula setup&#34;"></p>
 
 <p>I finally got the time to continue with my <a href="https://blog.bacula.org/">bacula</a> backup setup. See my previous posts about the start of my bacula setup.</p>
 
@@ -1163,10 +1163,10 @@ If you new micro code cause issue you can just remove the entry in grub configur
   
   <entry>
     <title type="html"><![CDATA[Model-m Tux Update...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
     <updated>2017-10-20T17:27:41+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/modelm_tux_only.jpg" width="400" height="266" title="&#34;modelm_tux_only.jpg&#34;" alt="&#34;modelm_tux_only.jpg&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/modelm_tux_only.jpg" width="400" height="266" title="&#34;modelm_tux_only.jpg&#34;" alt="&#34;modelm_tux_only.jpg&#34;"></p>
 
 <p>I own a <a href="https://en.wikipedia.org/wiki/Unicomp">Unicomp</a> <a herf="https://en.wikipedia.org/wiki/Model_M_keyboard">model-m keyboard</a>. The keyboard has a nice key feel but it has windows super key(s).</p>
 
@@ -1176,18 +1176,18 @@ If you new micro code cause issue you can just remove the entry in grub configur
 
 <h3>Pictures</h3>
 
-<p><a href="http://stafwag.github.io/blog/images/modelm_tux_package.jpg"><img src="http://stafwag.github.io/blog/images/modelm_tux_package.jpg" height="250" width="375" alt="modelm_tux_package.jpg" /></a>
-<a href="http://stafwag.github.io/blog/images/modelm_all_keys.jpg"><img src="http://stafwag.github.io/blog/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
-<a href="http://stafwag.github.io/blog/images/modelm_tux_only.jpg"><img src="http://stafwag.github.io/blog/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
-<a href="http://stafwag.github.io/blog/images/modelm_with_tux_keys.jpg"><img src="http://stafwag.github.io/blog/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
+<p><a href="https://stafwag.github.io/blog/images/modelm_tux_package.jpg"><img src="https://stafwag.github.io/blog/images/modelm_tux_package.jpg" height="250" width="375" alt="modelm_tux_package.jpg" /></a>
+<a href="https://stafwag.github.io/blog/images/modelm_all_keys.jpg"><img src="https://stafwag.github.io/blog/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
+<a href="https://stafwag.github.io/blog/images/modelm_tux_only.jpg"><img src="https://stafwag.github.io/blog/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
+<a href="https://stafwag.github.io/blog/images/modelm_with_tux_keys.jpg"><img src="https://stafwag.github.io/blog/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Jenkins Build With 20 Cores]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores/"/>
     <updated>2017-09-30T19:18:14+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores</id>
+    <id>https://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores</id>
     <content type="html"><![CDATA[<p>I finally got the time to try out my jenkins build on my new <a href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a></p>
 
 <div class="embed-video-container"><iframe src="http://www.youtube.com/embed/BNn9absXkE8 "></iframe></div>
@@ -1201,10 +1201,10 @@ If you new micro code cause issue you can just remove the entry in grub configur
   
   <entry>
     <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
     <updated>2017-09-16T14:29:51+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&#34;Xeon CPU Side&#34;" alt="&#34;Xeon CPU Side&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
+    <content type="html"><![CDATA[<p><img class="left" src="https://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&#34;Xeon CPU Side&#34;" alt="&#34;Xeon CPU Side&#34;"></p>
 
 <p><br /></p>
 
@@ -1229,9 +1229,9 @@ If you new micro code cause issue you can just remove the entry in grub configur
 
 <h3>Pictures</h3>
 
-<p><a href="http://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg"><img src="http://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg" height="291" width="300" alt="Xeon CPU side" /></a>
-<a href="http://stafwag.github.io/blog/images/201709_xeon_hd_side.jpg"><img src="http://stafwag.github.io/blog/images/201709_xeon_hd_side.jpg" height="291" width="317" alt="Xeon CPU side" /></a>
-<a href="http://stafwag.github.io/blog/images/201709_xeon_front_side.jpg"><img src="http://stafwag.github.io/blog/images/201709_xeon_front_side.jpg" height="291" width="151" alt="Xeon CPU side" /></a></p>
+<p><a href="https://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg"><img src="https://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg" height="291" width="300" alt="Xeon CPU side" /></a>
+<a href="https://stafwag.github.io/blog/images/201709_xeon_hd_side.jpg"><img src="https://stafwag.github.io/blog/images/201709_xeon_hd_side.jpg" height="291" width="317" alt="Xeon CPU side" /></a>
+<a href="https://stafwag.github.io/blog/images/201709_xeon_front_side.jpg"><img src="https://stafwag.github.io/blog/images/201709_xeon_front_side.jpg" height="291" width="151" alt="Xeon CPU side" /></a></p>
 
 <p><strong><em>Still need to verify if jenkins works on this system :-) </em></strong></p>
 ]]></content>
@@ -1239,10 +1239,10 @@ If you new micro code cause issue you can just remove the entry in grub configur
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 2 Bacula Catalog Over SSL )]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/"/>
     <updated>2017-09-09T10:27:03+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/postgressl.png" width="300" height="300" title="&#34;PostgreSSL&#34;" alt="&#34;PostgreSSL&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/postgressl.png" width="300" height="300" title="&#34;PostgreSSL&#34;" alt="&#34;PostgreSSL&#34;"></p>
 
 <p>In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.</p>
 
@@ -3331,9 +3331,9 @@ Have fun!
   
   <entry>
     <title type="html"><![CDATA[Bacula on FreeBSD (Part 1 PostgresSQL in a Jail)]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/"/>
     <updated>2017-08-06T08:43:28+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1</id>
+    <id>https://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1</id>
     <content type="html"><![CDATA[<p>I do take backups; my current solution are couple of shell script wrapper around dump/zfs send/btrfs send/rsync which is a mess.
 So decided give <a href="http://www.bacula.org/">bacula</a> a try</p>
 
@@ -4055,10 +4055,10 @@ Have fun!
   
   <entry>
     <title type="html"><![CDATA[Install Parabola GNU/Linux on an Encrypted Btrfs Logical Volume]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
     <updated>2017-05-25T09:05:38+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/413px-Gnu10-mascot-logo_100ppi.png" width="200" height="291" title="&#34;413px-Gnu10-mascot-logo_100ppi.png&#34;" alt="&#34;413px-Gnu10-mascot-logo_100ppi.png&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
+    <content type="html"><![CDATA[<p><img class="left" src="https://stafwag.github.io/blog/images/413px-Gnu10-mascot-logo_100ppi.png" width="200" height="291" title="&#34;413px-Gnu10-mascot-logo_100ppi.png&#34;" alt="&#34;413px-Gnu10-mascot-logo_100ppi.png&#34;"></p>
 
 <p>I finally found time to complete the installation of my <a href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">Libreboot laptop</a></p>
 
@@ -5262,9 +5262,9 @@ Have fun!
   
   <entry>
     <title type="html"><![CDATA[How to Install Libreboot on a ThinkPad X60]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/"/>
     <updated>2017-02-11T16:09:11+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60</id>
+    <id>https://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60</id>
     <content type="html"><![CDATA[<p><br />&nbsp;<br />
 I got a <a href="https://en.wikipedia.org/wiki/ThinkPad_X_Series#X60_Tablet">ThinkPad x60 (tablet version)</a> from <a href="http://ebay.be">ebay.be</a> to install <a href="https://libreboot.org/">libreboot</a> on it.
 <br />&nbsp;<br />
@@ -5276,7 +5276,7 @@ I might go with <a href="http://https://wiki.debian.org/DebianStretch">Debian St
 You&rsquo;ll find a small howto install libreboot on a Thinkpad X60 below.
 <br />&nbsp;<br /></p>
 
-<p><img class="centre" src="http://stafwag.github.io/blog/images/x60_open.jpg" width="750" height="1050" title="&#34;Thinkpad x60 open&#34;" alt="&#34;Thinkpad x60 open&#34;"></p>
+<p><img class="centre" src="https://stafwag.github.io/blog/images/x60_open.jpg" width="750" height="1050" title="&#34;Thinkpad x60 open&#34;" alt="&#34;Thinkpad x60 open&#34;"></p>
 
 <h1>Build Libreboot</h1>
 
@@ -6216,7 +6216,7 @@ Logon the system again and continue with the secondflash phase</p>
 
 <p>The installation is completed! Reboot our system and enjoy your Free As In Freedom Laptop.</p>
 
-<p><img class="centre" src="http://stafwag.github.io/blog/images/x60_free.jpg" width="750" height="853" title="&#34;Thinkpad x60 open&#34;" alt="&#34;Thinkpad x60 open&#34;"></p>
+<p><img class="centre" src="https://stafwag.github.io/blog/images/x60_free.jpg" width="750" height="853" title="&#34;Thinkpad x60 open&#34;" alt="&#34;Thinkpad x60 open&#34;"></p>
 
 <p style="font-style: italic;">
 Have fun
@@ -6237,21 +6237,21 @@ Have fun
   
   <entry>
     <title type="html"><![CDATA[Best Wishes 2017!]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017/"/>
     <updated>2017-01-01T09:43:34+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017</id>
+    <id>https://stafwag.github.io/blog/blog/2017/01/01/best-wishes-2017</id>
     <content type="html"><![CDATA[<p><strong><em> Best Wishes 2017! </em></strong></p>
 
-<p><img class="center" src="http://stafwag.github.io/blog/images/best_wishes_2017_scaled.jpg" width="1000" height="667" title="&#34;best_wishes_2017_scaled.jpg&#34;" alt="&#34;best_wishes_2017_scaled.jpg&#34;"></p>
+<p><img class="center" src="https://stafwag.github.io/blog/images/best_wishes_2017_scaled.jpg" width="1000" height="667" title="&#34;best_wishes_2017_scaled.jpg&#34;" alt="&#34;best_wishes_2017_scaled.jpg&#34;"></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Install Arch on an Encrypted Btrfs Partition]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/"/>
     <updated>2016-08-30T08:59:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/Arch-linux-logo.png" width="300" height="225" title="&#34;Arch Linux Logo&#34;" alt="&#34;Arch Linux Logo&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/Arch-linux-logo.png" width="300" height="225" title="&#34;Arch Linux Logo&#34;" alt="&#34;Arch Linux Logo&#34;"></p>
 
 <p>I&rsquo;m preparing to move <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my workstation</a> to <a href="https://www.archlinux.org/">arch linux</a> Before I&rsquo;ll install it on my physical workstation I did the installation on a virtual machine. I&rsquo;ll use <a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">btrfs</a> as the filesystem during the installation. btrfs is a nice filesystem but it had some serious dataloss issue with <a href="https://btrfs.wiki.kernel.org/index.php/RAID56">RAID5/RAID6</a> recently.</p>
 
@@ -6263,7 +6263,7 @@ Have fun
 
 <p>In this howto we&rsquo;ll setup a single root partition to have full disk encryption. I&rsquo;m not sure I go with an encrypted boot partition during my final installation. I might just create an empty partition of 1G so I can move switch between an encrypted and an non-encrypted boot filesystem.</p>
 
-<p><img class="left" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/00_boot.png" width="440" title="&#34;00_boot.png&#34;" alt="&#34;00_boot.png&#34;"></p>
+<p><img class="left" src="https://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/00_boot.png" width="440" title="&#34;00_boot.png&#34;" alt="&#34;00_boot.png&#34;"></p>
 
 <h2>Download the arch linux iso and boot it</h2>
 
@@ -7341,12 +7341,12 @@ Have fun
 
 <p>As mentioned before the GRUB will as for a passphrase to decrypt the boot partition.</p>
 
-<p><img class="center" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/01_1st_boot.png" width="700" height="274" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;">
-<img class="center" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_grub_menu.png" width="700" height="484" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
+<p><img class="center" src="https://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/01_1st_boot.png" width="700" height="274" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;">
+<img class="center" src="https://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_grub_menu.png" width="700" height="484" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
 
 <p>You&rsquo;ll need to type it the password a secod time during the loading of initrd.</p>
 
-<p><img class="center" src="http://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_decrypt_root.png" width="700" height="165" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
+<p><img class="center" src="https://stafwag.github.io/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_decrypt_root.png" width="700" height="165" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
 
 <h3>Setup swap space</h3>
 
@@ -7428,9 +7428,9 @@ Have fun
   
   <entry>
     <title type="html"><![CDATA[CGIpaf 1.3.5 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released/"/>
     <updated>2016-04-13T11:00:13+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released</id>
+    <id>https://stafwag.github.io/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released</id>
     <content type="html"><![CDATA[<p>CGIpaf 1.3.5 has been released</p>
 
 <h3>ChangeLog</h3>
@@ -7460,10 +7460,10 @@ Have fun...
   
   <entry>
     <title type="html"><![CDATA[Thunderbird: Importing S/mime Certificate Failed]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
     <updated>2016-01-17T09:03:53+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
-    <content type="html"><![CDATA[<p><img class="left" src="http://stafwag.github.io/blog/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&#34;thunderbird smime failed&#34;" alt="&#34;thunderbird smime failed&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
+    <content type="html"><![CDATA[<p><img class="left" src="https://stafwag.github.io/blog/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&#34;thunderbird smime failed&#34;" alt="&#34;thunderbird smime failed&#34;"></p>
 
 <p>On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate"><a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a></a>
 you get a list of free <a href="https://en.wikipedia.org/wiki/S/MIME">s/mime</a> certificate.</p>
@@ -7624,7 +7624,7 @@ you get a list of free <a href="https://en.wikipedia.org/wiki/S/MIME">s/mime</a>
 
 <h1>Import the the new pkcs12 file</h1>
 
-<p><img class="right" src="http://stafwag.github.io/blog/images/thunderbird_import_smime_ok.png" width="598" height="152" title="&#34;thunderbird smime import ok&#34;" alt="&#34;thunderbird smime import ok&#34;">
+<p><img class="right" src="https://stafwag.github.io/blog/images/thunderbird_import_smime_ok.png" width="598" height="152" title="&#34;thunderbird smime import ok&#34;" alt="&#34;thunderbird smime import ok&#34;">
 Not sure what the issue was with original pkcs12 but the import works now&hellip;.
  - it might have been the 32 characters password -.   After I was able to use the signing and encryption part in thunderbird.</p>
 
@@ -7634,20 +7634,20 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   
   <entry>
     <title type="html"><![CDATA[Happy New Year 2016]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016/"/>
     <updated>2016-01-01T10:24:48+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016</id>
+    <id>https://stafwag.github.io/blog/blog/2016/01/01/happy-new-year-2016</id>
     <content type="html"><![CDATA[<p><strong><em> Happy new year! </em></strong></p>
 
-<p><img class="center" src="http://stafwag.github.io/blog/images/2016.jpg" width="1000" height="625" title="&#34;2016.jpg&#34;" alt="&#34;2016.jpg&#34;"></p>
+<p><img class="center" src="https://stafwag.github.io/blog/images/2016.jpg" width="1000" height="625" title="&#34;2016.jpg&#34;" alt="&#34;2016.jpg&#34;"></p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
     <updated>2015-12-28T15:48:50+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
     <content type="html"><![CDATA[<p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
 
 <h3>ChangeLog</h3>
@@ -7674,17 +7674,17 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   
   <entry>
     <title type="html"><![CDATA[Running Docker on ARM]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm/"/>
     <updated>2015-12-26T14:55:59+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm</id>
-    <content type="html"><![CDATA[<p><img class="right" src="http://stafwag.github.io/blog/images/odroid_2_euro.jpg" width="500" height="256" title="&#34;odroid u3 2 euro&#34;" alt="&#34;odroid u3 2 euro&#34;"></p>
+    <id>https://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/odroid_2_euro.jpg" width="500" height="256" title="&#34;odroid u3 2 euro&#34;" alt="&#34;odroid u3 2 euro&#34;"></p>
 
 <p>I own an <a href="http://www.hardkernel.com/main/products/prdt_info.php?g_code=g138745696275">odroid u3</a> that I used for my media center with <a href="https://xbmc.org/">xbmc</a> while I like the performance of the <a href="https://en.wikipedia.org/wiki/Exynos">Exynos4412 CPU</a> but the drivers for the <a href="https://en.wikipedia.org/wiki/Mali_%28GPU%29">Mali GPU</a> aren&rsquo;t <a href="https://en.wikipedia.org/wiki/Open_source">opensource</a>.</p>
 
 <p>I like <a href="https://en.wikipedia.org/wiki/ARM_architecture">ARM</a> but unfortunatelly a lot of the ARM <a href="https://en.wikipedia.org/wiki/System_on_a_chip">soc</a>&rsquo;s  have no opensource drivers for the <a href="https://en.wikipedia.org/wiki/Graphics_processing_unit">GPU</a></p>
 
 <p>The manufacturer of the odroid u3 - <a href="http://www.hardkernel.com/">hardkernel</a> - provides <a href="http://com.odroid.com/sigong/nf_file_board/nfile_board.php?tag=ODROID-U3">ubuntu 14.04 images</a> with xbmc and mali support. It isn&rsquo;t possible to get the newer of version of xbmc - now <a href="http://www.kodi.org">kodi</a> - running, or I didn&rsquo;t succeed withit. I&rsquo;ll look for another solution for my media server needs this might be my <a href="https://www.raspberrypi.org/">raspberry pi</a> <a href="https://www.raspberrypi.org/products/model-b-plus/">1 model B+</a> that is laying around doing nothing running <a href="http://openelec.tv/">openelec</a><br /><br />
-<img class="left" src="http://stafwag.github.io/blog/images/odroid_u3_with_usbdisk.jpg" width="500" height="352" title="&#34;odroid u3 with usb disk&#34;" alt="&#34;odroid u3 with usb disk&#34;"></p>
+<img class="left" src="https://stafwag.github.io/blog/images/odroid_u3_with_usbdisk.jpg" width="500" height="352" title="&#34;odroid u3 with usb disk&#34;" alt="&#34;odroid u3 with usb disk&#34;"></p>
 
 <p>Like I said I like the performance of the ordoid U3 that why I installed <a href="http://archlinuxarm.org/">archLinuxArm</a> to play with <a href="https://www.docker.com/">Docker</a>. I could have sticked with Ubuntu 14.04 but with Arch Linux I get more up-to-date software.</p>
 
@@ -9479,9 +9479,9 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   
   <entry>
     <title type="html"><![CDATA[Protecting Your SSH Keys With SmartCard-HSM]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
     <updated>2015-12-05T09:37:41+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
     <content type="html"><![CDATA[<p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
 
 <h2>Create your first ssh keypair</h2>
@@ -9793,9 +9793,9 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   
   <entry>
     <title type="html"><![CDATA[Starting to Protect My Private Keys With SmartCard-Hsm]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
     <updated>2015-11-21T10:32:06+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
+    <id>https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
     <content type="html"><![CDATA[<p>I still have too many private keys on a local filesystem, I started to use the <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubikey neo</a> for <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">my ssh authentication</a>. Mainly because the nice formfactor of the yubikey.</p>
 
 <p>For my other private keys/data I was looking for something cheeper since I need to have a backup of my secured data so I bought a few <a href="http://www.smartcard-hsm.com">Smartcard-HSM smartcards</a> they cost 16 &euro; each while a yubi-key neo cost 54 &euro; at amazon.de</p>
@@ -10924,9 +10924,9 @@ For the convenience we&rsquo;ll store everything on an encrypted USB stick.</p>
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4rc2 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/"/>
     <updated>2015-10-17T15:36:05+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released</id>
     <content type="html"><![CDATA[<p>Lookat 1.4.4rc2 is the second release candicate of Lookat 1.4.4</p>
 
 <h3>ChangeLog</h3>

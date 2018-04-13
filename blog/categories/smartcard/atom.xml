@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Smartcard | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/smartcard/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/smartcard/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Using YubiKey Neo as Gpg Smartcard for SSH Authentication]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
     <updated>2015-06-16T10:32:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
+    <id>https://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
     <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
 
 <p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Git | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/git/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/git/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Bash Saved My Day]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day/"/>
     <updated>2013-10-20T10:04:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
+    <id>https://stafwag.github.io/blog/blog/2013/10/20/bash-saved-my-day</id>
     <content type="html"><![CDATA[<p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
 
 <p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
@@ -33,9 +33,9 @@ $ vi create_cache_entries.sh
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
+    <id>https://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
     <content type="html"><![CDATA[<p>Trying to release more often&hellip;</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>
@@ -58,9 +58,9 @@ $ vi create_cache_entries.sh
   
   <entry>
     <title type="html"><![CDATA[CGIpaf Uploaded to Github]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github/"/>
     <updated>2013-03-16T11:57:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
+    <id>https://stafwag.github.io/blog/blog/2013/03/16/cgipaf-uploaded-to-github</id>
     <content type="html"><![CDATA[<p>I finally converted the <a href="http://www.wagemakers.be/english/programs/cgipaf">cgipaf</a> cvs repository to <a href="https://github.com/stafwag/cgipaf">github</a>.</p>
 
 <p>I used <a href="http://cvs2svn.tigris.org/cvs2git.html">cvs2git</a>
@@ -111,9 +111,9 @@ git push origin --mirror
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.2 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released/"/>
     <updated>2012-12-12T20:32:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
+    <id>https://stafwag.github.io/blog/blog/2012/12/12/lookat-slash-bekijk-1-dot-4-2-released</id>
     <content type="html"><![CDATA[<p>Finaly a long overdue release of Lookat / Bekijk the userfriendly file browser.</p>
 
 <p>The new stable version 1.4.2 is available at the <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a></p>
@@ -153,9 +153,9 @@ git push origin --mirror
   
   <entry>
     <title type="html"><![CDATA[RIP: Pluto]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
+    <link href="https://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/"/>
     <updated>2012-12-11T23:19:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
+    <id>https://stafwag.github.io/blog/blog/2012/12/11/rip-pluto</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/rip_pluto.jpg" width="300" height="375" title="&ldquo;RIP pluto&rdquo;" >
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Lookat | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/lookat/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/lookat/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released/"/>
     <updated>2015-12-28T15:48:50+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/12/28/lookat-1-dot-4-4-released</id>
     <content type="html"><![CDATA[<p> Lookat 1.4.4 is the latest stable release of Lookat/Bekijk the userfriendly file browser/viewer.</p>
 
 <h3>ChangeLog</h3>
@@ -44,9 +44,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4rc2 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/"/>
     <updated>2015-10-17T15:36:05+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released</id>
     <content type="html"><![CDATA[<p>Lookat 1.4.4rc2 is the second release candicate of Lookat 1.4.4</p>
 
 <h3>ChangeLog</h3>
@@ -69,9 +69,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.4rc1 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released/"/>
     <updated>2015-07-21T12:24:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
+    <id>https://stafwag.github.io/blog/blog/2015/07/21/lookat-1-dot-4-4rc1-released</id>
     <content type="html"><![CDATA[<p>It is a <a href="https://en.wikipedia.org/wiki/July_21">national holiday in Belgium</a> so I have some time to code again.</p>
 
 <p>Lookat 1.4.4rc1 is the first release candicate of Lookat 1.4.4</p>
@@ -104,9 +104,9 @@ Thanks to Brian Callahan for the port!</p>
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.3 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
     <updated>2013-08-18T20:07:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
+    <id>https://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/lookat_143.png" width="360" height="217" title="&ldquo;lookat&rdquo;" >
 I&rsquo;m pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
 
@@ -128,9 +128,9 @@ Have fun...
   
   <entry>
     <title type="html"><![CDATA[Yum Install Lookat]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat/"/>
     <updated>2013-05-25T20:09:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat</id>
+    <id>https://stafwag.github.io/blog/blog/2013/05/25/yum-install-lookat</id>
     <content type="html"><![CDATA[<p>&ldquo;yum install lookat&rdquo; works on Fedora now  ;-)</p>
 
 <p>Thanks <a href="http://cicku.me/">Christopher</a>!</p>

@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Clang | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/clang/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/clang/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lookat 1.4.3 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released/"/>
     <updated>2013-08-18T20:07:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
+    <id>https://stafwag.github.io/blog/blog/2013/08/18/lookat-1-dot-4-3-released</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/lookat_143.png" width="360" height="217" title="&ldquo;lookat&rdquo;" >
 I&rsquo;m pleased to anounce that Lookat/Bekijk 1.4.3 has been released.</p>
 
@@ -39,9 +39,9 @@ Have fun...
   
   <entry>
     <title type="html"><![CDATA[Lookat/Bekijk 1.4.3rc1 Released]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/"/>
     <updated>2013-04-27T09:21:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
+    <id>https://stafwag.github.io/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released</id>
     <content type="html"><![CDATA[<p>Trying to release more often&hellip;</p>
 
 <p>The first release candicate of lookat 1.4.3 has been released.</p>

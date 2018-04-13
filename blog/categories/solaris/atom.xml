@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Solaris | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/solaris/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/solaris/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
     <updated>2017-09-16T14:29:51+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
+    <id>https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&ldquo;Xeon CPU Side&rdquo;" ></p>
 
 <p><br /></p>
@@ -53,9 +53,9 @@
   
   <entry>
     <title type="html"><![CDATA[Lxc Templates in Fedora 20]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
+    <link href="https://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20/"/>
     <updated>2014-06-09T14:28:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
+    <id>https://stafwag.github.io/blog/blog/2014/06/09/lxc-templates-in-fedora-20</id>
     <content type="html"><![CDATA[<p>I&rsquo;m a big fan of containers and used them a lot on <a href="http://en.wikipedia.org/wiki/Solaris_%28operating_system%29">Solaris</a> and <a href="http://www.freebsd.org/doc/handbook/jails.html">jails on Freebsd</a>. Containers/jails are the fastest way to spinup an new system and the easiest way to isolate services.</p>
 
 <p>As always with virtualization you&rsquo;ve to careful with sharing systems or containers that doesn&rsquo;t below to the same customer or service on the same physical machine since you&rsquo;re never sure which traces are left behind in the memory etc.</p>
@@ -485,9 +485,9 @@ root@mydebian:~#
   
   <entry>
     <title type="html"><![CDATA[Ide Is Still Alive...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive/"/>
     <updated>2013-08-10T14:26:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
+    <id>https://stafwag.github.io/blog/blog/2013/08/10/ide-is-still-alive</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/sta2ide_0.jpg" width="195" height="192" title="&ldquo;sta2ide&rdquo;" ></p>
 
 <p>
@@ -520,15 +520,15 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   
   <entry>
     <title type="html"><![CDATA[Freebsd 9.1 Jails With Qjail]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail/"/>
     <updated>2013-02-16T12:35:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
+    <id>https://stafwag.github.io/blog/blog/2013/02/16/freebsd-9.1-jails-with-qjail</id>
     <content type="html"><![CDATA[<hr />
 
 
 <p><strong></p>
 
-<p>I&rsquo;m using <em>ezjail</em> <a href="http://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
+<p>I&rsquo;m using <em>ezjail</em> <a href="https://stafwag.github.io/blog/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.</p>
 
 <p>The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
 Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html"><a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a></a>.</p>

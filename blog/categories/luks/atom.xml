@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Luks | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/luks/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/luks/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Install Parabola GNU/Linux on an Encrypted Btrfs Logical Volume]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
     <updated>2017-05-25T09:05:38+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
+    <id>https://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/413px-Gnu10-mascot-logo_100ppi.png" width="200" height="291" title="&ldquo;413px-Gnu10-mascot-logo_100ppi.png&rdquo;" ></p>
 
 <p>I finally found time to complete the installation of my <a href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">Libreboot laptop</a></p>
@@ -750,9 +750,9 @@ Have fun!
   
   <entry>
     <title type="html"><![CDATA[Install Arch on an Encrypted Btrfs Partition]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/"/>
+    <link href="https://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/"/>
     <updated>2016-08-30T08:59:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition</id>
+    <id>https://stafwag.github.io/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/Arch-linux-logo.png" width="300" height="225" title="&ldquo;Arch Linux Logo&rdquo;" ></p>
 
 <p>I&rsquo;m preparing to move <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my workstation</a> to <a href="https://www.archlinux.org/">arch linux</a> Before I&rsquo;ll install it on my physical workstation I did the installation on a virtual machine. I&rsquo;ll use <a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">btrfs</a> as the filesystem during the installation. btrfs is a nice filesystem but it had some serious dataloss issue with <a href="https://btrfs.wiki.kernel.org/index.php/RAID56">RAID5/RAID6</a> recently.</p>

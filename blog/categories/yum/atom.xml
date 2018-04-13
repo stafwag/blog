@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Yum | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/yum/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/yum/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Yum Update on Fedora 19 and Zfs on Linux]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/"/>
+    <link href="https://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux/"/>
     <updated>2013-10-13T17:51:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux</id>
+    <id>https://stafwag.github.io/blog/blog/2013/10/13/yum-update-on-fedora-19-and-zfs-on-linux</id>
     <content type="html"><![CDATA[<p><img class="left <a" src="href="http://zfsonlinux.org/images/zfs-linux.png">http://zfsonlinux.org/images/zfs-linux.png</a>" width="200" height="125" title="&ldquo;zfs on linux&rdquo;" ></p>
 
 <p>I use  <a href="http://zfsonlinux.org/"> zfs on linux</a> on <a href="http://fedoraproject.org/">fedora</a> now.</p>

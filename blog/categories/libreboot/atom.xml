@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Libreboot | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/libreboot/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/libreboot/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Install Parabola GNU/Linux on an Encrypted Btrfs Logical Volume]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume/"/>
     <updated>2017-05-25T09:05:38+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
+    <id>https://stafwag.github.io/blog/blog/2017/05/25/install-parabola-gnu-slash-linux-on-an-encrypted-btrfs-logical-volume</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/413px-Gnu10-mascot-logo_100ppi.png" width="200" height="291" title="&ldquo;413px-Gnu10-mascot-logo_100ppi.png&rdquo;" ></p>
 
 <p>I finally found time to complete the installation of my <a href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">Libreboot laptop</a></p>
@@ -750,9 +750,9 @@ Have fun!
   
   <entry>
     <title type="html"><![CDATA[How to Install Libreboot on a ThinkPad X60]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/"/>
+    <link href="https://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/"/>
     <updated>2017-02-11T16:09:11+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60</id>
+    <id>https://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60</id>
     <content type="html"><![CDATA[<p><br />&nbsp;<br />
 I got a <a href="https://en.wikipedia.org/wiki/ThinkPad_X_Series#X60_Tablet">ThinkPad x60 (tablet version)</a> from <a href="http://ebay.be">ebay.be</a> to install <a href="https://libreboot.org/">libreboot</a> on it.
 <br />&nbsp;<br />

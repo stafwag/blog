@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: 2015 | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/2015/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/2015/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Happy_new_year_2015]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015/"/>
+    <link href="https://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015/"/>
     <updated>2015-01-01T12:20:00+01:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015</id>
+    <id>https://stafwag.github.io/blog/blog/2015/01/01/happy-new-year-2015</id>
     <content type="html"><![CDATA[<p>
 Happy new year!
 </p>

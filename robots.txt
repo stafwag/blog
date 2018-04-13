@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://stafwag.github.io/blog/sitemap.xml 
+Sitemap: https://stafwag.github.io/blog/sitemap.xml 

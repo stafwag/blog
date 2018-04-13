@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Monitor | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/monitor/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/monitor/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Size Matters, but ...]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/05/25/size-matters/"/>
+    <link href="https://stafwag.github.io/blog/blog/2014/05/25/size-matters/"/>
     <updated>2014-05-25T09:11:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/05/25/size-matters</id>
+    <id>https://stafwag.github.io/blog/blog/2014/05/25/size-matters</id>
     <content type="html"><![CDATA[<p><img class="right" src="/images/dell2713.jpg" width="400" height="266" title="&ldquo;dell2713&rdquo;" >
 Size matters, but &hellip; resolution and image quality are as import.</p>
 

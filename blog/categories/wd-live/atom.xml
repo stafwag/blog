@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Wd Live | stafwag Blog]]></title>
-  <link href="http://stafwag.github.io/blog/blog/categories/wd-live/atom.xml" rel="self"/>
-  <link href="http://stafwag.github.io/blog/"/>
-  <updated>2018-03-04T08:58:52+01:00</updated>
-  <id>http://stafwag.github.io/blog/</id>
+  <link href="https://stafwag.github.io/blog/blog/categories/wd-live/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-13T14:54:37+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Convert PGS Subtitles]]></title>
-    <link href="http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles/"/>
+    <link href="https://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles/"/>
     <updated>2014-05-11T11:24:00+02:00</updated>
-    <id>http://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles</id>
+    <id>https://stafwag.github.io/blog/blog/2014/05/11/convert-pgs-subtitles</id>
     <content type="html"><![CDATA[<p><img class="left" src="/images/wdlive.jpg" width="300" height="200" title="&ldquo;wdlive&rdquo;" ></p>
 
 <p>I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it&rsquo;s still a nice media player.</p>
