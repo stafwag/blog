@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-04-13T14:54:37+02:00</updated>
+  <updated>2018-04-22T12:34:12+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,381 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[High Screen Resolution on a KVM Virtual Machine With QXL]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/"/>
+    <updated>2018-04-22T10:04:46+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl</id>
+    <content type="html"><![CDATA[<p>When you create an new virtual KVM virtual system the video ram is limited to 16MB by default to use a higer screen resolution you need
+to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to
+utilize.</p>
+
+<p>You&rsquo;ll find my journey to enable higher screen resoltions in my KVM (qemu) virtual systems below.</p>
+
+<h2>Ubuntu 16.04</h2>
+
+<p>There is an issue with Ubuntu 16.04 and the latest HWE kernel <a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack"><a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack">https://wiki.ubuntu.com/Kernel/LTSEnablementStack</a></a>. Even a full HD resultion (1920 x 1080 ) if you have the latest HWE kernel on your system.</p>
+
+<p>To resolve this issue your can uninstall the latest kernel or install the LTS kernel.</p>
+
+<h4>Install the LTS Kernel</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt-get install linux-generic-lts-xenial
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>The following additional packages will be installed:
+</span><span class='line'>  linux-generic linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic linux-headers-generic
+</span><span class='line'>  linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
+</span><span class='line'>Suggested packages:
+</span><span class='line'>  fdutils linux-doc-4.4.0 | linux-source-4.4.0 linux-tools
+</span><span class='line'>The following NEW packages will be installed:
+</span><span class='line'>  linux-generic linux-generic-lts-xenial linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic
+</span><span class='line'>  linux-headers-generic linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
+</span><span class='line'>0 upgraded, 8 newly installed, 0 to remove and 0 not upgraded.
+</span><span class='line'>Need to get 69,3 MB of archives.
+</span><span class='line'>After this operation, 301 MB of additional disk space will be used.
+</span><span class='line'>Do you want to continue? [Y/n] 
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>Setting up linux-image-generic (4.4.0.119.125) ...
+</span><span class='line'>Setting up linux-headers-4.4.0-119 (4.4.0-119.143) ...
+</span><span class='line'>Setting up linux-headers-4.4.0-119-generic (4.4.0-119.143) ...
+</span><span class='line'>Setting up linux-headers-generic (4.4.0.119.125) ...
+</span><span class='line'>Setting up linux-generic (4.4.0.119.125) ...
+</span><span class='line'>Setting up linux-generic-lts-xenial (4.4.0.119.125) ...
+</span><span class='line'>staf@ubuntu:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Remove the HWE kernel</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt-get purge linux-image-4.13*
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>done
+</span><span class='line'>The link /vmlinuz.old is a damaged link
+</span><span class='line'>Removing symbolic link vmlinuz.old 
+</span><span class='line'> you may need to re-run your boot loader[grub]
+</span><span class='line'>The link /initrd.img.old is a damaged link
+</span><span class='line'>Removing symbolic link initrd.img.old 
+</span><span class='line'> you may need to re-run your boot loader[grub]
+</span><span class='line'>Purging configuration files for linux-image-4.13.0-38-generic (4.13.0-38.43~16.04.1) ...
+</span><span class='line'>Examining /etc/kernel/postrm.d .
+</span><span class='line'>run-parts: executing /etc/kernel/postrm.d/initramfs-tools 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
+</span><span class='line'>run-parts: executing /etc/kernel/postrm.d/zz-update-grub 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Cleanup</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt autoremove
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>The following packages will be REMOVED:
+</span><span class='line'>  linux-headers-4.13.0-36 linux-headers-4.13.0-36-generic linux-headers-generic-hwe-16.04
+</span><span class='line'>0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
+</span><span class='line'>After this operation, 83,1 MB disk space will be freed.
+</span><span class='line'>Do you want to continue? [Y/n] 
+</span><span class='line'>(Reading database ... 234149 files and directories currently installed.)
+</span><span class='line'>Removing linux-headers-4.13.0-36-generic (4.13.0-36.40~16.04.1) ...
+</span><span class='line'>Removing linux-headers-4.13.0-36 (4.13.0-36.40~16.04.1) ...
+</span><span class='line'>Removing linux-headers-generic-hwe-16.04 (4.13.0.38.57) ...
+</span><span class='line'>staf@ubuntu:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Reboot</h4>
+
+<p>After a reboot higher resoltions are possible on ubuntu 16.04</p>
+
+<h1>Increase the video RAM</h1>
+
+<h2>Required video ram</h2>
+
+<p>When you create a new KVM virtual machine it has 16MB of video RAM.
+Below you&rsquo;ll the calculation for the required video RAM for a 4k resoltion ( 3840 x 2160 ).</p>
+
+<p>3840 x 2160 = 8294400 <br/>
+8294400 x 32 = 265420800 <br/ >
+265420800 / 8 = 33177600 <br />
+33177600 / (1024*1024) = 31.640625 MB</p>
+
+<p>So 32 MB video ram is enough for a 4k resolution, to take some overhead into account we&rsquo;ll increase the video ram to 64 MB.</p>
+
+<h2>list the domains</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[swagemakers@staflaptop ~]$ sudo virsh
+</span><span class='line'>Welcome to virsh, the virtualization interactive terminal.
+</span><span class='line'>
+</span><span class='line'>Type:  'help' for help with commands
+</span><span class='line'>       'quit' to quit
+</span><span class='line'>
+</span><span class='line'>virsh # list --all
+</span><span class='line'> Id    Name                           State
+</span><span class='line'>----------------------------------------------------
+</span><span class='line'> -     centos7.0                      shut off
+</span><span class='line'> -     debian                         shut off
+</span><span class='line'> -     fedora27                       shut off
+</span><span class='line'>
+</span><span class='line'>virsh # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>edit the domain settings</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virsh # edit --domain debian</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>update the memory settings</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;video&gt;
+</span><span class='line'>  &lt;model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/&gt;
+</span><span class='line'>  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+</span><span class='line'>&lt;/video&gt;
+</span><span class='line'>&lt;redirdev bus='usb' type='spicevmc'&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;video&gt;
+</span><span class='line'>  &lt;model type='qxl' ram='65536' vram='65536' vgamem='65536' heads='1' primary='yes'/&gt;
+</span><span class='line'>  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+</span><span class='line'>&lt;/video&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>xrandr</h4>
+
+<p>Even with the additional RAM higer resolution aren&rsquo;t possible (yet), the virtual screen doesn&rsquo;t report the higer screen resolution. It&rsquo;s possible to add the higher screen resolution with xrandr.</p>
+
+<h5>display current settings</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr 
+</span><span class='line'>Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 8192 x 8192
+</span><span class='line'>Virtual-0 connected primary 1920x1080+0+0 0mm x 0mm
+</span><span class='line'>   1024x768      59.95 +
+</span><span class='line'>   1920x1200     59.95  
+</span><span class='line'>   1920x1080     60.00* 
+</span><span class='line'>   1600x1200     59.95  
+</span><span class='line'>   1680x1050     60.00  
+</span><span class='line'>   1400x1050     60.00  
+</span><span class='line'>   1280x1024     59.95  
+</span><span class='line'>   1440x900      59.99  
+</span><span class='line'>   1280x960      59.99  
+</span><span class='line'>   1280x854      59.95  
+</span><span class='line'>   1280x800      59.96  
+</span><span class='line'>   1280x720      59.97  
+</span><span class='line'>   1152x768      59.95  
+</span><span class='line'>   800x600       59.96  
+</span><span class='line'>   848x480       59.94  
+</span><span class='line'>   720x480       59.94  
+</span><span class='line'>   640x480       59.94  
+</span><span class='line'>Virtual-1 disconnected
+</span><span class='line'>Virtual-2 disconnected
+</span><span class='line'>Virtual-3 disconnected
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>get the modeline</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ cvt 2560 1440 
+</span><span class='line'># 2560x1440 59.96 Hz (CVT 3.69M9) hsync: 89.52 kHz; pclk: 312.25 MHz
+</span><span class='line'>Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6># create the new mode line</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6># add the mode to your screen</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --addmode Virtual-0 2560x1440_60.00
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6># use the new mode</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --output Virtual-0 --mode 2560x1440_60.00
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>## 4k</h6>
+
+<p>To use a 4k resolution you can use the commands</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$  cvt 3840 2160
+</span><span class='line'># 3840x2160 59.98 Hz (CVT 8.29M9) hsync: 134.18 kHz; pclk: 712.75 MHz
+</span><span class='line'>Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+</span><span class='line'>staf@mydevolo:~$ xrandr --newmode "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+</span><span class='line'>staf@mydevolo:~$ xrandr --addmode Virtual-0 3840x2160_60.00
+</span><span class='line'>staf@mydevolo:~$ xrandr --output Virtual-0 --mode 3840x2160_60.00
+</span><span class='line'>staf@mydevolo:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Add the new screen resolution permanently</h2>
+
+<h3>Debian &amp; Co</h3>
+
+<p>Create a monitor configuration file in /usr/share/X11/xorg.conf.d</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@mydevolo:/usr/share/X11/xorg.conf.d# vi 10-monitor.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And add the modeline fgor your screen resolution.
+With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>section "Monitor"
+</span><span class='line'>    Identifier "Virtual-0 "
+</span><span class='line'>    Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+</span><span class='line'>    Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+</span><span class='line'>    Option "PreferredMode" "2560x1440_60.00"
+</span><span class='line'>EndSection</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Other GNU/Linux distros</h3>
+
+<p>Most other GNU/Linux distribution use /etc/X11/xorg.conf.d/</p>
+
+<p><strong><em> Have fun </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/xrandr"><a href="https://wiki.archlinux.org/index.php/xrandr">https://wiki.archlinux.org/index.php/xrandr</a></a></li>
+<li><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution"><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution">https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution</a></a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Postfix Smarthost With Authentication]]></title>
@@ -10919,31 +11294,6 @@ For the convenience we&rsquo;ll store everything on an encrypted USB stick.</p>
 <h3>Links</h3>
 
 <p><a href="https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM">https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lookat 1.4.4rc2 Released]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released/"/>
-    <updated>2015-10-17T15:36:05+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2015/10/17/lookat-1-dot-4-4rc2-released</id>
-    <content type="html"><![CDATA[<p>Lookat 1.4.4rc2 is the second release candicate of Lookat 1.4.4</p>
-
-<h3>ChangeLog</h3>
-
-<ul>
-<li>NetBSD support</li>
-</ul>
-
-
-<h3>Lookat 1.4.4rc2 is available at:</h3>
-
-<p><a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
-, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.4rc2.tar.gz">Download latest development release (1.4.4rc2)</a>.</p>
-
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
-
-<p><strong><em> Have fun </em></strong></p>
 ]]></content>
   </entry>
   
