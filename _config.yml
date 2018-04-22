@@ -2,11 +2,11 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://stafwag.github.io/blog
+url: https://stafwag.github.io/blog
 title: stafwag Blog
 subtitle: staf wagemakers blog 
 author: staf wagemakers
-simple_search: http://google.com/search
+simple_search: https://google.com/search
 description:
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
