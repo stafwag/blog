@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Vdsl | stafwag Blog]]></title>
+  <link href="https://stafwag.github.io/blog/blog/categories/vdsl/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-04-27T14:18:08+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[How to Start DLM Monitoring on a VDSL Line in Belgium]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/04/27/how-to-start-dlm-monitoring-on-a-vdsl-line-in-belgium/"/>
+    <updated>2018-04-27T12:28:55+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/04/27/how-to-start-dlm-monitoring-on-a-vdsl-line-in-belgium</id>
+    <content type="html"><![CDATA[<p>In Belgium/Flanders we have two main internet line providers;</p>
+
+<ul>
+<li><a href="https://www.telnet.be">telenet</a> the cablenet network provider.</li>
+<li><a href="https://www.proximus.be">proximus</a> is the telephone network provider.</li>
+</ul>
+
+
+<p>On telefpone network there are alternative internet providers but they use the network
+of proximus.</p>
+
+<p>I switched my internet connection from ADSL to VDSL and switched to a new provider ( <a href="https://www.edpnet.be">edpnet</a>).
+The internet speed was below the expectations and my modem reported errors on the line. After fixing the internal phone cabbeling in my appartment I wanted the retrigger the <a href="https://www.edpnet.be/en/support/ordering/internet/what-is-dlm-(dynamic-line-management).html">DLM</a> monitoring.</p>
+
+<p>The process is explained in the this post <a href="https://userbase.be/forum/viewtopic.php?t=48767"><a href="https://userbase.be/forum/viewtopic.php?t=48767">https://userbase.be/forum/viewtopic.php?t=48767</a></a> at <a href="https://userbase.be">usebase.be</a></p>
+
+<p>To start the DLM monitoring in Belgium you need to call 0800 22 424 and type in your line number. If you don&rsquo;t have a proximus phone number the line number is not the same as your phone number. To get your line number you need to connect an analog phone to our line and call 1924 this will read aloud your line number.</p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
+  
+</feed>
