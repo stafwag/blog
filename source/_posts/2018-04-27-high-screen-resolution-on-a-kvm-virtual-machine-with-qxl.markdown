@@ -10,7 +10,7 @@ When you create an new virtual KVM virtual system the video ram is limited to 16
 to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to 
 utilize.
 
-You'll find my journey to enable higher screen resoltions in my KVM (qemu) virtual systems below.
+You'll find my journey to enable higher screen resolutions in my KVM (qemu) virtual systems below.
 
 ## Ubuntu 16.04 
 
@@ -89,14 +89,14 @@ staf@ubuntu:~$
 
 #### Reboot
 
-After a reboot higher resoltions are possible on ubuntu 16.04
+After a reboot higher resolutions are possible on ubuntu 16.04
 
 # Increase the video RAM
 
 ## Required video ram
 
 When you create a new KVM virtual machine it has 16MB of video RAM.
-Below you'll the calculation for the required video RAM for a 4k resoltion ( 3840 x 2160 ).
+Below you'll the calculation for the required video RAM for a 4k resolution ( 3840 x 2160 ).
 
 3840 x 2160 = 8294400 <br/>
 8294400 x 32 = 265420800 <br/ >

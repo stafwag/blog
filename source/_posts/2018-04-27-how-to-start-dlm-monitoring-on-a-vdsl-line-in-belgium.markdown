@@ -11,7 +11,7 @@ In Belgium/Flanders we have two main internet line providers;
  * <a href="https://www.telnet.be">telenet</a> the cablenet network provider. 
  * <a href="https://www.proximus.be">proximus</a> is the telephone network provider.
 
-On telefpone network there are alternative internet providers but they use the network
+On telephone network there are alternative internet providers but they use the network
 of proximus.
 
 I switched my internet connection from ADSL to VDSL and switched to a new provider ( <a href="https://www.edpnet.be">edpnet</a>).
