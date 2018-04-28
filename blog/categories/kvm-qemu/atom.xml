@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Kvm. Qemu | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/kvm-qemu/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-04-28T08:36:09+02:00</updated>
+  <updated>2018-04-28T13:56:51+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -22,7 +22,7 @@
 to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to
 utilize.</p>
 
-<p>You&rsquo;ll find my journey to enable higher screen resoltions in my KVM (qemu) virtual systems below.</p>
+<p>You&rsquo;ll find my journey to enable higher screen resolutions in my KVM (qemu) virtual systems below.</p>
 
 <h2>Ubuntu 16.04</h2>
 
@@ -98,14 +98,14 @@ staf@ubuntu:~$
 
 <h4>Reboot</h4>
 
-<p>After a reboot higher resoltions are possible on ubuntu 16.04</p>
+<p>After a reboot higher resolutions are possible on ubuntu 16.04</p>
 
 <h1>Increase the video RAM</h1>
 
 <h2>Required video ram</h2>
 
 <p>When you create a new KVM virtual machine it has 16MB of video RAM.
-Below you&rsquo;ll the calculation for the required video RAM for a 4k resoltion ( 3840 x 2160 ).</p>
+Below you&rsquo;ll the calculation for the required video RAM for a 4k resolution ( 3840 x 2160 ).</p>
 
 <p>3840 x 2160 = 8294400 <br/>
 8294400 x 32 = 265420800 <br/ >
