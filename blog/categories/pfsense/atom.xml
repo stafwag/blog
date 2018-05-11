@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Pfsense | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/pfsense/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-04-28T13:56:51+02:00</updated>
+  <updated>2018-05-11T10:36:54+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[32 Bits Matters!]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/"/>
+    <updated>2018-05-11T09:08:17+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/32bits_opnsense.jpg" width="500" height="411" title="&ldquo;32bits_opnsense.jpg&rdquo;" ></p>
+
+<h3>pfsense 2.3</h3>
+
+<p>My firewall is a <a href="https://pcengines.ch/">pcengines</a> <a href="https://pcengines.ch/alix2d13.htm">alix</a>.</p>
+
+<p>It was running <a href="https://www.pfsense.org">pfsense</a> and was quite happy about it. Pfsense dropped support for 32 bits in their <a href="https://doc.pfsense.org/index.php/Does_pfSense_support_64_bit_systems">pfsense 2.4 release</a>.</p>
+
+<p>This would left me with a unsupported firewall which was one of the reasons why to use pfsense instead of close source commercial router.</p>
+
+<p>I could have moved to a new firewall like the <a href="https://pcengines.ch/apu.htm">pcengines apu</a> but there is no reason to replace hardware that works fine.</p>
+
+<p>The nice thing about opensource software is that we&rsquo;ve options to choose from if software doesn&rsquo;t match your usecase we&rsquo;ve other options to choose from.</p>
+
+<h3>OPNsense</h3>
+
+<p>So I decided to give <a href="https://opnsense.org/">opnsense</a> a try. OPNsense is a fork of pfsense, both are a fork of <a href="https://m0n0.ch/wall/index.php">m0n0wall</a>.</p>
+
+<p><img class="left" src="/images/opnsense_swapspace.png" width="500" height="584" title="&ldquo;opnsense_swapspace.png&rdquo;" ></p>
+
+<h4>swapspace</h4>
+
+<p>My firewall only has 256 MB of memory which is a bit low even for a firewall.</p>
+
+<p>The OPNsense developers made it very easy to add swapspace from the GUI. To add swap space go to [ System ] > [ Miscellaneous ] and activate the [ Add a 2 GB swap file to the system ] checkbox.</p>
+
+<p>I&rsquo;m verify satisfied with the upgrade from pfsense to OPNsense, OPNsense has a new release very month which is nice to get the latest security updates and it&rsquo;s possible to audit the systems for security updates from the GUI.</p>
+
+<p><img class="right" src="/images/duckdns_icon.png" width="150" height="150" title="&ldquo;duckdns&rdquo;" ></p>
+
+<h3>DuckDns</h3>
+
+<p>I move my ADSL with a fixed ip address to a VDSL line with a dynamic ip address so I was looking a good free dynamic dns provider and settled with <a href="https://www.duckdns.org/">duckdns</a>.</p>
+
+<p><strong><em> Have fun </em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Pfsense: Too Secure for Chromecast]]></title>

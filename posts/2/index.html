@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Install Parabola GNU/Linux on an Encrypted Btrfs Logical Volume May 25th, 2017 9:05 am I finally found time to complete the installation of my &hellip;">
+  <meta name="description" content="Bacula on FreeBSD (Part 1 PostgresSQL in a Jail) Aug 6th, 2017 8:43 am I do take backups; my current solution are couple of shell script wrapper &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,760 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">Bacula on FreeBSD (Part 1 PostgresSQL in a Jail)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-08-06T08:43:28+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>6</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>8:43 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I do take backups; my current solution are couple of shell script wrapper around dump/zfs send/btrfs send/rsync which is a mess.
+So decided give <a href="http://www.bacula.org/">bacula</a> a try</p>
+
+<p>I use <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> to manage my <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jails</a>. <a href="https://www.postgresql.org/">PostgresSQL</a> is my favorite database and will use this database as the backend for bacula  and will use this database as the backend for bacula. I want to move all my databases to 1 FreeBSD jail this should make the easier to create reliable database backup in the further. For this reason we&rsquo;ll setup 2 FreeBSD jails 1 for the database and 1 for bacula.</p>
+
+<p>You&rsquo;ll find my journey of installing PostgreSQL on a FreeBSD jail. In another blog post we will continue with the installation of baccula.</p>
+
+<h2>PostgreSQL</h2>
+
+<h3>Jail</h3>
+
+<h4>Create the PostgreSQL Jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin create stafdb "em0|192.168.1.51"
+</span><span class='line'>Warning: Some services already seem to be listening on all IP, (including 192.168.1.51)
+</span><span class='line'>  This may cause some confusion, here they are:
+</span><span class='line'>root     ntpd       754   20 udp6   *:123                 *:*
+</span><span class='line'>root     ntpd       754   21 udp4   *:123                 *:*
+</span><span class='line'>root     rpc.statd  717   4  udp6   *:640                 *:*
+</span><span class='line'>root     rpc.statd  717   5  tcp6   *:640                 *:*
+</span><span class='line'>root     rpc.statd  717   6  udp4   *:640                 *:*
+</span><span class='line'>root     rpc.statd  717   7  tcp4   *:640                 *:*
+</span><span class='line'>root     nfsd       713   5  tcp4   *:2049                *:*
+</span><span class='line'>root     nfsd       713   6  tcp6   *:2049                *:*
+</span><span class='line'>root     mountd     707   5  udp6   *:753                 *:*
+</span><span class='line'>root     mountd     707   6  tcp6   *:753                 *:*
+</span><span class='line'>root     mountd     707   7  udp4   *:753                 *:*
+</span><span class='line'>root     mountd     707   8  tcp4   *:753                 *:*
+</span><span class='line'>root     rpcbind    676   6  udp6   *:111                 *:*
+</span><span class='line'>root     rpcbind    676   7  udp6   *:847                 *:*
+</span><span class='line'>root     rpcbind    676   8  tcp6   *:111                 *:*
+</span><span class='line'>root     rpcbind    676   9  udp4   *:111                 *:*
+</span><span class='line'>root     rpcbind    676   10 udp4   *:766                 *:*
+</span><span class='line'>root     rpcbind    676   11 tcp4   *:111                 *:*
+</span><span class='line'>root     syslogd    657   6  udp6   *:514                 *:*
+</span><span class='line'>root     syslogd    657   7  udp4   *:514                 *:*
+</span><span class='line'>root@rataplan:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>PostgreSQL requires shared memory</h4>
+
+<p>PostgreSQL uses shared memory it&rsquo;s required to set &ldquo;allow.sysvipc=1&rdquo; for the jail. I don&rsquo;t want to enable this globaly since this might be a security risk. Shared memory has permissions set based on the uid enabling sysvipc on a jail might cause the jail to read shared memory from the host system or another jail.</p>
+
+<p>To enable &ldquo;allow.sysvipc=1&rdquo; a jail we can update the ezjail configuration. Ezjail keep the jail configuration in /usr/local/etc/ezjail</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # cd /usr/local/etc/ezjail
+</span><span class='line'>root@rataplan:/usr/local/etc/ezjail # ls
+</span><span class='line'>stafansible     staffs          stafproxy       staftestbuild
+</span><span class='line'>stafdb          stafmail        stafpuppet
+</span><span class='line'>root@rataplan:/usr/local/etc/ezjail # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Open the database jail file and update the configuration.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc/ezjail # vi stafdb</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#
+</span><span class='line'># Required to run PostgeSQL in the jail
+</span><span class='line'>#
+</span><span class='line'>
+</span><span class='line'>export jail_stafdb_parameters="allow.sysvipc=1"</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Start the database jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin start stafdb
+</span><span class='line'>Starting jails: stafdb.
+</span><span class='line'>/etc/rc.d/jail: WARNING: Per-jail configuration via jail_* variables  is obsolete.  Please consider migrating to /etc/jail.conf.
+</span><span class='line'>root@rataplan:~ #</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Console access</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin console stafdb
+</span><span class='line'>FreeBSD 11.0-RELEASE-p9 (GENERIC) #0: Tue Apr 11 08:48:40 UTC 2017
+</span><span class='line'>
+</span><span class='line'>Welcome to FreeBSD!
+</span><span class='line'>
+</span><span class='line'>Release Notes, Errata: https://www.FreeBSD.org/releases/
+</span><span class='line'>Security Advisories:   https://www.FreeBSD.org/security/
+</span><span class='line'>FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
+</span><span class='line'>FreeBSD FAQ:           https://www.FreeBSD.org/faq/
+</span><span class='line'>Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
+</span><span class='line'>FreeBSD Forums:        https://forums.FreeBSD.org/
+</span><span class='line'>
+</span><span class='line'>Documents installed with the system are in the /usr/local/share/doc/freebsd/
+</span><span class='line'>directory, or can be installed later with:  pkg install en-freebsd-doc
+</span><span class='line'>For other languages, replace "en" with a language code like de or fr.
+</span><span class='line'>
+</span><span class='line'>Show the version of FreeBSD installed:  freebsd-version ; uname -a
+</span><span class='line'>Please include that output and any error messages when posting questions.
+</span><span class='line'>Introduction to manual pages:  man man
+</span><span class='line'>FreeBSD directory layout:      man hier
+</span><span class='line'>
+</span><span class='line'>Edit /etc/motd to change this login announcement.
+</span><span class='line'>root@stafdb:~ # 
+</span><span class='line'>root@stafdb:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>ProgreSQL installation</h3>
+
+<h4>Install pkg</h4>
+
+<p>Set up dns</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # vi /etc/resolv.conf</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nameserver 192.168.1.1</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Bootstrap pkg</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # pkg
+</span><span class='line'>The package management tool is not yet installed on your system.
+</span><span class='line'>Do you want to fetch and install it now? [y/N]: y
+</span><span class='line'>Bootstrapping pkg from pkg+http://pkg.FreeBSD.org/FreeBSD:11:amd64/quarterly, please wait...
+</span><span class='line'>Verifying signature with trusted certificate pkg.freebsd.org.2013102301... done
+</span><span class='line'>[stafdb] Installing pkg-1.10.1...
+</span><span class='line'>[stafdb] Extracting pkg-1.10.1: 100%
+</span><span class='line'>pkg: not enough arguments
+</span><span class='line'>Usage: pkg [-v] [-d] [-l] [-N] [-j &lt;jail name or id&gt;|-c &lt;chroot path&gt;|-r &lt;rootdir&gt;] [-C &lt;configuration file&gt;] [-R &lt;repo config dir&gt;] [-o var=value] [-4|-6] &lt;command&gt; [&lt;args&gt;]
+</span><span class='line'>
+</span><span class='line'>For more information on available commands and options see 'pkg help'.
+</span><span class='line'>root@stafdb:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Install PostgreSQL</h4>
+
+<p>Search for the latest PostgreSQL server version.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # pkg search postgresql | grep server
+</span><span class='line'>pgtcl-postgresql92-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
+</span><span class='line'>pgtcl-postgresql93-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
+</span><span class='line'>pgtcl-postgresql94-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
+</span><span class='line'>pgtcl-postgresql95-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
+</span><span class='line'>pgtcl-postgresql96-2.0.0_1     TCL extension for accessing a PostgreSQL server (PGTCL-NG)
+</span><span class='line'>postgresql92-server-9.2.21_1   PostgreSQL is the most advanced open-source database available anywhere
+</span><span class='line'>postgresql93-server-9.3.17_1   PostgreSQL is the most advanced open-source database available anywhere
+</span><span class='line'>postgresql94-server-9.4.12_1   PostgreSQL is the most advanced open-source database available anywhere
+</span><span class='line'>postgresql95-server-9.5.7_1    PostgreSQL is the most advanced open-source database available anywhere
+</span><span class='line'>postgresql96-server-9.6.3_1    PostgreSQL is the most advanced open-source database available anywhere
+</span><span class='line'>root@stafdb:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Install the PostgreSQL package.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # pkg install postgresql96-server
+</span><span class='line'>Updating FreeBSD repository catalogue...
+</span><span class='line'>FreeBSD repository is up to date.
+</span><span class='line'>All repositories are up to date.
+</span><span class='line'>The following 8 package(s) will be affected (of 0 checked):
+</span><span class='line'>
+</span><span class='line'>New packages to be INSTALLED:
+</span><span class='line'>        postgresql96-server: 9.6.3_1
+</span><span class='line'>        libxml2: 2.9.4
+</span><span class='line'>        icu: 58.2_2,1
+</span><span class='line'>        gettext-runtime: 0.19.8.1_1
+</span><span class='line'>        indexinfo: 0.2.6
+</span><span class='line'>        postgresql96-client: 9.6.3_2
+</span><span class='line'>        perl5: 5.24.1_1
+</span><span class='line'>        readline: 7.0.3
+</span><span class='line'>
+</span><span class='line'>Number of packages to be installed: 8
+</span><span class='line'>
+</span><span class='line'>The process will require 131 MiB more space.
+</span><span class='line'>30 MiB to be downloaded.
+</span><span class='line'>
+</span><span class='line'>Proceed with this action? [y/N]: y
+</span><span class='line'>[stafdb] [1/8] Fetching postgresql96-server-9.6.3_1.txz: 100%    4 MiB 357.1kB/s    00:11    
+</span><span class='line'>[stafdb] [2/8] Fetching libxml2-2.9.4.txz: 100%  802 KiB 410.4kB/s    00:02    
+</span><span class='line'>[stafdb] [3/8] Fetching icu-58.2_2,1.txz: 100%    9 MiB 313.3kB/s    00:30    
+</span><span class='line'>[stafdb] [4/8] Fetching gettext-runtime-0.19.8.1_1.txz: 100%  147 KiB 151.0kB/s    00:01    
+</span><span class='line'>[stafdb] [5/8] Fetching indexinfo-0.2.6.txz: 100%    5 KiB   5.3kB/s    00:01    
+</span><span class='line'>[stafdb] [6/8] Fetching postgresql96-client-9.6.3_2.txz: 100%    2 MiB 300.0kB/s    00:08    
+</span><span class='line'>[stafdb] [7/8] Fetching perl5-5.24.1_1.txz: 100%   13 MiB 341.5kB/s    00:41    
+</span><span class='line'>[stafdb] [8/8] Fetching readline-7.0.3.txz: 100%  334 KiB 342.3kB/s    00:01    
+</span><span class='line'>Checking integrity... done (0 conflicting)
+</span><span class='line'>[stafdb] [1/8] Installing indexinfo-0.2.6...
+</span><span class='line'>[stafdb] [1/8] Extracting indexinfo-0.2.6: 100%
+</span><span class='line'>[stafdb] [2/8] Installing gettext-runtime-0.19.8.1_1...
+</span><span class='line'>[stafdb] [2/8] Extracting gettext-runtime-0.19.8.1_1: 100%
+</span><span class='line'>[stafdb] [3/8] Installing perl5-5.24.1_1...
+</span><span class='line'>[stafdb] [3/8] Extracting perl5-5.24.1_1: 100%
+</span><span class='line'>[stafdb] [4/8] Installing readline-7.0.3...
+</span><span class='line'>[stafdb] [4/8] Extracting readline-7.0.3: 100%
+</span><span class='line'>[stafdb] [5/8] Installing libxml2-2.9.4...
+</span><span class='line'>[stafdb] [5/8] Extracting libxml2-2.9.4: 100%
+</span><span class='line'>[stafdb] [6/8] Installing icu-58.2_2,1...
+</span><span class='line'>[stafdb] [6/8] Extracting icu-58.2_2,1: 100%
+</span><span class='line'>[stafdb] [7/8] Installing postgresql96-client-9.6.3_2...
+</span><span class='line'>[stafdb] [7/8] Extracting postgresql96-client-9.6.3_2: 100%
+</span><span class='line'>[stafdb] [8/8] Installing postgresql96-server-9.6.3_1...
+</span><span class='line'>===&gt; Creating groups.
+</span><span class='line'>Creating group 'postgres' with gid '770'.
+</span><span class='line'>===&gt; Creating users
+</span><span class='line'>Creating user 'postgres' with uid '770'.
+</span><span class='line'>
+</span><span class='line'>  =========== BACKUP YOUR DATA! =============
+</span><span class='line'>  As always, backup your data before
+</span><span class='line'>  upgrading. If the upgrade leads to a higher
+</span><span class='line'>  minor revision (e.g. 8.3.x -&gt; 8.4), a dump
+</span><span class='line'>  and restore of all databases is
+</span><span class='line'>  required. This is *NOT* done by the port!
+</span><span class='line'>  ===========================================
+</span><span class='line'>[stafdb] Extracting postgresql96-server-9.6.3_1: 100%
+</span><span class='line'>Message from perl5-5.24.1_1:
+</span><span class='line'>The /usr/bin/perl symlink has been removed starting with Perl 5.20.
+</span><span class='line'>For shebangs, you should either use:
+</span><span class='line'>
+</span><span class='line'>#!/usr/local/bin/perl
+</span><span class='line'>
+</span><span class='line'>or
+</span><span class='line'>
+</span><span class='line'>#!/usr/bin/env perl
+</span><span class='line'>
+</span><span class='line'>The first one will only work if you have a /usr/local/bin/perl,
+</span><span class='line'>the second will work as long as perl is in PATH.
+</span><span class='line'>Message from postgresql96-client-9.6.3_2:
+</span><span class='line'>The PostgreSQL port has a collection of "side orders":
+</span><span class='line'>
+</span><span class='line'>postgresql-docs
+</span><span class='line'>  For all of the html documentation
+</span><span class='line'>
+</span><span class='line'>p5-Pg
+</span><span class='line'>  A perl5 API for client access to PostgreSQL databases.
+</span><span class='line'>
+</span><span class='line'>postgresql-tcltk 
+</span><span class='line'>  If you want tcl/tk client support.
+</span><span class='line'>
+</span><span class='line'>postgresql-jdbc
+</span><span class='line'>  For Java JDBC support.
+</span><span class='line'>
+</span><span class='line'>postgresql-odbc
+</span><span class='line'>  For client access from unix applications using ODBC as access
+</span><span class='line'>  method. Not needed to access unix PostgreSQL servers from Win32
+</span><span class='line'>  using ODBC. See below.
+</span><span class='line'>
+</span><span class='line'>ruby-postgres, py-PyGreSQL
+</span><span class='line'>  For client access to PostgreSQL databases using the ruby & python
+</span><span class='line'>  languages.
+</span><span class='line'>
+</span><span class='line'>postgresql-plperl, postgresql-pltcl & postgresql-plruby
+</span><span class='line'>  For using perl5, tcl & ruby as procedural languages.
+</span><span class='line'>
+</span><span class='line'>postgresql-contrib
+</span><span class='line'>  Lots of contributed utilities, postgresql functions and
+</span><span class='line'>  datatypes. There you find pg_standby, pgcrypto and many other cool
+</span><span class='line'>  things.
+</span><span class='line'>
+</span><span class='line'>etc...
+</span><span class='line'>Message from postgresql96-server-9.6.3_1:
+</span><span class='line'>For procedural languages and postgresql functions, please note that
+</span><span class='line'>you might have to update them when updating the server.
+</span><span class='line'>
+</span><span class='line'>If you have many tables and many clients running, consider raising
+</span><span class='line'>kern.maxfiles using sysctl(8), or reconfigure your kernel
+</span><span class='line'>appropriately.
+</span><span class='line'>
+</span><span class='line'>The port is set up to use autovacuum for new databases, but you might
+</span><span class='line'>also want to vacuum and perhaps backup your database regularly. There
+</span><span class='line'>is a periodic script, /usr/local/etc/periodic/daily/502.pgsql, that
+</span><span class='line'>you may find useful. You can use it to backup and perform vacuum on all
+</span><span class='line'>databases nightly. Per default, it performs `vacuum analyze'. See the
+</span><span class='line'>script for instructions. For autovacuum settings, please review
+</span><span class='line'>~pgsql/data/postgresql.conf.
+</span><span class='line'>
+</span><span class='line'>If you plan to access your PostgreSQL server using ODBC, please
+</span><span class='line'>consider running the SQL script /usr/local/share/postgresql/odbc.sql
+</span><span class='line'>to get the functions required for ODBC compliance.
+</span><span class='line'>
+</span><span class='line'>Please note that if you use the rc script,
+</span><span class='line'>/usr/local/etc/rc.d/postgresql, to initialize the database, unicode
+</span><span class='line'>(UTF-8) will be used to store character data by default.  Set
+</span><span class='line'>postgresql_initdb_flags or use login.conf settings described below to
+</span><span class='line'>alter this behaviour. See the start rc script for more info.
+</span><span class='line'>
+</span><span class='line'>To set limits, environment stuff like locale and collation and other
+</span><span class='line'>things, you can set up a class in /etc/login.conf before initializing
+</span><span class='line'>the database. Add something similar to this to /etc/login.conf:
+</span><span class='line'>---
+</span><span class='line'>postgres:\
+</span><span class='line'>        :lang=en_US.UTF-8:\
+</span><span class='line'>        :setenv=LC_COLLATE=C:\
+</span><span class='line'>        :tc=default:
+</span><span class='line'>---
+</span><span class='line'>and run `cap_mkdb /etc/login.conf'.
+</span><span class='line'>Then add 'postgresql_class="postgres"' to /etc/rc.conf.
+</span><span class='line'>
+</span><span class='line'>======================================================================
+</span><span class='line'>
+</span><span class='line'>To initialize the database, run
+</span><span class='line'>
+</span><span class='line'>  /usr/local/etc/rc.d/postgresql initdb
+</span><span class='line'>
+</span><span class='line'>You can then start PostgreSQL by running:
+</span><span class='line'>
+</span><span class='line'>  /usr/local/etc/rc.d/postgresql start
+</span><span class='line'>
+</span><span class='line'>For postmaster settings, see ~pgsql/data/postgresql.conf
+</span><span class='line'>
+</span><span class='line'>NB. FreeBSD's PostgreSQL port logs to syslog by default
+</span><span class='line'>    See ~pgsql/data/postgresql.conf for more info
+</span><span class='line'>
+</span><span class='line'>======================================================================
+</span><span class='line'>
+</span><span class='line'>To run PostgreSQL at startup, add
+</span><span class='line'>'postgresql_enable="YES"' to /etc/rc.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enable the postgresql daemon at the jail startup</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # sysrc postgresql_enable="YES"
+</span><span class='line'>postgresql_enable:  -&gt; YES
+</span><span class='line'>root@stafdb:~ # grep postgresql_enable /etc/rc.conf
+</span><span class='line'>postgresql_enable="YES"
+</span><span class='line'>root@stafdb:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Initialize the database</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # service postgresql initdb
+</span><span class='line'>The files belonging to this database system will be owned by user "postgres".
+</span><span class='line'>This user must also own the server process.
+</span><span class='line'>
+</span><span class='line'>The database cluster will be initialized with locale "C".
+</span><span class='line'>The default text search configuration will be set to "english".
+</span><span class='line'>
+</span><span class='line'>Data page checksums are disabled.
+</span><span class='line'>
+</span><span class='line'>creating directory /var/db/postgres/data96 ... ok
+</span><span class='line'>creating subdirectories ... ok
+</span><span class='line'>selecting default max_connections ... 100
+</span><span class='line'>selecting default shared_buffers ... 128MB
+</span><span class='line'>selecting dynamic shared memory implementation ... posix
+</span><span class='line'>creating configuration files ... ok
+</span><span class='line'>running bootstrap script ... ok
+</span><span class='line'>performing post-bootstrap initialization ... ok
+</span><span class='line'>syncing data to disk ... ok
+</span><span class='line'>
+</span><span class='line'>WARNING: enabling "trust" authentication for local connections
+</span><span class='line'>You can change this by editing pg_hba.conf or using the option -A, or
+</span><span class='line'>--auth-local and --auth-host, the next time you run initdb.
+</span><span class='line'>
+</span><span class='line'>Success. You can now start the database server using:
+</span><span class='line'>
+</span><span class='line'>    /usr/local/bin/pg_ctl -D /var/db/postgres/data96 -l logfile start
+</span><span class='line'>
+</span><span class='line'>root@stafdb:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Start the database</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Droot@stafdb:~ # service postgresql start
+</span><span class='line'>LOG:  could not create IPv6 socket: Protocol not supported
+</span><span class='line'>LOG:  ending log output to stderr
+</span><span class='line'>HINT:  Future log output will go to log destination "syslog".
+</span><span class='line'>root@stafdb:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Verify the database</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafdb:~ # su - postgres                                                                                                   
+</span><span class='line'>$ psql -l                                                                                                                       
+</span><span class='line'>psql: could not connect to server: No such file or directory                                                                    
+</span><span class='line'>        Is the server running locally and accepting                                                                             
+</span><span class='line'>        connections on Unix domain socket "/tmp/.s.PGSQL.5432"?                                                                 
+</span><span class='line'>$ ^Droot@stafdb:~ # service postgresql start
+</span><span class='line'>LOG:  could not create IPv6 socket: Protocol not supported                                                                      
+</span><span class='line'>LOG:  ending log output to stderr                                                                                               
+</span><span class='line'>HINT:  Future log output will go to log destination "syslog".                                                                   
+</span><span class='line'>root@stafdb:~ # su - postgres
+</span><span class='line'>$ psql -l
+</span><span class='line'>                             List of databases
+</span><span class='line'>   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+</span><span class='line'>-----------+----------+----------+---------+-------+-----------------------
+</span><span class='line'> postgres  | postgres | UTF8     | C       | C     | 
+</span><span class='line'> template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+</span><span class='line'>           |          |          |         |       | postgres=CTc/postgres
+</span><span class='line'> template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+</span><span class='line'>           |          |          |         |       | postgres=CTc/postgres
+</span><span class='line'>(3 rows)
+</span><span class='line'>
+</span><span class='line'>$ </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<p style="font-style: italic;">
+Have fun!
+</p>
+
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/">https://dan.langille.org/2015/01/10/bacula-on-freebsd-with-zfs/</a></li>
+<li><a href="https://cwharton.com/blog/2016/10/postgresql-and-freebsd-quick-start/">https://cwharton.com/blog/2016/10/postgresql-and-freebsd-quick-start/</a></li>
+<li><a href="https://dan.langille.org/2013/07/09/fatal-could-not-create-shared-memory-segment-function-not-implemented/">https://dan.langille.org/2013/07/09/fatal-could-not-create-shared-memory-segment-function-not-implemented/</a></li>
+</ul>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -5772,350 +6526,6 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/">Protecting Your SSH Keys With SmartCard-HSM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2015-12-05T09:37:41+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:37 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
-
-<h2>Create your first ssh keypair</h2>
-
-<h3>Verify your smartcard connection</h3>
-
-<p>Insert you smartcard and verify the connection, see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">my previous post</a> if  you need more information about the smartcard initialization</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs11-tool -L
-</span><span class='line'>Available slots:
-</span><span class='line'>Slot 0 (0xffffffffffffffff): Virtual hotplug slot
-</span><span class='line'>  (empty)
-</span><span class='line'>Slot 1 (0x1): Generic Smart Card Reader Interface [Smart Card Reader Interface
-</span><span class='line'>  token label        : SmartCard-HSM (UserPIN)
-</span><span class='line'>  token manufacturer : www.CardContact.de
-</span><span class='line'>  token model        : PKCS#15 emulated
-</span><span class='line'>  token flags        : rng, login required, PIN initialized, token initialized
-</span><span class='line'>  hardware version   : 24.13
-</span><span class='line'>  firmware version   : 1.2
-</span><span class='line'>  serial num         : DECM0102331
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Create your keypair</h3>
-
-<p>Create your ssh key pair and give the a meaningful label</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs11-tool --slot 1 --keypairgen --key-type rsa:2048 --label my_ssh_key --login
-</span><span class='line'>Logging in to "SmartCard-HSM (UserPIN)".
-</span><span class='line'>Please enter User PIN: 
-</span><span class='line'>Key pair generated:
-</span><span class='line'>Private Key Object; RSA 
-</span><span class='line'>  label:      my_ssh_key
-</span><span class='line'>  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-</span><span class='line'>  Usage:      decrypt, sign, unwrap
-</span><span class='line'>Public Key Object; RSA 2048 bits
-</span><span class='line'>  label:      my_ssh_key
-</span><span class='line'>  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-</span><span class='line'>  Usage:      encrypt, verify, wrap
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Extract your public key</h3>
-
-<p>We used <a href="https://en.wikipedia.org/wiki/PKCS_11">PKCS11</a> to generate the keypair, <a href="https://en.wikipedia.org/wiki/PKCS">PKCS15</a> is designed identify users to applications.</p>
-
-<h4>Dump the token content</h4>
-
-<p>Dump the token content to get the id of your ssh keypair.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs15-tool -D
-</span><span class='line'>Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-</span><span class='line'>PKCS#15 Card [SmartCard-HSM]:
-</span><span class='line'>        Version        : 0
-</span><span class='line'>        Serial number  : DECM0102331
-</span><span class='line'>        Manufacturer ID: www.CardContact.de
-</span><span class='line'>        Flags          : 
-</span><span class='line'>
-</span><span class='line'>PIN [UserPIN]
-</span><span class='line'>        Object Flags   : [0x3], private, modifiable
-</span><span class='line'>        ID             : 01
-</span><span class='line'>        Flags          : [0x81A], local, unblock-disabled, initialized, exchangeRefData
-</span><span class='line'>        Length         : min_len:6, max_len:15, stored_len:0
-</span><span class='line'>        Pad char       : 0x00
-</span><span class='line'>        Reference      : 129 (0x81)
-</span><span class='line'>        Type           : ascii-numeric
-</span><span class='line'>        Tries left     : 3
-</span><span class='line'>
-</span><span class='line'>PIN [SOPIN]
-</span><span class='line'>        Object Flags   : [0x1], private
-</span><span class='line'>        ID             : 02
-</span><span class='line'>        Flags          : [0x9E], local, change-disabled, unblock-disabled, initialized, soPin
-</span><span class='line'>        Length         : min_len:16, max_len:16, stored_len:0
-</span><span class='line'>        Pad char       : 0x00
-</span><span class='line'>        Reference      : 136 (0x88)
-</span><span class='line'>        Type           : bcd
-</span><span class='line'>        Tries left     : 3
-</span><span class='line'>
-</span><span class='line'>Private EC Key [myfirst_keypair]
-</span><span class='line'>        Object Flags   : [0x3], private, modifiable
-</span><span class='line'>        Usage          : [0x10C], sign, signRecover, derive
-</span><span class='line'>        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
-</span><span class='line'>        FieldLength    : 256
-</span><span class='line'>        Key ref        : 1 (0x1)
-</span><span class='line'>        Native         : yes
-</span><span class='line'>        Path           : e82b0601040181c31f0201::
-</span><span class='line'>        Auth ID        : 01
-</span><span class='line'>        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-</span><span class='line'>        MD:guid        : {efac9b29-2289-658c-98d1-af5af965d484}
-</span><span class='line'>          :cmap flags  : 0x0
-</span><span class='line'>          :sign        : 0
-</span><span class='line'>          :key-exchange: 0
-</span><span class='line'>
-</span><span class='line'>Private RSA Key [my_ssh_key]
-</span><span class='line'>        Object Flags   : [0x3], private, modifiable
-</span><span class='line'>        Usage          : [0x2E], decrypt, sign, signRecover, unwrap
-</span><span class='line'>        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
-</span><span class='line'>        ModLength      : 2048
-</span><span class='line'>        Key ref        : 2 (0x2)
-</span><span class='line'>        Native         : yes
-</span><span class='line'>        Path           : e82b0601040181c31f0201::
-</span><span class='line'>        Auth ID        : 01
-</span><span class='line'>        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-</span><span class='line'>        MD:guid        : {a272b2ad-ff6f-606c-801a-4153be498018}
-</span><span class='line'>          :cmap flags  : 0x0
-</span><span class='line'>          :sign        : 0
-</span><span class='line'>          :key-exchange: 0
-</span><span class='line'>
-</span><span class='line'>Public EC Key [myfirst_keypair]
-</span><span class='line'>        Object Flags   : [0x0]
-</span><span class='line'>        Usage          : [0x0]
-</span><span class='line'>        Access Flags   : [0x2], extract
-</span><span class='line'>        FieldLength    : 256
-</span><span class='line'>        Key ref        : 0 (0x0)
-</span><span class='line'>        Native         : no
-</span><span class='line'>        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-</span><span class='line'>        DirectValue    : &lt;present&gt;
-</span><span class='line'>
-</span><span class='line'>Public RSA Key [my_ssh_key]
-</span><span class='line'>        Object Flags   : [0x0]
-</span><span class='line'>        Usage          : [0x0]
-</span><span class='line'>        Access Flags   : [0x2], extract
-</span><span class='line'>        ModLength      : 2048
-</span><span class='line'>        Key ref        : 0 (0x0)
-</span><span class='line'>        Native         : no
-</span><span class='line'>        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-</span><span class='line'>        DirectValue    : &lt;present&gt;
-</span><span class='line'>
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Get the public key</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs15-tool --read-ssh-key fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-</span><span class='line'>Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-</span><span class='line'>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWShfPjqh+pU8lCoIhXIXh+cGpSem1iNFH6TuluQQLPiqPIeObCTfqC8q9TjR/2FYzG+3ECdiRr0fiywE9OnzUgJI5oOjXfMwY3xE1PbYBrSvYERofhkEv2ejlyRifN3sbLGSU0V7pX+BNOuiJCquCehPMV9+ehkjbk9hPRFUzL1GywsOkmWUoIzrdjH0dlhPX3TUCdoizWAIdUqg+RX4DCEc52RvaGdX4Tn2THxeffXqFJ/gKkParZSLmOND1iRhtJeJ8CmgAqfD8ReshbcSs231h/QvUl3JaThcrLbPrSQFzVUH+rN+pGlSl722NWyPNPWlwwE+SreTLbQRoWayN my_ssh_key
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Configure the remote host</h3>
-
-<p>Add the key to the remote host</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky .ssh]$ vi authorized_keys 
-</span><span class='line'>[staf@vicky .ssh]$ 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Test the connection</h3>
-
-<p>Test you ssh connection with the PKCS11 interface:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh localhost
-</span><span class='line'>Permission denied (publickey,gssapi-keyex,gssapi-with-mic).</span></code></pre></td></tr></table></div></figure>
-
-
-<p>With the PKCS11 interface enabled:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh -o "PKCS11Provider opensc-pkcs11.so" localhost
-</span><span class='line'>C_GetAttributeValue failed: 18
-</span><span class='line'>Enter PIN for 'SmartCard-HSM (UserPIN)': 
-</span><span class='line'>Last login: Thu Dec  3 09:55:23 2015 from ::1
-</span><span class='line'>gpg-agent[17327]: enabled debug flags: command cache ipc
-</span><span class='line'>gpg-agent: a gpg-agent is already running - not starting a new one
-</span><span class='line'>gpg-agent: secmem usage: 0/32768 bytes in 0 blocks
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Update your ssh_config</h3>
-
-<p>Add PKCS11Provider opensc-pkcs11.so to your ~/.ssh/config or your global ssh_config</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky ~]$ cd .ssh/
-</span><span class='line'>[staf@vicky .ssh]$ vim config
-</span><span class='line'>PKCS11Provider opensc-pkcs11.so
-</span><span class='line'>[staf@vicky .ssh]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<p><strong><em> Have fun &hellip; </em></strong></p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/3">&larr; Older</a>
@@ -6151,6 +6561,10 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2018/05/11/32-bits-matters/">32 Bits Matters!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2018/04/27/how-to-start-dlm-monitoring-on-a-vdsl-line-in-belgium/">How to Start DLM Monitoring on a VDSL Line in Belgium</a>
       </li>
     
@@ -6164,10 +6578,6 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
     
       <li class="post">
         <a href="/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/">Update Your CPU Microcode on Arch Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2017/12/27/bacula-on-freebsd-part3/">Bacula on FreeBSD (Part 3 Storage Setup)</a>
       </li>
     
   </ul>

@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Lxc Templates in Fedora 20 Jun 9th, 2014 2:28 pm I&rsquo;m a big fan of containers and used them a lot on Solaris and jails on Freebsd. Containers/ &hellip;">
+  <meta name="description" content="CGIpaf 1.3.4 Released Nov 23rd, 2014 10:16 am CGIpaf 1.3.4 has been released ChangeLog version 1.3.4 ( 23 Nov 2014 ) Cracklib configuration checking &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,75 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2014/11/23/cgipaf-1-dot-3-4-released/">CGIpaf 1.3.4 Released</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-11-23T10:16:00+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>10:16 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>CGIpaf 1.3.4 has been released</p>
+
+<h3>ChangeLog</h3>
+
+<h5>version 1.3.4         ( 23 Nov 2014 )</h5>
+
+<blockquote><ul>
+<li>Cracklib configuration checking has been improved</li>
+<li>LDFLAGS is passed to the linker correctly</li>
+</ul>
+</blockquote>
+
+<h5>CGIpaf 1.3.4pre1 (15 Sep 2013)</h5>
+
+<blockquote><ul>
+<li>PAM is enabled on FreeBSD 7.3 or above</li>
+<li>PAM is enabled on NetBSD 6.0 or above</li>
+<li>xmalloc is updated to support systems with non GNU compatible malloc</li>
+</ul>
+</blockquote>
+
+<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
+
+<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
+
+<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
+
+<p style="font-style: italic;">
+Have fun...
+</p>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -2186,106 +2255,6 @@ Best wishes 2014
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/09/08/running-kindle-on-gnu-slash-linux-with-wine/">Running Kindle on GNU/Linux With Wine</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-09-08T11:57:00+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>8</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>11:57 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="left" src="/blog/images/i7_desktop.jpg" width="400" height="300" title="&#34;desktop&#34;" alt="&#34;desktop&#34;"></p>
-
-<p>I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.</p>
-
-<p>At home I prefer to read on my monitor since this is bigger.</p>
-
-<p>Most of the time I use <a href="http://en.wikipedia.org/wiki/EPUB">epub</a> or <a href="http://en.wikipedia.org/wiki/Pdf">pdf</a> for reading, I bought a <a href="https://kindle.amazon.com/">kindle</a> version of a book from <a href="http://www.amazon.com">amazon</a> assuming that I could read with <a href="https://read.amazon.com/">amazon cloud reader</a> at home.</p>
-
-<p>Unfortunately this books is not compatible with cloud reader.</p>
-
-<p><strong>
-<a href="http://en.wikipedia.org/wiki/Proprietary_format">Proprietary_formats</a> should be avoid, lesson learned (again).
-</strong></p>
-
-<p>To read my book at home I decided to give <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"</a> the windows version of kindle</a> on <a href="http://www.winehq.org/">wine</a> a try</p>
-
-<p>The installation was pretty straightforward on <a href="http://fedoraproject.org/">Fedora 19</a>.</p>
-
-<ul>
-<li>Install wine</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# yum install wine
-</span><span class='line'>Loaded plugins: langpacks, refresh-packagekit
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Download Kindle for Window xp</li>
-</ul>
-
-
-<p>Download it from: <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"><a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311">http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311</a></a></p>
-
-<ul>
-<li>Run the installer</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[swagemakers@vicky ~]$ wine ~/Downloads/KindleForPC-installer.exe </span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>Create kindle startup script</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>wine $HOME/.wine/drive_c/Program\ Files\ \(x86\)/Amazon/Kindle/Kindle.exe &</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>Happy reading</p>
-
-<p>but</p></blockquote>
-
-<p><strong>
-It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wiki/Open_format">open format</a>
-</strong></p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/5">&larr; Older</a>
@@ -2321,6 +2290,10 @@ It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wik
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2018/05/11/32-bits-matters/">32 Bits Matters!</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2018/04/27/how-to-start-dlm-monitoring-on-a-vdsl-line-in-belgium/">How to Start DLM Monitoring on a VDSL Line in Belgium</a>
       </li>
     
@@ -2334,10 +2307,6 @@ It&rsquo;s better to only read ebooks in an <a href="http://en.wikipedia.org/wik
     
       <li class="post">
         <a href="/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/">Update Your CPU Microcode on Arch Linux</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2017/12/27/bacula-on-freebsd-part3/">Bacula on FreeBSD (Part 3 Storage Setup)</a>
       </li>
     
   </ul>
