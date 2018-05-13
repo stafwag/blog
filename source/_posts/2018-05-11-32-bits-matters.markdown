@@ -14,7 +14,7 @@ My firewall is a <a href="https://pcengines.ch/">pcengines</a> <a href="https://
 
 It was running <a href="https://www.pfsense.org">pfsense</a> and was quite happy about it. Pfsense dropped support for 32 bits in their <a href="https://doc.pfsense.org/index.php/Does_pfSense_support_64_bit_systems">pfsense 2.4 release</a>.
 
-This would left me with a unsupported firewall which was one of the reasons why to use pfsense instead of close source commercial router.
+This would left me with a unsupported firewall which was one of the reasons to use pfsense instead of a closed source commercial router.
 
 I could have moved to a new firewall like the <a href="https://pcengines.ch/apu.htm">pcengines apu</a> but there is no reason to replace hardware that works fine.
 
