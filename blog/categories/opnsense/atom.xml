@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Opnsense | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/opnsense/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-05-11T10:36:54+02:00</updated>
+  <updated>2018-05-13T10:03:05+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -26,7 +26,7 @@
 
 <p>It was running <a href="https://www.pfsense.org">pfsense</a> and was quite happy about it. Pfsense dropped support for 32 bits in their <a href="https://doc.pfsense.org/index.php/Does_pfSense_support_64_bit_systems">pfsense 2.4 release</a>.</p>
 
-<p>This would left me with a unsupported firewall which was one of the reasons why to use pfsense instead of close source commercial router.</p>
+<p>This would left me with a unsupported firewall which was one of the reasons to use pfsense instead of a closed source commercial router.</p>
 
 <p>I could have moved to a new firewall like the <a href="https://pcengines.ch/apu.htm">pcengines apu</a> but there is no reason to replace hardware that works fine.</p>
 
