@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Qemu | stafwag Blog]]></title>
+  <link href="https://stafwag.github.io/blog/blog/categories/qemu/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2018-06-04T20:22:17+02:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Nested Virtualization in KVM]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/06/04/nested-virtualization-in-kvm/"/>
+    <updated>2018-06-04T19:58:06+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/06/04/nested-virtualization-in-kvm</id>
+    <content type="html"><![CDATA[<h2>KVM</h2>
+
+<p><a href="https://www.linux-kvm.org">Kernel-based Virtual Machine (KVM)</a> has become the defacto hypervisor on GNU/Linux systems it works with great performance as it utilizes the CPU virtualization extensions <a href="https://en.wikipedia.org/wiki/X86_virtualization#Intel_virtualization_(VT-x)">Inetl VT-x</a> or <a href="https://en.wikipedia.org/wiki/X86_virtualization#AMD_virtualization_(AMD-V)">AMD-V</a>). KVM doesn&rsquo;t emulate hardware but uses <a href="https://www.qemu.org/">QEMU</a> for this.</p>
+
+<h2>Nested Virtual guest</h2>
+
+<p>It&rsquo;s possible to use nested virtualization this make it possible to run a hypervisor inside a KVM virtual machine.</p>
+
+<h2>Enabling nested virtualization in KVM</h2>
+
+<h3>Verify</h3>
+
+<p>To verify if nested virtualization is enabled on your system can check /sys/module/kvm_intel/parameters/nested on Intal systems or /sys/module/kvm_amd/parameters/nested</p>
+
+<pre><code>[staf@frija ~]$ cat /sys/module/kvm_intel/parameters/nested
+N
+[staf@frija ~]$ 
+</code></pre>
+
+<h3>Enable</h3>
+
+<h4>Shutdown all virtual machines</h4>
+
+<p>Make sure that there no virtual machines running.</p>
+
+<pre><code>[root@frija ~]# virsh 
+Welcome to virsh, the virtualization interactive terminal.
+
+Type:  'help' for help with commands
+       'quit' to quit
+
+virsh # list
+ Id    Name                           State
+----------------------------------------------------
+
+virsh # 
+</code></pre>
+
+<h4>Unload KVM</h4>
+
+<p>Unload the KVM kernel module.</p>
+
+<pre><code>[root@frija ~]# modprobe -r kvm_intel
+[root@frija ~]# 
+</code></pre>
+
+<h4>Load KVM and activate nested</h4>
+
+<p>Reload the KVM with the nested feature enabled.</p>
+
+<pre><code>[root@frija ~]# modprobe kvm_intel nested=1
+[root@frija ~]# 
+</code></pre>
+
+<p>Verify</p>
+
+<pre><code>[root@frija ~]# cat /sys/module/kvm_intel/parameters/nested
+Y
+[root@frija ~]# 
+</code></pre>
+
+<p>To enable the nested feature permanently create /etc/modprobe.d/kvm.conf</p>
+
+<pre><code>[root@frija ~]# vi /etc/modprobe.d/kvm.conf
+</code></pre>
+
+<p>and enable the nested option.</p>
+
+<pre><code>options kvm_intel nested=1
+</code></pre>
+
+<h2>Enabling nested virtialization in the virtual machine</h2>
+
+<p>When you logon to a virtual machine and verify the virtualization extensions on the cpu the flags aren&rsquo;t available.</p>
+
+<pre><code>[staf@centos7 ~]$ cat /proc/cpuinfo | grep  -i -E "vmx|svm"
+[staf@centos7 ~]$ 
+</code></pre>
+
+<p>To enable nested virtualization in a vritual machine you can</p>
+
+<ul>
+<li>start <code>virsh</code> and and edit the the virtual machine and change the CPU line to <code>&lt;cpu mode='host-model' check='partial'/&gt;</code></li>
+<li>Open virt-manager and select <strong>Copy host CPU configuration</strong> on the CPU configuration</li>
+</ul>
+
+
+<pre><code>root@frija ~]# virsh 
+Welcome to virsh, the virtualization interactive terminal.
+
+Type:  'help' for help with commands
+       'quit' to quit
+
+virsh # list
+ Id    Name                           State
+----------------------------------------------------
+ 1     centos7.0                      running
+
+virsh # edit centos7.0 
+</code></pre>
+
+<p>Change the cpu settings</p>
+
+<pre><code>  &lt;features&gt;
+    &lt;acpi/&gt;
+    &lt;apic/&gt;
+    &lt;vmport state='off'/&gt;
+  &lt;/features&gt;
+  &lt;cpu mode='host-model' check='partial'&gt;
+    &lt;model fallback='allow'/&gt;
+  &lt;/cpu&gt;
+</code></pre>
+
+<p>Shutdown the virtual machine</p>
+
+<pre><code>virsh # reboot centos7.0 
+Domain centos7.0 is being rebooted
+
+virsh # 
+</code></pre>
+
+<p>Start the virtual machine</p>
+
+<pre><code>virsh # start centos7.0  
+Domain centos7.0 started
+</code></pre>
+
+<p>Verify that the <code>feature policies</code> on the cpu are updated.</p>
+
+<pre><code>virsh # dumpxml centos7.0 
+</code></pre>
+
+<pre><code> &lt;cpu mode='custom' match='exact' check='full'&gt;
+    &lt;model fallback='forbid'&gt;Haswell-noTSX-IBRS&lt;/model&gt;
+    &lt;vendor&gt;Intel&lt;/vendor&gt;
+    &lt;feature policy='require' name='vme'/&gt;
+    &lt;feature policy='require' name='ss'/&gt;
+    &lt;feature policy='require' name='f16c'/&gt;
+    &lt;feature policy='require' name='rdrand'/&gt;
+    &lt;feature policy='require' name='hypervisor'/&gt;
+    &lt;feature policy='require' name='arat'/&gt;
+    &lt;feature policy='require' name='tsc_adjust'/&gt;
+    &lt;feature policy='require' name='xsaveopt'/&gt;
+    &lt;feature policy='require' name='pdpe1gb'/&gt;
+    &lt;feature policy='require' name='abm'/&gt;
+    &lt;feature policy='require' name='ibpb'/&gt;
+ &lt;/cpu&gt;
+</code></pre>
+
+<p>Logon to the virtual machine and verify the cpu flags;</p>
+
+<pre><code>[staf@centos7 ~]$ cat /proc/cpuinfo | grep -i vmx
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
+[staf@centos7 ~]$ cat /proc/cpuinfo | grep  -i "vmx|svm"
+[staf@centos7 ~]$ cat /proc/cpuinfo | grep  -i -E "vmx|svm"
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
+</code></pre>
+
+<p>Execute the <code>virt-host-validate</code></p>
+
+<pre><code>[staf@centos7 ~]$ virt-host-validate
+  QEMU: Checking for hardware virtualization                                 : PASS
+  QEMU: Checking if device /dev/kvm exists                                   : PASS
+  QEMU: Checking if device /dev/kvm is accessible                            : PASS
+  QEMU: Checking if device /dev/vhost-net exists                             : PASS
+  QEMU: Checking if device /dev/net/tun exists                               : PASS
+  QEMU: Checking for cgroup 'memory' controller support                      : PASS
+  QEMU: Checking for cgroup 'memory' controller mount-point                  : PASS
+  QEMU: Checking for cgroup 'cpu' controller support                         : PASS
+  QEMU: Checking for cgroup 'cpu' controller mount-point                     : PASS
+  QEMU: Checking for cgroup 'cpuacct' controller support                     : PASS
+  QEMU: Checking for cgroup 'cpuacct' controller mount-point                 : PASS
+  QEMU: Checking for cgroup 'cpuset' controller support                      : PASS
+  QEMU: Checking for cgroup 'cpuset' controller mount-point                  : PASS
+  QEMU: Checking for cgroup 'devices' controller support                     : PASS
+  QEMU: Checking for cgroup 'devices' controller mount-point                 : PASS
+  QEMU: Checking for cgroup 'blkio' controller support                       : PASS
+  QEMU: Checking for cgroup 'blkio' controller mount-point                   : PASS
+  QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI DMAR table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
+   LXC: Checking for Linux &gt;= 2.6.26                                         : PASS
+   LXC: Checking for namespace ipc                                           : PASS
+   LXC: Checking for namespace mnt                                           : PASS
+   LXC: Checking for namespace pid                                           : PASS
+   LXC: Checking for namespace uts                                           : PASS
+   LXC: Checking for namespace net                                           : PASS
+   LXC: Checking for namespace user                                          : PASS
+   LXC: Checking for cgroup 'memory' controller support                      : PASS
+   LXC: Checking for cgroup 'memory' controller mount-point                  : PASS
+   LXC: Checking for cgroup 'cpu' controller support                         : PASS
+   LXC: Checking for cgroup 'cpu' controller mount-point                     : PASS
+   LXC: Checking for cgroup 'cpuacct' controller support                     : PASS
+   LXC: Checking for cgroup 'cpuacct' controller mount-point                 : PASS
+   LXC: Checking for cgroup 'cpuset' controller support                      : PASS
+   LXC: Checking for cgroup 'cpuset' controller mount-point                  : PASS
+   LXC: Checking for cgroup 'devices' controller support                     : PASS
+   LXC: Checking for cgroup 'devices' controller mount-point                 : PASS
+   LXC: Checking for cgroup 'blkio' controller support                       : PASS
+   LXC: Checking for cgroup 'blkio' controller mount-point                   : PASS
+   LXC: Checking if device /sys/fs/fuse/connections exists                   : FAIL (Load the 'fuse' module to enable /proc/ overrides)
+[staf@centos7 ~]$ 
+</code></pre>
+
+<p><strong><em>Have fun</em></strong></p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html"><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html">https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html</a></a></li>
+<li><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization"><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization">https://wiki.archlinux.org/index.php/KVM#Nested_virtualization</a></a></li>
+<li><a href="https://www.linux-kvm.org/page/Nested_Guests"><a href="https://www.linux-kvm.org/page/Nested_Guests">https://www.linux-kvm.org/page/Nested_Guests</a></a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
