@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-06-04T20:22:17+02:00</updated>
+  <updated>2018-07-01T19:28:17+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,306 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Migrate a Windows Vmware Virtual Machine to Linux KVM]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/"/>
+    <updated>2018-07-01T10:49:41+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm</id>
+    <content type="html"><![CDATA[<p><a href="https://www.linux-kvm.org">Linux KVM</a> is getting more and more useable for desktop virtualization thanks to the the <a href="https://www.linux-kvm.org/page/Virtio">virtio</a> and <a href="https://www.linux-kvm.org/page/SPICE">QXL/SPICE</a> drivers.</p>
+
+<p>Most Linux distributes have the virtio &amp; QXL drivers you might need to install the spice-vdagent.</p>
+
+<p>On Windows you can download and install the virtio and QXL drivers.</p>
+
+<p>Using the virtio drivers will improve your guest system performance and your virtualization experience.</p>
+
+<h2>Convert the disk image</h2>
+
+<h3>merge the vmware disk images&hellip;</h3>
+
+<p>If you use split disk images on vmware ( or vmware player ) migrate them to a single disk images with the vmware-vdiskmanager command.</p>
+
+<pre><code>$ vmware-vdiskmanager -r mywin.vmdk -t 0 /tmp/mywin._combined.vmdk
+Creating disk '/var/lib/libvirt/images/tmp/mywin._combined.vmdk'
+  Convert: 100% done.
+Virtual disk conversion successful.
+$
+</code></pre>
+
+<h3>convert the vmdk  image to qcow2</h3>
+
+<p>Convert the VMDK disk image to qcow2</p>
+
+<pre><code>[staf@vicky vboxes]$ qemu-img convert -f vmdk -O qcow2 mywin._combined.vmdk mywin.qcow2
+</code></pre>
+
+<h3>mv</h3>
+
+<pre><code>[staf@vicky vboxes]$ sudo mv mywin_combined.qcow2 /var/lib/libvirt/images/
+[sudo] password for staf: 
+</code></pre>
+
+<h2>Import the disk image to KVM</h2>
+
+<p>We&rsquo;ll inport the disk image with <code>virt-install</code> it&rsquo;s also posible to import the images with <code>virt-manager</code> if you prefer a graphical interface or or just being lazy :-)</p>
+
+<h2>Available os options</h2>
+
+<p>To list the supported operation system you can use the <code>osinfo-query os</code> command</p>
+
+<pre><code>[staf@vicky ~]$ osinfo-query os | head
+ Short ID             | Name                                               | Version  | ID                                      
+----------------------+----------------------------------------------------+----------+-----------------------------------------
+ alpinelinux3.5       | Alpine Linux 3.5                                   | 3.5      | http://alpinelinux.org/alpinelinux/3.5  
+ alpinelinux3.6       | Alpine Linux 3.6                                   | 3.6      | http://alpinelinux.org/alpinelinux/3.6  
+ alpinelinux3.7       | Alpine Linux 3.7                                   | 3.7      | http://alpinelinux.org/alpinelinux/3.7  
+ altlinux1.0          | Mandrake RE Spring 2001                            | 1.0      | http://altlinux.org/altlinux/1.0        
+ altlinux2.0          | ALT Linux 2.0                                      | 2.0      | http://altlinux.org/altlinux/2.0        
+ altlinux2.2          | ALT Linux 2.2                                      | 2.2      | http://altlinux.org/altlinux/2.2        
+ altlinux2.4          | ALT Linux 2.4                                      | 2.4      | http://altlinux.org/altlinux/2.4        
+ altlinux3.0          | ALT Linux 3.0                                      | 3.0      | http://altlinux.org/altlinux/3.0        
+</code></pre>
+
+<pre><code>[staf@vicky ~]$ osinfo-query os |  grep -i windows
+ win1.0               | Microsoft Windows 1.0                              | 1.0      | http://microsoft.com/win/1.0            
+ win10                | Microsoft Windows 10                               | 10.0     | http://microsoft.com/win/10             
+ win2.0               | Microsoft Windows 2.0                              | 2.0      | http://microsoft.com/win/2.0            
+ win2.1               | Microsoft Windows 2.1                              | 2.1      | http://microsoft.com/win/2.1            
+ win2k                | Microsoft Windows 2000                             | 5.0      | http://microsoft.com/win/2k             
+ win2k12              | Microsoft Windows Server 2012                      | 6.3      | http://microsoft.com/win/2k12           
+ win2k12r2            | Microsoft Windows Server 2012 R2                   | 6.3      | http://microsoft.com/win/2k12r2         
+ win2k16              | Microsoft Windows Server 2016                      | 10.0     | http://microsoft.com/win/2k16           
+ win2k3               | Microsoft Windows Server 2003                      | 5.2      | http://microsoft.com/win/2k3            
+ win2k3r2             | Microsoft Windows Server 2003 R2                   | 5.2      | http://microsoft.com/win/2k3r2          
+ win2k8               | Microsoft Windows Server 2008                      | 6.0      | http://microsoft.com/win/2k8            
+ win2k8r2             | Microsoft Windows Server 2008 R2                   | 6.1      | http://microsoft.com/win/2k8r2          
+ win3.1               | Microsoft Windows 3.1                              | 3.1      | http://microsoft.com/win/3.1            
+ win7                 | Microsoft Windows 7                                | 6.1      | http://microsoft.com/win/7              
+ win8                 | Microsoft Windows 8                                | 6.2      | http://microsoft.com/win/8              
+ win8.1               | Microsoft Windows 8.1                              | 6.3      | http://microsoft.com/win/8.1            
+ win95                | Microsoft Windows 95                               | 4.0      | http://microsoft.com/win/95             
+ win98                | Microsoft Windows 98                               | 4.1      | http://microsoft.com/win/98             
+ winme                | Microsoft Windows Millennium Edition               | 4.9      | http://microsoft.com/win/me             
+ winnt3.1             | Microsoft Windows NT Server 3.1                    | 3.1      | http://microsoft.com/winnt/3.1          
+ winnt3.5             | Microsoft Windows NT Server 3.5                    | 3.5      | http://microsoft.com/winnt/3.5          
+ winnt3.51            | Microsoft Windows NT Server 3.51                   | 3.51     | http://microsoft.com/winnt/3.51         
+ winnt4.0             | Microsoft Windows NT Server 4.0                    | 4.0      | http://microsoft.com/winnt/4.0          
+ winvista             | Microsoft Windows Vista                            | 6.0      | http://microsoft.com/win/vista          
+ winxp                | Microsoft Windows XP                               | 5.1      | http://microsoft.com/win/xp             
+[staf@vicky ~]$ 
+</code></pre>
+
+<h3>import</h3>
+
+<p>We need to import the disk image as IDE device since we don&rsquo;t have the virtio driver in our windows disk image (yet).</p>
+
+<pre><code>[root@vicky ~]# virt-install --name "mywin" --ram 8192 --cpu host --os-variant win10 --vcpu 8 --disk /var/lib/libvirt/images/mywin_combined.qcow2,bus=ide --network bridge=virbr0 --import
+
+Starting install...
+
+(virt-viewer:3361): GSpice-WARNING **: 16:49:26.546: Warning no automount-inhibiting implementation available
+</code></pre>
+
+<h2>Install the virtio drivers and QXL graphics drivers</h2>
+
+<h3>Get them&hellip;</h3>
+
+<h4>Type of virtio drivers</h4>
+
+<p>The following virtio windows drivers are available.</p>
+
+<ul>
+<li>block (disk drivers)</li>
+<li>network</li>
+<li>baloon ((dynamic memory management)</li>
+</ul>
+
+
+<p>The fedoraproject provides pre compiled iso images containig all the virtio drivers and installation images for
+windows XP.</p>
+
+<h4>ISO contents</h4>
+
+<ul>
+<li>NetKVM/ - Virtio network driver</li>
+<li>viostor/ - Virtio block driver</li>
+<li>vioscsi/ - Virtio Small Computer System Interface (SCSI) driver</li>
+<li>viorng/ - Virtio RNG driver</li>
+<li>vioser/ - Virtio serial driver</li>
+<li>Balloon/ - Virtio memory balloon driver</li>
+<li>qxl/ - QXL graphics driver for Windows 7 and earlier. (build virtio-win-0.1.103-1 and later)</li>
+<li>qxldod/ - QXL graphics driver for Windows 8 and later. (build virtio-win-0.1.103-2 and later)</li>
+<li>pvpanic/ - QEMU pvpanic device driver (build virtio-win-0.1.103-2 and later)</li>
+<li>guest-agent/ - QEMU Guest Agent 32bit and 64bit MSI installers</li>
+<li>qemupciserial/ - QEMU PCI serial device driver</li>
+<li>*.vfd VFD floppy images for using during install of Windows XP</li>
+</ul>
+
+
+<h4>Download</h4>
+
+<p>The virtio windows driver images are available from
+<a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html</a></p>
+
+<p>I use arch linux and download virtio-win AUR package with pacaur. You can download the images directly or use the installation packages for your Linux distribution.</p>
+
+<pre><code>[staf@vicky ~]$ pacaur -S virtio-win
+:: Package virtio-win not found in repositories, trying AUR...
+:: resolving dependencies...
+:: looking for inter-conflicts...
+
+AUR Packages  (1) virtio-win-0.1.149.2-1  
+
+:: Proceed with installation? [Y/n] 
+&lt;snip&gt;
+  -&gt; Compressing package...
+==&gt; Leaving fakeroot environment.
+==&gt; Finished making: virtio-win 0.1.149.2-1 (Sat Jun 16 20:00:22 2018)
+==&gt; Cleaning up...
+:: Installing virtio-win package(s)...
+loading packages...
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) virtio-win-0.1.149.2-1
+
+Total Installed Size:  314.84 MiB
+
+:: Proceed with installation? [Y/n] 
+(1/1) checking keys in keyring                                         [#######################################] 100%
+(1/1) checking package integrity                                       [#######################################] 100%
+(1/1) loading package files                                            [#######################################] 100%
+(1/1) checking for file conflicts                                      [#######################################] 100%
+(1/1) checking available disk space                                    [#######################################] 100%
+:: Processing package changes...
+(1/1) installing virtio-win                                            [#######################################] 100%
+Optional dependencies for virtio-win
+    qemu [installed]
+:: Running post-transaction hooks...
+(1/1) Arming ConditionNeedsUpdate...
+[staf@vicky ~]$ ls -l /var/li
+</code></pre>
+
+<p>This install virtio images to <code>/usr/share/virtio/</code></p>
+
+<pre><code>[staf@vicky ~]$  ls -l /usr/share/virtio/
+total 321308
+-rw-r--r-- 1 root root 324233216 Jun 16 19:58 virtio-win.iso
+-rw-r--r-- 1 root root   2949120 Jun 16 19:58 virtio-win_x86_32.vfd
+-rw-r--r-- 1 root root   2949120 Jun 16 19:58 virtio-win_x86_64.vfd
+[staf@vicky ~]$ 
+</code></pre>
+
+<p><code>virtio-win.iso</code> is the ISO cdrom image containing all the drivers.</p>
+
+<h2>Installation</h2>
+
+<h3>mount the iso image</h3>
+
+<p><img src="/images/virto_windows_install/mount_cdrom_000.png" width="816" height="689" title="&ldquo;mount_cdrom_000.png&rdquo;" ></p>
+
+<p>Make sure that the cdrom is mounted in windows.</p>
+
+<p><img src="/images/virto_windows_install/cdrom_mounted_000.png" width="798" height="605" title="&ldquo;mount_cdrom_000.png&rdquo;" ></p>
+
+<h3>Install</h3>
+
+<h4>Open Device Manager</h4>
+
+<p>Open device Manager in the control panel or type <code>devmgmt.msc</code> on the command prompt.</p>
+
+<p><img src="/images/virto_windows_install/devmgmt_msc_000.png" width="835" height="728" title="&ldquo;mount_cdrom_000.png&rdquo;" ></p>
+
+<h4>Update the drivers</h4>
+
+<ul>
+<li>balloon, the balloon driver affects the PCI device</li>
+<li>vioserial, affects the PCI simple communication controler</li>
+<li>NetKVM, the network driver affects the Network adapters.</li>
+<li>viostor, the block driver affects the Disk drives.</li>
+</ul>
+
+
+<h5>Update the PCI drivers</h5>
+
+<p>In windows 10 the <strong>PCI device</strong> and the <strong>PCI Simple Communications Controller</strong> have the missing driver icon.
+Right click on the <strong>PCI device</strong> and select <strong>update driver</strong> -> click on <strong>Browse my computer for driver software</strong>
+Specify the cdrom as the search location and click <strong>Next</strong>, this will install the Balloon driver.</p>
+
+<p>Do the same for the <strong>PCI Simple Communications Controller</strong> this will install the &ldquo;VirtIO Serial Driver&rdquo;</p>
+
+<p><img src="/images/virto_windows_install/update_pci_000.png" width="790" height="586" title="&ldquo;update_pci_000.png&rdquo;" >
+<img src="/images/virto_windows_install/update_pci_001.png" width="792" height="594" title="&ldquo;update_pci_001.png&rdquo;" >
+<img src="/images/virto_windows_install/update_pci_002.png" width="792" height="577" title="&ldquo;update_pci_002.png&rdquo;" >
+<img src="/images/virto_windows_install/update_pci_003.png" width="788" height="578" title="&ldquo;update_pci_003.png&rdquo;" ></p>
+
+<h5>install the VioStor driver</h5>
+
+<p>Add a temporary disk to the virtual machine and use <strong>VirtIO</strong> as the <strong>Bus Type</strong>
+In the <strong>Device Manager</strong> you&rsquo;ll get a new device <strong>SCSI Controller</strong> right click it and update the driver.
+This will install the <strong>Red Hat VirtIO SCSI controller</strong></p>
+
+<p><img src="/images/virto_windows_install/install_viostor_000.png" width="552" height="567" title="&ldquo;install_viostor_000.png&rdquo;" >
+<img src="/images/virto_windows_install/install_viostor_001.png" width="786" height="576" title="&ldquo;install_viostor_001.png&rdquo;" >
+<img src="/images/virto_windows_install/install_viostor_002.png" width="622" height="461" title="&ldquo;install_viostor_002.png&rdquo;" ></p>
+
+<p>Go to the device settings of your virtual machine and change the <strong>Disk bus</strong> to <strong>VirtIO</strong>
+and shutdown you virtual machine.</p>
+
+<p><img src="/images/virto_windows_install/install_viostor_003.png" width="705" height="689" title="&ldquo;install_viostor_003.png&rdquo;" ></p>
+
+<p>You can remove the temporary disk now or leave it if you can find some use for it&hellip;</p>
+
+<p>Make sure that you disk is selected as the bootable device.</p>
+
+<p><img src="/images/virto_windows_install/install_viostor_004.png" width="885" height="689" title="&ldquo;install_viostor_004.png&rdquo;" ></p>
+
+<p>Start the virtual machine and make sure that the system is bootable.</p>
+
+<h6>install the netKVM driver</h6>
+
+<p>Update the <strong>Device model</strong> to <strong>virtio</strong>.</p>
+
+<p><img src="/images/virto_windows_install/use_virtio_net_000.png" width="699" height="689" title="&ldquo;use_virtio_net_000.png&rdquo;" ></p>
+
+<p>Start <code>devmgmt.msc</code> and update the driver as we did before&hellip;.</p>
+
+<p><img src="/images/virto_windows_install/install_netkvm_000.png" width="809" height="737" title="&ldquo;install_netkvm_000.png&rdquo;" >
+<img src="/images/virto_windows_install/install_netkvm_001.png" width="788" height="586" title="&ldquo;install_netkvm_001.png&rdquo;" ></p>
+
+<p>And verify that you network card works correctly.</p>
+
+<p><img src="/images/virto_windows_install/install_netkvm_002.png" width="902" height="645" title="&ldquo;install_netkvm_002.png&rdquo;" ></p>
+
+<h6>install the QXL graphical driver</h6>
+
+<p>Update the <strong>Microsoft Basic Display Adapter</strong></p>
+
+<p><img src="/images/virto_windows_install/install_qxl_000.png" width="792" height="581" title="&ldquo;install_qxl_000.png&rdquo;" >
+<img src="/images/virto_windows_install/install_qxl_001.png" width="788" height="582" title="&ldquo;install_qxl_001.png&rdquo;" >
+<img src="/images/virto_windows_install/install_qxl_002.png" width="863" height="597" title="&ldquo;install_qxl_002.png&rdquo;" ></p>
+
+<p>After the installation you can change the the display resolution.</p>
+
+<p><img src="/images/virto_windows_install/install_qxl_003.png" width="812" height="651" title="&ldquo;install_qxl_003.png&rdquo;" ></p>
+
+<p>If you want to use higher screen resolutions you need to <a href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">increase the video ram</a></p>
+
+<p><strong><em>Have fun!</em></strong></p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://raymii.org/s/articles/virt-install_introduction_and_copy_paste_distro_install_commands.html">https://raymii.org/s/articles/virt-install_introduction_and_copy_paste_distro_install_commands.html</a></li>
+<li><a href="http://bart.vanhauwaert.org/hints/installing-win10-on-KVM.html">http://bart.vanhauwaert.org/hints/installing-win10-on-KVM.html</a></li>
+<li><a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html</a></li>
+<li><a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers">https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers</a></li>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/form-virtualization_host_configuration_and_guest_installation_guide-para_virtualized_drivers-mounting_the_image_with_virt_manager">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/form-virtualization_host_configuration_and_guest_installation_guide-para_virtualized_drivers-mounting_the_image_with_virt_manager</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Nested Virtualization in KVM]]></title>
@@ -906,44 +1206,6 @@ If you new micro code cause issue you can just remove the entry in grub configur
 <a href="/images/modelm_all_keys.jpg"><img src="/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
 <a href="/images/modelm_tux_only.jpg"><img src="/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
 <a href="/images/modelm_with_tux_keys.jpg"><img src="/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
-    <updated>2017-09-16T14:29:51+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
-    <content type="html"><![CDATA[<p><img class="left" src="/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&ldquo;Xeon CPU Side&rdquo;" ></p>
-
-<p><br /></p>
-
-<p>My jenkins builds are taking too long mainly due the lack of memory. I mainly use jenkins to verify that my software work on different operation systems (GNU/Linux distributions / *BSD / Solaris).</p>
-
-<p>Looking for a solution that is still affordable I ended up with building a dual Xeon workstation. CPU and memory comes from <a href="http://www.ebay.be">www.ebay.be</a></p>
-
-<p><br />&nbsp;<br />
-<br /></p>
-
-<h3>Part list:</h3>
-
-<ul>
-<li><strong>CPU:</strong> 2 * <a href="http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
-<li><strong>Motherboard:</strong> <a href="http://www.asrockrack.com/general/productdetail.asp?Model=EP2C602-4L/D16#Specifications">Asrock EP2C602-4L/D16</a> I choose this motherboard because it has a lot of DIMM slots so I can upgrade the memory in the further. Downside is that layout is SSI EEB that limits the case choose.</li>
-<li><strong>Memory:</strong> 4 * SAMSUNG M393B2G70BH0-CK0 16GB which gives me 64 GB <a href="https://en.wikipedia.org/wiki/ECC_memory">ECC memory</a></li>
-<li><strong>CPU Cooler</strong> 2 * <a href="http://www.thermaltake.com/products-model.aspx?id=C_00002470">Thermaltake Water 3.0 Performer C</a> For the first I used watercooling mainly because I wanted to make sure that the cooling will not block the access to the DIMM slots.</li>
-<li><strong>PSU:</strong> <a href="https://seasonic.com/product/focus-plus-750-gold/">Seasonic FOCUS Plus 750 Gold</a> I needed a power supply with 2 * 8 pins CPU connectors.</li>
-<li><strong>Case:</strong> <a href="http://www.phanteks.com/Enthoo-Pro.html">Phanteks Enthoo Pro</a> This case supports SSI EEB and is not too expensive.</li>
-</ul>
-
-
-<h3>Pictures</h3>
-
-<p><a href="/images/201709_xeon_cpu_side.jpg"><img src="/images/201709_xeon_cpu_side.jpg" height="291" width="300" alt="Xeon CPU side" /></a>
-<a href="/images/201709_xeon_hd_side.jpg"><img src="/images/201709_xeon_hd_side.jpg" height="291" width="317" alt="Xeon CPU side" /></a>
-<a href="/images/201709_xeon_front_side.jpg"><img src="/images/201709_xeon_front_side.jpg" height="291" width="151" alt="Xeon CPU side" /></a></p>
-
-<p><strong><em>Still need to verify if jenkins works on this system :-) </em></strong></p>
 ]]></content>
   </entry>
   

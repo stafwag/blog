@@ -1,0 +1,728 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Migrate a Windows Vmware Virtual Machine to Linux KVM - stafwag Blog</title>
+  <meta name="author" content="staf wagemakers">
+
+  
+  <meta name="description" content="Migrate a Windows Vmware Virtual Machine to Linux KVM Jul 1st, 2018 10:49 am Linux KVM is getting more and more useable for desktop virtualization &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/">
+  <link href="/blog/favicon.png" rel="icon">
+  <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/blog/atom.xml" rel="alternate" title="stafwag Blog" type="application/atom+xml">
+  <script src="/blog/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37258385-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/">stafwag Blog</a></h1>
+  
+    <h2>staf wagemakers blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="stafwag.github.io/blog">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/blog/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Migrate a Windows Vmware Virtual Machine to Linux KVM</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-07-01T10:49:41+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2018</span></span> <span class='time'>10:49 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><a href="https://www.linux-kvm.org">Linux KVM</a> is getting more and more useable for desktop virtualization thanks to the the <a href="https://www.linux-kvm.org/page/Virtio">virtio</a> and <a href="https://www.linux-kvm.org/page/SPICE">QXL/SPICE</a> drivers.</p>
+
+<p>Most Linux distributes have the virtio &amp; QXL drivers you might need to install the spice-vdagent.</p>
+
+<p>On Windows you can download and install the virtio and QXL drivers.</p>
+
+<p>Using the virtio drivers will improve your guest system performance and your virtualization experience.</p>
+
+<h2>Convert the disk image</h2>
+
+<h3>merge the vmware disk images&hellip;</h3>
+
+<p>If you use split disk images on vmware ( or vmware player ) migrate them to a single disk images with the vmware-vdiskmanager command.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ vmware-vdiskmanager -r mywin.vmdk -t 0 /tmp/mywin._combined.vmdk
+</span><span class='line'>Creating disk '/var/lib/libvirt/images/tmp/mywin._combined.vmdk'
+</span><span class='line'>  Convert: 100% done.
+</span><span class='line'>Virtual disk conversion successful.
+</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>convert the vmdk  image to qcow2</h3>
+
+<p>Convert the VMDK disk image to qcow2</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky vboxes]$ qemu-img convert -f vmdk -O qcow2 mywin._combined.vmdk mywin.qcow2</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mv</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky vboxes]$ sudo mv mywin_combined.qcow2 /var/lib/libvirt/images/
+</span><span class='line'>[sudo] password for staf: 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Import the disk image to KVM</h2>
+
+<p>We&rsquo;ll inport the disk image with <code>virt-install</code> it&rsquo;s also posible to import the images with <code>virt-manager</code> if you prefer a graphical interface or or just being lazy :-)</p>
+
+<h2>Available os options</h2>
+
+<p>To list the supported operation system you can use the <code>osinfo-query os</code> command</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ osinfo-query os | head
+</span><span class='line'> Short ID             | Name                                               | Version  | ID                                      
+</span><span class='line'>----------------------+----------------------------------------------------+----------+-----------------------------------------
+</span><span class='line'> alpinelinux3.5       | Alpine Linux 3.5                                   | 3.5      | http://alpinelinux.org/alpinelinux/3.5  
+</span><span class='line'> alpinelinux3.6       | Alpine Linux 3.6                                   | 3.6      | http://alpinelinux.org/alpinelinux/3.6  
+</span><span class='line'> alpinelinux3.7       | Alpine Linux 3.7                                   | 3.7      | http://alpinelinux.org/alpinelinux/3.7  
+</span><span class='line'> altlinux1.0          | Mandrake RE Spring 2001                            | 1.0      | http://altlinux.org/altlinux/1.0        
+</span><span class='line'> altlinux2.0          | ALT Linux 2.0                                      | 2.0      | http://altlinux.org/altlinux/2.0        
+</span><span class='line'> altlinux2.2          | ALT Linux 2.2                                      | 2.2      | http://altlinux.org/altlinux/2.2        
+</span><span class='line'> altlinux2.4          | ALT Linux 2.4                                      | 2.4      | http://altlinux.org/altlinux/2.4        
+</span><span class='line'> altlinux3.0          | ALT Linux 3.0                                      | 3.0      | http://altlinux.org/altlinux/3.0        </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ osinfo-query os |  grep -i windows
+</span><span class='line'> win1.0               | Microsoft Windows 1.0                              | 1.0      | http://microsoft.com/win/1.0            
+</span><span class='line'> win10                | Microsoft Windows 10                               | 10.0     | http://microsoft.com/win/10             
+</span><span class='line'> win2.0               | Microsoft Windows 2.0                              | 2.0      | http://microsoft.com/win/2.0            
+</span><span class='line'> win2.1               | Microsoft Windows 2.1                              | 2.1      | http://microsoft.com/win/2.1            
+</span><span class='line'> win2k                | Microsoft Windows 2000                             | 5.0      | http://microsoft.com/win/2k             
+</span><span class='line'> win2k12              | Microsoft Windows Server 2012                      | 6.3      | http://microsoft.com/win/2k12           
+</span><span class='line'> win2k12r2            | Microsoft Windows Server 2012 R2                   | 6.3      | http://microsoft.com/win/2k12r2         
+</span><span class='line'> win2k16              | Microsoft Windows Server 2016                      | 10.0     | http://microsoft.com/win/2k16           
+</span><span class='line'> win2k3               | Microsoft Windows Server 2003                      | 5.2      | http://microsoft.com/win/2k3            
+</span><span class='line'> win2k3r2             | Microsoft Windows Server 2003 R2                   | 5.2      | http://microsoft.com/win/2k3r2          
+</span><span class='line'> win2k8               | Microsoft Windows Server 2008                      | 6.0      | http://microsoft.com/win/2k8            
+</span><span class='line'> win2k8r2             | Microsoft Windows Server 2008 R2                   | 6.1      | http://microsoft.com/win/2k8r2          
+</span><span class='line'> win3.1               | Microsoft Windows 3.1                              | 3.1      | http://microsoft.com/win/3.1            
+</span><span class='line'> win7                 | Microsoft Windows 7                                | 6.1      | http://microsoft.com/win/7              
+</span><span class='line'> win8                 | Microsoft Windows 8                                | 6.2      | http://microsoft.com/win/8              
+</span><span class='line'> win8.1               | Microsoft Windows 8.1                              | 6.3      | http://microsoft.com/win/8.1            
+</span><span class='line'> win95                | Microsoft Windows 95                               | 4.0      | http://microsoft.com/win/95             
+</span><span class='line'> win98                | Microsoft Windows 98                               | 4.1      | http://microsoft.com/win/98             
+</span><span class='line'> winme                | Microsoft Windows Millennium Edition               | 4.9      | http://microsoft.com/win/me             
+</span><span class='line'> winnt3.1             | Microsoft Windows NT Server 3.1                    | 3.1      | http://microsoft.com/winnt/3.1          
+</span><span class='line'> winnt3.5             | Microsoft Windows NT Server 3.5                    | 3.5      | http://microsoft.com/winnt/3.5          
+</span><span class='line'> winnt3.51            | Microsoft Windows NT Server 3.51                   | 3.51     | http://microsoft.com/winnt/3.51         
+</span><span class='line'> winnt4.0             | Microsoft Windows NT Server 4.0                    | 4.0      | http://microsoft.com/winnt/4.0          
+</span><span class='line'> winvista             | Microsoft Windows Vista                            | 6.0      | http://microsoft.com/win/vista          
+</span><span class='line'> winxp                | Microsoft Windows XP                               | 5.1      | http://microsoft.com/win/xp             
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>import</h3>
+
+<p>We need to import the disk image as IDE device since we don&rsquo;t have the virtio driver in our windows disk image (yet).</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# virt-install --name "mywin" --ram 8192 --cpu host --os-variant win10 --vcpu 8 --disk /var/lib/libvirt/images/mywin_combined.qcow2,bus=ide --network bridge=virbr0 --import
+</span><span class='line'>
+</span><span class='line'>Starting install...
+</span><span class='line'>
+</span><span class='line'>(virt-viewer:3361): GSpice-WARNING **: 16:49:26.546: Warning no automount-inhibiting implementation available
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Install the virtio drivers and QXL graphics drivers</h2>
+
+<h3>Get them&hellip;</h3>
+
+<h4>Type of virtio drivers</h4>
+
+<p>The following virtio windows drivers are available.</p>
+
+<ul>
+<li>block (disk drivers)</li>
+<li>network</li>
+<li>baloon ((dynamic memory management)</li>
+</ul>
+
+
+<p>The fedoraproject provides pre compiled iso images containig all the virtio drivers and installation images for
+windows XP.</p>
+
+<h4>ISO contents</h4>
+
+<ul>
+<li>NetKVM/ - Virtio network driver</li>
+<li>viostor/ - Virtio block driver</li>
+<li>vioscsi/ - Virtio Small Computer System Interface (SCSI) driver</li>
+<li>viorng/ - Virtio RNG driver</li>
+<li>vioser/ - Virtio serial driver</li>
+<li>Balloon/ - Virtio memory balloon driver</li>
+<li>qxl/ - QXL graphics driver for Windows 7 and earlier. (build virtio-win-0.1.103-1 and later)</li>
+<li>qxldod/ - QXL graphics driver for Windows 8 and later. (build virtio-win-0.1.103-2 and later)</li>
+<li>pvpanic/ - QEMU pvpanic device driver (build virtio-win-0.1.103-2 and later)</li>
+<li>guest-agent/ - QEMU Guest Agent 32bit and 64bit MSI installers</li>
+<li>qemupciserial/ - QEMU PCI serial device driver</li>
+<li>*.vfd VFD floppy images for using during install of Windows XP</li>
+</ul>
+
+
+<h4>Download</h4>
+
+<p>The virtio windows driver images are available from
+<a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html</a></p>
+
+<p>I use arch linux and download virtio-win AUR package with pacaur. You can download the images directly or use the installation packages for your Linux distribution.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pacaur -S virtio-win
+</span><span class='line'>:: Package virtio-win not found in repositories, trying AUR...
+</span><span class='line'>:: resolving dependencies...
+</span><span class='line'>:: looking for inter-conflicts...
+</span><span class='line'>
+</span><span class='line'>AUR Packages  (1) virtio-win-0.1.149.2-1  
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] 
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>  -&gt; Compressing package...
+</span><span class='line'>==&gt; Leaving fakeroot environment.
+</span><span class='line'>==&gt; Finished making: virtio-win 0.1.149.2-1 (Sat Jun 16 20:00:22 2018)
+</span><span class='line'>==&gt; Cleaning up...
+</span><span class='line'>:: Installing virtio-win package(s)...
+</span><span class='line'>loading packages...
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) virtio-win-0.1.149.2-1
+</span><span class='line'>
+</span><span class='line'>Total Installed Size:  314.84 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] 
+</span><span class='line'>(1/1) checking keys in keyring                                         [#######################################] 100%
+</span><span class='line'>(1/1) checking package integrity                                       [#######################################] 100%
+</span><span class='line'>(1/1) loading package files                                            [#######################################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                                      [#######################################] 100%
+</span><span class='line'>(1/1) checking available disk space                                    [#######################################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing virtio-win                                            [#######################################] 100%
+</span><span class='line'>Optional dependencies for virtio-win
+</span><span class='line'>    qemu [installed]
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/1) Arming ConditionNeedsUpdate...
+</span><span class='line'>[staf@vicky ~]$ ls -l /var/li</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This install virtio images to <code>/usr/share/virtio/</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$  ls -l /usr/share/virtio/
+</span><span class='line'>total 321308
+</span><span class='line'>-rw-r--r-- 1 root root 324233216 Jun 16 19:58 virtio-win.iso
+</span><span class='line'>-rw-r--r-- 1 root root   2949120 Jun 16 19:58 virtio-win_x86_32.vfd
+</span><span class='line'>-rw-r--r-- 1 root root   2949120 Jun 16 19:58 virtio-win_x86_64.vfd
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>virtio-win.iso</code> is the ISO cdrom image containing all the drivers.</p>
+
+<h2>Installation</h2>
+
+<h3>mount the iso image</h3>
+
+<p><img src="/blog/images/virto_windows_install/mount_cdrom_000.png" width="816" height="689" title="&#34;mount_cdrom_000.png&#34;" alt="&#34;mount_cdrom_000.png&#34;"></p>
+
+<p>Make sure that the cdrom is mounted in windows.</p>
+
+<p><img src="/blog/images/virto_windows_install/cdrom_mounted_000.png" width="798" height="605" title="&#34;mount_cdrom_000.png&#34;" alt="&#34;mount_cdrom_000.png&#34;"></p>
+
+<h3>Install</h3>
+
+<h4>Open Device Manager</h4>
+
+<p>Open device Manager in the control panel or type <code>devmgmt.msc</code> on the command prompt.</p>
+
+<p><img src="/blog/images/virto_windows_install/devmgmt_msc_000.png" width="835" height="728" title="&#34;mount_cdrom_000.png&#34;" alt="&#34;mount_cdrom_000.png&#34;"></p>
+
+<h4>Update the drivers</h4>
+
+<ul>
+<li>balloon, the balloon driver affects the PCI device</li>
+<li>vioserial, affects the PCI simple communication controler</li>
+<li>NetKVM, the network driver affects the Network adapters.</li>
+<li>viostor, the block driver affects the Disk drives.</li>
+</ul>
+
+
+<h5>Update the PCI drivers</h5>
+
+<p>In windows 10 the <strong>PCI device</strong> and the <strong>PCI Simple Communications Controller</strong> have the missing driver icon.
+Right click on the <strong>PCI device</strong> and select <strong>update driver</strong> -> click on <strong>Browse my computer for driver software</strong>
+Specify the cdrom as the search location and click <strong>Next</strong>, this will install the Balloon driver.</p>
+
+<p>Do the same for the <strong>PCI Simple Communications Controller</strong> this will install the &ldquo;VirtIO Serial Driver&rdquo;</p>
+
+<p><img src="/blog/images/virto_windows_install/update_pci_000.png" width="790" height="586" title="&#34;update_pci_000.png&#34;" alt="&#34;update_pci_000.png&#34;">
+<img src="/blog/images/virto_windows_install/update_pci_001.png" width="792" height="594" title="&#34;update_pci_001.png&#34;" alt="&#34;update_pci_001.png&#34;">
+<img src="/blog/images/virto_windows_install/update_pci_002.png" width="792" height="577" title="&#34;update_pci_002.png&#34;" alt="&#34;update_pci_002.png&#34;">
+<img src="/blog/images/virto_windows_install/update_pci_003.png" width="788" height="578" title="&#34;update_pci_003.png&#34;" alt="&#34;update_pci_003.png&#34;"></p>
+
+<h5>install the VioStor driver</h5>
+
+<p>Add a temporary disk to the virtual machine and use <strong>VirtIO</strong> as the <strong>Bus Type</strong>
+In the <strong>Device Manager</strong> you&rsquo;ll get a new device <strong>SCSI Controller</strong> right click it and update the driver.
+This will install the <strong>Red Hat VirtIO SCSI controller</strong></p>
+
+<p><img src="/blog/images/virto_windows_install/install_viostor_000.png" width="552" height="567" title="&#34;install_viostor_000.png&#34;" alt="&#34;install_viostor_000.png&#34;">
+<img src="/blog/images/virto_windows_install/install_viostor_001.png" width="786" height="576" title="&#34;install_viostor_001.png&#34;" alt="&#34;install_viostor_001.png&#34;">
+<img src="/blog/images/virto_windows_install/install_viostor_002.png" width="622" height="461" title="&#34;install_viostor_002.png&#34;" alt="&#34;install_viostor_002.png&#34;"></p>
+
+<p>Go to the device settings of your virtual machine and change the <strong>Disk bus</strong> to <strong>VirtIO</strong>
+and shutdown you virtual machine.</p>
+
+<p><img src="/blog/images/virto_windows_install/install_viostor_003.png" width="705" height="689" title="&#34;install_viostor_003.png&#34;" alt="&#34;install_viostor_003.png&#34;"></p>
+
+<p>You can remove the temporary disk now or leave it if you can find some use for it&hellip;</p>
+
+<p>Make sure that you disk is selected as the bootable device.</p>
+
+<p><img src="/blog/images/virto_windows_install/install_viostor_004.png" width="885" height="689" title="&#34;install_viostor_004.png&#34;" alt="&#34;install_viostor_004.png&#34;"></p>
+
+<p>Start the virtual machine and make sure that the system is bootable.</p>
+
+<h6>install the netKVM driver</h6>
+
+<p>Update the <strong>Device model</strong> to <strong>virtio</strong>.</p>
+
+<p><img src="/blog/images/virto_windows_install/use_virtio_net_000.png" width="699" height="689" title="&#34;use_virtio_net_000.png&#34;" alt="&#34;use_virtio_net_000.png&#34;"></p>
+
+<p>Start <code>devmgmt.msc</code> and update the driver as we did before&hellip;.</p>
+
+<p><img src="/blog/images/virto_windows_install/install_netkvm_000.png" width="809" height="737" title="&#34;install_netkvm_000.png&#34;" alt="&#34;install_netkvm_000.png&#34;">
+<img src="/blog/images/virto_windows_install/install_netkvm_001.png" width="788" height="586" title="&#34;install_netkvm_001.png&#34;" alt="&#34;install_netkvm_001.png&#34;"></p>
+
+<p>And verify that you network card works correctly.</p>
+
+<p><img src="/blog/images/virto_windows_install/install_netkvm_002.png" width="902" height="645" title="&#34;install_netkvm_002.png&#34;" alt="&#34;install_netkvm_002.png&#34;"></p>
+
+<h6>install the QXL graphical driver</h6>
+
+<p>Update the <strong>Microsoft Basic Display Adapter</strong></p>
+
+<p><img src="/blog/images/virto_windows_install/install_qxl_000.png" width="792" height="581" title="&#34;install_qxl_000.png&#34;" alt="&#34;install_qxl_000.png&#34;">
+<img src="/blog/images/virto_windows_install/install_qxl_001.png" width="788" height="582" title="&#34;install_qxl_001.png&#34;" alt="&#34;install_qxl_001.png&#34;">
+<img src="/blog/images/virto_windows_install/install_qxl_002.png" width="863" height="597" title="&#34;install_qxl_002.png&#34;" alt="&#34;install_qxl_002.png&#34;"></p>
+
+<p>After the installation you can change the the display resolution.</p>
+
+<p><img src="/blog/images/virto_windows_install/install_qxl_003.png" width="812" height="651" title="&#34;install_qxl_003.png&#34;" alt="&#34;install_qxl_003.png&#34;"></p>
+
+<p>If you want to use higher screen resolutions you need to <a href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">increase the video ram</a></p>
+
+<p><strong><em>Have fun!</em></strong></p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://raymii.org/s/articles/virt-install_introduction_and_copy_paste_distro_install_commands.html">https://raymii.org/s/articles/virt-install_introduction_and_copy_paste_distro_install_commands.html</a></li>
+<li><a href="http://bart.vanhauwaert.org/hints/installing-win10-on-KVM.html">http://bart.vanhauwaert.org/hints/installing-win10-on-KVM.html</a></li>
+<li><a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html</a></li>
+<li><a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers">https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers</a></li>
+<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/form-virtualization_host_configuration_and_guest_installation_guide-para_virtualized_drivers-mounting_the_image_with_virt_manager">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/form-virtualization_host_configuration_and_guest_installation_guide-para_virtualized_drivers-mounting_the_image_with_virt_manager</a></li>
+</ul>
+
+</div>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">staf wagemakers</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2018-07-01T10:49:41+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2018</span></span> <span class='time'>10:49 am</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/blog/categories/kvm/'>kvm</a>, <a class='category' href='/blog/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/blog/categories/vmware/'>vmware</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/" data-via="" data-counturl="https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <span style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;">
+    <script src="//platform.linkedin.com/in.js" type="text/javascript">
+    lang: en_US
+  </script>
+  <script type="IN/Share" data-url="https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/" data-counter="right"></script>
+  </snap>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blog/2018/06/04/nested-virtualization-in-kvm/" title="Previous Post: Nested virtualization in KVM">&laquo; Nested virtualization in KVM</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><a href="http://www.wagemakers.be">http://www.wagemakers.be</a></p>
+  <p><a href="http://www.linkedin.com/in/stafwagemakers">LinkedIn profile</a></p>
+  <p><a href="https://google.com/+StafWagemakers">Google Plus profile</a></p>
+<!-- Place this tag where you want the widget to render. -->
+<div class="g-person" data-width="180" data-href="http://google.com/+StafWagemakers" data-showtagline="false" data-showcoverphoto="false" data-rel="author"></div>
+
+<!-- Place this tag after the last widget tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/">Migrate a Windows Vmware Virtual Machine to Linux KVM</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/06/04/nested-virtualization-in-kvm/">Nested Virtualization in KVM</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/05/11/32-bits-matters/">32 Bits Matters!</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/04/27/how-to-start-dlm-monitoring-on-a-vdsl-line-in-belgium/">How to Start DLM Monitoring on a VDSL Line in Belgium</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">High Screen Resolution on a KVM Virtual Machine With QXL</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/stafwag">@stafwag</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'stafwag',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<hr />
+<br />
+<br />
+<br />
+<br />
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4659298941528586";
+/* blogads_right */
+google_ad_slot = "8839948148";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - staf wagemakers -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'stafwag';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/';
+        var disqus_url = 'https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

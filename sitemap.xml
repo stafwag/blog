@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/</loc>
+    <lastmod>2018-07-01T10:49:41+02:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2018/06/04/nested-virtualization-in-kvm/</loc>
     <lastmod>2018-06-04T19:58:06+02:00</lastmod>
   </url>
@@ -543,5 +547,8 @@
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/qemu/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/vmware/</loc>
   </url>
 </urlset>
