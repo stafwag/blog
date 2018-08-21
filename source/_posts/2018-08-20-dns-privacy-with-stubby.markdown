@@ -6,32 +6,32 @@ comments: true
 categories: [security, privacy, linux, freebsd, dns]  
 ---
 
+*** Installing and configuring an encrypted dns server is straightforward and there is no reason to use an unencrypted dns service. ***
+
 ## DNS is not secure or private
 
-DNS traffic is insecure and runs over UDP port 53 (TCP for zone transfers) unecrypted by default.
+DNS traffic is insecure and runs over [UDP](https://nl.wikipedia.org/wiki/User_Datagram_Protocol) port 53 ([TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) for [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer) ) unecrypted by default.
 
-This make your encrypted DNS traffic a privacy risk and a security risk: 
+This make your encrypted DNS traffic a **privacy risk** and a **security risk**: 
 
-* anyone that is able to snif your network traffic can collect a lot information from your leaking DNS information.
-* with a DNS spoofing attack an attacker can trick you let go to malicious website or try to incept your email traffic.
-
-Setup an encrypted dns server is straight forward and there is no reason to use an unencrytped dns service.
+* anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS information.
+* with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.
 
 
 ## Encrypt your dns traffic
 
-Encrypting your network traffic is always a good idea for privacy and security reasons - we encrypt, because we can! -  .
+Encrypting your network traffic is always a good idea for privacy and security reasons - *** we encrypt, because we can! *** -  .
 More information about dns privacy can be found at [https://dnsprivacy.org/](https://dnsprivacy.org/)
 
-On this site you'll find also [DNS Privacy Daemon - Stubby](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) that let you send your DNS request over TLS to an alternative DNS provider. You should use a DNS provider that you trust and have a no logging policy.  [quad9](https://www.quad9.net/), [cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) and google dns are well-known alternative dns providers. At [https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers) you can find a few other option to choose from.
+On this site you'll find also the [DNS Privacy Daemon - Stubby](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) that let's you send your DNS request over TLS to an alternative DNS provider. You should use a DNS provider that you trust and has a no logging policy.  [quad9](https://www.quad9.net/), [cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) and google dns are well-known alternative dns providers. At [https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers) you can find a few other options.
 
-You'll find me journey to setup Stubby on a few operation systems I use...
+You'll find my journey to setup Stubby on a few operation systems I use (or I'm force to use) ...
 
 ## Linux
 
 ### Arch Linux
 
-I use Arch Linux on my main workstation. Stubby is already in the Arch repositories this make installation straight forward.
+I use Arch Linux on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.
 
 #### Install stubby 
 
@@ -84,7 +84,7 @@ Optional dependencies for unbound
 [root@vicky ~]# 
 ```
 
-### choose the upstream dns provider
+##### choose your upstream dns provider
 
 Edit the stubby.yml file and uncomment the upstream dns server that you want the use.
 
@@ -92,7 +92,7 @@ Edit the stubby.yml file and uncomment the upstream dns server that you want the
 [staf@vicky ~]$ sudo vi /etc/stubby/stubby.yml
 ```
 
-### enable and start stubby
+##### enable and start stubby
 
 ```
 [root@vicky ~]# systemctl enable stubby
@@ -101,7 +101,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service -> /u
 [root@vicky ~]# 
 ```
 
-### test
+##### test
 
 ```
 [root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
@@ -131,10 +131,9 @@ wagemakers.be.          86000   IN      A       95.215.185.144
 [root@vicky ~]# 
 ```
 
+#### Local dns cache with dnsmasq
 
-### Local dns cache with dnsmasq
-
-#### Change the stubby port.
+##### Change the stubby port.
 
 Edit /etc/stubby/stubby.yml
 
@@ -142,7 +141,7 @@ Edit /etc/stubby/stubby.yml
 [root@vicky ~]# vi /etc/stubby/stubby.yml
 ```
 
-And change the port by modifing the listen_addresses directive
+And change the port by modifing the ```listen_addresses``` directive
 
 ```
 listen_addresses:
@@ -168,7 +167,36 @@ and verify that the dns on 127.0.0.1:53 doesn't work anymore.
 [root@vicky ~]# 
 ```
 
-Install dnsmasq
+ensure that stubby does work on port 53000
+
+```
+[root@frija etc]# dig @127.0.0.1 -p 53000 www.wagemakers.be
+
+; <<>> DiG 9.13.2 <<>> @127.0.0.1 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 27173
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65535
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      43200   IN      CNAME   wagemakers.be.
+wagemakers.be.          43200   IN      A       95.215.185.144
+
+;; Query time: 250 msec
+;; SERVER: 127.0.0.1#53000(127.0.0.1)
+;; WHEN: Tue Aug 21 13:26:37 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+[root@frija etc]# 
+```
+
+##### Install dnsmasq
 
 ```
 [root@vicky ~]# pacman -S dnsmasq
@@ -196,12 +224,16 @@ Net Upgrade Size:      0.00 MiB
 [root@vicky ~]# 
 ```
 
-Configure dnsmasq
+##### Configure dnsmasq
 
 ```
+[root@vicky etc]# cd /etc
 [root@vicky etc]# mv /etc/dnsmasq.conf /etc/dnsmasq.conf_org
 [root@vicky etc]# vi dnsmasq.conf
 ```
+
+It is import to configure stubby to listen the localhost interface only.
+If you use Linux KVM you probably have a dns serivce running on your bridge interfaces for your virtual machines.
 
 ```
 no-resolv
@@ -210,8 +242,9 @@ server=127.0.0.1#53000
 listen-address=127.0.0.1
 ```
 
+#### Configure your system
 
-
+reconfigure your system to use dnsmasq as the dns service.
 
 
 
