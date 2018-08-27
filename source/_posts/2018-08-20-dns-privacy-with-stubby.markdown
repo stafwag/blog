@@ -6,7 +6,7 @@ comments: true
 categories: [security, privacy, linux, freebsd, dns]  
 ---
 
-*** Installing and configuring an encrypted dns server is straightforward and there is no reason to use an unencrypted dns service. ***
+*** Installing and configuring an encrypted dns server is straightforward, there is no reason to use an unencrypted dns service. ***
 
 ## DNS is not secure or private
 
@@ -27,11 +27,11 @@ On this site you'll find also the [DNS Privacy Daemon - Stubby](https://dnspriva
 
 You'll find my journey to setup Stubby on a few operation systems I use (or I'm force to use) ...
 
-## Linux
+## GNU/Linux
 
 ### Arch Linux
 
-I use Arch Linux on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.
+I use [Arch Linux](https://www.archlinux.org/) on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.
 
 #### Install stubby 
 
@@ -236,19 +236,104 @@ It is import to configure stubby to listen the localhost interface only.
 If you use Linux KVM you probably have a dns serivce running on your bridge interfaces for your virtual machines.
 
 ```
-no-resolv
-proxy-dnssec
 server=127.0.0.1#53000
 listen-address=127.0.0.1
+interface=lo
+bind-interfaces
 ```
 
-#### Configure your system
+#### Start and enable dnsmasq
+
+```
+[root@vicky ~]# systemctl start dnsmasq
+[root@vicky ~]# systemctl enable dnsmasq
+Created symlink /etc/systemd/system/multi-user.target.wants/dnsmasq.service -> /usr/lib/systemd/system/dnsmasq.service.
+[root@vicky ~]# 
+```
+
+#### Reconfigure your system
 
 reconfigure your system to use dnsmasq as the dns service.
+
+I use [netctl](https://wiki.archlinux.org/index.php/Netctl) on my system. You can update the network configuration with ```netctl```
+
+```
+[root@vicky netctl]# netctl edit <network_name>
+[root@vicky netctl]# netctl restart  <network_name>
+```
+
+If you networkmanager you can use ```nmcli```, ```nmtui``` or the GUI network configuration in your desktop environment.
+
+### GNU/Linux is GNU/Linux
+
+The configuration on other GNU/Linux distributions is the same as on Arch apart from the installation process.
+
+### Debian
+ 
+#### Current testing release Debian "buster"
+
+[Debian](https://www.debian.org/) is still my goto distribution if want to setup a system with complete [Free Software](https://www.gnu.org/philosophy/free-sw.en.html). Using only Free Software is a good choice if you care about privacy and securty on your system. I use Debian on my [libreboot laptop](http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/)
+
+```
+$ sudo apt install stubby dnsmasq
+```
+
+#### Current stable Debian 9 "strech"
+
+Stubby in the ```getdns-utils``` in Debian stretch, it's an older version. 
+Therefor I ended up with building stubby from the source code.
+
+##### Install the required packages
+
+Install the required packages to build stubby.
+
+```
+staf@stretch:~/github$ sudo apt install build-essential git libtool autoconf libssl-dev libyaml-dev
+```
+
+##### git clone
+
+The getdns git repo;
+
+```
+staf@stretch:~/github$ git clone https://github.com/getdnsapi/getdns.git
+Cloning into 'getdns'...
+remote: Counting objects: 16154, done.
+remote: Total 16154 (delta 0), reused 0 (delta 0), pack-reused 16154
+Receiving objects: 100% (16154/16154), 9.72 MiB | 1.13 MiB/s, done.
+Resolving deltas: 100% (12413/12413), done.
+staf@stretch:~/github$ 
+```
+
+##### checkout the latest stable release
+
+checkout the latest stable release. The current stable release 1.4.2
+
+```
+staf@stretch:~/github/getdns$ git tag
+TNW2015
+list
+v0.1.0
+v0.1.1
+v0.1.2
+<snip>
+v1.4.0
+v1.4.0-rc1
+v1.4.1
+v1.4.1-rc1
+v1.4.2
+v1.4.2-rc1
+staf@stretch:~/github/getdns$ 
+```
+
+#### Centos
+
+```
+```
 
 
 
 ## Links
 
-* [https://wiki.archlinux.org/index.php/Stubby](https://wiki.archlinux.org/index.php/Stubby)
-
+[https://dnsprivacy.org](https://dnsprivacy.org)
+[https://wiki.archlinux.org/index.php/Stubby](https://wiki.archlinux.org/index.php/Stubby)
