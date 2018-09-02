@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "DNS Privacy with Stubby (Part 1 GNU/Linux)"
-date: 2018-08-20 12:30:03 +0200
+date: 2018-09-08 12:30:03 +0200
 comments: true
 categories: [security, privacy, linux, freebsd, dns]  
 ---
@@ -14,7 +14,7 @@ DNS traffic is insecure and runs over [UDP](https://nl.wikipedia.org/wiki/User_D
 
 This make your encrypted DNS traffic a **privacy risk** and a **security risk**: 
 
-* anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS information.
+* anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.
 * with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.
 
 
@@ -25,7 +25,7 @@ More information about dns privacy can be found at [https://dnsprivacy.org/](htt
 
 On this site you'll find also the [DNS Privacy Daemon - Stubby](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) that let's you send your DNS request over TLS to an alternative DNS provider. You should use a DNS provider that you trust and has a no logging policy.  [quad9](https://www.quad9.net/), [cloudflare](https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/) and google dns are well-known alternative dns providers. At [https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers) you can find a few other options.
 
-You'll find my journey to setup Stubby on a few operation systems I use (or I'm force to use) ...
+You'll find my journey to setup Stubby on a few operation systems I use (or I'm force to use) below ...
 
 ## GNU/Linux
 
@@ -566,6 +566,8 @@ root@stretch:/etc# nvi resolv.conf
 ```
 nameserver 127.0.0.1
 ```
+
+***Have fun!***
 
 ## Links
 
