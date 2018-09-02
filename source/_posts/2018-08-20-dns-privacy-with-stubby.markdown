@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "DNS Privacy with Stubby"
+title: "DNS Privacy with Stubby (Part 1 GNU/Linux)"
 date: 2018-08-20 12:30:03 +0200
 comments: true
 categories: [security, privacy, linux, freebsd, dns]  
@@ -87,6 +87,8 @@ Optional dependencies for unbound
 ##### choose your upstream dns provider
 
 Edit the stubby.yml file and uncomment the upstream dns server that you want the use.
+Stubby will loadbalance the dns traffic to all configured upstream dns servers by default.
+This is configured with the ```round_robin_upstreams``` directive, if set to ```1``` the traffic is loadbalanced, if set ```0``` stubby will use the first configured dns server.
 
 ```
 [staf@vicky ~]$ sudo vi /etc/stubby/stubby.yml
@@ -267,12 +269,11 @@ If you networkmanager you can use ```nmcli```, ```nmtui``` or the GUI network co
 ### GNU/Linux is GNU/Linux
 
 The configuration on other GNU/Linux distributions is the same as on Arch apart from the installation process.
+The same method can be use if your (favorite) Linux distribution doesn't have a stubby package, the installation method of the required package will be different of course.
 
 ### Debian
  
 #### Current testing release Debian "buster"
-
-[Debian](https://www.debian.org/) is still my goto distribution if want to setup a system with complete [Free Software](https://www.gnu.org/philosophy/free-sw.en.html). Using only Free Software is a good choice if you care about privacy and securty on your system. I use Debian on my [libreboot laptop](http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/)
 
 ```
 $ sudo apt install stubby dnsmasq
@@ -307,7 +308,7 @@ staf@stretch:~/github$
 
 ##### checkout the latest stable release
 
-checkout the latest stable release. The current stable release 1.4.2
+Verify the lastest release tag. The current stable release 1.4.2
 
 ```
 staf@stretch:~/github/getdns$ git tag
@@ -326,14 +327,247 @@ v1.4.2-rc1
 staf@stretch:~/github/getdns$ 
 ```
 
-#### Centos
+checkout the latest stable release.
 
 ```
+staf@stretch:~/github/getdns$ git checkout v1.4.2
+Note: checking out 'v1.4.2'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at e481273... Last minute update
+staf@stretch:~/github/getdns$ 
 ```
 
+##### build it...
 
+```
+staf@stretch:~/github/getdns$ git submodule update --init
+staf@stretch:~/github/getdns$ libtoolize -ci
+staf@stretch:~/github/getdns$ autoreconf -fi
+staf@stretch:~/github/getdns$ mkdir build
+staf@stretch:~/github/getdns$ cd build/
+staf@stretch:~/github/getdns/build$ ../configure --prefix=/usr/local --without-libidn --without-libidn2 --enable-stub-only --with-stubby
+staf@stretch:~/github/getdns/build$ make
+```
+
+##### make install
+
+```
+staf@stretch:~/github/getdns/build$ sudo make install
+[sudo] password for staf: 
+cd src && make install
+make[1]: Entering directory '/home/staf/github/getdns/build/src'
+<snip>
+make[1]: Leaving directory '/home/staf/github/getdns/build/doc'
+***
+***  !!! IMPORTANT !!!!
+***
+***  From release 1.2.0, getdns comes with built-in DNSSEC
+***  trust anchor management.  External trust anchor management,
+***  for example with unbound-anchor, is no longer necessary
+***  and no longer recommended.
+***
+***  Previously installed trust anchors, in the default location -
+***
+***        /usr/local/etc/unbound/getdns-root.key
+***
+***  - will be preferred and used for DNSSEC validation, however
+***  getdns will fallback to trust-anchors obtained via built-in
+***  trust anchor management when the anchors from the default
+***  location fail to validate the root DNSKEY rrset.
+***
+***  To prevent expired DNSSEC trust anchors to be used for
+***  validation, we strongly recommend removing the trust anchors
+***  on the default location when there is no active external
+***  trust anchor management keeping it up-to-date.
+***
+staf@stretch:~/github/getdns/build$ sudo make install
+```
+
+##### systemd service
+
+Stubby comes with a systemd service definition. Copy it to the correct location.
+
+```
+staf@stretch:~/github/getdns/build$ cd ..
+staf@stretch:~/github/getdns$ cd stubby/systemd/
+staf@stretch:~/github/getdns/stubby/systemd$ sudo cp stubby.service /lib/systemd/system/
+```
+
+Update the path to /usr/local
+
+```
+staf@stretch:~/github/getdns/stubby/systemd$ sudo vi /lib/systemd/system/stubby.service
+```
+
+```
+[Unit]
+Description=stubby DNS resolver
+
+[Service]
+User=stubby
+DynamicUser=yes
+CacheDirectory=stubby
+WorkingDirectory=/var/cache/stubby
+ExecStart=/usr/local/bin/stubby
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+```
+
+And create the stubby working directory
+
+```
+root@stretch:~# mkdir /var/cache/stubby
+```
+
+#### ldconfig
+
+update your library cache
+
+```
+staf@stretch:~/github/getdns/stubby/systemd$ sudo ldconfig -v
+```
+
+#### Update the configuration
+
+Edit the stubby.yml configuration file.
+
+```
+staf@stretch:~/github/getdns/stubby/systemd$ sudo nvi /usr/local/etc/stubby/stubby.yml
+```
+
+Update the port where stubby will listen to and select the upstream dns service you want to use.
+
+```
+listen_addresses:
+  - 127.0.0.1@53000
+  - 0::1@53000
+```
+
+#### start and test 
+
+Start stubby....
+
+```
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl list-unit-files | grep -i stubby
+stubby.service                              disabled
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl enable stubby
+Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service /lib/systemd/system/stubby.service.
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl start stubby
+staf@stretch:~/github/getdns/stubby/systemd$ 
+```
+
+and test it
+
+```
+root@stretch:~# dig @127.0.0.1 -p 53000 www.wagemakers.be
+
+; <<>> DiG 9.10.3-P4-Debian <<>> @127.0.0.1 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 17510
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      49704   IN      CNAME   wagemakers.be.
+wagemakers.be.          81815   IN      A       95.215.185.144
+
+;; Query time: 72 msec
+;; SERVER: 127.0.0.1#53000(127.0.0.1)
+;; WHEN: Sun Sep 02 10:33:53 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+root@stretch:~# 
+```
+
+#### dnsmasq
+
+Install dnsmasq
+
+```
+root@stretch:/etc# apt-get install dnsmasq
+```
+
+Configure dnsmasq
+
+```
+root@stretch:/etc# mv dnsmasq.conf dnsmasq.conf_org
+root@stretch:/etc# vi dnsmasq.conf
+```
+
+```
+server=127.0.0.1#53000
+listen-address=127.0.0.1
+interface=lo
+bind-interfaces
+```
+
+Enable and start it...
+
+```
+root@stretch:/etc# systemctl enable dnsmasq
+Synchronizing state of dnsmasq.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable dnsmasq
+root@stretch:/etc# systemctl restart dnsmasq
+```
+
+Verify
+
+```
+root@stretch:/etc# dig @127.0.0.1 www.wagemakers.be
+
+; <<>> DiG 9.10.3-P4-Debian <<>> @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 57295
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      48645   IN      CNAME   wagemakers.be.
+wagemakers.be.          80756   IN      A       95.215.185.144
+
+;; Query time: 72 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun Sep 02 10:51:32 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+root@stretch:/etc# 
+```
+
+reconfigure you system to use dnsmasq....
+
+```
+root@stretch:/etc# nvi resolv.conf
+```
+
+```
+nameserver 127.0.0.1
+```
 
 ## Links
 
-[https://dnsprivacy.org](https://dnsprivacy.org)
-[https://wiki.archlinux.org/index.php/Stubby](https://wiki.archlinux.org/index.php/Stubby)
+* [https://dnsprivacy.org](https://dnsprivacy.org)
+* [https://wiki.archlinux.org/index.php/Stubby](https://wiki.archlinux.org/index.php/Stubby)
