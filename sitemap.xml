@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/</loc>
+    <lastmod>2018-09-09T10:30:03+02:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/</loc>
     <lastmod>2018-07-01T10:49:41+02:00</lastmod>
   </url>
@@ -550,5 +554,11 @@
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/vmware/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/privacy/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/dns/</loc>
   </url>
 </urlset>

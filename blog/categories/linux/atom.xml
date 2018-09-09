@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-07-01T19:28:17+02:00</updated>
+  <updated>2018-09-09T11:24:10+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,549 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DNS Privacy With Stubby (Part 1 GNU/Linux)]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/"/>
+    <updated>2018-09-09T10:30:03+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux</id>
+    <content type="html"><![CDATA[<p><strong><em> Installing and configuring an encrypted dns server is straightforward, there is no reason to use an unencrypted dns service. </em></strong></p>
+
+<h1>DNS is not secure or private</h1>
+
+<p>DNS traffic is insecure and runs over <a href="https://nl.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> port 53 (<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> for <a href="https://en.wikipedia.org/wiki/DNS_zone_transfer">zone transfers</a> ) unecrypted by default.</p>
+
+<p>This make your encrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
+
+<ul>
+<li>anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.</li>
+<li>with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.</li>
+</ul>
+
+
+<h1>Encrypt your dns traffic</h1>
+
+<p>Encrypting your network traffic is always a good idea for privacy and security reasons - <strong><em> we encrypt, because we can! </em></strong> -  .
+More information about dns privacy can be found at <a href="https://dnsprivacy.org/">https://dnsprivacy.org/</a></p>
+
+<p>On this site you&rsquo;ll find also the <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby">DNS Privacy Daemon - Stubby</a> that let&rsquo;s you send your DNS request over TLS to an alternative DNS provider. You should use a DNS provider that you trust and has a no logging policy.  <a href="https://www.quad9.net/">quad9</a>, <a href="https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/">cloudflare</a> and google dns are well-known alternative dns providers. At <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers">https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers</a> you can find a few other options.</p>
+
+<p>You&rsquo;ll find my journey to setup Stubby on a few operation systems I use (or I&rsquo;m force to use) below &hellip;</p>
+
+<h1>GNU/Linux</h1>
+
+<h2>Arch Linux</h2>
+
+<p>I use <a href="https://www.archlinux.org/">Arch Linux</a> on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.</p>
+
+<h3>Install stubby</h3>
+
+<pre><code>[root@vicky ~]# pacman -S stubby
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (5) fstrm-0.4.0-1  getdns-1.4.2-1  protobuf-c-1.3.0-3  unbound-1.7.3-4
+             stubby-0.2.3-1
+
+Total Download Size:   1.09 MiB
+Total Installed Size:  5.68 MiB
+
+:: Proceed with installation? [Y/n] 
+:: Retrieving packages...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 88476  100 88476    0     0   403k      0 --:--:-- --:--:-- --:--:--  403k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 62480  100 62480    0     0  1271k      0 --:--:-- --:--:-- --:--:-- 1271k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  632k  100  632k    0     0   750k      0 --:--:-- --:--:-- --:--:--  749k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  302k  100  302k    0     0  1615k      0 --:--:-- --:--:-- --:--:-- 1606k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 34052  100 34052    0     0   831k      0 --:--:-- --:--:-- --:--:--  831k
+(5/5) checking keys in keyring                       [###########################] 100%
+(5/5) checking package integrity                     [###########################] 100%
+(5/5) loading package files                          [###########################] 100%
+(5/5) checking for file conflicts                    [###########################] 100%
+(5/5) checking available disk space                  [###########################] 100%
+:: Processing package changes...
+(1/5) installing fstrm                               [###########################] 100%
+(2/5) installing protobuf-c                          [###########################] 100%
+(3/5) installing unbound                             [###########################] 100%
+Optional dependencies for unbound
+    expat: unbound-anchor [installed]
+(4/5) installing getdns                              [###########################] 100%
+(5/5) installing stubby                              [###########################] 100%
+:: Running post-transaction hooks...
+(1/4) Reloading system manager configuration...
+(2/4) Creating system user accounts...
+(3/4) Creating temporary files...
+(4/4) Arming ConditionNeedsUpdate...
+[root@vicky ~]# 
+</code></pre>
+
+<h4>choose your upstream dns provider</h4>
+
+<p>Edit the stubby.yml file and uncomment the upstream dns server that you want the use.
+Stubby will loadbalance the dns traffic to all configured upstream dns servers by default.
+This is configured with the <code>round_robin_upstreams</code> directive, if set to <code>1</code> the traffic is loadbalanced, if set <code>0</code> stubby will use the first configured dns server.</p>
+
+<pre><code>[staf@vicky ~]$ sudo vi /etc/stubby/stubby.yml
+</code></pre>
+
+<h4>enable and start stubby</h4>
+
+<pre><code>[root@vicky ~]# systemctl enable stubby
+Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service -&gt; /usr/lib/systemd/system/stubby.service.
+[root@vicky ~]# systemctl start stubby
+[root@vicky ~]# 
+</code></pre>
+
+<h4>test</h4>
+
+<pre><code>[root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 18226
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: fe9d3618b821614f174436385b7acb64a4f4cc6657e14626 (good)
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      86000   IN      CNAME   wagemakers.be.
+wagemakers.be.          86000   IN      A       95.215.185.144
+
+;; Query time: 128 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Mon Aug 20 16:08:36 CEST 2018
+;; MSG SIZE  rcvd: 147
+
+[root@vicky ~]# 
+</code></pre>
+
+<h3>Local dns cache with dnsmasq</h3>
+
+<h4>Change the stubby port.</h4>
+
+<p>Edit /etc/stubby/stubby.yml</p>
+
+<pre><code>[root@vicky ~]# vi /etc/stubby/stubby.yml
+</code></pre>
+
+<p>And change the port by modifing the <code>listen_addresses</code> directive</p>
+
+<pre><code>listen_addresses:
+  - 127.0.0.1@53000
+  - 0::1@53000
+</code></pre>
+
+<p>restart stubby</p>
+
+<pre><code>[root@vicky ~]# systemctl restart stubby.service
+</code></pre>
+
+<p>and verify that the dns on 127.0.0.1:53 doesn&rsquo;t work anymore.</p>
+
+<pre><code>[root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; connection timed out; no servers could be reached
+[root@vicky ~]# 
+</code></pre>
+
+<p>ensure that stubby does work on port 53000</p>
+
+<pre><code>[root@frija etc]# dig @127.0.0.1 -p 53000 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27173
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65535
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      43200   IN      CNAME   wagemakers.be.
+wagemakers.be.          43200   IN      A       95.215.185.144
+
+;; Query time: 250 msec
+;; SERVER: 127.0.0.1#53000(127.0.0.1)
+;; WHEN: Tue Aug 21 13:26:37 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+[root@frija etc]# 
+</code></pre>
+
+<h4>Install dnsmasq</h4>
+
+<pre><code>[root@vicky ~]# pacman -S dnsmasq
+warning: dnsmasq-2.79-1 is up to date -- reinstalling
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) dnsmasq-2.79-1
+
+Total Installed Size:  0.70 MiB
+Net Upgrade Size:      0.00 MiB
+
+:: Proceed with installation? [Y/n] y
+(1/1) checking keys in keyring                       [###########################] 100%
+(1/1) checking package integrity                     [###########################] 100%
+(1/1) loading package files                          [###########################] 100%
+(1/1) checking for file conflicts                    [###########################] 100%
+(1/1) checking available disk space                  [###########################] 100%
+:: Processing package changes...
+(1/1) reinstalling dnsmasq                           [###########################] 100%
+:: Running post-transaction hooks...
+(1/3) Reloading system manager configuration...
+(2/3) Creating system user accounts...
+(3/3) Arming ConditionNeedsUpdate...
+[root@vicky ~]# 
+</code></pre>
+
+<h4>Configure dnsmasq</h4>
+
+<pre><code>[root@vicky etc]# cd /etc
+[root@vicky etc]# mv /etc/dnsmasq.conf /etc/dnsmasq.conf_org
+[root@vicky etc]# vi dnsmasq.conf
+</code></pre>
+
+<p>It is import to configure stubby to listen the localhost interface only.
+If you use Linux KVM you probably have a dns serivce running on your bridge interfaces for your virtual machines.</p>
+
+<pre><code>server=127.0.0.1#53000
+listen-address=127.0.0.1
+interface=lo
+bind-interfaces
+</code></pre>
+
+<h4>Start and enable dnsmasq</h4>
+
+<pre><code>[root@vicky ~]# systemctl start dnsmasq
+[root@vicky ~]# systemctl enable dnsmasq
+Created symlink /etc/systemd/system/multi-user.target.wants/dnsmasq.service -&gt; /usr/lib/systemd/system/dnsmasq.service.
+[root@vicky ~]# 
+</code></pre>
+
+<h4>Reconfigure your system</h4>
+
+<p>reconfigure your system to use dnsmasq as the dns service.</p>
+
+<p>I use <a href="https://wiki.archlinux.org/index.php/Netctl">netctl</a> on my system. You can update the network configuration with <code>netctl</code></p>
+
+<pre><code>[root@vicky netctl]# netctl edit &lt;network_name&gt;
+[root@vicky netctl]# netctl restart  &lt;network_name&gt;
+</code></pre>
+
+<p>If you networkmanager you can use <code>nmcli</code>, <code>nmtui</code> or the GUI network configuration in your desktop environment.</p>
+
+<h2>GNU/Linux is GNU/Linux</h2>
+
+<p>The configuration on other GNU/Linux distributions is the same as on Arch apart from the installation process.
+The same method can be use if your (favorite) Linux distribution doesn&rsquo;t have a stubby package, the installation method of the required package will be different of course.</p>
+
+<h3>Debian</h3>
+
+<h4>Current testing release Debian &ldquo;buster&rdquo;</h4>
+
+<pre><code>$ sudo apt install stubby dnsmasq
+</code></pre>
+
+<h4>Current stable Debian 9 &ldquo;strech&rdquo;</h4>
+
+<p>Stubby in the <code>getdns-utils</code> in Debian stretch, it&rsquo;s an older version.
+Therefor I ended up with building stubby from the source code.</p>
+
+<h5>Install the required packages</h5>
+
+<p>Install the required packages to build stubby.</p>
+
+<pre><code>staf@stretch:~/github$ sudo apt install build-essential git libtool autoconf libssl-dev libyaml-dev
+</code></pre>
+
+<h5>git clone</h5>
+
+<p>The getdns git repo;</p>
+
+<pre><code>staf@stretch:~/github$ git clone https://github.com/getdnsapi/getdns.git
+Cloning into 'getdns'...
+remote: Counting objects: 16154, done.
+remote: Total 16154 (delta 0), reused 0 (delta 0), pack-reused 16154
+Receiving objects: 100% (16154/16154), 9.72 MiB | 1.13 MiB/s, done.
+Resolving deltas: 100% (12413/12413), done.
+staf@stretch:~/github$ 
+</code></pre>
+
+<h5>checkout the latest stable release</h5>
+
+<p>Verify the lastest release tag. The current stable release 1.4.2</p>
+
+<pre><code>staf@stretch:~/github/getdns$ git tag
+TNW2015
+list
+v0.1.0
+v0.1.1
+v0.1.2
+&lt;snip&gt;
+v1.4.0
+v1.4.0-rc1
+v1.4.1
+v1.4.1-rc1
+v1.4.2
+v1.4.2-rc1
+staf@stretch:~/github/getdns$ 
+</code></pre>
+
+<p>checkout the latest stable release.</p>
+
+<pre><code>staf@stretch:~/github/getdns$ git checkout v1.4.2
+Note: checking out 'v1.4.2'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b &lt;new-branch-name&gt;
+
+HEAD is now at e481273... Last minute update
+staf@stretch:~/github/getdns$ 
+</code></pre>
+
+<h5>build it&hellip;</h5>
+
+<pre><code>staf@stretch:~/github/getdns$ git submodule update --init
+staf@stretch:~/github/getdns$ libtoolize -ci
+staf@stretch:~/github/getdns$ autoreconf -fi
+staf@stretch:~/github/getdns$ mkdir build
+staf@stretch:~/github/getdns$ cd build/
+staf@stretch:~/github/getdns/build$ ../configure --prefix=/usr/local --without-libidn --without-libidn2 --enable-stub-only --with-stubby
+staf@stretch:~/github/getdns/build$ make
+</code></pre>
+
+<h5>make install</h5>
+
+<pre><code>staf@stretch:~/github/getdns/build$ sudo make install
+[sudo] password for staf: 
+cd src &amp;&amp; make install
+make[1]: Entering directory '/home/staf/github/getdns/build/src'
+&lt;snip&gt;
+make[1]: Leaving directory '/home/staf/github/getdns/build/doc'
+***
+***  !!! IMPORTANT !!!!
+***
+***  From release 1.2.0, getdns comes with built-in DNSSEC
+***  trust anchor management.  External trust anchor management,
+***  for example with unbound-anchor, is no longer necessary
+***  and no longer recommended.
+***
+***  Previously installed trust anchors, in the default location -
+***
+***        /usr/local/etc/unbound/getdns-root.key
+***
+***  - will be preferred and used for DNSSEC validation, however
+***  getdns will fallback to trust-anchors obtained via built-in
+***  trust anchor management when the anchors from the default
+***  location fail to validate the root DNSKEY rrset.
+***
+***  To prevent expired DNSSEC trust anchors to be used for
+***  validation, we strongly recommend removing the trust anchors
+***  on the default location when there is no active external
+***  trust anchor management keeping it up-to-date.
+***
+staf@stretch:~/github/getdns/build$ sudo make install
+</code></pre>
+
+<h5>systemd service</h5>
+
+<p>Stubby comes with a systemd service definition. Copy it to the correct location.</p>
+
+<pre><code>staf@stretch:~/github/getdns/build$ cd ..
+staf@stretch:~/github/getdns$ cd stubby/systemd/
+staf@stretch:~/github/getdns/stubby/systemd$ sudo cp stubby.service /lib/systemd/system/
+</code></pre>
+
+<p>Update the path to /usr/local</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo vi /lib/systemd/system/stubby.service
+</code></pre>
+
+<pre><code>[Unit]
+Description=stubby DNS resolver
+
+[Service]
+User=stubby
+DynamicUser=yes
+CacheDirectory=stubby
+WorkingDirectory=/var/cache/stubby
+ExecStart=/usr/local/bin/stubby
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<p>And create the stubby working directory</p>
+
+<pre><code>root@stretch:~# mkdir /var/cache/stubby
+</code></pre>
+
+<h4>ldconfig</h4>
+
+<p>update your library cache</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo ldconfig -v
+</code></pre>
+
+<h4>Update the configuration</h4>
+
+<p>Edit the stubby.yml configuration file.</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo nvi /usr/local/etc/stubby/stubby.yml
+</code></pre>
+
+<p>Update the port where stubby will listen to and select the upstream dns service you want to use.</p>
+
+<pre><code>listen_addresses:
+  - 127.0.0.1@53000
+  - 0::1@53000
+</code></pre>
+
+<h4>start and test</h4>
+
+<p>Start stubby&hellip;.</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl list-unit-files | grep -i stubby
+stubby.service                              disabled
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl enable stubby
+Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service /lib/systemd/system/stubby.service.
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl start stubby
+staf@stretch:~/github/getdns/stubby/systemd$ 
+</code></pre>
+
+<p>and test it</p>
+
+<pre><code>root@stretch:~# dig @127.0.0.1 -p 53000 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.10.3-P4-Debian &lt;&lt;&gt;&gt; @127.0.0.1 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 17510
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      49704   IN      CNAME   wagemakers.be.
+wagemakers.be.          81815   IN      A       95.215.185.144
+
+;; Query time: 72 msec
+;; SERVER: 127.0.0.1#53000(127.0.0.1)
+;; WHEN: Sun Sep 02 10:33:53 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+root@stretch:~# 
+</code></pre>
+
+<h4>dnsmasq</h4>
+
+<p>Install dnsmasq</p>
+
+<pre><code>root@stretch:/etc# apt-get install dnsmasq
+</code></pre>
+
+<p>Configure dnsmasq</p>
+
+<pre><code>root@stretch:/etc# mv dnsmasq.conf dnsmasq.conf_org
+root@stretch:/etc# vi dnsmasq.conf
+</code></pre>
+
+<pre><code>server=127.0.0.1#53000
+listen-address=127.0.0.1
+interface=lo
+bind-interfaces
+</code></pre>
+
+<p>Enable and start it&hellip;</p>
+
+<pre><code>root@stretch:/etc# systemctl enable dnsmasq
+Synchronizing state of dnsmasq.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable dnsmasq
+root@stretch:/etc# systemctl restart dnsmasq
+</code></pre>
+
+<p>Verify</p>
+
+<pre><code>root@stretch:/etc# dig @127.0.0.1 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.10.3-P4-Debian &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57295
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      48645   IN      CNAME   wagemakers.be.
+wagemakers.be.          80756   IN      A       95.215.185.144
+
+;; Query time: 72 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun Sep 02 10:51:32 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+root@stretch:/etc# 
+</code></pre>
+
+<p>reconfigure you system to use dnsmasq&hellip;.</p>
+
+<pre><code>root@stretch:/etc# nvi resolv.conf
+</code></pre>
+
+<pre><code>nameserver 127.0.0.1
+</code></pre>
+
+<p><strong><em>Have fun!</em></strong></p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://dnsprivacy.org">https://dnsprivacy.org</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Stubby">https://wiki.archlinux.org/index.php/Stubby</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Migrate a Windows Vmware Virtual Machine to Linux KVM]]></title>
@@ -1184,28 +1727,6 @@ If you new micro code cause issue you can just remove the entry in grub configur
 </code></pre>
 
 <p><strong><em>Have fun</em></strong></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Model-m Tux Update...]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot/"/>
-    <updated>2017-10-20T17:27:41+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2017/10/20/model-m-tux-update-dot-dot-dot</id>
-    <content type="html"><![CDATA[<p><img class="right" src="/images/modelm_tux_only.jpg" width="400" height="266" title="&ldquo;modelm_tux_only.jpg&rdquo;" ></p>
-
-<p>I own a <a href="https://en.wikipedia.org/wiki/Unicomp">Unicomp</a> <a herf="https://en.wikipedia.org/wiki/Model_M_keyboard">model-m keyboard</a>. The keyboard has a nice key feel but it has windows super key(s).</p>
-
-<p><br /></p>
-
-<p>I don&rsquo;t use super key(s), and would prefer to have a keyboard without it.  But when it has super keys  I&rsquo;d rather have it without the windows logo on it so it was time  to replace them with <a href="http://www.keyboardco.com/product/unicomp-gray-linux-tux-keyset.asp">the tux version</a></p>
-
-<h3>Pictures</h3>
-
-<p><a href="/images/modelm_tux_package.jpg"><img src="/images/modelm_tux_package.jpg" height="250" width="375" alt="modelm_tux_package.jpg" /></a>
-<a href="/images/modelm_all_keys.jpg"><img src="/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
-<a href="/images/modelm_tux_only.jpg"><img src="/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
-<a href="/images/modelm_with_tux_keys.jpg"><img src="/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Security | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-07-01T19:28:17+02:00</updated>
+  <updated>2018-09-09T11:24:10+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,549 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DNS Privacy With Stubby (Part 1 GNU/Linux)]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/"/>
+    <updated>2018-09-09T10:30:03+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux</id>
+    <content type="html"><![CDATA[<p><strong><em> Installing and configuring an encrypted dns server is straightforward, there is no reason to use an unencrypted dns service. </em></strong></p>
+
+<h1>DNS is not secure or private</h1>
+
+<p>DNS traffic is insecure and runs over <a href="https://nl.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> port 53 (<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> for <a href="https://en.wikipedia.org/wiki/DNS_zone_transfer">zone transfers</a> ) unecrypted by default.</p>
+
+<p>This make your encrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
+
+<ul>
+<li>anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.</li>
+<li>with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.</li>
+</ul>
+
+
+<h1>Encrypt your dns traffic</h1>
+
+<p>Encrypting your network traffic is always a good idea for privacy and security reasons - <strong><em> we encrypt, because we can! </em></strong> -  .
+More information about dns privacy can be found at <a href="https://dnsprivacy.org/">https://dnsprivacy.org/</a></p>
+
+<p>On this site you&rsquo;ll find also the <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby">DNS Privacy Daemon - Stubby</a> that let&rsquo;s you send your DNS request over TLS to an alternative DNS provider. You should use a DNS provider that you trust and has a no logging policy.  <a href="https://www.quad9.net/">quad9</a>, <a href="https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/">cloudflare</a> and google dns are well-known alternative dns providers. At <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers">https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers</a> you can find a few other options.</p>
+
+<p>You&rsquo;ll find my journey to setup Stubby on a few operation systems I use (or I&rsquo;m force to use) below &hellip;</p>
+
+<h1>GNU/Linux</h1>
+
+<h2>Arch Linux</h2>
+
+<p>I use <a href="https://www.archlinux.org/">Arch Linux</a> on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.</p>
+
+<h3>Install stubby</h3>
+
+<pre><code>[root@vicky ~]# pacman -S stubby
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (5) fstrm-0.4.0-1  getdns-1.4.2-1  protobuf-c-1.3.0-3  unbound-1.7.3-4
+             stubby-0.2.3-1
+
+Total Download Size:   1.09 MiB
+Total Installed Size:  5.68 MiB
+
+:: Proceed with installation? [Y/n] 
+:: Retrieving packages...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 88476  100 88476    0     0   403k      0 --:--:-- --:--:-- --:--:--  403k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 62480  100 62480    0     0  1271k      0 --:--:-- --:--:-- --:--:-- 1271k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  632k  100  632k    0     0   750k      0 --:--:-- --:--:-- --:--:--  749k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  302k  100  302k    0     0  1615k      0 --:--:-- --:--:-- --:--:-- 1606k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 34052  100 34052    0     0   831k      0 --:--:-- --:--:-- --:--:--  831k
+(5/5) checking keys in keyring                       [###########################] 100%
+(5/5) checking package integrity                     [###########################] 100%
+(5/5) loading package files                          [###########################] 100%
+(5/5) checking for file conflicts                    [###########################] 100%
+(5/5) checking available disk space                  [###########################] 100%
+:: Processing package changes...
+(1/5) installing fstrm                               [###########################] 100%
+(2/5) installing protobuf-c                          [###########################] 100%
+(3/5) installing unbound                             [###########################] 100%
+Optional dependencies for unbound
+    expat: unbound-anchor [installed]
+(4/5) installing getdns                              [###########################] 100%
+(5/5) installing stubby                              [###########################] 100%
+:: Running post-transaction hooks...
+(1/4) Reloading system manager configuration...
+(2/4) Creating system user accounts...
+(3/4) Creating temporary files...
+(4/4) Arming ConditionNeedsUpdate...
+[root@vicky ~]# 
+</code></pre>
+
+<h4>choose your upstream dns provider</h4>
+
+<p>Edit the stubby.yml file and uncomment the upstream dns server that you want the use.
+Stubby will loadbalance the dns traffic to all configured upstream dns servers by default.
+This is configured with the <code>round_robin_upstreams</code> directive, if set to <code>1</code> the traffic is loadbalanced, if set <code>0</code> stubby will use the first configured dns server.</p>
+
+<pre><code>[staf@vicky ~]$ sudo vi /etc/stubby/stubby.yml
+</code></pre>
+
+<h4>enable and start stubby</h4>
+
+<pre><code>[root@vicky ~]# systemctl enable stubby
+Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service -&gt; /usr/lib/systemd/system/stubby.service.
+[root@vicky ~]# systemctl start stubby
+[root@vicky ~]# 
+</code></pre>
+
+<h4>test</h4>
+
+<pre><code>[root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 18226
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: fe9d3618b821614f174436385b7acb64a4f4cc6657e14626 (good)
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      86000   IN      CNAME   wagemakers.be.
+wagemakers.be.          86000   IN      A       95.215.185.144
+
+;; Query time: 128 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Mon Aug 20 16:08:36 CEST 2018
+;; MSG SIZE  rcvd: 147
+
+[root@vicky ~]# 
+</code></pre>
+
+<h3>Local dns cache with dnsmasq</h3>
+
+<h4>Change the stubby port.</h4>
+
+<p>Edit /etc/stubby/stubby.yml</p>
+
+<pre><code>[root@vicky ~]# vi /etc/stubby/stubby.yml
+</code></pre>
+
+<p>And change the port by modifing the <code>listen_addresses</code> directive</p>
+
+<pre><code>listen_addresses:
+  - 127.0.0.1@53000
+  - 0::1@53000
+</code></pre>
+
+<p>restart stubby</p>
+
+<pre><code>[root@vicky ~]# systemctl restart stubby.service
+</code></pre>
+
+<p>and verify that the dns on 127.0.0.1:53 doesn&rsquo;t work anymore.</p>
+
+<pre><code>[root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; connection timed out; no servers could be reached
+[root@vicky ~]# 
+</code></pre>
+
+<p>ensure that stubby does work on port 53000</p>
+
+<pre><code>[root@frija etc]# dig @127.0.0.1 -p 53000 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27173
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65535
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      43200   IN      CNAME   wagemakers.be.
+wagemakers.be.          43200   IN      A       95.215.185.144
+
+;; Query time: 250 msec
+;; SERVER: 127.0.0.1#53000(127.0.0.1)
+;; WHEN: Tue Aug 21 13:26:37 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+[root@frija etc]# 
+</code></pre>
+
+<h4>Install dnsmasq</h4>
+
+<pre><code>[root@vicky ~]# pacman -S dnsmasq
+warning: dnsmasq-2.79-1 is up to date -- reinstalling
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) dnsmasq-2.79-1
+
+Total Installed Size:  0.70 MiB
+Net Upgrade Size:      0.00 MiB
+
+:: Proceed with installation? [Y/n] y
+(1/1) checking keys in keyring                       [###########################] 100%
+(1/1) checking package integrity                     [###########################] 100%
+(1/1) loading package files                          [###########################] 100%
+(1/1) checking for file conflicts                    [###########################] 100%
+(1/1) checking available disk space                  [###########################] 100%
+:: Processing package changes...
+(1/1) reinstalling dnsmasq                           [###########################] 100%
+:: Running post-transaction hooks...
+(1/3) Reloading system manager configuration...
+(2/3) Creating system user accounts...
+(3/3) Arming ConditionNeedsUpdate...
+[root@vicky ~]# 
+</code></pre>
+
+<h4>Configure dnsmasq</h4>
+
+<pre><code>[root@vicky etc]# cd /etc
+[root@vicky etc]# mv /etc/dnsmasq.conf /etc/dnsmasq.conf_org
+[root@vicky etc]# vi dnsmasq.conf
+</code></pre>
+
+<p>It is import to configure stubby to listen the localhost interface only.
+If you use Linux KVM you probably have a dns serivce running on your bridge interfaces for your virtual machines.</p>
+
+<pre><code>server=127.0.0.1#53000
+listen-address=127.0.0.1
+interface=lo
+bind-interfaces
+</code></pre>
+
+<h4>Start and enable dnsmasq</h4>
+
+<pre><code>[root@vicky ~]# systemctl start dnsmasq
+[root@vicky ~]# systemctl enable dnsmasq
+Created symlink /etc/systemd/system/multi-user.target.wants/dnsmasq.service -&gt; /usr/lib/systemd/system/dnsmasq.service.
+[root@vicky ~]# 
+</code></pre>
+
+<h4>Reconfigure your system</h4>
+
+<p>reconfigure your system to use dnsmasq as the dns service.</p>
+
+<p>I use <a href="https://wiki.archlinux.org/index.php/Netctl">netctl</a> on my system. You can update the network configuration with <code>netctl</code></p>
+
+<pre><code>[root@vicky netctl]# netctl edit &lt;network_name&gt;
+[root@vicky netctl]# netctl restart  &lt;network_name&gt;
+</code></pre>
+
+<p>If you networkmanager you can use <code>nmcli</code>, <code>nmtui</code> or the GUI network configuration in your desktop environment.</p>
+
+<h2>GNU/Linux is GNU/Linux</h2>
+
+<p>The configuration on other GNU/Linux distributions is the same as on Arch apart from the installation process.
+The same method can be use if your (favorite) Linux distribution doesn&rsquo;t have a stubby package, the installation method of the required package will be different of course.</p>
+
+<h3>Debian</h3>
+
+<h4>Current testing release Debian &ldquo;buster&rdquo;</h4>
+
+<pre><code>$ sudo apt install stubby dnsmasq
+</code></pre>
+
+<h4>Current stable Debian 9 &ldquo;strech&rdquo;</h4>
+
+<p>Stubby in the <code>getdns-utils</code> in Debian stretch, it&rsquo;s an older version.
+Therefor I ended up with building stubby from the source code.</p>
+
+<h5>Install the required packages</h5>
+
+<p>Install the required packages to build stubby.</p>
+
+<pre><code>staf@stretch:~/github$ sudo apt install build-essential git libtool autoconf libssl-dev libyaml-dev
+</code></pre>
+
+<h5>git clone</h5>
+
+<p>The getdns git repo;</p>
+
+<pre><code>staf@stretch:~/github$ git clone https://github.com/getdnsapi/getdns.git
+Cloning into 'getdns'...
+remote: Counting objects: 16154, done.
+remote: Total 16154 (delta 0), reused 0 (delta 0), pack-reused 16154
+Receiving objects: 100% (16154/16154), 9.72 MiB | 1.13 MiB/s, done.
+Resolving deltas: 100% (12413/12413), done.
+staf@stretch:~/github$ 
+</code></pre>
+
+<h5>checkout the latest stable release</h5>
+
+<p>Verify the lastest release tag. The current stable release 1.4.2</p>
+
+<pre><code>staf@stretch:~/github/getdns$ git tag
+TNW2015
+list
+v0.1.0
+v0.1.1
+v0.1.2
+&lt;snip&gt;
+v1.4.0
+v1.4.0-rc1
+v1.4.1
+v1.4.1-rc1
+v1.4.2
+v1.4.2-rc1
+staf@stretch:~/github/getdns$ 
+</code></pre>
+
+<p>checkout the latest stable release.</p>
+
+<pre><code>staf@stretch:~/github/getdns$ git checkout v1.4.2
+Note: checking out 'v1.4.2'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b &lt;new-branch-name&gt;
+
+HEAD is now at e481273... Last minute update
+staf@stretch:~/github/getdns$ 
+</code></pre>
+
+<h5>build it&hellip;</h5>
+
+<pre><code>staf@stretch:~/github/getdns$ git submodule update --init
+staf@stretch:~/github/getdns$ libtoolize -ci
+staf@stretch:~/github/getdns$ autoreconf -fi
+staf@stretch:~/github/getdns$ mkdir build
+staf@stretch:~/github/getdns$ cd build/
+staf@stretch:~/github/getdns/build$ ../configure --prefix=/usr/local --without-libidn --without-libidn2 --enable-stub-only --with-stubby
+staf@stretch:~/github/getdns/build$ make
+</code></pre>
+
+<h5>make install</h5>
+
+<pre><code>staf@stretch:~/github/getdns/build$ sudo make install
+[sudo] password for staf: 
+cd src &amp;&amp; make install
+make[1]: Entering directory '/home/staf/github/getdns/build/src'
+&lt;snip&gt;
+make[1]: Leaving directory '/home/staf/github/getdns/build/doc'
+***
+***  !!! IMPORTANT !!!!
+***
+***  From release 1.2.0, getdns comes with built-in DNSSEC
+***  trust anchor management.  External trust anchor management,
+***  for example with unbound-anchor, is no longer necessary
+***  and no longer recommended.
+***
+***  Previously installed trust anchors, in the default location -
+***
+***        /usr/local/etc/unbound/getdns-root.key
+***
+***  - will be preferred and used for DNSSEC validation, however
+***  getdns will fallback to trust-anchors obtained via built-in
+***  trust anchor management when the anchors from the default
+***  location fail to validate the root DNSKEY rrset.
+***
+***  To prevent expired DNSSEC trust anchors to be used for
+***  validation, we strongly recommend removing the trust anchors
+***  on the default location when there is no active external
+***  trust anchor management keeping it up-to-date.
+***
+staf@stretch:~/github/getdns/build$ sudo make install
+</code></pre>
+
+<h5>systemd service</h5>
+
+<p>Stubby comes with a systemd service definition. Copy it to the correct location.</p>
+
+<pre><code>staf@stretch:~/github/getdns/build$ cd ..
+staf@stretch:~/github/getdns$ cd stubby/systemd/
+staf@stretch:~/github/getdns/stubby/systemd$ sudo cp stubby.service /lib/systemd/system/
+</code></pre>
+
+<p>Update the path to /usr/local</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo vi /lib/systemd/system/stubby.service
+</code></pre>
+
+<pre><code>[Unit]
+Description=stubby DNS resolver
+
+[Service]
+User=stubby
+DynamicUser=yes
+CacheDirectory=stubby
+WorkingDirectory=/var/cache/stubby
+ExecStart=/usr/local/bin/stubby
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<p>And create the stubby working directory</p>
+
+<pre><code>root@stretch:~# mkdir /var/cache/stubby
+</code></pre>
+
+<h4>ldconfig</h4>
+
+<p>update your library cache</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo ldconfig -v
+</code></pre>
+
+<h4>Update the configuration</h4>
+
+<p>Edit the stubby.yml configuration file.</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo nvi /usr/local/etc/stubby/stubby.yml
+</code></pre>
+
+<p>Update the port where stubby will listen to and select the upstream dns service you want to use.</p>
+
+<pre><code>listen_addresses:
+  - 127.0.0.1@53000
+  - 0::1@53000
+</code></pre>
+
+<h4>start and test</h4>
+
+<p>Start stubby&hellip;.</p>
+
+<pre><code>staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl list-unit-files | grep -i stubby
+stubby.service                              disabled
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl enable stubby
+Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service /lib/systemd/system/stubby.service.
+staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl start stubby
+staf@stretch:~/github/getdns/stubby/systemd$ 
+</code></pre>
+
+<p>and test it</p>
+
+<pre><code>root@stretch:~# dig @127.0.0.1 -p 53000 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.10.3-P4-Debian &lt;&lt;&gt;&gt; @127.0.0.1 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 17510
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      49704   IN      CNAME   wagemakers.be.
+wagemakers.be.          81815   IN      A       95.215.185.144
+
+;; Query time: 72 msec
+;; SERVER: 127.0.0.1#53000(127.0.0.1)
+;; WHEN: Sun Sep 02 10:33:53 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+root@stretch:~# 
+</code></pre>
+
+<h4>dnsmasq</h4>
+
+<p>Install dnsmasq</p>
+
+<pre><code>root@stretch:/etc# apt-get install dnsmasq
+</code></pre>
+
+<p>Configure dnsmasq</p>
+
+<pre><code>root@stretch:/etc# mv dnsmasq.conf dnsmasq.conf_org
+root@stretch:/etc# vi dnsmasq.conf
+</code></pre>
+
+<pre><code>server=127.0.0.1#53000
+listen-address=127.0.0.1
+interface=lo
+bind-interfaces
+</code></pre>
+
+<p>Enable and start it&hellip;</p>
+
+<pre><code>root@stretch:/etc# systemctl enable dnsmasq
+Synchronizing state of dnsmasq.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable dnsmasq
+root@stretch:/etc# systemctl restart dnsmasq
+</code></pre>
+
+<p>Verify</p>
+
+<pre><code>root@stretch:/etc# dig @127.0.0.1 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.10.3-P4-Debian &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57295
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      48645   IN      CNAME   wagemakers.be.
+wagemakers.be.          80756   IN      A       95.215.185.144
+
+;; Query time: 72 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Sun Sep 02 10:51:32 CEST 2018
+;; MSG SIZE  rcvd: 119
+
+root@stretch:/etc# 
+</code></pre>
+
+<p>reconfigure you system to use dnsmasq&hellip;.</p>
+
+<pre><code>root@stretch:/etc# nvi resolv.conf
+</code></pre>
+
+<pre><code>nameserver 127.0.0.1
+</code></pre>
+
+<p><strong><em>Have fun!</em></strong></p>
+
+<h2>Links</h2>
+
+<ul>
+<li><a href="https://dnsprivacy.org">https://dnsprivacy.org</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Stubby">https://wiki.archlinux.org/index.php/Stubby</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Update Your CPU Microcode on Arch Linux]]></title>
@@ -1396,737 +1939,6 @@ umount: /mnt: umount failed: Operation not permitted
 <h3>Links</h3>
 
 <p><a href="https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM">https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Using YubiKey Neo as Gpg Smartcard for SSH Authentication]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/"/>
-    <updated>2015-06-16T10:32:00+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication</id>
-    <content type="html"><![CDATA[<p>I purchased a <a href="https://www.yubico.com/products/yubikey-hardware/">Yubi NEO</a> I&rsquo;ll use it to hold my  <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">Luks</a> password and for ssh authentication instead of the password authentication that I still use.</p>
-
-<p>You&rsquo;ll find  my journey to get the smartcard interface working with ssh on a fedora 22 system below;</p>
-
-<h2>Install the yubiclient and smartcard software</h2>
-
-<h3>Install the ykclient</h3>
-
-<pre><code>ykclient.x86_64 : Yubikey management library and client
-[root@vicky ~]# dnf install ykclient
-Last metadata expiration check performed 1:00:07 ago on Sun Jun 14 09:14:34 2015.
-Dependencies resolved.
-====================================================================================================================
- Package                    Arch                     Version                         Repository                Size
-====================================================================================================================
-Installing:
- ykclient                   x86_64                   2.13-1.fc22                     fedora                    35 k
-
-Transaction Summary
-====================================================================================================================
-Install  1 Package
-
-Total download size: 35 k
-Installed size: 58 k
-Is this ok [y/N]: y
-Downloading Packages:
-ykclient-2.13-1.fc22.x86_64.rpm                                                      48 kB/s |  35 kB     00:00    
---------------------------------------------------------------------------------------------------------------------
-Total                                                                                11 kB/s |  35 kB     00:03     
-Running transaction check
-Transaction check succeeded.
-Running transaction test
-Transaction test succeeded.
-Running transaction
-  Installing  : ykclient-2.13-1.fc22.x86_64                                                                     1/1 
-  Verifying   : ykclient-2.13-1.fc22.x86_64                                                                     1/1 
-
-Installed:
-  ykclient.x86_64 2.13-1.fc22                                                                                       
-
-Complete!
-[root@vicky ~]# 
-</code></pre>
-
-<pre><code>root@vicky ~]# ykinfo
-bash: ykinfo: command not found...
-Install package 'ykpers' to provide command 'ykinfo'? [N/y] ^C
-
-[root@vicky ~]# dnf install ykpers
-Last metadata expiration check performed 1:01:23 ago on Sun Jun 14 09:14:34 2015.
-Dependencies resolved.
-====================================================================================================================
- Package                     Arch                    Version                          Repository               Size
-====================================================================================================================
-Installing:
- libyubikey                  x86_64                  1.11-3.fc22                      fedora                   33 k
- ykpers                      x86_64                  1.17.1-1.fc22                    fedora                  101 k
-
-Transaction Summary
-====================================================================================================================
-Install  2 Packages
-
-Total download size: 135 k
-Installed size: 372 k
-Is this ok [y/N]: y
-Downloading Packages:
-(1/2): libyubikey-1.11-3.fc22.x86_64.rpm                                             13 kB/s |  33 kB     00:02    
-(2/2): ykpers-1.17.1-1.fc22.x86_64.rpm                                               38 kB/s | 101 kB     00:02    
---------------------------------------------------------------------------------------------------------------------
-Total                                                                                22 kB/s | 135 kB     00:06     
-Running transaction check
-Transaction check succeeded.
-Running transaction test
-Transaction test succeeded.
-Running transaction
-  Installing  : libyubikey-1.11-3.fc22.x86_64                                                                   1/2 
-  Installing  : ykpers-1.17.1-1.fc22.x86_64                                                                     2/2 
-  Verifying   : ykpers-1.17.1-1.fc22.x86_64                                                                     1/2 
-  Verifying   : libyubikey-1.11-3.fc22.x86_64                                                                   2/2 
-
-Installed:
-  libyubikey.x86_64 1.11-3.fc22                             ykpers.x86_64 1.17.1-1.fc22                            
-
-Complete!
-</code></pre>
-
-<h3>Verify that you&rsquo;ve access to the yubikey</h3>
-
-<p>&ldquo;ykinfo -v&rdquo; shows you the version on the yubikey.</p>
-
-<pre><code>[root@vicky ~]# ykinfo -v
-version: 3.4.0
-[root@vicky ~]# 
-</code></pre>
-
-<p>If you try with the user that you&rsquo;ll for the yubi authentication you might get a permission denied:</p>
-
-<pre><code>staf@vicky ~]$ ykinfo -v
-USB error: Access denied (insufficient permissions)
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>Update the udev permissions</h4>
-
-<h5>Update rule file</h5>
-
-<p>On a fedora 22 system to udev rules for the yubi key are defined in &ldquo;/usr/lib/udev/rules.d/69-yubikey.rules&rdquo;</p>
-
-<p>It is a good practice to only grant access to user that will use the yubikey.</p>
-
-<pre><code>[root@vicky ~]# cd /usr/lib/udev/rules.d/
-[root@vicky rules.d]# vi 69-yubikey.rules 
-</code></pre>
-
-<pre><code>ACTION!="add|change", GOTO="yubico_end"
-
-# Udev rules for letting the console user access the Yubikey USB
-# device node, needed for challenge/response to work correctly.
-
-# Yubico Yubikey II
-ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0010|0110|0111|0114|0116|0401|0403|0405|0407|0410", OWNER="staf", MODE="0600"
-
-LABEL="yubico_end"
-</code></pre>
-
-<h5>Update udev rules</h5>
-
-<pre><code># udevadm control --reload
-# udevadm trigger
-</code></pre>
-
-<h5>Test it again</h5>
-
-<pre><code>[staf@vicky ~]$ ykinfo -v
-version: 3.4.0
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Enable the smartcard interface</h3>
-
-<pre><code>staf@vicky yubi]$ ykpersonalize -m82
-Firmware version 3.4.0 Touch level 1551 Program sequence 3
-
-The USB mode will be set to: 0x82
-
-Commit? (y/n) [n]: y
-[staf@vicky yubi]$ 
-</code></pre>
-
-<p>Remove the yubi key from your system and plug it back to activate the new interface.</p>
-
-<h3>Install the required smartcard software</h3>
-
-<pre><code>[root@vicky ~]# dnf install pcsc-tools   
-Last metadata expiration check performed 0:33:58 ago on Sun Jun 14 09:14:34 2015.
-Dependencies resolved.                                       
-====================================================================================================================
- Package                         Arch                  Version                          Repository             Size
-====================================================================================================================
-Installing:                                                 
- pcsc-lite                       x86_64                1.8.13-1.fc22                    fedora                101 k
- pcsc-lite-asekey                x86_64                3.7-1.fc22                       fedora                 34 k
- pcsc-perl                       x86_64                1.4.12-11.fc22                   fedora                 61 k
- pcsc-tools                      x86_64                1.4.23-1.fc22                    fedora                116 k
- perl-Cairo                      x86_64                1.105-1.fc22                     fedora                126 k
- perl-Glib                       x86_64                1.310-1.fc22                     fedora                362 k
- perl-Gtk2                       x86_64                1.2495-1.fc22                    fedora                1.8 M
- perl-HTML-Tree                  noarch                1:5.03-8.fc22                    fedora                223 k
- perl-Pango                      x86_64                1.226-3.fc22                     fedora                220 k
-
-Transaction Summary                                        
-====================================================================================================================
-Install  9 Packages                                        
-
-Total download size: 3.0 M                                  
-Installed size: 8.4 M                                       
-Is this ok [y/N]: y                                          
-Downloading Packages:                                        
-(1/9): pcsc-tools-1.4.23-1.fc22.x86_64.rpm                                           38 kB/s | 116 kB     00:03    
-(2/9): pcsc-perl-1.4.12-11.fc22.x86_64.rpm                                           20 kB/s |  61 kB     00:03    
-(3/9): pcsc-lite-1.8.13-1.fc22.x86_64.rpm                                            23 kB/s | 101 kB     00:04    
-(4/9): perl-Glib-1.310-1.fc22.x86_64.rpm                                            159 kB/s | 362 kB     00:02    
-(5/9): perl-Cairo-1.105-1.fc22.x86_64.rpm                                            56 kB/s | 126 kB     00:02    
-(6/9): perl-HTML-Tree-5.03-8.fc22.noarch.rpm                                         99 kB/s | 223 kB     00:02    
-(7/9): perl-Gtk2-1.2495-1.fc22.x86_64.rpm                                           342 kB/s | 1.8 MB     00:05    
-(8/9): perl-Pango-1.226-3.fc22.x86_64.rpm                                            89 kB/s | 220 kB     00:02    
-(9/9): pcsc-lite-asekey-3.7-1.fc22.x86_64.rpm                                        21 kB/s |  34 kB     00:01    
---------------------------------------------------------------------------------------------------------------------
-Total                                                                               257 kB/s | 3.0 MB     00:11     
-Running transaction check                                   
-Transaction check succeeded.                                
-Running transaction test                                     
-Transaction test succeeded.                                   
-Running transaction                                             
-  Installing  : perl-Glib-1.310-1.fc22.x86_64                                                                   1/9 
-  Installing  : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              2/9 
-  Installing  : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  3/9 
-  Installing  : perl-Cairo-1.105-1.fc22.x86_64                                                                  4/9 
-  Installing  : perl-Pango-1.226-3.fc22.x86_64                                                                  5/9 
-  Installing  : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             6/9 
-  Installing  : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  7/9 
-  Installing  : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 8/9 
-  Installing  : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 9/9 
-  Verifying   : pcsc-tools-1.4.23-1.fc22.x86_64                                                                 1/9 
-  Verifying   : pcsc-lite-1.8.13-1.fc22.x86_64                                                                  2/9 
-  Verifying   : pcsc-perl-1.4.12-11.fc22.x86_64                                                                 3/9 
-  Verifying   : perl-Glib-1.310-1.fc22.x86_64                                                                   4/9 
-  Verifying   : perl-Gtk2-1.2495-1.fc22.x86_64                                                                  5/9 
-  Verifying   : perl-Cairo-1.105-1.fc22.x86_64                                                                  6/9 
-  Verifying   : perl-HTML-Tree-1:5.03-8.fc22.noarch                                                             7/9 
-  Verifying   : perl-Pango-1.226-3.fc22.x86_64                                                                  8/9 
-  Verifying   : pcsc-lite-asekey-3.7-1.fc22.x86_64                                                              9/9 
-
-Installed:
-  pcsc-lite.x86_64 1.8.13-1.fc22       pcsc-lite-asekey.x86_64 3.7-1.fc22       pcsc-perl.x86_64 1.4.12-11.fc22     
-  pcsc-tools.x86_64 1.4.23-1.fc22      perl-Cairo.x86_64 1.105-1.fc22           perl-Glib.x86_64 1.310-1.fc22       
-  perl-Gtk2.x86_64 1.2495-1.fc22       perl-HTML-Tree.noarch 1:5.03-8.fc22      perl-Pango.x86_64 1.226-3.fc22      
-
-Complete!
-[root@vicky ~]# 
-</code></pre>
-
-<pre><code>root@vicky ~]# dnf install opensc
-Last metadata expiration check performed 0:37:38 ago on Sun Jun 14 09:14:34 2015.
-Dependencies resolved.
-====================================================================================================================
- Package                  Arch                     Version                           Repository                Size
-====================================================================================================================
-Installing:
- opensc                   x86_64                   0.14.0-2.fc22                     fedora                   976 k
-
-Transaction Summary
-====================================================================================================================
-Install  1 Package
-
-Total download size: 976 k
-Installed size: 2.8 M
-Is this ok [y/N]: y
-Downloading Packages:
-opensc-0.14.0-2.fc22.x86_64.rpm                                                     277 kB/s | 976 kB     00:03    
---------------------------------------------------------------------------------------------------------------------
-Total                                                                               203 kB/s | 976 kB     00:04     
-Running transaction check
-Transaction check succeeded.
-Running transaction test
-Transaction test succeeded.
-Running transaction
-  Installing  : opensc-0.14.0-2.fc22.x86_64                                                                     1/1 
-  Verifying   : opensc-0.14.0-2.fc22.x86_64                                                                     1/1 
-
-Installed:
-  opensc.x86_64 0.14.0-2.fc22                                                                                       
-
-Complete!
-[root@vicky ~]# dnf search opensc
-</code></pre>
-
-<pre><code>[root@vicky ~]# dnf search ccid
-Last metadata expiration check performed 0:39:03 ago on Sun Jun 14 09:14:34 2015.
-================================================ N/S Matched: ccid =================================================
-pcsc-lite-ccid.x86_64 : Generic USB CCID smart card reader driver
-libykneomgr.i686 : YubiKey NEO CCID Manager C Library
-libykneomgr.x86_64 : YubiKey NEO CCID Manager C Library
-[root@vicky ~]# dnf install pcsc-lite-ccid
-Last metadata expiration check performed 0:39:34 ago on Sun Jun 14 09:14:34 2015.
-Dependencies resolved.
-====================================================================================================================
- Package                        Arch                   Version                         Repository              Size
-====================================================================================================================
-Installing:
- pcsc-lite-ccid                 x86_64                 1.4.18-1.fc22                   fedora                 177 k
-
-Transaction Summary
-====================================================================================================================
-Install  1 Package
-
-Total download size: 177 k
-Installed size: 599 k
-Is this ok [y/N]: y
-Downloading Packages:
-pcsc-lite-ccid-1.4.18-1.fc22.x86_64.rpm                                              47 kB/s | 177 kB     00:03    
---------------------------------------------------------------------------------------------------------------------
-Total                                                                                27 kB/s | 177 kB     00:06     
-Running transaction check
-Transaction check succeeded.
-Running transaction test
-Transaction test succeeded.
-Running transaction
-  Installing  : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1 
-  Verifying   : pcsc-lite-ccid-1.4.18-1.fc22.x86_64                                                             1/1 
-
-Installed:
-  pcsc-lite-ccid.x86_64 1.4.18-1.fc22                                                                               
-
-Complete!
-[root@vicky ~]# 
-</code></pre>
-
-<h4>Start the pcscd service</h4>
-
-<pre><code>root@vicky ~]# systemctl list-unit-files -t service | grep pcscd
-pcscd.service                               static  
-[root@vicky ~]# systemctl start pcscd
-[root@vicky ~]# systemctl enable pcscd
-[root@vicky ~]# 
-</code></pre>
-
-<h4>Verify that you are able to see the yubi smartcard</h4>
-
-<h5>Run pcsc_scan</h5>
-
-<p>Execute &ldquo;pcsc_scan&rdquo; to verify that you see the smartcard</p>
-
-<pre><code>[staf@vicky ~]$ pcsc_scan 
-PC/SC device scanner
-V 1.4.23 (c) 2001-2011, Ludovic Rousseau &lt;ludovic.rousseau@free.fr&gt;
-Compiled with PC/SC lite version: 1.8.13
-Using reader plug'n play mechanism
-Scanning present readers...
-0: Gemalto Gemplus USB SmartCard Reader 433-Swap [CCID Interface] (1-0000:00:06.7-1) 00 00
-1: Yubico Yubikey NEO OTP+CCID 01 00
-
-Mon Jun 15 11:36:44 2015
-Reader 0: Gemalto Gemplus USB SmartCard Reader 433-Swap [CCID Interface] (1-0000:00:06.7-1) 00 00
-  Card state: Card removed, 
-Reader 1: Yubico Yubikey NEO OTP+CCID 01 00
-  Card state: Card inserted, 
-  ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
-
-defined(@array) is deprecated at /usr/lib64/perl5/vendor_perl/Chipcard/PCSC.pm line 69.
-        (Maybe you should just omit the defined()?)
-ATR: 3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
-+ TS = 3B --&gt; Direct Convention
-+ T0 = FC, Y(1): 1111, K: 12 (historical bytes)
-  TA(1) = 13 --&gt; Fi=372, Di=4, 93 cycles/ETU
-    43010 bits/s at 4 MHz, fMax for Fi = 5 MHz =&gt; 53763 bits/s
-  TB(1) = 00 --&gt; VPP is not electrically connected
-  TC(1) = 00 --&gt; Extra guard time: 0
-  TD(1) = 81 --&gt; Y(i+1) = 1000, Protocol T = 1 
------
-  TD(2) = 31 --&gt; Y(i+1) = 0011, Protocol T = 1 
------
-  TA(3) = FE --&gt; IFSC: 254
-  TB(3) = 15 --&gt; Block Waiting Integer: 1 - Character Waiting Integer: 5
-+ Historical bytes: 59 75 62 69 6B 65 79 4E 45 4F 72 33
-  Category indicator byte: 59 (proprietary format)
-+ TCK = E1 (correct checksum)
-
-Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
-3B FC 13 00 00 81 31 FE 15 59 75 62 69 6B 65 79 4E 45 4F 72 33 E1
-        YubiKey NEO (PKI)
-        http://www.yubico.com/
-</code></pre>
-
-<h4>Remote smartcard access</h4>
-
-<p>By default only console logins have access to the smartcard if you want to grant access to remote logins (e.g. ssh)
-create a polkit rule for the user that will use the smartcard.</p>
-
-<pre><code>[root@vicky ~]# cd /usr/share/polkit-1/rules.d/                                    
-[root@vicky rules.d]# vi 30_smartcard_access.rules 
-</code></pre>
-
-<pre><code>polkit.addRule(function(action, subject) {
-    if (action.id == "org.debian.pcsc-lite.access_pcsc" &amp;&amp;
-        subject.user == "staf") {
-            return polkit.Result.YES;
-    }
-});
-
-polkit.addRule(function(action, subject) {
-    if (action.id == "org.debian.pcsc-lite.access_card" &amp;&amp;
-        action.lookup("reader") == 'name_of_reader' &amp;&amp;
-        subject.user == "staf") {
-            return polkit.Result.YES;    }
-});
-</code></pre>
-
-<h3>Reset smartcard PIN codes</h3>
-
-<p>The default user PIN code is &ldquo;123456&rdquo; the default admin PIN code is &ldquo;12345678&rdquo;</p>
-
-<pre><code>[staf@vicky ~]$ gpg --change-pin 
-gpg: OpenPGP card no. D2760001240102000006035062250000 detected
-
-1 - change PIN
-2 - unblock PIN
-3 - change Admin PIN
-4 - set the Reset Code
-Q - quit
-
-#### Change user PIN
-
-Your selection? 
-</code></pre>
-
-<pre><code>Your selection? 1
-
-Please enter the PIN
-
-New PIN
-
-New PIN
-PIN changed.     
-</code></pre>
-
-<h4>Change admin PIN</h4>
-
-<pre><code> - change PIN
-2 - unblock PIN
-3 - change Admin PIN
-4 - set the Reset Code
-Q - quit
-
-Your selection? 3
-gpg: 3 Admin PIN attempts remaining before card is permanently locked
-
-Please enter the Admin PIN
-
-New Admin PIN
-
-New Admin PIN
-PIN changed.     
-
-1 - change PIN
-2 - unblock PIN
-3 - change Admin PIN
-4 - set the Reset Code
-Q - quit
-
-Your selection? 
-</code></pre>
-
-<h3>Generate a new key pair</h3>
-
-<h4>Execute &ldquo;gpg &ndash;card-edit&rdquo;</h4>
-
-<pre><code>[staf@vicky ~]$ gpg --card-edit 
-
-Application ID ...: D2760001240102000006035062250000
-Version ..........: 2.0
-Manufacturer .....: unknown
-Serial number ....: 03506225
-Name of cardholder: [not set]
-Language prefs ...: [not set]
-Sex ..............: unspecified
-URL of public key : [not set]
-Login data .......: [not set]
-Signature PIN ....: forced
-Key attributes ...: 2048R 2048R 2048R
-Max. PIN lengths .: 127 127 127
-PIN retry counter : 3 3 3
-Signature counter : 5
-Signature key ....: 1E41 4C61 B1CE F02A F431  85BF 46B9 3657 54DF 802E
-      created ....: 2015-06-15 11:47:23
-Encryption key....: BB75 75F4 404A 2681 4331  4B46 34E7 EE51 4199 C702
-      created ....: 2015-06-15 11:47:23
-Authentication key: A7F8 A844 4762 C44D 20C7  A2AF E06D 602C 069D 7EFF
-      created ....: 2015-06-15 11:47:23
-General key info..: 
-pub  2048R/54DF802E 2015-06-15 qwerty &lt;qwert@qwert&gt;
-sec&gt;  2048R/54DF802E  created: 2015-06-15  expires: never     
-                      card-no: 0006 03506225
-ssb&gt;  2048R/069D7EFF  created: 2015-06-15  expires: never     
-                      card-no: 0006 03506225
-ssb&gt;  2048R/4199C702  created: 2015-06-15  expires: never     
-                      card-no: 0006 03506225
-
-gpg/card&gt; 
-</code></pre>
-
-<h4>Enable admin commands</h4>
-
-<pre><code>gpg/card&gt; admin
-Admin commands are allowed                                                      
-
-gpg/card&gt;                                                                        
-</code></pre>
-
-<h4>Generate key</h4>
-
-<pre><code>gpg/card&gt; generate 
-Make off-card backup of encryption key? (Y/n) n
-
-gpg: NOTE: keys are already stored on the card!
-
-Replace existing keys? (y/N) y
-
-Please note that the factory settings of the PINs are
-   PIN = `123456'     Admin PIN = `12345678'
-You should change them using the command --change-pin
-
-
-Please enter the PIN
-Please specify how long the key should be valid.
-         0 = key does not expire
-      &lt;n&gt;  = key expires in n days
-      &lt;n&gt;w = key expires in n weeks
-      &lt;n&gt;m = key expires in n months
-      &lt;n&gt;y = key expires in n years
-Key is valid for? (0) 
-Key does not expire at all
-Is this correct? (y/N) y
-
-You need a user ID to identify your key; the software constructs the user ID
-from the Real Name, Comment and Email Address in this form:
-    "Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"
-
-Real name: staf wagemakers
-Email address: staf@wagemakers.be
-Comment: 
-You selected this USER-ID:
-    "staf wagemakers &lt;staf@wagemakers.be&gt;"
-
-Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
-gpg: existing key will be replaced
-gpg: 3 Admin PIN attempts remaining before card is permanently locked
-
-Please enter the Admin PIN
-gpg: please wait while key is being generated ...
-gpg: key generation completed (5 seconds)
-gpg: signatures created so far: 0
-gpg: existing key will be replaced
-gpg: please wait while key is being generated ...
-gpg: key generation completed (35 seconds)
-gpg: signatures created so far: 1
-gpg: signatures created so far: 2
-gpg: existing key will be replaced
-gpg: please wait while key is being generated ...
-gpg: key generation completed (9 seconds)
-gpg: signatures created so far: 3
-gpg: signatures created so far: 4
-gpg: key C15CE3D7 marked as ultimately trusted
-public and secret key created and signed.
-
-gpg: checking the trustdb
-gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
-gpg: depth: 0  valid:   2  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 2u
-pub   2048R/C15CE3D7 2015-06-15
-      Key fingerprint = B702 663D 833B DC19 0EEF  663A 54FA 0B1E C15C E3D7
-uid                  staf wagemakers &lt;staf@wagemakers.be&gt;
-sub   2048R/D2AEBBA3 2015-06-15
-sub   2048R/6C2C699A 2015-06-15
-
-
-gpg/card&gt; 
-</code></pre>
-
-<h3>Extract the public key</h3>
-
-<h4>Execute gpg &ndash;card-status</h4>
-
-<pre><code>staf@vicky ~]$ gpg --card-status
-Application ID ...: D2760001240102000006035062250000
-Version ..........: 2.0
-Manufacturer .....: unknown
-Serial number ....: 03506225
-Name of cardholder: [not set]
-Language prefs ...: [not set]
-Sex ..............: unspecified
-URL of public key : [not set]
-Login data .......: [not set]
-Signature PIN ....: not forced
-Key attributes ...: 2048R 2048R 2048R
-Max. PIN lengths .: 127 127 127
-PIN retry counter : 3 3 3
-Signature counter : 5
-Signature key ....: AED7 C79B 574D 45CC 7C1B  CC35 BDDE E66F 0C2C CF82
-      created ....: 2015-06-16 06:32:02
-Encryption key....: 6650 AB0A 5F31 059F 3221  3F29 C9F3 2031 01B3 1F53
-      created ....: 2015-06-16 06:32:02
-Authentication key: A387 A45A 446E DC9C D78E  F173 7C19 5D7D A1D9 9813
-      created ....: 2015-06-16 06:32:02
-General key info..: pub  2048R/0C2CCF82 2015-06-16 staf wagemakers &lt;staf@wagemakers.be&gt;
-sec&gt;  2048R/0C2CCF82  created: 2015-06-16  expires: never     
-                      card-no: 0006 03506225
-ssb&gt;  2048R/A1D99813  created: 2015-06-16  expires: never     
-                      card-no: 0006 03506225
-ssb&gt;  2048R/01B31F53  created: 2015-06-16  expires: never     
-                      card-no: 0006 03506225
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>Run gpgkey2ssh on the authentication key</h4>
-
-<pre><code>[staf@vicky ~]$ gpgkey2ssh A1D99813
-ssh-rsa qwertyqwertyqwerty COMMENT
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Test ssh access</h3>
-
-<h4>Configure the gpg agent</h4>
-
-<p>The gpg-agent can be use as a ssh-agent</p>
-
-<h5>Enable ssh support in your gpg-agent.conf</h5>
-
-<p>Create your gpg-agent.conf file</p>
-
-<pre><code>[staf@vicky ~]$ vi .gnupg/gpg-agent.conf
-</code></pre>
-
-<pre><code>pinentry-program  /usr/bin/pinentry
-enable-ssh-support
-</code></pre>
-
-<h4>Start the gpg-agent</h4>
-
-<pre><code>staf@vicky ~]$ gpg-agent --daemon --verbose
-gpg-agent[1395]: listening on socket '/home/staf/.gnupg/S.gpg-agent'
-gpg-agent[1395]: listening on socket '/home/staf/.gnupg/S.gpg-agent.ssh'
-gpg-agent[1396]: gpg-agent (GnuPG) 2.1.4 started
-SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>Export the SSH_AUTH_SOCK variable</h4>
-
-<pre><code>SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-</code></pre>
-
-<h4>Verify the agent</h4>
-
-<p>Run ssh-add -L</p>
-
-<pre><code>[staf@vicky ~]$ ssh-add -L
-error fetching identities for protocol 1: agent refused operation
-ssh-rsa qwertyqwertyqwerty cardno:xxxx
-</code></pre>
-
-<p>The public key must be the same as extracted with &ldquo;gpgkey2ssh&rdquo;</p>
-
-<h4>Add the public key to the remote system</h4>
-
-<p>Add this public key to ~/.ssh/authorized_keys on the remote system.</p>
-
-<h4>Test</h4>
-
-<p>Try to logon to your remote system</p>
-
-<pre><code>staf@vicky ~]$ ssh -v xxx.xxx.xxx.xxx
-</code></pre>
-
-<p>You should get a window that asks for user PIN code.</p>
-
-<pre><code>
-
-
-
-
-
-
-               ┌──────────────────────────────────────────────┐
-               │ Please enter the PIN                         │
-               │                                              │
-               │ PIN ________________________________________ │
-               │                                              │
-               │      &lt;OK&gt;                        &lt;Cancel&gt;    │
-               └──────────────────────────────────────────────┘
-</code></pre>
-
-<pre><code>FreeBSD 10.1-RELEASE-p10 (GENERIC) #0: Wed May 13 06:54:13 UTC 2015
-
-Welcome to FreeBSD!
-
-Release Notes, Errata: https://www.FreeBSD.org/releases/
-Security Advisories:   https://www.FreeBSD.org/security/
-FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
-FreeBSD FAQ:           https://www.FreeBSD.org/faq/
-Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
-FreeBSD Forums:        https://forums.FreeBSD.org/
-
-Documents installed with the system are in the /usr/local/share/doc/freebsd/
-directory, or can be installed later with:  pkg install en-freebsd-doc
-For other languages, replace "en" with a language code like de or fr.
-
-Show the version of FreeBSD installed:  freebsd-version ; uname -a
-Please include that output and any error messages when posting questions.
-Introduction to manual pages:  man man
-FreeBSD directory layout:      man hier
-
-Edit /etc/motd to change this login announcement.
-Want to run the same command again?
-In tcsh you can type "!!"
-$ 
-</code></pre>
-
-<h2>CleanUp</h2>
-
-<h3>Start the gpg-daemon</h3>
-
-<p>Add</p>
-
-<pre><code>gpg-agent --daemon
-SSH_AUTH_SOCK=/home/staf/.gnupg/S.gpg-agent.ssh; export SSH_AUTH_SOCK;
-</code></pre>
-
-<p>To your .bash_profile or setup a generic script for all users in /etc/profile.d/</p>
-
-<h3>Disable password login in the /etc/ssh/sshd_config</h3>
-
-<p><em>Have fun!</em></p>
-
-<h2>Links</h2>
-
-<ul>
-<li><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/"><a href="https://www.yubico.com/2012/12/yubikey-neo-openpgp/">https://www.yubico.com/2012/12/yubikey-neo-openpgp/</a></a></li>
-<li><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO"><a href="https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO">https://blog.habets.se/2013/02/GPG-and-SSH-with-Yubikey-NEO</a></a></li>
-<li><a href="http://25thandclement.com/~william/YubiKey_NEO.html"><a href="http://25thandclement.com/~william/YubiKey_NEO.html">http://25thandclement.com/~william/YubiKey_NEO.html</a></a></li>
-<li><a href="http://forum.yubico.com/viewtopic.php?f=26&t=1171"><a href="http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171">http://forum.yubico.com/viewtopic.php?f=26&amp;t=1171</a></a></li>
-<li><a href="https://developers.yubico.com/yubikey-personalization/Releases/"><a href="https://developers.yubico.com/yubikey-personalization/Releases/">https://developers.yubico.com/yubikey-personalization/Releases/</a></a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
-<li><a href="http://www.programmierecke.net/howto/gpg-ssh.html"><a href="http://www.programmierecke.net/howto/gpg-ssh.html">http://www.programmierecke.net/howto/gpg-ssh.html</a></a></li>
-<li><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/"><a href="http://www.bradfordembedded.com/2013/12/yubikey-smartcard/">http://www.bradfordembedded.com/2013/12/yubikey-smartcard/</a></a></li>
-<li><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html"><a href="http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html">http://www.incenp.org/notes/2014/gnupg-for-ssh-authentication.html</a></a></li>
-<li><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst"><a href="https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst">https://github.com/herlo/ssh-gpg-smartcard-config/blob/master/YubiKey_NEO.rst</a></a></li>
-<li><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/"><a href="https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/">https://www.esev.com/blog/post/2015-01-pgp-ssh-key-on-yubikey-neo/</a></a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Common_Access_Card"><a href="https://wiki.archlinux.org/index.php/Common_Access_Card">https://wiki.archlinux.org/index.php/Common_Access_Card</a></a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Udev"><a href="https://wiki.archlinux.org/index.php/Udev">https://wiki.archlinux.org/index.php/Udev</a></a></li>
-<li><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/"><a href="https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/">https://securityblog.redhat.com/2014/07/30/controlling-access-to-smart-cards/</a></a></li>
-</ul>
-
 ]]></content>
   </entry>
   
