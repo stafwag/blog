@@ -3,7 +3,7 @@ layout: post
 title: "DNS Privacy with Stubby (Part 1 GNU/Linux)"
 date: 2018-09-08 12:30:03 +0200
 comments: true
-categories: [security, privacy, linux, freebsd, dns]  
+categories: [security, privacy, linux, dns]  
 ---
 
 *** Installing and configuring an encrypted dns server is straightforward, there is no reason to use an unencrypted dns service. ***
