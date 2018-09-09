@@ -1,14 +1,14 @@
 ---
 layout: post
 title: "DNS Privacy with Stubby (Part 1 GNU/Linux)"
-date: 2018-09-08 12:30:03 +0200
+date: 2018-09-09 10:30:03 +0200
 comments: true
-categories: [security, privacy, linux, freebsd, dns]  
+categories: [security, privacy, linux, dns]  
 ---
 
 *** Installing and configuring an encrypted dns server is straightforward, there is no reason to use an unencrypted dns service. ***
 
-## DNS is not secure or private
+# DNS is not secure or private
 
 DNS traffic is insecure and runs over [UDP](https://nl.wikipedia.org/wiki/User_Datagram_Protocol) port 53 ([TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) for [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer) ) unecrypted by default.
 
@@ -18,7 +18,7 @@ This make your encrypted DNS traffic a **privacy risk** and a **security risk**:
 * with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.
 
 
-## Encrypt your dns traffic
+# Encrypt your dns traffic
 
 Encrypting your network traffic is always a good idea for privacy and security reasons - *** we encrypt, because we can! *** -  .
 More information about dns privacy can be found at [https://dnsprivacy.org/](https://dnsprivacy.org/)
@@ -27,13 +27,13 @@ On this site you'll find also the [DNS Privacy Daemon - Stubby](https://dnspriva
 
 You'll find my journey to setup Stubby on a few operation systems I use (or I'm force to use) below ...
 
-## GNU/Linux
+# GNU/Linux
 
-### Arch Linux
+## Arch Linux
 
 I use [Arch Linux](https://www.archlinux.org/) on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.
 
-#### Install stubby 
+### Install stubby 
 
 ```
 [root@vicky ~]# pacman -S stubby
@@ -84,7 +84,7 @@ Optional dependencies for unbound
 [root@vicky ~]# 
 ```
 
-##### choose your upstream dns provider
+#### choose your upstream dns provider
 
 Edit the stubby.yml file and uncomment the upstream dns server that you want the use.
 Stubby will loadbalance the dns traffic to all configured upstream dns servers by default.
@@ -94,7 +94,7 @@ This is configured with the ```round_robin_upstreams``` directive, if set to ```
 [staf@vicky ~]$ sudo vi /etc/stubby/stubby.yml
 ```
 
-##### enable and start stubby
+#### enable and start stubby
 
 ```
 [root@vicky ~]# systemctl enable stubby
@@ -103,7 +103,7 @@ Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service -> /u
 [root@vicky ~]# 
 ```
 
-##### test
+#### test
 
 ```
 [root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
@@ -133,9 +133,9 @@ wagemakers.be.          86000   IN      A       95.215.185.144
 [root@vicky ~]# 
 ```
 
-#### Local dns cache with dnsmasq
+### Local dns cache with dnsmasq
 
-##### Change the stubby port.
+#### Change the stubby port.
 
 Edit /etc/stubby/stubby.yml
 
@@ -198,7 +198,7 @@ wagemakers.be.          43200   IN      A       95.215.185.144
 [root@frija etc]# 
 ```
 
-##### Install dnsmasq
+#### Install dnsmasq
 
 ```
 [root@vicky ~]# pacman -S dnsmasq
@@ -226,7 +226,7 @@ Net Upgrade Size:      0.00 MiB
 [root@vicky ~]# 
 ```
 
-##### Configure dnsmasq
+#### Configure dnsmasq
 
 ```
 [root@vicky etc]# cd /etc
@@ -266,7 +266,7 @@ I use [netctl](https://wiki.archlinux.org/index.php/Netctl) on my system. You ca
 
 If you networkmanager you can use ```nmcli```, ```nmtui``` or the GUI network configuration in your desktop environment.
 
-### GNU/Linux is GNU/Linux
+## GNU/Linux is GNU/Linux
 
 The configuration on other GNU/Linux distributions is the same as on Arch apart from the installation process.
 The same method can be use if your (favorite) Linux distribution doesn't have a stubby package, the installation method of the required package will be different of course.
