@@ -12,7 +12,7 @@ categories: [security, privacy, linux, dns]
 
 DNS traffic is insecure and runs over [UDP](https://nl.wikipedia.org/wiki/User_Datagram_Protocol) port 53 ([TCP](https://en.wikipedia.org/wiki/Transmission_Control_Protocol) for [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer) ) unecrypted by default.
 
-This make your encrypted DNS traffic a **privacy risk** and a **security risk**: 
+This make your unencrypted DNS traffic a **privacy risk** and a **security risk**: 
 
 * anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.
 * with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.

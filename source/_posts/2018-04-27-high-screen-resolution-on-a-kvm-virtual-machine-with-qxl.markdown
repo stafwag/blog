@@ -3,7 +3,7 @@ layout: post
 title: "High screen resolution on a KVM virtual machine with QXL"
 date: 2018-04-22 10:04:46 +0200
 comments: true
-categories: [ qxl, linux, kvm. qemu ] 
+categories: [ qxl, linux, kvm, qemu ] 
 ---
 
 When you create an new virtual KVM virtual system the video ram is limited to 16MB by default to use a higer screen resolution you need
