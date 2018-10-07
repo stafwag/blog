@@ -107,7 +107,7 @@ Proceed with this action? [y/N]: y
 
 #### Physical system
 
-On physical FreeBSD system execute ```portsnap fetch``` and ```portsnap extract```
+On a physical FreeBSD system execute ```portsnap fetch``` and ```portsnap extract```
 
 ```
 root@rataplan:~ # portsnap fetch
