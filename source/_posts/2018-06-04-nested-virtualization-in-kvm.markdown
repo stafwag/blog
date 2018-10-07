@@ -3,7 +3,7 @@ layout: post
 title: "Nested virtualization in KVM"
 date: 2018-06-04 19:58:06 +0200
 comments: true
-categories: ["linux","kvm", "qemu"] 
+categories: [linux,kvm, qemu] 
 ---
 
 ## KVM
