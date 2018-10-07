@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Security | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-09-09T11:24:10+02:00</updated>
+  <updated>2018-10-07T11:39:22+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,517 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DNS Privacy With Stubby (Part 2 FreeBSD)]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/"/>
+    <updated>2018-10-07T09:06:05+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd</id>
+    <content type="html"><![CDATA[<h1>FreeBSD</h1>
+
+<p><a href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">In my previous blog article</a> we install on GNU/Linux which is my main desktop operation system. <a href="https://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">My NAS</a> and the services that are required to be always running are on <a href="https://www.freebsd.org">FreeBSD</a>.</p>
+
+<p>In this arcticle we will setup Stubby - the DNS Privacy Daemon - on FreeBSD.</p>
+
+<h2>Jails</h2>
+
+<p>FreeBSD jails are verify nice to keep services separated in a secure way.</p>
+
+<h3>ezjail</h3>
+
+<p><a href="https://erdgeist.org/arts/software/ezjail/">ezjail</a> is a very nice tool for managing FreeBSD jails.</p>
+
+<pre><code>root@rataplan:~ # pkg install ezjail
+</code></pre>
+
+<h3>To loopback or not to loopback&hellip;.</h3>
+
+<p>The loopback ip address is mapped to the jail ip address on FreeBSD by default.
+There are two options</p>
+
+<ul>
+<li>use the jail ip address, make sure that you setup a firewall rule if you want disable traffic from external.</li>
+<li>use a cloned loopback interface; keep in mind that with a cloned interface this interface is shared between your jails.</li>
+</ul>
+
+
+<p>We&rsquo;ll use the jail ip address.</p>
+
+<h4>create the jail</h4>
+
+<p>We create a new jail and we assign the cloned loop interface with a loopback ip address - this loopback ip address must be unique for each for each jail - and outside interface and ip address.</p>
+
+<pre><code>root@rataplan:~ # ezjail-admin create stafdns 're0|192.168.1.53'
+</code></pre>
+
+<h4>start the jail</h4>
+
+<pre><code>root@rataplan:/usr/local/etc/ezjail # ezjail-admin start stafdns
+Starting jails: stafdns.
+/etc/rc.d/jail: WARNING: Per-jail configuration via jail_* variables  is obsolete.  Please consider migrating to /etc/jail.conf.
+root@rataplan:/usr/local/etc/ezjail #
+</code></pre>
+
+<h4>console login and install pkg</h4>
+
+<p>Logon to the jail and install pkg we might need to configure a dns server or use a proxy sever to install pkg.</p>
+
+<pre><code>root@rataplan:/usr/local/etc/ezjail # ezjail-admin console stafdns
+root@stafdns:~ # echo "nameserver 9.9.9.9" &gt; /etc/resolv.conf
+root@stafdns:~ # pkg
+The package management tool is not yet installed on your system.
+Do you want to fetch and install it now? [y/N]: y
+Bootstrapping pkg from pkg+http://pkg.FreeBSD.org/FreeBSD:11:amd64/quarterly, please wait...
+Verifying signature with trusted certificate pkg.freebsd.org.2013102301... done
+[stafdns] Installing pkg-1.10.5_1...
+[stafdns] Extracting pkg-1.10.5_1: 100%
+pkg: not enough arguments
+Usage: pkg [-v] [-d] [-l] [-N] [-j &lt;jail name or id&gt;|-c &lt;chroot path&gt;|-r &lt;rootdir&gt;] [-C &lt;configuration file&gt;] [-R &lt;repo config dir&gt;] [-o var=value] [-4|-6] &lt;command&gt; [&lt;args&gt;]
+
+For more information on available commands and options see 'pkg help'.
+root@stafdns:~ #
+</code></pre>
+
+<h2>Install stubby</h2>
+
+<p>Stubby available in the <a href="https://www.freebsd.org/ports/">FreeBSD Ports</a> in the getdns package, &hellip;but it isn&rsquo;t installed when you install the binary package. To install stubby we need to it from source.</p>
+
+<h3>dig</h3>
+
+<p>To debug dns issues dig a handy tool to have&hellip;.</p>
+
+<pre><code>root@rataplan:/usr/ports/dns/getdns # pkg install bind-tools
+Updating FreeBSD repository catalogue...
+FreeBSD repository is up to date.
+All repositories are up to date.
+Updating database digests format: 100%
+The following 4 package(s) will be affected (of 0 checked):
+
+New packages to be INSTALLED:
+        bind-tools: 9.12.2P1
+        idnkit: 1.0_7
+        py27-ply: 3.11
+        json-c: 0.13
+
+Number of packages to be installed: 4
+
+The process will require 42 MiB more space.
+4 MiB to be downloaded.
+
+Proceed with this action? [y/N]: y
+</code></pre>
+
+<h3>Update your ports tree</h3>
+
+<h4>Physical system</h4>
+
+<p>On a physical FreeBSD system execute <code>portsnap fetch</code> and <code>portsnap extract</code></p>
+
+<pre><code>root@rataplan:~ # portsnap fetch
+Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+Fetching snapshot metadata... done.
+Updating from Sat Sep  8 09:31:35 CEST 2018 to Sun Sep  9 09:51:49 CEST 2018.
+Fetching 4 metadata patches... done.
+Applying metadata patches... done.
+Fetching 0 metadata files... done.
+Fetching 44 patches. 
+(44/44) 100.00%  done.                                
+done.
+Applying patches... 
+done.
+Fetching 2 new ports or files... done.
+root@rataplan:~ # 
+</code></pre>
+
+<pre><code>root@rataplan:~ # portsnap extract
+/usr/ports/.arcconfig
+/usr/ports/.gitattributes
+/usr/ports/.gitauthors
+/usr/ports/.gitignore
+/usr/ports/.gitmessage
+/usr/ports/CHANGES
+/usr/ports/CONTRIBUTING.md
+/usr/ports/COPYRIGHT
+/usr/ports/GIDs
+/usr/ports/Keywords/desktop-file-utils.ucl
+/usr/ports/Keywords/fc.ucl
+/usr/ports/Keywords/fcfontsdir.ucl
+
+&lt;snip&gt;
+
+/usr/ports/x11/xzoom/
+/usr/ports/x11/yad/
+/usr/ports/x11/yakuake-kde4/
+/usr/ports/x11/yakuake/
+/usr/ports/x11/yalias/
+/usr/ports/x11/yeahconsole/
+/usr/ports/x11/yelp/
+/usr/ports/x11/zenity/
+Building new INDEX files... done.
+</code></pre>
+
+<h4>Jail</h4>
+
+<p>I use <a href="https://erdgeist.org/arts/software/ezjail/">ezjail</a> to manage my <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a>. Execute the <code>ezjail-admin update -P</code> to update the ports tree inside your jails.</p>
+
+<pre><code>root@rataplan:~ # ezjail-admin update -P
+Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+Ports tree hasn't changed since last snapshot.
+No updates needed.
+Removing old files and directories... done.
+Extracting new files:
+/usr/jails/basejail/usr/ports/archivers/py-lz4/
+/usr/jails/basejail/usr/ports/astro/wmsolar/
+/usr/jails/basejail/usr/ports/audio/musicpd/
+/usr/jails/basejail/usr/ports/biology/seaview/
+/usr/jails/basejail/usr/ports/deskutils/gsimplecal/
+/usr/jails/basejail/usr/ports/deskutils/xfce4-tumbler/
+/usr/jails/basejail/usr/ports/devel/eric6/
+/usr/jails/basejail/usr/ports/devel/es-eric6/
+/usr/jails/basejail/usr/ports/devel/ioncube/
+/usr/jails/basejail/usr/ports/devel/liblouis/
+/usr/jails/basejail/usr/ports/devel/monodevelop/
+/usr/jails/basejail/usr/ports/devel/rudeconfig/
+/usr/jails/basejail/usr/ports/emulators/ppsspp-qt5/
+/usr/jails/basejail/usr/ports/emulators/ppsspp/
+/usr/jails/basejail/usr/ports/german/eric6/
+/usr/jails/basejail/usr/ports/java/linux-oracle-jdk10/
+/usr/jails/basejail/usr/ports/java/linux-oracle-jre10/
+/usr/jails/basejail/usr/ports/java/openjdk8/
+/usr/jails/basejail/usr/ports/lang/gcc6-devel/
+/usr/jails/basejail/usr/ports/lang/gcc7-devel/
+/usr/jails/basejail/usr/ports/lang/gcc8-devel/
+/usr/jails/basejail/usr/ports/lang/gcc9-devel/
+/usr/jails/basejail/usr/ports/misc/ree/
+/usr/jails/basejail/usr/ports/net-im/psi/
+/usr/jails/basejail/usr/ports/net-mgmt/p5-Net-SNMP/
+/usr/jails/basejail/usr/ports/net/Makefile
+/usr/jails/basejail/usr/ports/net/charm/
+/usr/jails/basejail/usr/ports/net/linknx/
+/usr/jails/basejail/usr/ports/net/py-maxminddb/
+/usr/jails/basejail/usr/ports/net/py-shodan/
+/usr/jails/basejail/usr/ports/net/tcpreen/
+/usr/jails/basejail/usr/ports/ports-mgmt/pkg-devel/
+/usr/jails/basejail/usr/ports/print/ghostscript9-agpl-base/
+/usr/jails/basejail/usr/ports/russian/eric6/
+/usr/jails/basejail/usr/ports/science/Makefile
+/usr/jails/basejail/usr/ports/science/metaphysicl/
+/usr/jails/basejail/usr/ports/science/namd/
+/usr/jails/basejail/usr/ports/security/sancp/
+/usr/jails/basejail/usr/ports/security/testssl.sh/
+/usr/jails/basejail/usr/ports/textproc/scim-bridge/
+/usr/jails/basejail/usr/ports/www/orangehrm/
+/usr/jails/basejail/usr/ports/www/smarty3/
+/usr/jails/basejail/usr/ports/www/tinytinyhttpd/
+/usr/jails/basejail/usr/ports/x11-wm/spectrwm/
+/usr/jails/basejail/usr/ports/x11/plasma5-plasma-workspace/
+/usr/jails/basejail/usr/ports/x11/sddm/
+Building new INDEX files... done.
+root@rataplan:~ # 
+</code></pre>
+
+<h3>Install stubby</h3>
+
+<p>Go to the getdns ports directory</p>
+
+<pre><code>root@stafproxy:/root # cd /usr/ports/dns/getdns/
+root@stafproxy:/usr/ports/dns/getdns # make config
+</code></pre>
+
+<p>and run <code>make config</code> select <code>[ ] STUBBY    Build with Stubby DNS/TLS resolver</code></p>
+
+<pre><code>┌─────────────────────────────── getdns-1.4.2 ─────────────────────────────────┐
+│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+│ │+[x] DOCS      Build and/or install documentation                         │ │
+│ │+[ ] LIBEV     Build with libev extension                                 │ │
+│ │+[ ] LIBEVENT  Build with libevent extension                              │ │
+│ │+[ ] LIBUV     Build with libuv extension                                 │ │
+│ │+[x] STUBBY    Build with Stubby DNS/TLS resolver                         │ │
+│ └──────────────────────────────────────────────────────────────────────────┘ │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                       &lt;  OK  &gt;            &lt;Cancel&gt;                           │
+└──────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+
+<p>run <code>make</code> and accept the defaults.</p>
+
+<pre><code>root@stafproxy:/usr/ports/dns/getdns # make
+===&gt;  License BSD3CLAUSE accepted by the user
+===&gt;   getdns-1.4.2 depends on file: /usr/local/sbin/pkg - found
+=&gt; getdns-1.4.2.tar.gz doesn't seem to exist in /var/ports/distfiles/.
+=&gt; Attempting to fetch https://getdnsapi.net/dist/getdns-1.4.2.tar.gz
+getdns-1.4.2.tar.gz                           100% of 1034 kB 1092 kBps 00m01s
+===&gt; Fetching all distfiles required by getdns-1.4.2 for building
+===&gt;  Extracting for getdns-1.4.2
+=&gt; SHA256 Checksum OK for getdns-1.4.2.tar.gz.
+
+&lt;snip&gt;
+
+/usr/bin/install -c -m 644 getdns_service_sync.3 /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/man/man3
+/usr/bin/install -c -m 644 getdns_validate_dnssec.3 /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/man/man3
+/usr/bin/strip /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/lib/libgetdns*.so.*
+/usr/bin/strip /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/bin/getdns_*
+/usr/bin/strip /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/bin/stubby
+/bin/mv /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/etc/stubby/stubby.yml  /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/etc/stubby/stubby.yml.sample
+====&gt; Compressing man pages (compress-man)
+===&gt; Staging rc.d startup script(s)
+</code></pre>
+
+<p>make install</p>
+
+<pre><code>root@stafproxy:/usr/ports/dns/getdns # make install
+===&gt;  Installing for getdns-1.4.2
+===&gt;  Checking if getdns already installed
+===&gt;   Registering installation for getdns-1.4.2
+[stafproxy] Installing getdns-1.4.2...
+***
+***  !!! IMPORTANT !!!!  libgetdns needs a DNSSEC trust anchor!
+***
+***  For the library to be able to perform DNSSEC, the root
+***  trust anchor needs to be present in presentation format
+***  in the file:
+***     /usr/local/etc/unbound/root.key
+***
+***  We recomend using unbound-anchor to retrieve and install
+***  the root trust anchor like this:
+***     su -m unbound -c /usr/local/sbin/unbound-anchor
+***
+
+===&gt; SECURITY REPORT: 
+      This port has installed the following files which may act as network
+      servers and may therefore pose a remote security risk to the system.
+/usr/local/lib/libgetdns.a(stub.o)
+/usr/local/lib/libgetdns.so.10.0.2
+/usr/local/lib/libgetdns.a(server.o)
+
+      This port has installed the following startup scripts which may cause
+      these network services to be started at boot time.
+/usr/local/etc/rc.d/stubby
+
+      If there are vulnerabilities in these programs there may be a security
+      risk to the system. FreeBSD makes no guarantee about the security of
+      ports included in the Ports Collection. Please type 'make deinstall'
+      to deinstall the port if this is a concern.
+
+      For more information, and contact details about the security
+      status of this software, see the following webpage: 
+https://getdnsapi.net/
+root@stafproxy:/usr/ports/dns/getdns # 
+</code></pre>
+
+<p>Lock the package to avoid that the package gets replaced by a getdns package without stubby.</p>
+
+<pre><code>root@stafproxy:/usr/ports/dns/getdns # pkg lock getdns
+getdns-1.4.2: lock this package? [y/N]: y
+Locking getdns-1.4.2
+root@stafproxy:/usr/ports/dns/getdns # 
+</code></pre>
+
+<h2>Configure stubby</h2>
+
+<h3>Enable the stubby service</h3>
+
+<p>Use <code>sysrc</code> to enable the stubby service&hellip;</p>
+
+<pre><code>root@stafproxy:/usr/local/etc # service stubby start
+Cannot 'start' stubby. Set stubby_enable to YES in /etc/rc.conf or use 'onestart' instead of 'start'.
+root@stafproxy:/usr/local/etc # service stubby rcvar
+# stubby
+#
+stubby_enable="NO"
+#   (default: "")
+
+root@stafproxy:/usr/local/etc # sysrc stubby_enable="YES"
+stubby_enable:  -&gt; YES
+root@stafproxy:/usr/local/etc # 
+</code></pre>
+
+<h3>choose your upstream dns provider</h3>
+
+<p>Edit the stubby.yml file and uncomment the upstream dns server that you want the use. Stubby will loadbalance the dns traffic to all configured upstream dns servers by default. This is configured with the round_robin_upstreams directive, if set to 1 the traffic is loadbalanced, if set 0 stubby will use the first configured dns server.</p>
+
+<pre><code>root@rataplan:/usr/local/etc # vi stubby/stubby.yml
+</code></pre>
+
+<h3>Change the port</h3>
+
+<p>We&rsquo;ll setup dnsmasq to cache our dns requests modify the <code>listen_addresses</code> directive and set the port 53000</p>
+
+<pre><code>listen_addresses:
+  - 127.0.0.1@53000
+  - 0::1@53000
+</code></pre>
+
+<h3>Start it</h3>
+
+<pre><code>root@stafproxy:/usr/local/etc # service stubby start
+Starting stubby.
+[07:51:37.865826] STUBBY: Read config from file /usr/local/etc/stubby/stubby.yml
+root@stafproxy:/usr/local/etc # 
+</code></pre>
+
+<h3>test it</h3>
+
+<pre><code>root@stafproxy:/root # dig @&lt;ip_of_the_jail&gt; -p 53000 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.8.3-P4 &lt;&lt;&gt;&gt; @127.0.0.53 -p 53000 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56970
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      85181   IN      CNAME   wagemakers.be.
+wagemakers.be.          85181   IN      A       95.215.185.144
+
+;; Query time: 110 msec
+;; SERVER: 127.0.0.53#53000(127.0.0.53)
+;; WHEN: Sat Sep 22 13:16:11 2018
+;; MSG SIZE  rcvd: 119
+</code></pre>
+
+<h3>dnsmasq</h3>
+
+<h4>Install dnsmasq.</h4>
+
+<pre><code>root@stafproxy:/root # pkg install dnsmasq
+Updating FreeBSD repository catalogue...
+FreeBSD repository is up to date.
+All repositories are up to date.
+The following 1 package(s) will be affected (of 0 checked):
+
+New packages to be INSTALLED:
+        dnsmasq: 2.79,1
+
+Number of packages to be installed: 1
+
+329 KiB to be downloaded.
+
+Proceed with this action? [y/N]: y
+[stafproxy] [1/1] Fetching dnsmasq-2.79,1.txz: 100%  329 KiB 336.4kB/s    00:01
+Checking integrity... done (0 conflicting)
+[stafproxy] [1/1] Installing dnsmasq-2.79,1...
+[stafproxy] [1/1] Extracting dnsmasq-2.79,1: 100%
+Message from dnsmasq-2.79,1:
+
+*** To enable dnsmasq, edit /usr/local/etc/dnsmasq.conf and
+*** set dnsmasq_enable="YES" in /etc/rc.conf[.local]
+***
+*** Further options and actions are documented inside
+*** /usr/local/etc/rc.d/dnsmasq
+root@stafproxy:/root #
+</code></pre>
+
+<h4>Enable dnsmasq.</h4>
+
+<p>Usae <code>sysrc</code> to enable the dnsmasq service.</p>
+
+<pre><code>root@stafproxy:/root # sysrc dnsmasq_enable="YES"
+dnsmasq_enable:  -&gt; YES
+root@stafproxy:/root #
+</code></pre>
+
+<h4>Configure dnsmasq</h4>
+
+<pre><code>root@stafproxy:/usr/local/etc # mv dnsmasq.conf dnsmasq.conf_org
+root@stafproxy:/usr/local/etc # vi dnsmasq.conf
+</code></pre>
+
+<pre><code>server=&lt;ip_address_of_the_jail&gt;#53000
+listen-address=&lt;ip_address_of_the_jail&gt;
+interface=&lt;netork_interface_of_the_jail&gt;
+bind-interfaces
+</code></pre>
+
+<h4>start dnsmasq</h4>
+
+<pre><code>root@stafproxy:/usr/local/etc # service dnsmasq start
+Starting dnsmasq.
+root@stafproxy:/usr/local/etc #
+</code></pre>
+
+<h4>test it</h4>
+
+<pre><code>root@stafproxy:/usr/local/etc # dig @192.168.1.45 www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.8.3-P4 &lt;&lt;&gt;&gt; @192.168.1.45 www.wagemakers.be
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 32987
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      86000   IN      CNAME   wagemakers.be.
+wagemakers.be.          86000   IN      A       95.215.185.144
+
+;; Query time: 308 msec
+;; SERVER: 192.168.1.45#53(192.168.1.45)
+;; WHEN: Sun Oct  7 09:16:51 2018
+;; MSG SIZE  rcvd: 119
+
+root@stafproxy:/usr/local/etc #
+</code></pre>
+
+<h4>Update /etc/resolv.conf</h4>
+
+<p>Update your <code>/etc/resolv.conf</code></p>
+
+<pre><code>root@stafproxy:/usr/local/etc # vi /etc/resolv.conf
+</code></pre>
+
+<pre><code>nameserver &lt;ip_address_of_the_jail&gt;
+</code></pre>
+
+<p>and test it;</p>
+
+<pre><code>root@stafproxy:/usr/local/etc # dig www.wagemakers.be
+
+; &lt;&lt;&gt;&gt; DiG 9.8.3-P4 &lt;&lt;&gt;&gt; www.wagemakers.be
+;; global options: +cmd
+;; Got answer:
+;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27629
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;www.wagemakers.be.             IN      A
+
+;; ANSWER SECTION:
+www.wagemakers.be.      85702   IN      CNAME   wagemakers.be.
+wagemakers.be.          85702   IN      A       95.215.185.144
+
+;; Query time: 1 msec
+;; SERVER: 192.168.1.45#53(192.168.1.45)
+;; WHEN: Sun Oct  7 09:21:49 2018
+;; MSG SIZE  rcvd: 78
+
+root@stafproxy:/usr/local/etc #
+</code></pre>
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/</a></li>
+<li><a href="https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/jails-ezjail.html">https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/jails-ezjail.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DNS Privacy With Stubby (Part 1 GNU/Linux)]]></title>
@@ -24,7 +535,7 @@
 
 <p>DNS traffic is insecure and runs over <a href="https://nl.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> port 53 (<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> for <a href="https://en.wikipedia.org/wiki/DNS_zone_transfer">zone transfers</a> ) unecrypted by default.</p>
 
-<p>This make your encrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
+<p>This make your unencrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
 
 <ul>
 <li>anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.</li>
@@ -1273,672 +1784,6 @@ PKCS11Provider opensc-pkcs11.so
 </code></pre>
 
 <p><strong><em> Have fun &hellip; </em></strong></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Starting to Protect My Private Keys With SmartCard-Hsm]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/"/>
-    <updated>2015-11-21T10:32:06+01:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm</id>
-    <content type="html"><![CDATA[<p>I still have too many private keys on a local filesystem, I started to use the <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubikey neo</a> for <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">my ssh authentication</a>. Mainly because the nice formfactor of the yubikey.</p>
-
-<p>For my other private keys/data I was looking for something cheeper since I need to have a backup of my secured data so I bought a few <a href="http://www.smartcard-hsm.com">Smartcard-HSM smartcards</a> they cost 16 &euro; each while a yubi-key neo cost 54 &euro; at amazon.de</p>
-
-<h2>Preparing Backup and Restore</h2>
-
-<p>The Smartcard-HSM has a backup/restore functionality this needs to be enabled before any keys are generated on the HSM.</p>
-
-<p>To store our Device Key Encryption Key (DKEK) securely we need a safe place, we&rsquo;ll use an ecrypted usb stick.</p>
-
-<p>It'is possible to configure multiple DKEK shares e.g. you will need multiple keys to perform a backup restore you might want to store these DKEK shares over multiple (encrypted) USB sticks/people.</p>
-
-<p>If you want to create a backup of your DKEK shares we need to store at least two encrypted USB sticks.</p>
-
-<p>For the convenience we&rsquo;ll store all DKEK shares on 1 encrypted USB stick in the example below you should executed it on an secured computer.</p>
-
-<h3>Install opensc</h3>
-
-<pre><code>staf@vicky ~]$ sudo dnf install opensc
-Last metadata expiration check performed 0:23:14 ago on Wed Nov 11 14:47:21 2015.
-Package opensc-0.15.0-2.fc23.x86_64 is already installed, skipping.
-Dependencies resolved.
-Nothing to do.
-Complete!
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Create an encrypted USB key stick</h3>
-
-<h4>Write random data to the USB stick</h4>
-
-<pre><code>[staf@vicky ~]$ sudo dd if=/dev/urandom of=/dev/sdn bs=1024
-[sudo] password for staf:                                                                                      
-dd: error writing ‘/dev/sdn’: No space left on device                                                          
-4029441+0 records in                                                                                           
-4029440+0 records out                                                                                          
-4126146560 bytes (4.1 GB) copied, 1280.14 s, 3.2 MB/s                                                          
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>luksFormat</h4>
-
-<pre><code>[staf@vicky ~]$ sudo cryptsetup luksFormat --cipher serpent-cbc-essiv:sha256 --key-size 256 /dev/sdn
-
-WARNING!
-========
-This will overwrite data on /dev/sdn irrevocably.
-
-Are you sure? (Type uppercase yes): YES
-Enter passphrase: 
-Verify passphrase: 
-[staf@vicky ~]$ sudo cry
-cryptoflex-tool  cryptsetup       crywrap          
-[staf@vicky ~]$ sudo cryptsetup luksOpen /dev/sdn myprivatedata
-Enter passphrase for /dev/sdn: 
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>luksOpen</h4>
-
-<pre><code>[staf@vicky ~]$ sudo cryptsetup luksOpen /dev/sdn myprivatedata
-Enter passphrase for /dev/sdn: 
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>mkfs</h4>
-
-<pre><code>[staf@vicky ~]$ sudo mkfs.ext4 /dev/mapper/myprivatedata
-mke2fs 1.42.13 (17-May-2015)
-Creating filesystem with 1007360 4k blocks and 251968 inodes
-Filesystem UUID: 49390936-49e3-4606-abf2-567c3f5b50e1
-Superblock backups stored on blocks: 
-        32768, 98304, 163840, 229376, 294912, 819200, 884736
-
-Allocating group tables: done                            
-Writing inode tables: done                            
-Creating journal (16384 blocks): done
-Writing superblocks and filesystem accounting information: done 
-
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Verify the encrypted USB stick</h3>
-
-<p>To verify that the USB stick is encrypted and we can&rsquo;t mount without typing our passphrase we&rsquo;ll close the luks device and mount it.</p>
-
-<h4>luksClose</h4>
-
-<pre><code>[staf@vicky ~]$ sudo cryptsetup luksClose myprivatedata
-[sudo] password for staf: 
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>Try to mount it without luksOpen</h4>
-
-<pre><code>[staf@vicky ~]$ sudo mount /dev/sdn /mnt
-mount: unknown filesystem type 'crypto_LUKS'
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>Mount it with luksOpen / mount</h4>
-
-<pre><code>[staf@vicky ~]$ sudo cryptsetup luksOpen /dev/sdn myhsm_dkek
-Enter passphrase for /dev/sdn: 
-[staf@vicky ~]$ sudo mount /dev/mapper/myhsm_dkek /mnt
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>update the ownership</h4>
-
-<p>Update the usb stick ownership</p>
-
-<pre><code>[staf@vicky mnt]$ sudo chown staf:staf .
-[sudo] password for staf: 
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h2>SmartCard initialization</h2>
-
-<h3>pcsc_scan</h3>
-
-<h4>start the pcscd service</h4>
-
-<p>Start/enable the pcscd service if didn&rsquo;t enable it before</p>
-
-<pre><code>root@vicky ~]# systemctl list-unit-files -t service | grep pcscd
-pcscd.service                               static  
-[root@vicky ~]# systemctl start pcscd
-[root@vicky ~]# systemctl enable pcscd
-[root@vicky ~]# 
-</code></pre>
-
-<h4>run pcsc_scan</h4>
-
-<p>Insert the smartcard into the read, run pcsc_scan to verify that you see the smartcard</p>
-
-<pre><code>[staf@vicky mnt]$ pcsc_scan                    
-PC/SC device scanner
-V 1.4.23 (c) 2001-2011, Ludovic Rousseau &lt;ludovic.rousseau@free.fr&gt;
-Compiled with PC/SC lite version: 1.8.13
-Using reader plug'n play mechanism
-Scanning present readers...
-0: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-
-Wed Nov 11 10:58:59 2015
-Reader 0: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-  Card state: Card inserted, 
-  ATR: 3B FE 18 00 00 81 31 FE 45 80 31 81 54 48 53 4D 31 73 80 21 40 81 07 FA
-
-ATR: 3B FE 18 00 00 81 31 FE 45 80 31 81 54 48 53 4D 31 73 80 21 40 81 07 FA
-+ TS = 3B --&gt; Direct Convention
-+ T0 = FE, Y(1): 1111, K: 14 (historical bytes)
-  TA(1) = 18 --&gt; Fi=372, Di=12, 31 cycles/ETU
-    129032 bits/s at 4 MHz, fMax for Fi = 5 MHz =&gt; 161290 bits/s                                                     
-  TB(1) = 00 --&gt; VPP is not electrically connected
-  TC(1) = 00 --&gt; Extra guard time: 0
-  TD(1) = 81 --&gt; Y(i+1) = 1000, Protocol T = 1 
------
-  TD(2) = 31 --&gt; Y(i+1) = 0011, Protocol T = 1 
------
-  TA(3) = FE --&gt; IFSC: 254
-  TB(3) = 45 --&gt; Block Waiting Integer: 4 - Character Waiting Integer: 5
-+ Historical bytes: 80 31 81 54 48 53 4D 31 73 80 21 40 81 07
-  Category indicator byte: 80 (compact TLV data object)
-    Tag: 3, len: 1 (card service data byte)
-      Card service data byte: 81
-        - Application selection: by full DF name
-        - EF.DIR and EF.ATR access services: by GET RECORD(s) command
-        - Card without MF
-    Tag: 5, len: 4 (card issuer's data)
-      Card issuer data: 48 53 4D 31
-    Tag: 7, len: 3 (card capabilities)
-      Selection methods: 80
-        - DF selection by full DF name
-      Data coding byte: 21
-        - Behaviour of write functions: proprietary
-        - Value 'FF' for the first byte of BER-TLV tag fields: invalid
-        - Data unit in quartets: 2
-      Command chaining, length fields and logical channels: 40
-        - Extended Lc and Le fields
-        - Logical channel number assignment: No logical channel
-        - Maximum number of logical channels: 1
-    Tag: 8, len: 1 (status indicator)
-      LCS (life card cycle): 07
-+ TCK = FA (correct checksum)
-
-Possibly identified card (using /usr/share/pcsc/smartcard_list.txt):
-3B FE 18 00 00 81 31 FE 45 80 31 81 54 48 53 4D 31 73 80 21 40 81 07 FA
-        Smartcard-HSM
-        http://www.cardcontact.de/products/sc-hsm.html
-</code></pre>
-
-<h3>Initialize the first smartcard</h3>
-
-<h4>Create two DKEK shares</h4>
-
-<ul>
-<li>1st share;</li>
-</ul>
-
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --create-dkek-share dkek-share-1.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-
-The DKEK share will be enciphered using a key derived from a user supplied password.
-The security of the DKEK share relies on a well chosen and sufficiently long password.
-The recommended length is more than 10 characters, which are mixed letters, numbers and
-symbols.
-
-Please keep the generated DKEK share file in a safe location. We also recommend to keep a
-paper printout, in case the electronic version becomes unavailable. A printable version
-of the file can be generated using "openssl base64 -in &lt;filename&gt;".
-Enter password to encrypt DKEK share : 
-
-Please retype password to confirm : 
-
-Passwords do not match. Please retry.
-Enter password to encrypt DKEK share : 
-[staf@vicky mnt]$ sc-hsm-tool --create-dkek-share dkek-share-1.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-
-The DKEK share will be enciphered using a key derived from a user supplied password.
-The security of the DKEK share relies on a well chosen and sufficiently long password.
-The recommended length is more than 10 characters, which are mixed letters, numbers and
-symbols.
-
-Please keep the generated DKEK share file in a safe location. We also recommend to keep a
-paper printout, in case the electronic version becomes unavailable. A printable version
-of the file can be generated using "openssl base64 -in &lt;filename&gt;".
-Enter password to encrypt DKEK share : 
-
-Please retype password to confirm : 
-
-Enciphering DKEK share, please wait...
-DKEK share created and saved to dkek-share-1.pbe
-[staf@vicky mnt]$ 
-</code></pre>
-
-<ul>
-<li>2nd share;</li>
-</ul>
-
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --create-dkek-share dkek-share-2.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-
-The DKEK share will be enciphered using a key derived from a user supplied password.
-The security of the DKEK share relies on a well chosen and sufficiently long password.
-The recommended length is more than 10 characters, which are mixed letters, numbers and
-symbols.
-
-Please keep the generated DKEK share file in a safe location. We also recommend to keep a
-paper printout, in case the electronic version becomes unavailable. A printable version
-of the file can be generated using "openssl base64 -in &lt;filename&gt;".
-Enter password to encrypt DKEK share : 
-
-Please retype password to confirm : 
-[staf@vicky mnt]$ sc-hsm-tool --create-dkek-share dkek-share-2.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-
-The DKEK share will be enciphered using a key derived from a user supplied password.
-The security of the DKEK share relies on a well chosen and sufficiently long password.
-The recommended length is more than 10 characters, which are mixed letters, numbers and
-symbols.
-
-Please keep the generated DKEK share file in a safe location. We also recommend to keep a
-paper printout, in case the electronic version becomes unavailable. A printable version
-of the file can be generated using "openssl base64 -in &lt;filename&gt;".
-Enter password to encrypt DKEK share : 
-
-Please retype password to confirm : 
-
-Enciphering DKEK share, please wait...
-DKEK share created and saved to dkek-share-2.pbe
-[staf@vicky mnt]$ 
-</code></pre>
-
-<p>If you want a backup of DKEK shares copy them to another (encrypted) USB stick(s).</p>
-
-<h4>Initialize the SmartCard</h4>
-
-<ul>
-<li>Initialize</li>
-</ul>
-
-
-<p>Use sc-hsm-tool to Intialize the smartcard and specify the number DKEK shares that you&rsquo;ll use. You&rsquo;ll need to pick a PIN code for the &ldquo;security officer&rdquo; and the &ldquo;user&rdquo;.</p>
-
-<p>If you forget the so-pin you can not reinitialize the smartcard again so be sure that you pick so-pin that you can remember or write it down and store it on secure location. The so-pin has to be 16 digits long.</p>
-
-<p><strong>
-The sc-hsm-tool only asks for the PIN code ones so be sure that you know what you have typed. If you don&rsquo;t know it you smartcard becomes trash&hellip;
-</strong></p>
-
-<p>It possible to specify the pin code with &ldquo;&ndash;so-pin&rdquo; and &ldquo;&ndash;pin&rdquo; argument but this leaves the pin code in your shell history or in the process list&hellip;</p>
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --initialize --dkek-shares 2
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter SO-PIN (16 hexadecimal characters) : 
-
-Enter initial User-PIN (6 - 16 characters) : 
-
-[staf@vicky mnt]$ 
-</code></pre>
-
-<p>If you execute the sc-hsm-tool command you&rsquo;ll see that the DKEK shares are still missing;</p>
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool 
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Version              : 1.2
-User PIN tries left  : 3
-DKEK shares          : 2
-DKEK import pending, 2 share(s) still missing
-[staf@vicky mnt]$ 
-</code></pre>
-
-<ul>
-<li>import the dkek shares</li>
-</ul>
-
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --import-dkek-share dkek-share-1.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter password to decrypt DKEK share : 
-
-Deciphering DKEK share, please wait...
-DKEK share imported
-DKEK shares          : 2
-DKEK import pending, 1 share(s) still missing
-[staf@vicky mnt]$ sc-hsm-tool --import-dkek-share dkek-share-2.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter password to decrypt DKEK share : 
-
-Deciphering DKEK share, please wait...
-DKEK share imported
-DKEK shares          : 2
-DKEK key check value : 2C63E9E5D6FE0B8C
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h4>test the user and so pin</h4>
-
-<p>list the pkcs#11 slots</p>
-
-<pre><code>[staf@vicky mnt]$ pkcs11-tool --module opensc-pkcs11.so -L
-Available slots:
-Slot 0 (0xffffffffffffffff): Virtual hotplug slot
-  (empty)
-Slot 1 (0x1): Generic Smart Card Reader Interface [Smart Card Reader Interface
-  token label        : SmartCard-HSM (UserPIN)
-  token manufacturer : www.CardContact.de
-  token model        : PKCS#15 emulated
-  token flags        : rng, login required, PIN initialized, token initialized
-  hardware version   : 24.13
-  firmware version   : 1.2
-  serial num         : DECM0102332
-[staf@vicky mnt]$ 
-</code></pre>
-
-<p>test the user pin;</p>
-
-<pre><code>staf@vicky mnt]$ pkcs11-tool --module opensc-pkcs11.so --slot 1 --login --test
-Logging in to "SmartCard-HSM (UserPIN)".
-Please enter User PIN: 
-C_SeedRandom() and C_GenerateRandom():
-  seeding (C_SeedRandom) not supported
-  seems to be OK
-Digests:
-  all 4 digest functions seem to work
-  MD5: OK
-  SHA-1: OK
-  RIPEMD160: OK
-Signatures (currently only RSA signatures)
-Signatures: no private key found in this slot
-Verify (currently only for RSA):
-  No private key found for testing
-Unwrap: not implemented
-Decryption (RSA)
-No errors
-[staf@vicky mnt]$ 
-</code></pre>
-
-<p>test the so pin</p>
-
-<pre><code>[staf@vicky mnt]$ pkcs11-tool --module opensc-pkcs11.so --slot 1 --login --test --login-type so
-Logging in to "SmartCard-HSM (UserPIN)".
-Please enter SO PIN: 
-C_SeedRandom() and C_GenerateRandom():
-  seeding (C_SeedRandom) not supported
-  seems to be OK
-Digests:
-  all 4 digest functions seem to work
-  MD5: OK
-  SHA-1: OK
-  RIPEMD160: OK
-Signatures: not logged in, skipping signature tests
-Verify: not logged in, skipping verify tests
-Key unwrap: not a R/W session, skipping key unwrap tests
-Decryption: not logged in, skipping decryption tests
-No errors
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h3>Create your first keypair</h3>
-
-<h4>create key pair</h4>
-
-<p>The command below an <a href="https://en.wikipedia.org/wiki/Elliptic_curve_cryptography">Elliptic Curve Cryptography (ECC)</a> key pair.</p>
-
-<pre><code>[staf@vicky mnt]$ pkcs11-tool --module opensc-pkcs11.so --keypairgen --key-type EC:prime256v1 --label myfirst_keypair --login
-Using slot 1 with a present token (0x1)
-Logging in to "SmartCard-HSM (UserPIN)".
-Please enter User PIN: 
-Key pair generated:
-Private Key Object; EC
-  label:      myfirst_keypair
-  ID:         ae79417e809ed19b9a69d4c14f444462ad0bd66c
-  Usage:      sign, derive
-Public Key Object; EC  EC_POINT 256 bits
-  EC_POINT:   044104f8ead77d1411e016196141d9d1f747a481aec4be40d1f8822d26d407fee05902082e18843ee58db4f5575b19ff243a735b66b2c91adbec1a59aeacc7c1ae8b52
-  EC_PARAMS:  06082a8648ce3d030107
-  label:      myfirst_keypair
-  ID:         ae79417e809ed19b9a69d4c14f444462ad0bd66c
-  Usage:      verify
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h4>list objects</h4>
-
-<p>list the objects to verif that your keypair in on the smartcard</p>
-
-<pre><code>staf@vicky mnt]$ pkcs11-tool --module opensc-pkcs11.so --list-objects
-Using slot 1 with a present token (0x1)
-Public Key Object; EC  EC_POINT 256 bits
-  EC_POINT:   044104f8ead77d1411e016196141d9d1f747a481aec4be40d1f8822d26d407fee05902082e18843ee58db4f5575b19ff243a735b66b2c91adbec1a59aeacc7c1ae8b52
-  EC_PARAMS:  06082a8648ce3d030107
-  label:      myfirst_keypair
-  ID:         ae79417e809ed19b9a69d4c14f444462ad0bd66c
-  Usage:      none
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h2>Copy objects to another smartcard</h2>
-
-<h3>Backup</h3>
-
-<p>To create a backup of our keys or data we need to extract it from the smartcard and copy it to another.
-To store the object temporary we can use an encrypted filesystem or even a ram disk on a secured computer.</p>
-
-<p>For security reasons you might want to separate your DKEK share from you key backups,
-For the convenience we&rsquo;ll store everything on an encrypted USB stick.</p>
-
-<h4>get the object reference</h4>
-
-<p>First we need to find the object reference</p>
-
-<pre><code>[staf@vicky mnt]$ pkcs15-tool -D
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-PKCS#15 Card [SmartCard-HSM]:
-        Version        : 0
-        Serial number  : DECM0102332
-        Manufacturer ID: www.CardContact.de
-        Flags          : 
-
-PIN [UserPIN]
-        Object Flags   : [0x3], private, modifiable
-        ID             : 01
-        Flags          : [0x81A], local, unblock-disabled, initialized, exchangeRefData
-        Length         : min_len:6, max_len:15, stored_len:0
-        Pad char       : 0x00
-        Reference      : 129 (0x81)
-        Type           : ascii-numeric
-        Tries left     : 3
-
-PIN [SOPIN]
-        Object Flags   : [0x1], private
-        ID             : 02
-        Flags          : [0x9E], local, change-disabled, unblock-disabled, initialized, soPin
-        Length         : min_len:16, max_len:16, stored_len:0
-        Pad char       : 0x00
-        Reference      : 136 (0x88)
-        Type           : bcd
-        Tries left     : 3
-
-Private EC Key [myfirst_keypair]
-        Object Flags   : [0x3], private, modifiable
-        Usage          : [0x10C], sign, signRecover, derive
-        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
-        FieldLength    : 256
-        Key ref        : 1 (0x1)
-        Native         : yes
-        Path           : e82b0601040181c31f0201::
-        Auth ID        : 01
-        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-        MD:guid        : {3a03d245-ea49-1da1-d8cd-f2ced0526400}
-          :cmap flags  : 0x0
-          :sign        : 0
-          :key-exchange: 0
-
-Public EC Key [myfirst_keypair]
-        Object Flags   : [0x0]
-        Usage          : [0x0]
-        Access Flags   : [0x2], extract
-        FieldLength    : 256
-        Key ref        : 0 (0x0)
-        Native         : no
-        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-        DirectValue    : &lt;present&gt;
-
-[staf@vicky mnt]$ pkcs15-tool -D
-</code></pre>
-
-<h4>extract the object(s)</h4>
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --wrap-key private_myfirst_keypair --key-reference 1 
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter User PIN : 
-
-[staf@vicky mnt]$ ls -l
-total 28
--rw-r--r-- 1 swagemakers backup    64 Nov 11 13:42 dkek-share-1.pbe
--rw-r--r-- 1 swagemakers backup    64 Nov 11 13:42 dkek-share-2.pbe
-drwx------ 2 root        root   16384 Nov 11 13:37 lost+found
--rw-rw-r-- 1 staf        staf     926 Nov 11 14:05 private_myfirst_keypair
-[staf@vicky mnt]$ 
-</code></pre>
-
-<p>Please not that we only need to copy the private key, the backup object also contains the public keypair.</p>
-
-<h3>Initialize a second smartcard</h3>
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --initialize --dkek-shares 2
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter SO-PIN (16 hexadecimal characters) : 
-
-Enter initial User-PIN (6 - 16 characters) : 
-
-[staf@vicky mnt]$ sc-hsm-tool 
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Version              : 1.2
-User PIN tries left  : 3
-DKEK shares          : 2
-DKEK import pending, 2 share(s) still missing
-[staf@vicky mnt]$ sc-hsm-tool --import-dkek-share dkek-share-1.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter password to decrypt DKEK share : 
-
-Deciphering DKEK share, please wait...
-DKEK share imported
-DKEK shares          : 2
-DKEK import pending, 1 share(s) still missing
-[staf@vicky mnt]$ sc-hsm-tool --import-dkek-share dkek-share-2.pbe
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Enter password to decrypt DKEK share : 
-
-Deciphering DKEK share, please wait...
-DKEK share imported
-DKEK shares          : 2
-DKEK key check value : 2C63E9E5D6FE0B8C
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h3>Store the key pair</h3>
-
-<p>It&rsquo;s possible to write the private object to another smartcard with the same DKEK shares.</p>
-
-<pre><code>[staf@vicky mnt]$ sc-hsm-tool --unwrap-key private_myfirst_keypair --key-reference 1
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-Wrapped key contains:
-  Key blob
-  Private Key Description (PRKD)
-  Certificate
-Enter User PIN : 
-
-Key successfully imported
-[staf@vicky mnt]$ pkcs11-tool --list-objects 
-Using slot 1 with a present token (0x1)
-Public Key Object; EC  EC_POINT 256 bits
-  EC_POINT:   044104f8ead77d1411e016196141d9d1f747a481aec4be40d1f8822d26d407fee05902082e18843ee58db4f5575b19ff243a735b66b2c91adbec1a59aeacc7c1ae8b52
-  EC_PARAMS:  06082a8648ce3d030107
-  label:      myfirst_keypair
-  ID:         ae79417e809ed19b9a69d4c14f444462ad0bd66c
-  Usage:      none
-[staf@vicky mnt]$ pkcs15-tool -D
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-PKCS#15 Card [SmartCard-HSM]:
-        Version        : 0
-        Serial number  : DECM0102330
-        Manufacturer ID: www.CardContact.de
-        Flags          : 
-
-PIN [UserPIN]
-        Object Flags   : [0x3], private, modifiable
-        ID             : 01
-        Flags          : [0x81A], local, unblock-disabled, initialized, exchangeRefData
-        Length         : min_len:6, max_len:15, stored_len:0
-        Pad char       : 0x00
-        Reference      : 129 (0x81)
-        Type           : ascii-numeric
-        Tries left     : 3
-
-PIN [SOPIN]
-        Object Flags   : [0x1], private
-        ID             : 02
-        Flags          : [0x9E], local, change-disabled, unblock-disabled, initialized, soPin
-        Length         : min_len:16, max_len:16, stored_len:0
-        Pad char       : 0x00
-        Reference      : 136 (0x88)
-        Type           : bcd
-        Tries left     : 3
-
-Private EC Key [myfirst_keypair]
-        Object Flags   : [0x3], private, modifiable
-        Usage          : [0x10C], sign, signRecover, derive
-        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
-        FieldLength    : 256
-        Key ref        : 1 (0x1)
-        Native         : yes
-        Path           : e82b0601040181c31f0201::
-        Auth ID        : 01
-        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-        MD:guid        : {8e96ad75-4f6c-eb5e-6bb3-4a637bbcda50}
-          :cmap flags  : 0x0
-          :sign        : 0
-          :key-exchange: 0
-
-Public EC Key [myfirst_keypair]
-        Object Flags   : [0x0]
-        Usage          : [0x0]
-        Access Flags   : [0x2], extract
-        FieldLength    : 256
-        Key ref        : 0 (0x0)
-        Native         : no
-        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-        DirectValue    : &lt;present&gt;
-
-[staf@vicky mnt]$ 
-</code></pre>
-
-<h3>Done&hellip;</h3>
-
-<p>We have a backup to our second smartcard and an ecrypted backup of the key on the usb, umount the backup and store it to a safe location.</p>
-
-<pre><code>[staf@vicky ~]$ mount | grep mnt
-/dev/mapper/my on /mnt type ext4 (rw,relatime,data=ordered)
-[staf@vicky ~]$ umount /mnt
-umount: /mnt: umount failed: Operation not permitted
-[staf@vicky ~]$ sudo umount /mnt
-[sudo] password for staf: 
-[staf@vicky ~]$ sudo cryptsetup luksClose my
-[staf@vicky ~]$ 
-</code></pre>
-
-<p><strong><em> I might publish some smartcard-hsm usage examples in the further&hellip;. </em></strong></p>
-
-<h3>Links</h3>
-
-<p><a href="https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM">https://github.com/OpenSC/OpenSC/wiki/SmartCardHSM</a></p>
 ]]></content>
   </entry>
   

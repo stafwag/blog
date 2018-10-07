@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/</loc>
+    <lastmod>2018-10-07T09:06:05+02:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/</loc>
     <lastmod>2018-09-09T10:30:03+02:00</lastmod>
   </url>
@@ -535,7 +539,7 @@
     <loc>https://stafwag.github.io/blog/blog/categories/qxl/</loc>
   </url>
   <url>
-    <loc>https://stafwag.github.io/blog/blog/categories/kvm-qemu/</loc>
+    <loc>https://stafwag.github.io/blog/blog/categories/qemu/</loc>
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/vdsl/</loc>
@@ -548,9 +552,6 @@
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/duckdns/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/blog/categories/qemu/</loc>
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/vmware/</loc>

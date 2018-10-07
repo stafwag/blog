@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Qemu | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/qemu/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-09-09T11:24:10+02:00</updated>
+  <updated>2018-10-07T11:39:22+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -230,6 +230,254 @@ flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov 
 <li><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html"><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html">https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html</a></a></li>
 <li><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization"><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization">https://wiki.archlinux.org/index.php/KVM#Nested_virtualization</a></a></li>
 <li><a href="https://www.linux-kvm.org/page/Nested_Guests"><a href="https://www.linux-kvm.org/page/Nested_Guests">https://www.linux-kvm.org/page/Nested_Guests</a></a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[High Screen Resolution on a KVM Virtual Machine With QXL]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/"/>
+    <updated>2018-04-22T10:04:46+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl</id>
+    <content type="html"><![CDATA[<p>When you create an new virtual KVM virtual system the video ram is limited to 16MB by default to use a higer screen resolution you need
+to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to
+utilize.</p>
+
+<p>You&rsquo;ll find my journey to enable higher screen resolutions in my KVM (qemu) virtual systems below.</p>
+
+<h2>Ubuntu 16.04</h2>
+
+<p>There is an issue with Ubuntu 16.04 and the latest HWE kernel <a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack"><a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack">https://wiki.ubuntu.com/Kernel/LTSEnablementStack</a></a>. Even a full HD resultion (1920 x 1080 ) if you have the latest HWE kernel on your system.</p>
+
+<p>To resolve this issue your can uninstall the latest kernel or install the LTS kernel.</p>
+
+<h4>Install the LTS Kernel</h4>
+
+<pre><code>staf@ubuntu:~$ sudo apt-get install linux-generic-lts-xenial
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following additional packages will be installed:
+  linux-generic linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic linux-headers-generic
+  linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
+Suggested packages:
+  fdutils linux-doc-4.4.0 | linux-source-4.4.0 linux-tools
+The following NEW packages will be installed:
+  linux-generic linux-generic-lts-xenial linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic
+  linux-headers-generic linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
+0 upgraded, 8 newly installed, 0 to remove and 0 not upgraded.
+Need to get 69,3 MB of archives.
+After this operation, 301 MB of additional disk space will be used.
+Do you want to continue? [Y/n] 
+&lt;snip&gt;
+Setting up linux-image-generic (4.4.0.119.125) ...
+Setting up linux-headers-4.4.0-119 (4.4.0-119.143) ...
+Setting up linux-headers-4.4.0-119-generic (4.4.0-119.143) ...
+Setting up linux-headers-generic (4.4.0.119.125) ...
+Setting up linux-generic (4.4.0.119.125) ...
+Setting up linux-generic-lts-xenial (4.4.0.119.125) ...
+staf@ubuntu:~$ 
+</code></pre>
+
+<h4>Remove the HWE kernel</h4>
+
+<pre><code>staf@ubuntu:~$ sudo apt-get purge linux-image-4.13*
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+&lt;snip&gt;
+done
+The link /vmlinuz.old is a damaged link
+Removing symbolic link vmlinuz.old 
+ you may need to re-run your boot loader[grub]
+The link /initrd.img.old is a damaged link
+Removing symbolic link initrd.img.old 
+ you may need to re-run your boot loader[grub]
+Purging configuration files for linux-image-4.13.0-38-generic (4.13.0-38.43~16.04.1) ...
+Examining /etc/kernel/postrm.d .
+run-parts: executing /etc/kernel/postrm.d/initramfs-tools 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
+run-parts: executing /etc/kernel/postrm.d/zz-update-grub 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
+</code></pre>
+
+<h4>Cleanup</h4>
+
+<pre><code>staf@ubuntu:~$ sudo apt autoremove
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be REMOVED:
+  linux-headers-4.13.0-36 linux-headers-4.13.0-36-generic linux-headers-generic-hwe-16.04
+0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
+After this operation, 83,1 MB disk space will be freed.
+Do you want to continue? [Y/n] 
+(Reading database ... 234149 files and directories currently installed.)
+Removing linux-headers-4.13.0-36-generic (4.13.0-36.40~16.04.1) ...
+Removing linux-headers-4.13.0-36 (4.13.0-36.40~16.04.1) ...
+Removing linux-headers-generic-hwe-16.04 (4.13.0.38.57) ...
+staf@ubuntu:~$ 
+</code></pre>
+
+<h4>Reboot</h4>
+
+<p>After a reboot higher resolutions are possible on ubuntu 16.04</p>
+
+<h1>Increase the video RAM</h1>
+
+<h2>Required video ram</h2>
+
+<p>When you create a new KVM virtual machine it has 16MB of video RAM.
+Below you&rsquo;ll the calculation for the required video RAM for a 4k resolution ( 3840 x 2160 ).</p>
+
+<p>3840 x 2160 = 8294400 <br/>
+8294400 x 32 = 265420800 <br/ >
+265420800 / 8 = 33177600 <br />
+33177600 / (1024*1024) = 31.640625 MB</p>
+
+<p>So 32 MB video ram is enough for a 4k resolution, to take some overhead into account we&rsquo;ll increase the video ram to 64 MB.</p>
+
+<h2>list the domains</h2>
+
+<pre><code>[swagemakers@staflaptop ~]$ sudo virsh
+Welcome to virsh, the virtualization interactive terminal.
+
+Type:  'help' for help with commands
+       'quit' to quit
+
+virsh # list --all
+ Id    Name                           State
+----------------------------------------------------
+ -     centos7.0                      shut off
+ -     debian                         shut off
+ -     fedora27                       shut off
+
+virsh # 
+</code></pre>
+
+<h4>edit the domain settings</h4>
+
+<pre><code>virsh # edit --domain debian
+</code></pre>
+
+<h5>update the memory settings</h5>
+
+<pre><code>    &lt;video&gt;
+      &lt;model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+    &lt;/video&gt;
+    &lt;redirdev bus='usb' type='spicevmc'&gt;
+</code></pre>
+
+<p>to</p>
+
+<pre><code>    &lt;video&gt;
+      &lt;model type='qxl' ram='65536' vram='65536' vgamem='65536' heads='1' primary='yes'/&gt;
+      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+    &lt;/video&gt;
+</code></pre>
+
+<h4>xrandr</h4>
+
+<p>Even with the additional RAM higer resolution aren&rsquo;t possible (yet), the virtual screen doesn&rsquo;t report the higer screen resolution. It&rsquo;s possible to add the higher screen resolution with xrandr.</p>
+
+<h5>display current settings</h5>
+
+<pre><code>staf@debian:~$ xrandr 
+Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 8192 x 8192
+Virtual-0 connected primary 1920x1080+0+0 0mm x 0mm
+   1024x768      59.95 +
+   1920x1200     59.95  
+   1920x1080     60.00* 
+   1600x1200     59.95  
+   1680x1050     60.00  
+   1400x1050     60.00  
+   1280x1024     59.95  
+   1440x900      59.99  
+   1280x960      59.99  
+   1280x854      59.95  
+   1280x800      59.96  
+   1280x720      59.97  
+   1152x768      59.95  
+   800x600       59.96  
+   848x480       59.94  
+   720x480       59.94  
+   640x480       59.94  
+Virtual-1 disconnected
+Virtual-2 disconnected
+Virtual-3 disconnected
+staf@debian:~$ 
+</code></pre>
+
+<h6>get the modeline</h6>
+
+<pre><code>staf@debian:~$ cvt 2560 1440 
+# 2560x1440 59.96 Hz (CVT 3.69M9) hsync: 89.52 kHz; pclk: 312.25 MHz
+Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+staf@debian:~$ 
+</code></pre>
+
+<h6># create the new mode line</h6>
+
+<pre><code>staf@debian:~$ xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+staf@debian:~$ 
+</code></pre>
+
+<h6># add the mode to your screen</h6>
+
+<pre><code>staf@debian:~$ xrandr --addmode Virtual-0 2560x1440_60.00
+staf@debian:~$ 
+</code></pre>
+
+<h6># use the new mode</h6>
+
+<pre><code>staf@debian:~$ xrandr --output Virtual-0 --mode 2560x1440_60.00
+staf@debian:~$ 
+</code></pre>
+
+<h6>## 4k</h6>
+
+<p>To use a 4k resolution you can use the commands</p>
+
+<pre><code>staf@debian:~$  cvt 3840 2160
+# 3840x2160 59.98 Hz (CVT 8.29M9) hsync: 134.18 kHz; pclk: 712.75 MHz
+Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+staf@mydevolo:~$ xrandr --newmode "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+staf@mydevolo:~$ xrandr --addmode Virtual-0 3840x2160_60.00
+staf@mydevolo:~$ xrandr --output Virtual-0 --mode 3840x2160_60.00
+staf@mydevolo:~$ 
+</code></pre>
+
+<h2>Add the new screen resolution permanently</h2>
+
+<h3>Debian &amp; Co</h3>
+
+<p>Create a monitor configuration file in /usr/share/X11/xorg.conf.d</p>
+
+<pre><code>root@mydevolo:/usr/share/X11/xorg.conf.d# vi 10-monitor.conf
+</code></pre>
+
+<p>And add the modeline fgor your screen resolution.
+With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.</p>
+
+<pre><code>section "Monitor"
+    Identifier "Virtual-0 "
+    Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+    Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+    Option "PreferredMode" "2560x1440_60.00"
+EndSection
+</code></pre>
+
+<h3>Other GNU/Linux distros</h3>
+
+<p>Most other GNU/Linux distribution use /etc/X11/xorg.conf.d/</p>
+
+<p><strong><em> Have fun </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/xrandr"><a href="https://wiki.archlinux.org/index.php/xrandr">https://wiki.archlinux.org/index.php/xrandr</a></a></li>
+<li><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution"><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution">https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution</a></a></li>
 </ul>
 
 ]]></content>

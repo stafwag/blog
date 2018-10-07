@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-09-09T11:24:10+02:00</updated>
+  <updated>2018-10-07T11:39:22+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,861 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[DNS Privacy With Stubby (Part 2 FreeBSD)]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/"/>
+    <updated>2018-10-07T09:06:05+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd</id>
+    <content type="html"><![CDATA[<h1>FreeBSD</h1>
+
+<p><a href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">In my previous blog article</a> we install on GNU/Linux which is my main desktop operation system. <a href="https://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">My NAS</a> and the services that are required to be always running are on <a href="https://www.freebsd.org">FreeBSD</a>.</p>
+
+<p>In this arcticle we will setup Stubby - the DNS Privacy Daemon - on FreeBSD.</p>
+
+<h2>Jails</h2>
+
+<p>FreeBSD jails are verify nice to keep services separated in a secure way.</p>
+
+<h3>ezjail</h3>
+
+<p><a href="https://erdgeist.org/arts/software/ezjail/">ezjail</a> is a very nice tool for managing FreeBSD jails.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # pkg install ezjail</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>To loopback or not to loopback&hellip;.</h3>
+
+<p>The loopback ip address is mapped to the jail ip address on FreeBSD by default.
+There are two options</p>
+
+<ul>
+<li>use the jail ip address, make sure that you setup a firewall rule if you want disable traffic from external.</li>
+<li>use a cloned loopback interface; keep in mind that with a cloned interface this interface is shared between your jails.</li>
+</ul>
+
+
+<p>We&rsquo;ll use the jail ip address.</p>
+
+<h4>create the jail</h4>
+
+<p>We create a new jail and we assign the cloned loop interface with a loopback ip address - this loopback ip address must be unique for each for each jail - and outside interface and ip address.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin create stafdns 're0|192.168.1.53'</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>start the jail</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc/ezjail # ezjail-admin start stafdns
+</span><span class='line'>Starting jails: stafdns.
+</span><span class='line'>/etc/rc.d/jail: WARNING: Per-jail configuration via jail_* variables  is obsolete.  Please consider migrating to /etc/jail.conf.
+</span><span class='line'>root@rataplan:/usr/local/etc/ezjail #</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>console login and install pkg</h4>
+
+<p>Logon to the jail and install pkg we might need to configure a dns server or use a proxy sever to install pkg.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc/ezjail # ezjail-admin console stafdns
+</span><span class='line'>root@stafdns:~ # echo "nameserver 9.9.9.9" &gt; /etc/resolv.conf
+</span><span class='line'>root@stafdns:~ # pkg
+</span><span class='line'>The package management tool is not yet installed on your system.
+</span><span class='line'>Do you want to fetch and install it now? [y/N]: y
+</span><span class='line'>Bootstrapping pkg from pkg+http://pkg.FreeBSD.org/FreeBSD:11:amd64/quarterly, please wait...
+</span><span class='line'>Verifying signature with trusted certificate pkg.freebsd.org.2013102301... done
+</span><span class='line'>[stafdns] Installing pkg-1.10.5_1...
+</span><span class='line'>[stafdns] Extracting pkg-1.10.5_1: 100%
+</span><span class='line'>pkg: not enough arguments
+</span><span class='line'>Usage: pkg [-v] [-d] [-l] [-N] [-j &lt;jail name or id&gt;|-c &lt;chroot path&gt;|-r &lt;rootdir&gt;] [-C &lt;configuration file&gt;] [-R &lt;repo config dir&gt;] [-o var=value] [-4|-6] &lt;command&gt; [&lt;args&gt;]
+</span><span class='line'>
+</span><span class='line'>For more information on available commands and options see 'pkg help'.
+</span><span class='line'>root@stafdns:~ #
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Install stubby</h2>
+
+<p>Stubby available in the <a href="https://www.freebsd.org/ports/">FreeBSD Ports</a> in the getdns package, &hellip;but it isn&rsquo;t installed when you install the binary package. To install stubby we need to it from source.</p>
+
+<h3>dig</h3>
+
+<p>To debug dns issues dig a handy tool to have&hellip;.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/ports/dns/getdns # pkg install bind-tools
+</span><span class='line'>Updating FreeBSD repository catalogue...
+</span><span class='line'>FreeBSD repository is up to date.
+</span><span class='line'>All repositories are up to date.
+</span><span class='line'>Updating database digests format: 100%
+</span><span class='line'>The following 4 package(s) will be affected (of 0 checked):
+</span><span class='line'>
+</span><span class='line'>New packages to be INSTALLED:
+</span><span class='line'>        bind-tools: 9.12.2P1
+</span><span class='line'>        idnkit: 1.0_7
+</span><span class='line'>        py27-ply: 3.11
+</span><span class='line'>        json-c: 0.13
+</span><span class='line'>
+</span><span class='line'>Number of packages to be installed: 4
+</span><span class='line'>
+</span><span class='line'>The process will require 42 MiB more space.
+</span><span class='line'>4 MiB to be downloaded.
+</span><span class='line'>
+</span><span class='line'>Proceed with this action? [y/N]: y</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Update your ports tree</h3>
+
+<h4>Physical system</h4>
+
+<p>On a physical FreeBSD system execute <code>portsnap fetch</code> and <code>portsnap extract</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # portsnap fetch
+</span><span class='line'>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+</span><span class='line'>Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+</span><span class='line'>Fetching snapshot metadata... done.
+</span><span class='line'>Updating from Sat Sep  8 09:31:35 CEST 2018 to Sun Sep  9 09:51:49 CEST 2018.
+</span><span class='line'>Fetching 4 metadata patches... done.
+</span><span class='line'>Applying metadata patches... done.
+</span><span class='line'>Fetching 0 metadata files... done.
+</span><span class='line'>Fetching 44 patches. 
+</span><span class='line'>(44/44) 100.00%  done.                                
+</span><span class='line'>done.
+</span><span class='line'>Applying patches... 
+</span><span class='line'>done.
+</span><span class='line'>Fetching 2 new ports or files... done.
+</span><span class='line'>root@rataplan:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # portsnap extract
+</span><span class='line'>/usr/ports/.arcconfig
+</span><span class='line'>/usr/ports/.gitattributes
+</span><span class='line'>/usr/ports/.gitauthors
+</span><span class='line'>/usr/ports/.gitignore
+</span><span class='line'>/usr/ports/.gitmessage
+</span><span class='line'>/usr/ports/CHANGES
+</span><span class='line'>/usr/ports/CONTRIBUTING.md
+</span><span class='line'>/usr/ports/COPYRIGHT
+</span><span class='line'>/usr/ports/GIDs
+</span><span class='line'>/usr/ports/Keywords/desktop-file-utils.ucl
+</span><span class='line'>/usr/ports/Keywords/fc.ucl
+</span><span class='line'>/usr/ports/Keywords/fcfontsdir.ucl
+</span><span class='line'>
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>
+</span><span class='line'>/usr/ports/x11/xzoom/
+</span><span class='line'>/usr/ports/x11/yad/
+</span><span class='line'>/usr/ports/x11/yakuake-kde4/
+</span><span class='line'>/usr/ports/x11/yakuake/
+</span><span class='line'>/usr/ports/x11/yalias/
+</span><span class='line'>/usr/ports/x11/yeahconsole/
+</span><span class='line'>/usr/ports/x11/yelp/
+</span><span class='line'>/usr/ports/x11/zenity/
+</span><span class='line'>Building new INDEX files... done.</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Jail</h4>
+
+<p>I use <a href="https://erdgeist.org/arts/software/ezjail/">ezjail</a> to manage my <a href="https://www.freebsd.org/doc/handbook/jails.html">FreeBSD jails</a>. Execute the <code>ezjail-admin update -P</code> to update the ports tree inside your jails.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin update -P
+</span><span class='line'>Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+</span><span class='line'>Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+</span><span class='line'>Ports tree hasn't changed since last snapshot.
+</span><span class='line'>No updates needed.
+</span><span class='line'>Removing old files and directories... done.
+</span><span class='line'>Extracting new files:
+</span><span class='line'>/usr/jails/basejail/usr/ports/archivers/py-lz4/
+</span><span class='line'>/usr/jails/basejail/usr/ports/astro/wmsolar/
+</span><span class='line'>/usr/jails/basejail/usr/ports/audio/musicpd/
+</span><span class='line'>/usr/jails/basejail/usr/ports/biology/seaview/
+</span><span class='line'>/usr/jails/basejail/usr/ports/deskutils/gsimplecal/
+</span><span class='line'>/usr/jails/basejail/usr/ports/deskutils/xfce4-tumbler/
+</span><span class='line'>/usr/jails/basejail/usr/ports/devel/eric6/
+</span><span class='line'>/usr/jails/basejail/usr/ports/devel/es-eric6/
+</span><span class='line'>/usr/jails/basejail/usr/ports/devel/ioncube/
+</span><span class='line'>/usr/jails/basejail/usr/ports/devel/liblouis/
+</span><span class='line'>/usr/jails/basejail/usr/ports/devel/monodevelop/
+</span><span class='line'>/usr/jails/basejail/usr/ports/devel/rudeconfig/
+</span><span class='line'>/usr/jails/basejail/usr/ports/emulators/ppsspp-qt5/
+</span><span class='line'>/usr/jails/basejail/usr/ports/emulators/ppsspp/
+</span><span class='line'>/usr/jails/basejail/usr/ports/german/eric6/
+</span><span class='line'>/usr/jails/basejail/usr/ports/java/linux-oracle-jdk10/
+</span><span class='line'>/usr/jails/basejail/usr/ports/java/linux-oracle-jre10/
+</span><span class='line'>/usr/jails/basejail/usr/ports/java/openjdk8/
+</span><span class='line'>/usr/jails/basejail/usr/ports/lang/gcc6-devel/
+</span><span class='line'>/usr/jails/basejail/usr/ports/lang/gcc7-devel/
+</span><span class='line'>/usr/jails/basejail/usr/ports/lang/gcc8-devel/
+</span><span class='line'>/usr/jails/basejail/usr/ports/lang/gcc9-devel/
+</span><span class='line'>/usr/jails/basejail/usr/ports/misc/ree/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net-im/psi/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net-mgmt/p5-Net-SNMP/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net/Makefile
+</span><span class='line'>/usr/jails/basejail/usr/ports/net/charm/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net/linknx/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net/py-maxminddb/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net/py-shodan/
+</span><span class='line'>/usr/jails/basejail/usr/ports/net/tcpreen/
+</span><span class='line'>/usr/jails/basejail/usr/ports/ports-mgmt/pkg-devel/
+</span><span class='line'>/usr/jails/basejail/usr/ports/print/ghostscript9-agpl-base/
+</span><span class='line'>/usr/jails/basejail/usr/ports/russian/eric6/
+</span><span class='line'>/usr/jails/basejail/usr/ports/science/Makefile
+</span><span class='line'>/usr/jails/basejail/usr/ports/science/metaphysicl/
+</span><span class='line'>/usr/jails/basejail/usr/ports/science/namd/
+</span><span class='line'>/usr/jails/basejail/usr/ports/security/sancp/
+</span><span class='line'>/usr/jails/basejail/usr/ports/security/testssl.sh/
+</span><span class='line'>/usr/jails/basejail/usr/ports/textproc/scim-bridge/
+</span><span class='line'>/usr/jails/basejail/usr/ports/www/orangehrm/
+</span><span class='line'>/usr/jails/basejail/usr/ports/www/smarty3/
+</span><span class='line'>/usr/jails/basejail/usr/ports/www/tinytinyhttpd/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11-wm/spectrwm/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/plasma5-plasma-workspace/
+</span><span class='line'>/usr/jails/basejail/usr/ports/x11/sddm/
+</span><span class='line'>Building new INDEX files... done.
+</span><span class='line'>root@rataplan:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Install stubby</h3>
+
+<p>Go to the getdns ports directory</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/root # cd /usr/ports/dns/getdns/
+</span><span class='line'>root@stafproxy:/usr/ports/dns/getdns # make config</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and run <code>make config</code> select <code>[ ] STUBBY    Build with Stubby DNS/TLS resolver</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>┌─────────────────────────────── getdns-1.4.2 ─────────────────────────────────┐
+</span><span class='line'>│ ┌──────────────────────────────────────────────────────────────────────────┐ │
+</span><span class='line'>│ │+[x] DOCS      Build and/or install documentation                         │ │
+</span><span class='line'>│ │+[ ] LIBEV     Build with libev extension                                 │ │
+</span><span class='line'>│ │+[ ] LIBEVENT  Build with libevent extension                              │ │
+</span><span class='line'>│ │+[ ] LIBUV     Build with libuv extension                                 │ │
+</span><span class='line'>│ │+[x] STUBBY    Build with Stubby DNS/TLS resolver                         │ │
+</span><span class='line'>│ └──────────────────────────────────────────────────────────────────────────┘ │
+</span><span class='line'>├──────────────────────────────────────────────────────────────────────────────┤
+</span><span class='line'>│                       &lt;  OK  &gt;            &lt;Cancel&gt;                           │
+</span><span class='line'>└──────────────────────────────────────────────────────────────────────────────┘</span></code></pre></td></tr></table></div></figure>
+
+
+<p>run <code>make</code> and accept the defaults.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/dns/getdns # make
+</span><span class='line'>===&gt;  License BSD3CLAUSE accepted by the user
+</span><span class='line'>===&gt;   getdns-1.4.2 depends on file: /usr/local/sbin/pkg - found
+</span><span class='line'>=&gt; getdns-1.4.2.tar.gz doesn't seem to exist in /var/ports/distfiles/.
+</span><span class='line'>=&gt; Attempting to fetch https://getdnsapi.net/dist/getdns-1.4.2.tar.gz
+</span><span class='line'>getdns-1.4.2.tar.gz                           100% of 1034 kB 1092 kBps 00m01s
+</span><span class='line'>===&gt; Fetching all distfiles required by getdns-1.4.2 for building
+</span><span class='line'>===&gt;  Extracting for getdns-1.4.2
+</span><span class='line'>=&gt; SHA256 Checksum OK for getdns-1.4.2.tar.gz.
+</span><span class='line'>
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>
+</span><span class='line'>/usr/bin/install -c -m 644 getdns_service_sync.3 /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/man/man3
+</span><span class='line'>/usr/bin/install -c -m 644 getdns_validate_dnssec.3 /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/man/man3
+</span><span class='line'>/usr/bin/strip /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/lib/libgetdns*.so.*
+</span><span class='line'>/usr/bin/strip /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/bin/getdns_*
+</span><span class='line'>/usr/bin/strip /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/bin/stubby
+</span><span class='line'>/bin/mv /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/etc/stubby/stubby.yml  /var/ports/basejail/usr/ports/dns/getdns/work/stage/usr/local/etc/stubby/stubby.yml.sample
+</span><span class='line'>====&gt; Compressing man pages (compress-man)
+</span><span class='line'>===&gt; Staging rc.d startup script(s)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>make install</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/dns/getdns # make install
+</span><span class='line'>===&gt;  Installing for getdns-1.4.2
+</span><span class='line'>===&gt;  Checking if getdns already installed
+</span><span class='line'>===&gt;   Registering installation for getdns-1.4.2
+</span><span class='line'>[stafproxy] Installing getdns-1.4.2...
+</span><span class='line'>***
+</span><span class='line'>***  !!! IMPORTANT !!!!  libgetdns needs a DNSSEC trust anchor!
+</span><span class='line'>***
+</span><span class='line'>***  For the library to be able to perform DNSSEC, the root
+</span><span class='line'>***  trust anchor needs to be present in presentation format
+</span><span class='line'>***  in the file:
+</span><span class='line'>***     /usr/local/etc/unbound/root.key
+</span><span class='line'>***
+</span><span class='line'>***  We recomend using unbound-anchor to retrieve and install
+</span><span class='line'>***  the root trust anchor like this:
+</span><span class='line'>***     su -m unbound -c /usr/local/sbin/unbound-anchor
+</span><span class='line'>***
+</span><span class='line'>
+</span><span class='line'>===&gt; SECURITY REPORT: 
+</span><span class='line'>      This port has installed the following files which may act as network
+</span><span class='line'>      servers and may therefore pose a remote security risk to the system.
+</span><span class='line'>/usr/local/lib/libgetdns.a(stub.o)
+</span><span class='line'>/usr/local/lib/libgetdns.so.10.0.2
+</span><span class='line'>/usr/local/lib/libgetdns.a(server.o)
+</span><span class='line'>
+</span><span class='line'>      This port has installed the following startup scripts which may cause
+</span><span class='line'>      these network services to be started at boot time.
+</span><span class='line'>/usr/local/etc/rc.d/stubby
+</span><span class='line'>
+</span><span class='line'>      If there are vulnerabilities in these programs there may be a security
+</span><span class='line'>      risk to the system. FreeBSD makes no guarantee about the security of
+</span><span class='line'>      ports included in the Ports Collection. Please type 'make deinstall'
+</span><span class='line'>      to deinstall the port if this is a concern.
+</span><span class='line'>
+</span><span class='line'>      For more information, and contact details about the security
+</span><span class='line'>      status of this software, see the following webpage: 
+</span><span class='line'>https://getdnsapi.net/
+</span><span class='line'>root@stafproxy:/usr/ports/dns/getdns # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Lock the package to avoid that the package gets replaced by a getdns package without stubby.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/ports/dns/getdns # pkg lock getdns
+</span><span class='line'>getdns-1.4.2: lock this package? [y/N]: y
+</span><span class='line'>Locking getdns-1.4.2
+</span><span class='line'>root@stafproxy:/usr/ports/dns/getdns # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Configure stubby</h2>
+
+<h3>Enable the stubby service</h3>
+
+<p>Use <code>sysrc</code> to enable the stubby service&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # service stubby start
+</span><span class='line'>Cannot 'start' stubby. Set stubby_enable to YES in /etc/rc.conf or use 'onestart' instead of 'start'.
+</span><span class='line'>root@stafproxy:/usr/local/etc # service stubby rcvar
+</span><span class='line'># stubby
+</span><span class='line'>#
+</span><span class='line'>stubby_enable="NO"
+</span><span class='line'>#   (default: "")
+</span><span class='line'>
+</span><span class='line'>root@stafproxy:/usr/local/etc # sysrc stubby_enable="YES"
+</span><span class='line'>stubby_enable:  -&gt; YES
+</span><span class='line'>root@stafproxy:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>choose your upstream dns provider</h3>
+
+<p>Edit the stubby.yml file and uncomment the upstream dns server that you want the use. Stubby will loadbalance the dns traffic to all configured upstream dns servers by default. This is configured with the round_robin_upstreams directive, if set to 1 the traffic is loadbalanced, if set 0 stubby will use the first configured dns server.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:/usr/local/etc # vi stubby/stubby.yml</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Change the port</h3>
+
+<p>We&rsquo;ll setup dnsmasq to cache our dns requests modify the <code>listen_addresses</code> directive and set the port 53000</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>listen_addresses:
+</span><span class='line'>  - 127.0.0.1@53000
+</span><span class='line'>  - 0::1@53000</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Start it</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # service stubby start
+</span><span class='line'>Starting stubby.
+</span><span class='line'>[07:51:37.865826] STUBBY: Read config from file /usr/local/etc/stubby/stubby.yml
+</span><span class='line'>root@stafproxy:/usr/local/etc # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>test it</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/root # dig @&lt;ip_of_the_jail&gt; -p 53000 www.wagemakers.be
+</span><span class='line'>
+</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.8.3-P4 &lt;&lt;&gt;&gt; @127.0.0.53 -p 53000 www.wagemakers.be
+</span><span class='line'>; (1 server found)
+</span><span class='line'>;; global options: +cmd
+</span><span class='line'>;; Got answer:
+</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 56970
+</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+</span><span class='line'>
+</span><span class='line'>;; OPT PSEUDOSECTION:
+</span><span class='line'>; EDNS: version: 0, flags:; udp: 4096
+</span><span class='line'>;; QUESTION SECTION:
+</span><span class='line'>;www.wagemakers.be.             IN      A
+</span><span class='line'>
+</span><span class='line'>;; ANSWER SECTION:
+</span><span class='line'>www.wagemakers.be.      85181   IN      CNAME   wagemakers.be.
+</span><span class='line'>wagemakers.be.          85181   IN      A       95.215.185.144
+</span><span class='line'>
+</span><span class='line'>;; Query time: 110 msec
+</span><span class='line'>;; SERVER: 127.0.0.53#53000(127.0.0.53)
+</span><span class='line'>;; WHEN: Sat Sep 22 13:16:11 2018
+</span><span class='line'>;; MSG SIZE  rcvd: 119
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>dnsmasq</h3>
+
+<h4>Install dnsmasq.</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/root # pkg install dnsmasq
+</span><span class='line'>Updating FreeBSD repository catalogue...
+</span><span class='line'>FreeBSD repository is up to date.
+</span><span class='line'>All repositories are up to date.
+</span><span class='line'>The following 1 package(s) will be affected (of 0 checked):
+</span><span class='line'>
+</span><span class='line'>New packages to be INSTALLED:
+</span><span class='line'>        dnsmasq: 2.79,1
+</span><span class='line'>
+</span><span class='line'>Number of packages to be installed: 1
+</span><span class='line'>
+</span><span class='line'>329 KiB to be downloaded.
+</span><span class='line'>
+</span><span class='line'>Proceed with this action? [y/N]: y
+</span><span class='line'>[stafproxy] [1/1] Fetching dnsmasq-2.79,1.txz: 100%  329 KiB 336.4kB/s    00:01
+</span><span class='line'>Checking integrity... done (0 conflicting)
+</span><span class='line'>[stafproxy] [1/1] Installing dnsmasq-2.79,1...
+</span><span class='line'>[stafproxy] [1/1] Extracting dnsmasq-2.79,1: 100%
+</span><span class='line'>Message from dnsmasq-2.79,1:
+</span><span class='line'>
+</span><span class='line'>*** To enable dnsmasq, edit /usr/local/etc/dnsmasq.conf and
+</span><span class='line'>*** set dnsmasq_enable="YES" in /etc/rc.conf[.local]
+</span><span class='line'>***
+</span><span class='line'>*** Further options and actions are documented inside
+</span><span class='line'>*** /usr/local/etc/rc.d/dnsmasq
+</span><span class='line'>root@stafproxy:/root #</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Enable dnsmasq.</h4>
+
+<p>Usae <code>sysrc</code> to enable the dnsmasq service.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/root # sysrc dnsmasq_enable="YES"
+</span><span class='line'>dnsmasq_enable:  -&gt; YES
+</span><span class='line'>root@stafproxy:/root #</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Configure dnsmasq</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # mv dnsmasq.conf dnsmasq.conf_org
+</span><span class='line'>root@stafproxy:/usr/local/etc # vi dnsmasq.conf</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>server=&lt;ip_address_of_the_jail&gt;#53000
+</span><span class='line'>listen-address=&lt;ip_address_of_the_jail&gt;
+</span><span class='line'>interface=&lt;netork_interface_of_the_jail&gt;
+</span><span class='line'>bind-interfaces</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>start dnsmasq</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # service dnsmasq start
+</span><span class='line'>Starting dnsmasq.
+</span><span class='line'>root@stafproxy:/usr/local/etc #</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>test it</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # dig @192.168.1.45 www.wagemakers.be
+</span><span class='line'>
+</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.8.3-P4 &lt;&lt;&gt;&gt; @192.168.1.45 www.wagemakers.be
+</span><span class='line'>; (1 server found)
+</span><span class='line'>;; global options: +cmd
+</span><span class='line'>;; Got answer:
+</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 32987
+</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+</span><span class='line'>
+</span><span class='line'>;; OPT PSEUDOSECTION:
+</span><span class='line'>; EDNS: version: 0, flags:; udp: 4096
+</span><span class='line'>;; QUESTION SECTION:
+</span><span class='line'>;www.wagemakers.be.             IN      A
+</span><span class='line'>
+</span><span class='line'>;; ANSWER SECTION:
+</span><span class='line'>www.wagemakers.be.      86000   IN      CNAME   wagemakers.be.
+</span><span class='line'>wagemakers.be.          86000   IN      A       95.215.185.144
+</span><span class='line'>
+</span><span class='line'>;; Query time: 308 msec
+</span><span class='line'>;; SERVER: 192.168.1.45#53(192.168.1.45)
+</span><span class='line'>;; WHEN: Sun Oct  7 09:16:51 2018
+</span><span class='line'>;; MSG SIZE  rcvd: 119
+</span><span class='line'>
+</span><span class='line'>root@stafproxy:/usr/local/etc #
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Update /etc/resolv.conf</h4>
+
+<p>Update your <code>/etc/resolv.conf</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # vi /etc/resolv.conf</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>nameserver &lt;ip_address_of_the_jail&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>and test it;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafproxy:/usr/local/etc # dig www.wagemakers.be
+</span><span class='line'>
+</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.8.3-P4 &lt;&lt;&gt;&gt; www.wagemakers.be
+</span><span class='line'>;; global options: +cmd
+</span><span class='line'>;; Got answer:
+</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27629
+</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 0
+</span><span class='line'>
+</span><span class='line'>;; QUESTION SECTION:
+</span><span class='line'>;www.wagemakers.be.             IN      A
+</span><span class='line'>
+</span><span class='line'>;; ANSWER SECTION:
+</span><span class='line'>www.wagemakers.be.      85702   IN      CNAME   wagemakers.be.
+</span><span class='line'>wagemakers.be.          85702   IN      A       95.215.185.144
+</span><span class='line'>
+</span><span class='line'>;; Query time: 1 msec
+</span><span class='line'>;; SERVER: 192.168.1.45#53(192.168.1.45)
+</span><span class='line'>;; WHEN: Sun Oct  7 09:21:49 2018
+</span><span class='line'>;; MSG SIZE  rcvd: 78
+</span><span class='line'>
+</span><span class='line'>root@stafproxy:/usr/local/etc #</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/</a></li>
+<li><a href="https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/jails-ezjail.html">https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/jails-ezjail.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DNS Privacy With Stubby (Part 1 GNU/Linux)]]></title>
@@ -24,7 +879,7 @@
 
 <p>DNS traffic is insecure and runs over <a href="https://nl.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> port 53 (<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> for <a href="https://en.wikipedia.org/wiki/DNS_zone_transfer">zone transfers</a> ) unecrypted by default.</p>
 
-<p>This make your encrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
+<p>This make your unencrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
 
 <ul>
 <li>anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.</li>
@@ -9499,180 +10354,6 @@ Have fun...
 
 
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Thunderbird: Importing S/mime Certificate Failed]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed/"/>
-    <updated>2016-01-17T09:03:53+01:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2016/01/17/thunderbird-importing-s-slash-mime-certificate-failed</id>
-    <content type="html"><![CDATA[<p><img class="left" src="https://stafwag.github.io/blog/images/thunderbird_import_smime_failed.png" width="1000" height="835" title="&#34;thunderbird smime failed&#34;" alt="&#34;thunderbird smime failed&#34;"></p>
-
-<p>On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate"><a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a></a>
-you get a list of free <a href="https://en.wikipedia.org/wiki/S/MIME">s/mime</a> certificate.</p>
-
-<p>I ordered a free 30 days certificate at <a href="globalsign">globalsign</a>: <a href="https://www.globalsign.com/en/personalsign/trial/"><a href="https://www.globalsign.com/en/personalsign/trial/">https://www.globalsign.com/en/personalsign/trial/</a></a></p>
-
-<p>The import of the <a href="https://en.wikipedia.org/wiki/PKCS_12">pkcs12</a> failed in Thunderbird with the message: &ldquo;The PKCS #12 operation failed for unknown reasons.&rdquo;</p>
-
-<p>Searching the internet didn&rsquo;t provide a solution. To debug this issue I started to extract the private / certificate from the pkcs12 file provided by globalsign and creating a new one.</p>
-
-<p>To execute this command I use an encrypted <a href="https://gitlab.com/cryptsetup/cryptsetup/blob/master/README.md">luks</a> volume.</p>
-
-<h1>Create a new pkcs12 file</h1>
-
-<h2>verifying the pkx file</h2>
-
-<h3>password too long?</h3>
-
-<p>The first issue was that the password of my pkx was too long by default the openssl pkcs12 command seems to have a limit of 32 characters.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx 
-</span><span class='line'>Enter Import Password:
-</span><span class='line'>Can't read Password
-</span><span class='line'>[staf@vicky staf@wagemakers.be]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Use the &ldquo;-passin pass&rdquo;, &ldquo;-passin stdin&rdquo; or &ldquo;-passin file&rdquo; argument resolves this issue. The &ldquo;-passin pass&rdquo; argument will show the password on the screen and in shell history, the &ldquo;-passin stdin&rdquo; will show your password on the screen, the &ldquo;-passin file&rdquo; will leave your password on the (hopefully encrypted) filesystem  so I went with the &ldquo;-pass file&rdquo; option.</p>
-
-<h3>Created password file</h3>
-
-<p>Create the file that holds your password with the corrected file permissions, you must be the only one that is able to read this file:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ touch pass
-</span><span class='line'>[staf@vicky staf@wagemakers.be]$ chmod 600 pass
-</span><span class='line'>[staf@vicky staf@wagemakers.be]$ vi pass</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Try again</h3>
-
-<p>With the &ldquo;-passin file&rdquo; argument we are able to the pkcs12 file.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -passin file:pass
-</span><span class='line'>MAC verified OK
-</span><span class='line'>Bag Attributes
-</span><span class='line'>    localKeyID: 9B B7 F3 7A 96 46 1F 08 28 A2 BC 2B 87 0E 53 92 29 B4 7D 7D 
-</span><span class='line'>Key Attributes: &lt;No Attributes&gt;
-</span><span class='line'>Enter PEM pass phrase:
-</span><span class='line'>Bag Attributes
-</span><span class='line'>    localKeyID: 9B B7 F3 7A 96 46 1F 08 28 A2 BC 2B 87 0E 53 92 29 B4 7D 7D 
-</span><span class='line'>subject=/CN=staf@wagemakers.be/emailAddress=staf@wagemakers.be
-</span><span class='line'>issuer=/C=BE/O=GlobalSign nv-sa/CN=GlobalSign PersonalSign 1 CA - SHA256 - G2
-</span><span class='line'>-----BEGIN CERTIFICATE-----
-</span><span class='line'>&lt;snip&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Extract</h2>
-
-<p>We&rsquo;ll extract the private key and the certificates and build a new pkcs12 file and import this pkcs12 file into thunderbird.</p>
-
-<h3>Extract the private key</h3>
-
-<p>The private key is encrypted with the &ldquo;bag&rdquo; so need to type it or copy/pass it&hellip;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -nocerts -out key.pem -passin file:pass 
-</span><span class='line'>MAC verified OK
-</span><span class='line'>Enter PEM pass phrase:
-</span><span class='line'>Verifying - Enter PEM pass phrase:</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Extract the client certificate</h3>
-
-<p>The client certificate isn&rsquo;t encrypted so you can leave the pem password empty.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -clcerts -out staf.pem -passin file:pass 
-</span><span class='line'>MAC verified OK
-</span><span class='line'>
-</span><span class='line'>Enter PEM pass phrase:
-</span><span class='line'>[staf@vicky staf@wagemakers.be]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Verify the key and certificate</h3>
-
-<p>To verify that the certificate and the private belongs together we need to verify the modulus of the key and the certificate the sha1sum should match.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky staf@wagemakers.be]$ openssl rsa -in key.pem -modulus -noout | sha1sum
-</span><span class='line'>Enter pass phrase for key.pem:
-</span><span class='line'>1234567890123456789012345678901234567890  -
-</span><span class='line'>[staf@vicky staf@wagemakers.be]$ </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl x509 -in staf.pem -modulus -noout | sha1sum
-</span><span class='line'>1234567890123456789012345678901234567890  -
-</span><span class='line'>[staf@vicky staf@wagemakers.be]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Extract the signing certificate(s)</h3>
-
-<p>The following command extracts the ca certificates.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -in staf.pkx -cacerts -out cacerts.pem -passin file:pass
-</span><span class='line'>MAC verified OK
-</span><span class='line'>Enter PEM pass phrase:</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Create a new pkcs12 file</h2>
-
-<p>This time we use a 32 characters password.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky staf@wagemakers.be]$ openssl pkcs12 -export -in staf.pem -inkey key.pem -certfile cacerts.pem -out staf_new.p12
-</span><span class='line'>Enter pass phrase for key.pem:
-</span><span class='line'>Enter Export Password:
-</span><span class='line'>Verifying - Enter Export Password:</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>Import the the new pkcs12 file</h1>
-
-<p><img class="right" src="https://stafwag.github.io/blog/images/thunderbird_import_smime_ok.png" width="598" height="152" title="&#34;thunderbird smime import ok&#34;" alt="&#34;thunderbird smime import ok&#34;">
-Not sure what the issue was with original pkcs12 but the import works now&hellip;.
- - it might have been the 32 characters password -.   After I was able to use the signing and encryption part in thunderbird.</p>
-
-<p><strong><em> Have fun </em></strong></p>
 ]]></content>
   </entry>
   

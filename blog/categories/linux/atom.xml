@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-09-09T11:24:10+02:00</updated>
+  <updated>2018-10-07T11:39:22+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -24,7 +24,7 @@
 
 <p>DNS traffic is insecure and runs over <a href="https://nl.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> port 53 (<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> for <a href="https://en.wikipedia.org/wiki/DNS_zone_transfer">zone transfers</a> ) unecrypted by default.</p>
 
-<p>This make your encrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
+<p>This make your unencrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
 
 <ul>
 <li>anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.</li>
