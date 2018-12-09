@@ -45,7 +45,7 @@ In this article we'll use Quad9 but you could also with cloudfare or another dns
 
 ## Enable DNS-over-TLS
 
-<a href="/images/opnsense_enable_dns_tls.png"><img src="/images/opnsense_enable_dns_tls.png" class="left" width="300" height="407" alt="opnsense_enable_dns_tls.png" /> </a>
+<a href="/images/opnsense_enable_dns_tls.png"><img src="/images/opnsense_enable_dns_tls.png" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a>
 
 You need to configure your firewall to use your upstream dns provider. You also want to make sure your isp dns servers aren't used.
 
