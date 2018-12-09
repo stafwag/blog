@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/</loc>
+    <lastmod>2018-12-09T08:11:38+01:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/</loc>
     <lastmod>2018-10-07T09:06:05+02:00</lastmod>
   </url>
@@ -561,5 +565,14 @@
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/dns/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/unbound/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/stubby/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/dnsmasq/</loc>
   </url>
 </urlset>

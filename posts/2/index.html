@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Model-m Tux Update... Oct 20th, 2017 5:27 pm I own a Unicomp model-m keyboard. The keyboard has a nice key feel but it has windows super key(s). I &hellip;">
+  <meta name="description" content="Bacula on FreeBSD (Part 3 Storage Setup) Dec 27th, 2017 11:25 am I finally got the time to continue with my bacula backup setup. See my previous &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,337 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2017/12/27/bacula-on-freebsd-part3/">Bacula on FreeBSD (Part 3 Storage Setup)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2017-12-27T11:25:25+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>11:25 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="right" src="/blog/images/bacula_setup.jpg" width="500" height="416" title="&#34;bacula setup&#34;" alt="&#34;bacula setup&#34;"></p>
+
+<p>I finally got the time to continue with my <a href="https://blog.bacula.org/">bacula</a> backup setup. See my previous posts about the start of my bacula setup.</p>
+
+<ul>
+<li><a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">bacula on freebsd_part 1</a></li>
+<li><a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a></li>
+</ul>
+
+
+<h1>Storage setup</h1>
+
+<p>I created a new zfs pool &ldquo;bigpool&rdquo; with some old harddisks I probably need to replace them with bigger harddisk in the further.</p>
+
+<h2>zfs filesystem</h2>
+
+<p>First we create a zfs filesystem for our bacula storage.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # zfs create bigpool/bacula
+</span><span class='line'>root@rataplan:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>delegate to jail</h2>
+
+<h3>jailed</h3>
+
+<p>We want to use the zfs dataset in the bacula jail so we need to delegate the control to the dataset into the bacula jail.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # zfs set jailed=on bigpool/bacula
+</span><span class='line'>root@rataplan:~ # zfs jail stafbacula bigpool/bacula</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>verify</h3>
+
+<p>When we logon to the jail we see that the zfs dateset is available.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin console stafbacula
+</span><span class='line'>Last login: Wed Dec 27 10:52:27 on pts/2
+</span><span class='line'>FreeBSD 11.1-RELEASE-p4 (GENERIC) #0: Tue Nov 14 06:12:40 UTC 2017
+</span><span class='line'>
+</span><span class='line'>Welcome to FreeBSD!
+</span><span class='line'>
+</span><span class='line'>Release Notes, Errata: https://www.FreeBSD.org/releases/
+</span><span class='line'>Security Advisories:   https://www.FreeBSD.org/security/
+</span><span class='line'>FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
+</span><span class='line'>FreeBSD FAQ:           https://www.FreeBSD.org/faq/
+</span><span class='line'>Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
+</span><span class='line'>FreeBSD Forums:        https://forums.FreeBSD.org/
+</span><span class='line'>
+</span><span class='line'>Documents installed with the system are in the /usr/local/share/doc/freebsd/
+</span><span class='line'>directory, or can be installed later with:  pkg install en-freebsd-doc
+</span><span class='line'>For other languages, replace "en" with a language code like de or fr.
+</span><span class='line'>
+</span><span class='line'>Show the version of FreeBSD installed:  freebsd-version ; uname -a
+</span><span class='line'>Please include that output and any error messages when posting questions.
+</span><span class='line'>Introduction to manual pages:  man man
+</span><span class='line'>FreeBSD directory layout:      man hier
+</span><span class='line'>
+</span><span class='line'>Edit /etc/motd to change this login announcement.
+</span><span class='line'>You have new mail.
+</span><span class='line'>root@stafbacula:~ # zfs list
+</span><span class='line'>NAME             USED  AVAIL  REFER  MOUNTPOINT
+</span><span class='line'>bigpool         1.14M   433G    23K  /bigpool
+</span><span class='line'>bigpool/bacula    23K   433G    23K  /bigpool/bacula
+</span><span class='line'>root@stafbacula:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>When we restart the jail we see that the dataset isn&rsquo;t available anymore in the jail</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@stafbacula:~ # logout
+</span><span class='line'>root@rataplan:~ # /usr/local/etc/rc.d/ezjail restart stafbacula
+</span><span class='line'>Stopping jails: stafbacula.
+</span><span class='line'>Starting jails: stafbacula.
+</span><span class='line'>/etc/rc.d/jail: WARNING: Per-jail configuration via jail_* variables  is obsolete.  Please consider migrating to /etc/jail.conf.
+</span><span class='line'>root@rataplan:~ # ezjail-admin console stafbacula
+</span><span class='line'>Last login: Wed Dec 27 10:58:33 on pts/2
+</span><span class='line'>FreeBSD 11.1-RELEASE-p4 (GENERIC) #0: Tue Nov 14 06:12:40 UTC 2017
+</span><span class='line'>
+</span><span class='line'>Welcome to FreeBSD!
+</span><span class='line'>
+</span><span class='line'>Release Notes, Errata: https://www.FreeBSD.org/releases/
+</span><span class='line'>Security Advisories:   https://www.FreeBSD.org/security/
+</span><span class='line'>FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
+</span><span class='line'>FreeBSD FAQ:           https://www.FreeBSD.org/faq/
+</span><span class='line'>Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
+</span><span class='line'>FreeBSD Forums:        https://forums.FreeBSD.org/
+</span><span class='line'>
+</span><span class='line'>Documents installed with the system are in the /usr/local/share/doc/freebsd/
+</span><span class='line'>directory, or can be installed later with:  pkg install en-freebsd-doc
+</span><span class='line'>For other languages, replace "en" with a language code like de or fr.
+</span><span class='line'>
+</span><span class='line'>Show the version of FreeBSD installed:  freebsd-version ; uname -a
+</span><span class='line'>Please include that output and any error messages when posting questions.
+</span><span class='line'>Introduction to manual pages:  man man
+</span><span class='line'>FreeBSD directory layout:      man hier
+</span><span class='line'>
+</span><span class='line'>Edit /etc/motd to change this login announcement.
+</span><span class='line'>You have new mail.
+</span><span class='line'>root@stafbacula:~ # zfs list
+</span><span class='line'>no datasets available
+</span><span class='line'>root@stafbacula:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>make persistent</h3>
+
+<h4>enable zfs in the jail</h4>
+
+<p>When the jail is booted it need to bring the zfs filesystem online. We need to add <code>zfs_enable=YES</code> to the jail rc.conf</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # vi /usr/jails/stafbacula/etc/rc.conf</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>bacula_dir="start"
+</span><span class='line'>bacula_dir_enable="yes"
+</span><span class='line'>zfs_enable="YES"</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>update the ezjail configuration</h4>
+
+<p>ezjail needs to jail the zfs dataset to the jail when it&rsquo;s start the jail.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # vi /usr/local/etc/ezjail/stafbacula</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We need to add the dataset to the jail&rsquo;s zfs_datasets. By default a jail isn&rsquo;t allowed to mount the zfs dataset so need to update jail&rsquo;s parmeters.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export jail_stafbacula_zfs_datasets="bigpool/bacula"
+</span><span class='line'>export jail_stafbacula_parameters="enforce_statfs=0 allow.mount=1 allow.mount.zfs=1 allow.mount.procfs=1 allow.mount.devfs=1"
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Restart the jail and verify that the zfs filesystem is available inside the jail</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin restart stafbacula
+</span><span class='line'>Stopping jails: stafbacula.
+</span><span class='line'>Starting jails: stafbacula.
+</span><span class='line'>/etc/rc.d/jail: WARNING: Per-jail configuration via jail_* variables  is obsolete.  Please consider migrating to /etc/jail.conf.
+</span><span class='line'>root@rataplan:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Verify that dataset is mounted</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@rataplan:~ # ezjail-admin console stafbacula
+</span><span class='line'>Last login: Wed Dec 27 11:36:04 on pts/2
+</span><span class='line'>FreeBSD 11.1-RELEASE-p4 (GENERIC) #0: Tue Nov 14 06:12:40 UTC 2017
+</span><span class='line'>
+</span><span class='line'>Welcome to FreeBSD!
+</span><span class='line'>
+</span><span class='line'>Release Notes, Errata: https://www.FreeBSD.org/releases/
+</span><span class='line'>Security Advisories:   https://www.FreeBSD.org/security/
+</span><span class='line'>FreeBSD Handbook:      https://www.FreeBSD.org/handbook/
+</span><span class='line'>FreeBSD FAQ:           https://www.FreeBSD.org/faq/
+</span><span class='line'>Questions List: https://lists.FreeBSD.org/mailman/listinfo/freebsd-questions/
+</span><span class='line'>FreeBSD Forums:        https://forums.FreeBSD.org/
+</span><span class='line'>
+</span><span class='line'>Documents installed with the system are in the /usr/local/share/doc/freebsd/
+</span><span class='line'>directory, or can be installed later with:  pkg install en-freebsd-doc
+</span><span class='line'>For other languages, replace "en" with a language code like de or fr.
+</span><span class='line'>
+</span><span class='line'>Show the version of FreeBSD installed:  freebsd-version ; uname -a
+</span><span class='line'>Please include that output and any error messages when posting questions.
+</span><span class='line'>Introduction to manual pages:  man man
+</span><span class='line'>FreeBSD directory layout:      man hier
+</span><span class='line'>
+</span><span class='line'>Edit /etc/motd to change this login announcement.
+</span><span class='line'>You have new mail.
+</span><span class='line'>root@stafbacula:~ # zfs list
+</span><span class='line'>NAME             USED  AVAIL  REFER  MOUNTPOINT
+</span><span class='line'>bigpool         1.14M   433G    23K  /bigpool
+</span><span class='line'>bigpool/bacula    23K   433G    23K  /bigpool/bacula
+</span><span class='line'>root@stafbacula:~ # df -h /bigpool/bacula
+</span><span class='line'>Filesystem                    Size    Used   Avail Capacity  Mounted on
+</span><span class='line'>zroot/usr/jails/stafbacula    2.6T    618M    2.6T     0%    /usr/jails/stafbacula
+</span><span class='line'>root@stafbacula:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="http://www.allanjude.com/blog/2013-10-05_poudriere_jail"><a href="http://www.allanjude.com/blog/2013-10-05_poudriere_jail">http://www.allanjude.com/blog/2013-10-05_poudriere_jail</a></a></li>
+</ul>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -6613,68 +6944,6 @@ Have fun
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2016/04/13/cgipaf-1-dot-3-5-released/">CGIpaf 1.3.5 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-04-13T11:00:13+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>11:00 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>CGIpaf 1.3.5 has been released</p>
-
-<h3>ChangeLog</h3>
-
-<h5>version 1.3.5         ( 13 Apr 2016 )</h5>
-
-<blockquote><ul>
-<li>pwd_mkdb errors were not handled correctly on BSD</li>
-<li>kyua test scripts added</li>
-</ul>
-</blockquote>
-
-<p>CGIpaf 1.3.5 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
-
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
-
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
-
-<p style="font-style: italic;">
-Have fun...
-</p>
-
-
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/3">&larr; Older</a>
@@ -6710,6 +6979,10 @@ Have fun...
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/">How to Configure DNS-over-TLS on OPNsense</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/">DNS Privacy With Stubby (Part 2 FreeBSD)</a>
       </li>
     
@@ -6723,10 +6996,6 @@ Have fun...
     
       <li class="post">
         <a href="/blog/blog/2018/06/04/nested-virtualization-in-kvm/">Nested Virtualization in KVM</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2018/05/11/32-bits-matters/">32 Bits Matters!</a>
       </li>
     
   </ul>

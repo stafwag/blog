@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Opnsense | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/opnsense/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-10-07T11:39:22+02:00</updated>
+  <updated>2018-12-09T09:25:33+01:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Configure DNS-over-TLS on OPNsense]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/"/>
+    <updated>2018-12-09T08:11:38+01:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/12/09/configure-dns-tls-on-opnsense</id>
+    <content type="html"><![CDATA[<h1>DNS-over-TLS</h1>
+
+<p>In my <a href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">previous blog posts</a> we configured <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby">Stubby </a> on GNU/Linux and FreeBSD.</p>
+
+<p><img class="right" src="/images/Logo_OPNsense.jpg" width="300" height="85" title="&ldquo;Logo_OPNsense.jpg&rdquo;" ></p>
+
+<p>In this blog article we&rsquo;ll configure <a href="https://en.wikipedia.org/wiki/DNS_over_TLS">DNS-over-TLS</a> with <a href="https://nlnetlabs.nl/projects/unbound/about/">Unbound</a> on <a href="https://opnsense.org/">OPNsense</a>. Both <a href="https://nlnetlabs.nl/projects/getdns/">Stubby</a> and <a href="https://nlnetlabs.nl/projects/unbound/about/">Unbound</a> are written by <a href="https://nlnet.nl/">NLnet</a>.</p>
+
+<h2>DNS resolvers</h2>
+
+<p>Stubby is a small dns resolver to encrypt your dns traffic, which makes it perfect to increase end-user privacy. Stubby can be integrated into existing dns setups.</p>
+
+<p><a href="http://http://www.thekelleys.org.uk/dnsmasq/doc.html">DNSmasq</a> is small dns resolver that can cache dns queries and forward dns traffic to other dns servers.</p>
+
+<p>Unbound is fast validating, caching DNS resolver that supports DNS-over-TLS.
+Unbound or dnsmaq are not full feature dns servers like <a href="https://www.isc.org/downloads/bind/">BIND</a>.</p>
+
+<p>The main difference beteen Unbound and DNSmasq is that Unbound can talk the the <a href="https://www.iana.org/domains/root/servers">root servers</a> directly while dnsmasq always needs to forward your dns queries to another dns server - your ISP dns server or a public dns servicve like (<a href="https://www.quad9.net/">Quad9</a>, <a href="https://1.1.1.1/">cloudfare</a>, <a href="https://developers.google.com/speed/public-dns/">google</a>, &hellip;) -</p>
+
+<p>Unbound has build-in support for DNS-over-TLS. DNSmasq needs an external DNS-over-TLS resolver like Stubby.</p>
+
+<h2>Which one to use?</h2>
+
+<p>It depends - as always -, Stubby can integrating easily in existing dns setups like dnsmasq. Unbound is one package that does it all and is more feature rich compared to DNSmasq.</p>
+
+<h1>OPNsense</h1>
+
+<p>I use <a href="https://opnsense.org/">OPNsense</a> as my firewall. Unbound is the default dns resolver on OPNsense so it makes (OPN)sense to use Unbound.</p>
+
+<h2>Choose your upstream DNS service</h2>
+
+<p>There&rsquo;re a few public DNS providers that supports DNS-over-tls the best known are <a href="https://www.quad9.net/">Quad9</a>, <a href="https://1.1.1.1/">cloudfare</a>. Quad9 will block malicious domains on the default dns servers 9.9.9.9/149.112.112.10 while 9.9.9.10 has no security blocklist.</p>
+
+<p>In this article we&rsquo;ll use Quad9 but you could also with cloudfare or another dns provider that you trust and has support for DNS-over-tls.</p>
+
+<h2>Enable DNS-over-TLS</h2>
+
+<p><a href="https://stafwag.github.io/blog/images/opnsense_enable_dns_tls.png"><img src="https://stafwag.github.io/blog/images/opnsense_enable_dns_tls.png" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a></p>
+
+<p>You need to configure your firewall to use your upstream dns provider. You also want to make sure your isp dns servers aren&rsquo;t used.</p>
+
+<h3>Sniffing</h3>
+
+<p> If you snif the DNS traffic on your firewall <code>tcpdump -i wan_interface udp port 53</code> you&rsquo;ll see that the DNS traffic is unencrypted.</p>
+
+<h3>Configuration</h3>
+
+<p>To enable DNS-over-TLS we&rsquo;ll need to reconfigure unbound.</p>
+
+<p>Go to <strong> [ Services ] -> [Unbound DNS ] -> [General] </strong>
+And copy/paste the setting below</p>
+
+<pre><code>server:
+forward-zone:
+name: "."
+forward-ssl-upstream: yes
+forward-addr: 9.9.9.9@853
+forward-addr: 149.112.112.112@853
+</code></pre>
+
+<p>to <strong> Custom options </strong> these settings will reconfigure Unbound to forward the dns for the upstream dns servers Quad9 over ssl.</p>
+
+<h3>Verify</h3>
+
+<p>If you snif the udp  traffic on you firewall  with <code>tcpdump -i wan_interface udp port 53</code> you&rsquo;ll not see any unencrypted traffic anymore - unless not all your clients are configured to use your firewall as the dns server -.</p>
+
+<p>If your snif TCP PORT 853 <code>tcpdump -i vr1 tcp port 853</code> we&rsquo;ll see your encrypted dns-over-tls traffic.</p>
+
+<h2>General DNS settings</h2>
+
+<p>You also want to make sure that your firewall isn&rsquo;t configure to use an unecrypted DNS server.</p>
+
+<p><a href="https://stafwag.github.io/blog/images/opnsense_set_dns.png"><img src="https://stafwag.github.io/blog/images/opnsense_set_dns.png" class="right" width="300" height="693" alt="opnsense_set_dns.png" /> </a></p>
+
+<h3>Configuration</h3>
+
+<p>Go to <strong>[ system ] -> [ settings ] -> [ general ]</strong> and set the dns servers also make sure that <strong> [ ] Allow DNS server list to be overridden by DHCP/PPP on WAN </strong> is unchecked.</p>
+
+<h3>Verify</h3>
+
+<p>You can verify the configuration by logging on to your firewall over ssh and reviewing the contents of /etc/resolv.conf.</p>
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://nlnetlabs.nl/projects/unbound/">https://nlnetlabs.nl/projects/unbound/</a></li>
+<li><a href="https://forum.opnsense.org/index.php?topic=7814.0">https://forum.opnsense.org/index.php?topic=7814.0</a></li>
+<li><a href="https://news.ycombinator.com/item?id=17944423">https://news.ycombinator.com/item?id=17944423</a></li>
+<li>[<a href="https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265">https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265</a>](<a href="https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265">https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265</a></li>
+<li><a href="https://www.netgate.com/blog/dns-over-tls-with-pfsense.html">https://www.netgate.com/blog/dns-over-tls-with-pfsense.html</a></li>
+<li><a href="https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265">https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265</a></li>
+<li><a href="https://www.quad9.net/faq/">https://www.quad9.net/faq/</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[32 Bits Matters!]]></title>

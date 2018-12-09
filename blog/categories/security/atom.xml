@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Security | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/security/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2018-10-07T11:39:22+02:00</updated>
+  <updated>2018-12-09T09:25:33+01:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to Configure DNS-over-TLS on OPNsense]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/"/>
+    <updated>2018-12-09T08:11:38+01:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2018/12/09/configure-dns-tls-on-opnsense</id>
+    <content type="html"><![CDATA[<h1>DNS-over-TLS</h1>
+
+<p>In my <a href="https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">previous blog posts</a> we configured <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby">Stubby </a> on GNU/Linux and FreeBSD.</p>
+
+<p><img class="right" src="/images/Logo_OPNsense.jpg" width="300" height="85" title="&ldquo;Logo_OPNsense.jpg&rdquo;" ></p>
+
+<p>In this blog article we&rsquo;ll configure <a href="https://en.wikipedia.org/wiki/DNS_over_TLS">DNS-over-TLS</a> with <a href="https://nlnetlabs.nl/projects/unbound/about/">Unbound</a> on <a href="https://opnsense.org/">OPNsense</a>. Both <a href="https://nlnetlabs.nl/projects/getdns/">Stubby</a> and <a href="https://nlnetlabs.nl/projects/unbound/about/">Unbound</a> are written by <a href="https://nlnet.nl/">NLnet</a>.</p>
+
+<h2>DNS resolvers</h2>
+
+<p>Stubby is a small dns resolver to encrypt your dns traffic, which makes it perfect to increase end-user privacy. Stubby can be integrated into existing dns setups.</p>
+
+<p><a href="http://http://www.thekelleys.org.uk/dnsmasq/doc.html">DNSmasq</a> is small dns resolver that can cache dns queries and forward dns traffic to other dns servers.</p>
+
+<p>Unbound is fast validating, caching DNS resolver that supports DNS-over-TLS.
+Unbound or dnsmaq are not full feature dns servers like <a href="https://www.isc.org/downloads/bind/">BIND</a>.</p>
+
+<p>The main difference beteen Unbound and DNSmasq is that Unbound can talk the the <a href="https://www.iana.org/domains/root/servers">root servers</a> directly while dnsmasq always needs to forward your dns queries to another dns server - your ISP dns server or a public dns servicve like (<a href="https://www.quad9.net/">Quad9</a>, <a href="https://1.1.1.1/">cloudfare</a>, <a href="https://developers.google.com/speed/public-dns/">google</a>, &hellip;) -</p>
+
+<p>Unbound has build-in support for DNS-over-TLS. DNSmasq needs an external DNS-over-TLS resolver like Stubby.</p>
+
+<h2>Which one to use?</h2>
+
+<p>It depends - as always -, Stubby can integrating easily in existing dns setups like dnsmasq. Unbound is one package that does it all and is more feature rich compared to DNSmasq.</p>
+
+<h1>OPNsense</h1>
+
+<p>I use <a href="https://opnsense.org/">OPNsense</a> as my firewall. Unbound is the default dns resolver on OPNsense so it makes (OPN)sense to use Unbound.</p>
+
+<h2>Choose your upstream DNS service</h2>
+
+<p>There&rsquo;re a few public DNS providers that supports DNS-over-tls the best known are <a href="https://www.quad9.net/">Quad9</a>, <a href="https://1.1.1.1/">cloudfare</a>. Quad9 will block malicious domains on the default dns servers 9.9.9.9/149.112.112.10 while 9.9.9.10 has no security blocklist.</p>
+
+<p>In this article we&rsquo;ll use Quad9 but you could also with cloudfare or another dns provider that you trust and has support for DNS-over-tls.</p>
+
+<h2>Enable DNS-over-TLS</h2>
+
+<p><a href="https://stafwag.github.io/blog/images/opnsense_enable_dns_tls.png"><img src="https://stafwag.github.io/blog/images/opnsense_enable_dns_tls.png" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a></p>
+
+<p>You need to configure your firewall to use your upstream dns provider. You also want to make sure your isp dns servers aren&rsquo;t used.</p>
+
+<h3>Sniffing</h3>
+
+<p> If you snif the DNS traffic on your firewall <code>tcpdump -i wan_interface udp port 53</code> you&rsquo;ll see that the DNS traffic is unencrypted.</p>
+
+<h3>Configuration</h3>
+
+<p>To enable DNS-over-TLS we&rsquo;ll need to reconfigure unbound.</p>
+
+<p>Go to <strong> [ Services ] -> [Unbound DNS ] -> [General] </strong>
+And copy/paste the setting below</p>
+
+<pre><code>server:
+forward-zone:
+name: "."
+forward-ssl-upstream: yes
+forward-addr: 9.9.9.9@853
+forward-addr: 149.112.112.112@853
+</code></pre>
+
+<p>to <strong> Custom options </strong> these settings will reconfigure Unbound to forward the dns for the upstream dns servers Quad9 over ssl.</p>
+
+<h3>Verify</h3>
+
+<p>If you snif the udp  traffic on you firewall  with <code>tcpdump -i wan_interface udp port 53</code> you&rsquo;ll not see any unencrypted traffic anymore - unless not all your clients are configured to use your firewall as the dns server -.</p>
+
+<p>If your snif TCP PORT 853 <code>tcpdump -i vr1 tcp port 853</code> we&rsquo;ll see your encrypted dns-over-tls traffic.</p>
+
+<h2>General DNS settings</h2>
+
+<p>You also want to make sure that your firewall isn&rsquo;t configure to use an unecrypted DNS server.</p>
+
+<p><a href="https://stafwag.github.io/blog/images/opnsense_set_dns.png"><img src="https://stafwag.github.io/blog/images/opnsense_set_dns.png" class="right" width="300" height="693" alt="opnsense_set_dns.png" /> </a></p>
+
+<h3>Configuration</h3>
+
+<p>Go to <strong>[ system ] -> [ settings ] -> [ general ]</strong> and set the dns servers also make sure that <strong> [ ] Allow DNS server list to be overridden by DHCP/PPP on WAN </strong> is unchecked.</p>
+
+<h3>Verify</h3>
+
+<p>You can verify the configuration by logging on to your firewall over ssh and reviewing the contents of /etc/resolv.conf.</p>
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://nlnetlabs.nl/projects/unbound/">https://nlnetlabs.nl/projects/unbound/</a></li>
+<li><a href="https://forum.opnsense.org/index.php?topic=7814.0">https://forum.opnsense.org/index.php?topic=7814.0</a></li>
+<li><a href="https://news.ycombinator.com/item?id=17944423">https://news.ycombinator.com/item?id=17944423</a></li>
+<li>[<a href="https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265">https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265</a>](<a href="https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265">https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265</a></li>
+<li><a href="https://www.netgate.com/blog/dns-over-tls-with-pfsense.html">https://www.netgate.com/blog/dns-over-tls-with-pfsense.html</a></li>
+<li><a href="https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265">https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265</a></li>
+<li><a href="https://www.quad9.net/faq/">https://www.quad9.net/faq/</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[DNS Privacy With Stubby (Part 2 FreeBSD)]]></title>
@@ -1598,192 +1702,6 @@ Not sure what the issue was with original pkcs12 but the import works now&hellip
  - it might have been the 32 characters password -.   After I was able to use the signing and encryption part in thunderbird.</p>
 
 <p><strong><em> Have fun </em></strong></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Protecting Your SSH Keys With SmartCard-HSM]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/"/>
-    <updated>2015-12-05T09:37:41+01:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm</id>
-    <content type="html"><![CDATA[<p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
-
-<h2>Create your first ssh keypair</h2>
-
-<h3>Verify your smartcard connection</h3>
-
-<p>Insert you smartcard and verify the connection, see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">my previous post</a> if  you need more information about the smartcard initialization</p>
-
-<pre><code>[staf@vicky ~]$ pkcs11-tool -L
-Available slots:
-Slot 0 (0xffffffffffffffff): Virtual hotplug slot
-  (empty)
-Slot 1 (0x1): Generic Smart Card Reader Interface [Smart Card Reader Interface
-  token label        : SmartCard-HSM (UserPIN)
-  token manufacturer : www.CardContact.de
-  token model        : PKCS#15 emulated
-  token flags        : rng, login required, PIN initialized, token initialized
-  hardware version   : 24.13
-  firmware version   : 1.2
-  serial num         : DECM0102331
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Create your keypair</h3>
-
-<p>Create your ssh key pair and give the a meaningful label</p>
-
-<pre><code>[staf@vicky ~]$ pkcs11-tool --slot 1 --keypairgen --key-type rsa:2048 --label my_ssh_key --login
-Logging in to "SmartCard-HSM (UserPIN)".
-Please enter User PIN: 
-Key pair generated:
-Private Key Object; RSA 
-  label:      my_ssh_key
-  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-  Usage:      decrypt, sign, unwrap
-Public Key Object; RSA 2048 bits
-  label:      my_ssh_key
-  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-  Usage:      encrypt, verify, wrap
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Extract your public key</h3>
-
-<p>We used <a href="https://en.wikipedia.org/wiki/PKCS_11">PKCS11</a> to generate the keypair, <a href="https://en.wikipedia.org/wiki/PKCS">PKCS15</a> is designed identify users to applications.</p>
-
-<h4>Dump the token content</h4>
-
-<p>Dump the token content to get the id of your ssh keypair.</p>
-
-<pre><code>[staf@vicky ~]$ pkcs15-tool -D
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-PKCS#15 Card [SmartCard-HSM]:
-        Version        : 0
-        Serial number  : DECM0102331
-        Manufacturer ID: www.CardContact.de
-        Flags          : 
-
-PIN [UserPIN]
-        Object Flags   : [0x3], private, modifiable
-        ID             : 01
-        Flags          : [0x81A], local, unblock-disabled, initialized, exchangeRefData
-        Length         : min_len:6, max_len:15, stored_len:0
-        Pad char       : 0x00
-        Reference      : 129 (0x81)
-        Type           : ascii-numeric
-        Tries left     : 3
-
-PIN [SOPIN]
-        Object Flags   : [0x1], private
-        ID             : 02
-        Flags          : [0x9E], local, change-disabled, unblock-disabled, initialized, soPin
-        Length         : min_len:16, max_len:16, stored_len:0
-        Pad char       : 0x00
-        Reference      : 136 (0x88)
-        Type           : bcd
-        Tries left     : 3
-
-Private EC Key [myfirst_keypair]
-        Object Flags   : [0x3], private, modifiable
-        Usage          : [0x10C], sign, signRecover, derive
-        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
-        FieldLength    : 256
-        Key ref        : 1 (0x1)
-        Native         : yes
-        Path           : e82b0601040181c31f0201::
-        Auth ID        : 01
-        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-        MD:guid        : {efac9b29-2289-658c-98d1-af5af965d484}
-          :cmap flags  : 0x0
-          :sign        : 0
-          :key-exchange: 0
-
-Private RSA Key [my_ssh_key]
-        Object Flags   : [0x3], private, modifiable
-        Usage          : [0x2E], decrypt, sign, signRecover, unwrap
-        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
-        ModLength      : 2048
-        Key ref        : 2 (0x2)
-        Native         : yes
-        Path           : e82b0601040181c31f0201::
-        Auth ID        : 01
-        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-        MD:guid        : {a272b2ad-ff6f-606c-801a-4153be498018}
-          :cmap flags  : 0x0
-          :sign        : 0
-          :key-exchange: 0
-
-Public EC Key [myfirst_keypair]
-        Object Flags   : [0x0]
-        Usage          : [0x0]
-        Access Flags   : [0x2], extract
-        FieldLength    : 256
-        Key ref        : 0 (0x0)
-        Native         : no
-        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
-        DirectValue    : &lt;present&gt;
-
-Public RSA Key [my_ssh_key]
-        Object Flags   : [0x0]
-        Usage          : [0x0]
-        Access Flags   : [0x2], extract
-        ModLength      : 2048
-        Key ref        : 0 (0x0)
-        Native         : no
-        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-        DirectValue    : &lt;present&gt;
-
-[staf@vicky ~]$ 
-</code></pre>
-
-<h4>Get the public key</h4>
-
-<pre><code>[staf@vicky ~]$ pkcs15-tool --read-ssh-key fca6240eeef8d3156f0c4dfc591b2d938d6104cb
-Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWShfPjqh+pU8lCoIhXIXh+cGpSem1iNFH6TuluQQLPiqPIeObCTfqC8q9TjR/2FYzG+3ECdiRr0fiywE9OnzUgJI5oOjXfMwY3xE1PbYBrSvYERofhkEv2ejlyRifN3sbLGSU0V7pX+BNOuiJCquCehPMV9+ehkjbk9hPRFUzL1GywsOkmWUoIzrdjH0dlhPX3TUCdoizWAIdUqg+RX4DCEc52RvaGdX4Tn2THxeffXqFJ/gKkParZSLmOND1iRhtJeJ8CmgAqfD8ReshbcSs231h/QvUl3JaThcrLbPrSQFzVUH+rN+pGlSl722NWyPNPWlwwE+SreTLbQRoWayN my_ssh_key
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Configure the remote host</h3>
-
-<p>Add the key to the remote host</p>
-
-<pre><code>staf@vicky .ssh]$ vi authorized_keys 
-[staf@vicky .ssh]$ 
-</code></pre>
-
-<h3>Test the connection</h3>
-
-<p>Test you ssh connection with the PKCS11 interface:</p>
-
-<pre><code>[staf@vicky ~]$ ssh localhost
-Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
-</code></pre>
-
-<p>With the PKCS11 interface enabled:</p>
-
-<pre><code>[staf@vicky ~]$ ssh -o "PKCS11Provider opensc-pkcs11.so" localhost
-C_GetAttributeValue failed: 18
-Enter PIN for 'SmartCard-HSM (UserPIN)': 
-Last login: Thu Dec  3 09:55:23 2015 from ::1
-gpg-agent[17327]: enabled debug flags: command cache ipc
-gpg-agent: a gpg-agent is already running - not starting a new one
-gpg-agent: secmem usage: 0/32768 bytes in 0 blocks
-[staf@vicky ~]$ 
-</code></pre>
-
-<h3>Update your ssh_config</h3>
-
-<p>Add PKCS11Provider opensc-pkcs11.so to your ~/.ssh/config or your global ssh_config</p>
-
-<pre><code>staf@vicky ~]$ cd .ssh/
-[staf@vicky .ssh]$ vim config
-PKCS11Provider opensc-pkcs11.so
-[staf@vicky .ssh]$ 
-</code></pre>
-
-<p><strong><em> Have fun &hellip; </em></strong></p>
 ]]></content>
   </entry>
   
