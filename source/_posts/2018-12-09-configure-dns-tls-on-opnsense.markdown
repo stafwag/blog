@@ -97,7 +97,7 @@ You can verify the configuration by logging on to your firewall over ssh and rev
 
 # Links
 
-* [https://nlnetlabs.nl/projects/unbound/][https://nlnetlabs.nl/projects/unbound/]
+* [https://nlnetlabs.nl/projects/unbound/](https://nlnetlabs.nl/projects/unbound/)
 * [https://forum.opnsense.org/index.php?topic=7814.0](https://forum.opnsense.org/index.php?topic=7814.0)
 * [https://news.ycombinator.com/item?id=17944423](https://news.ycombinator.com/item?id=17944423)
 * [https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265](https://forum.opnsense.org/index.php?topic=9197.msg41265#msg41265
