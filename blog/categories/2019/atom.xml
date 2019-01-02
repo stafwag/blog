@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 2019 | stafwag Blog]]></title>
+  <link href="https://stafwag.github.io/blog/blog/categories/2019/atom.xml" rel="self"/>
+  <link href="https://stafwag.github.io/blog/"/>
+  <updated>2019-01-02T20:45:29+01:00</updated>
+  <id>https://stafwag.github.io/blog/</id>
+  <author>
+    <name><![CDATA[staf wagemakers]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Best Wishes 2019]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2019/01/02/best-wishes-2019/"/>
+    <updated>2019-01-02T20:36:31+01:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2019/01/02/best-wishes-2019</id>
+    <content type="html"><![CDATA[<p><a href="https://stafwag.github.io/blog/images/2019.jpg"><img src="https://stafwag.github.io/blog/images/2019.jpg" class="left" width="500" height="511" alt="2019" /> </a></p>
+]]></content>
+  </entry>
+  
+</feed>

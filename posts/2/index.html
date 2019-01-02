@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Bacula on FreeBSD (Part 3 Storage Setup) Dec 27th, 2017 11:25 am I finally got the time to continue with my bacula backup setup. See my previous &hellip;">
+  <meta name="description" content="Update Your CPU Microcode on Arch Linux Feb 10th, 2018 8:33 am Meltdown &amp; spectre With Meldown https://nvd.nist.gov/vuln/detail/CVE-2017-5754, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,790 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2018/02/10/update-your-cpu-microcodeon-arch-linux/">Update Your CPU Microcode on Arch Linux</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-02-10T08:33:01+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>8:33 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1>Meltdown &amp; spectre</h1>
+
+<p>With Meldown <a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754"><a href="https://nvd.nist.gov/vuln/detail/CVE-2017-5754">https://nvd.nist.gov/vuln/detail/CVE-2017-5754</a></a>, Spectre Variant 1 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> and Spectre Variant 2 <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753"><a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753">https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-5753</a></a> out in the wild there is a lot of confusing going about updating microcode.</p>
+
+<p>There is a &ldquo;Spectre &amp; Meltdown Checker&rdquo; available at <a href="https://github.com/speed47/spectre-meltdown-checker"><a href="https://github.com/speed47/spectre-meltdown-checker">https://github.com/speed47/spectre-meltdown-checker</a></a></p>
+
+<p>Usage is very easy just clone the git repository and run the script.</p>
+
+<h1>Microcode</h1>
+
+<p>Microcode isn&rsquo;t uploaded to the CPU but loaded during the boot strap of the CPU.
+Normally the BIOS upload the microcode to the CPU but this can also be done by the by the bootloader, or the operating system kernel.</p>
+
+<h2>Grub</h2>
+
+<p>Normally you get an updated bios for your motherboard or computer vendor to get new microcode for your CPU.</p>
+
+<p>But when your vendor hasn&rsquo;t released a new Bios yet or when you are using old hardware you might not get a new BIOS with updated microcode.</p>
+
+<p>Lucky microcode can also loaded by bootloader this way you can get new microcode without a BIOS update if the new microcode cuase issues you disable it in the bootloader.</p>
+
+<p>The process for Arch Linux is describe at the Arch Wiki <a href="https://wiki.archlinux.org/index.php/Microcode"><a href="https://wiki.archlinux.org/index.php/Microcode">https://wiki.archlinux.org/index.php/Microcode</a></a></p>
+
+<p>You&rsquo;ll find journey how to update the microcode on my Arch GNU/Linux system below.</p>
+
+<h3>Current microcode</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ dmesg | grep -i microcode
+</span><span class='line'>[    2.102649] microcode: sig=0x40661, pf=0x20, revision=0xa
+</span><span class='line'>[    2.102981] microcode: Microcode Update Driver: v2.01 &lt;tigran@aivazian.fsnet.co.uk&gt;, Peter Oruba
+</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Install intel-ucode</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# pacman -Syy intel-ucode
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> core                     126.8 KiB  12.4M/s 00:00 [######################] 100%
+</span><span class='line'> extra                   1629.4 KiB  11.4M/s 00:00 [######################] 100%
+</span><span class='line'> community                  4.1 MiB  11.0M/s 00:00 [######################] 100%
+</span><span class='line'> multilib                 167.2 KiB  8.16M/s 00:00 [######################] 100%
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) intel-ucode-20180108-1
+</span><span class='line'>
+</span><span class='line'>Total Download Size:   1.12 MiB
+</span><span class='line'>Total Installed Size:  1.55 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] y
+</span><span class='line'>:: Retrieving packages...
+</span><span class='line'> intel-ucode-2018010...  1145.0 KiB   916K/s 00:01 [######################] 100%
+</span><span class='line'>(1/1) checking keys in keyring                     [######################] 100%
+</span><span class='line'>(1/1) checking package integrity                   [######################] 100%
+</span><span class='line'>(1/1) loading package files                        [######################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                  [######################] 100%
+</span><span class='line'>(1/1) checking available disk space                [######################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing intel-ucode                       [######################] 100%
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/1) Arming ConditionNeedsUpdate...
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Verify the available microcode for your CPU</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+<span class='line-number'>182</span>
+<span class='line-number'>183</span>
+<span class='line-number'>184</span>
+<span class='line-number'>185</span>
+<span class='line-number'>186</span>
+<span class='line-number'>187</span>
+<span class='line-number'>188</span>
+<span class='line-number'>189</span>
+<span class='line-number'>190</span>
+<span class='line-number'>191</span>
+<span class='line-number'>192</span>
+<span class='line-number'>193</span>
+<span class='line-number'>194</span>
+<span class='line-number'>195</span>
+<span class='line-number'>196</span>
+<span class='line-number'>197</span>
+<span class='line-number'>198</span>
+<span class='line-number'>199</span>
+<span class='line-number'>200</span>
+<span class='line-number'>201</span>
+<span class='line-number'>202</span>
+<span class='line-number'>203</span>
+<span class='line-number'>204</span>
+<span class='line-number'>205</span>
+<span class='line-number'>206</span>
+<span class='line-number'>207</span>
+<span class='line-number'>208</span>
+<span class='line-number'>209</span>
+<span class='line-number'>210</span>
+<span class='line-number'>211</span>
+<span class='line-number'>212</span>
+<span class='line-number'>213</span>
+<span class='line-number'>214</span>
+<span class='line-number'>215</span>
+<span class='line-number'>216</span>
+<span class='line-number'>217</span>
+<span class='line-number'>218</span>
+<span class='line-number'>219</span>
+<span class='line-number'>220</span>
+<span class='line-number'>221</span>
+<span class='line-number'>222</span>
+<span class='line-number'>223</span>
+<span class='line-number'>224</span>
+<span class='line-number'>225</span>
+<span class='line-number'>226</span>
+<span class='line-number'>227</span>
+<span class='line-number'>228</span>
+<span class='line-number'>229</span>
+<span class='line-number'>230</span>
+<span class='line-number'>231</span>
+<span class='line-number'>232</span>
+<span class='line-number'>233</span>
+<span class='line-number'>234</span>
+<span class='line-number'>235</span>
+<span class='line-number'>236</span>
+<span class='line-number'>237</span>
+<span class='line-number'>238</span>
+<span class='line-number'>239</span>
+<span class='line-number'>240</span>
+<span class='line-number'>241</span>
+<span class='line-number'>242</span>
+<span class='line-number'>243</span>
+<span class='line-number'>244</span>
+<span class='line-number'>245</span>
+<span class='line-number'>246</span>
+<span class='line-number'>247</span>
+<span class='line-number'>248</span>
+<span class='line-number'>249</span>
+<span class='line-number'>250</span>
+<span class='line-number'>251</span>
+<span class='line-number'>252</span>
+<span class='line-number'>253</span>
+<span class='line-number'>254</span>
+<span class='line-number'>255</span>
+<span class='line-number'>256</span>
+<span class='line-number'>257</span>
+<span class='line-number'>258</span>
+<span class='line-number'>259</span>
+<span class='line-number'>260</span>
+<span class='line-number'>261</span>
+<span class='line-number'>262</span>
+<span class='line-number'>263</span>
+<span class='line-number'>264</span>
+<span class='line-number'>265</span>
+<span class='line-number'>266</span>
+<span class='line-number'>267</span>
+<span class='line-number'>268</span>
+<span class='line-number'>269</span>
+<span class='line-number'>270</span>
+<span class='line-number'>271</span>
+<span class='line-number'>272</span>
+<span class='line-number'>273</span>
+<span class='line-number'>274</span>
+<span class='line-number'>275</span>
+<span class='line-number'>276</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ yaourt  iucode-tool
+</span><span class='line'>1 aur/iucode-tool 2.2-1 (59) (4.87)
+</span><span class='line'>    Tool to manipulate Intel® IA-32/X86-64 microcode bundles
+</span><span class='line'>==&gt; Enter n° of packages to be installed (e.g., 1 2 3 or 1-3)
+</span><span class='line'>==&gt; ----------------------------------------------------------
+</span><span class='line'>==&gt; 1
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>==&gt; Downloading iucode-tool PKGBUILD from AUR...
+</span><span class='line'>x .SRCINFO
+</span><span class='line'>x PKGBUILD
+</span><span class='line'>oxe commented on 2017-10-01 17:50          
+</span><span class='line'>issue with pgp key and have tried various times and not sure what I might be doing wrong but why do you have so many self-signed sigs?
+</span><span class='line'>
+</span><span class='line'>gpg --keyserver hkps.pool.sks-keyservers.net  --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>
+</span><span class='line'>uid  Henrique de Moraes Holschuh hmh@debian.org
+</span><span class='line'>sig!3        0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>uid  Henrique de Moraes Holschuh hmh@hmh.eng.br
+</span><span class='line'>sig!3        0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>sub  A4B9D9AFC03142CD
+</span><span class='line'>sig!         0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>sub  981C05C79F47CF26
+</span><span class='line'>sig!         0BD9E81139CB4807 2012-06-26  [self-signature]
+</span><span class='line'>sub  9137FBD3DE6F0A93
+</span><span class='line'>sig!         0BD9E81139CB4807 2014-03-23  [self-signature]
+</span><span class='line'>sub  FFDB99C00EABDE2E
+</span><span class='line'>sig!         0BD9E81139CB4807 2014-03-23  [self-signature]
+</span><span class='line'>sub  FE11BFA68B158E98
+</span><span class='line'>sig!         0BD9E81139CB4807 2016-03-26  [self-signature]
+</span><span class='line'>sub  A4B1618F7F267286
+</span><span class='line'>sig!         0BD9E81139CB4807 2016-03-26  [self-signature]
+</span><span class='line'>key 0BD9E81139CB4807:
+</span><span class='line'>6 duplicate signatures removed
+</span><span class='line'>45 signatures not checked due to missing keys
+</span><span class='line'>gpg: key 0BD9E81139CB4807: "Henrique de Moraes Holschuh hmh@hmh.eng.br" not changed
+</span><span class='line'>gpg: Total number processed: 1
+</span><span class='line'>gpg:              unchanged: 1
+</span><span class='line'>
+</span><span class='line'>please advise
+</span><span class='line'>
+</span><span class='line'>progandy commented on 2017-10-01 18:19             
+</span><span class='line'>@oxe: I am not Henrique, so I don't know what he did with his key that it looks this strange, but it doesn't affect the package. The build works, and the signature is properly validated.
+</span><span class='line'>
+</span><span class='line'>Cbhihe commented on 2017-10-10 19:12           
+</span><span class='line'>Hi:
+</span><span class='line'>During install with '$ makepkg -sric ' I got: a PGP signature error: 
+</span><span class='line'>
+</span><span class='line'>A simplified output follows because I am typing (not copy/pasting) this on a different box than the one (4.13.4.-1-ARCH) where the install took place:
+</span><span class='line'>
+</span><span class='line'>== making package: iucode-tool 2.2-1 (Tue Oct 10...2017)
+</span><span class='line'>== Checking runtime dependencies...
+</span><span class='line'>== Checking buildtime dependencies...
+</span><span class='line'>== Retrieving sources...
+</span><span class='line'>downloads ok [...]
+</span><span class='line'>== Validating source files with sha256sums...
+</span><span class='line'>passed [...]
+</span><span class='line'>== Verifying source files with gpg...
+</span><span class='line'>iucode-tool_2.2.tar.xz ... FAILED (unknown public key FE11BFA68B158E98)
+</span><span class='line'>== ERROR: One or more PGP signatures could not be verified !
+</span><span class='line'>
+</span><span class='line'>Can you explain that unknown PGP public key error ? 
+</span><span class='line'>Is it a problem on my side ? 
+</span><span class='line'>Please advise. I will be waiting for your response before I actually execute that code. Cheers.
+</span><span class='line'>
+</span><span class='line'>progandy commented on 2017-10-13 15:28             
+</span><span class='line'>@Cbhihe: I did not have time and then forgot, sorry. Still, it should be obvious from the previous comments that you need to import the key in your gpg keyring with gpg, as described in the wiki for makepkg [1],[2]
+</span><span class='line'>
+</span><span class='line'>gpg --recv-keys FE11BFA68B158E98
+</span><span class='line'>or
+</span><span class='line'>gpg --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>or
+</span><span class='line'>gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>
+</span><span class='line'>[1]: https://wiki.archlinux.org/index.php/Makepkg#Signature_checking
+</span><span class='line'>[2]: https://wiki.archlinux.org/index.php/GnuPG#Use_a_keyserver
+</span><span class='line'>
+</span><span class='line'>Cbhihe commented on 2017-10-14 17:40           
+</span><span class='line'>Thank you. Yes it WAS obvious and I had tried 
+</span><span class='line'>gpg --recv-keys FE11BFA68B158E98
+</span><span class='line'>already, but for some reason I do not get, either the keyring did not register correctly or I screwed up something, or both. 
+</span><span class='line'>
+</span><span class='line'>I have reinstalled the Gnome keyring, re-imported my saved signatures and  
+</span><span class='line'>gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys C467A717507BBAFED3C160920BD9E81139CB4807
+</span><span class='line'>worked this time. :-)
+</span><span class='line'>Cheers.
+</span><span class='line'>
+</span><span class='line'>iucode-tool 2.2-1  (2017-09-13 07:49)
+</span><span class='line'>( Unsupported package: Potentially dangerous ! )
+</span><span class='line'>==&gt; Edit PKGBUILD ? [Y/n] ("A" to abort)
+</span><span class='line'>==&gt; ------------------------------------
+</span><span class='line'>==&gt; n
+</span><span class='line'>
+</span><span class='line'>==&gt; iucode-tool dependencies:
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'>==&gt; Continue building iucode-tool ? [Y/n]
+</span><span class='line'>==&gt; -------------------------------------
+</span><span class='line'>==&gt; 
+</span><span class='line'>
+</span><span class='line'>==&gt; Building and installing package
+</span><span class='line'>==&gt; Making package: iucode-tool 2.2-1 (Sun Jan 21 12:48:37 CET 2018)
+</span><span class='line'>==&gt; Checking runtime dependencies...
+</span><span class='line'>==&gt; Checking buildtime dependencies...
+</span><span class='line'>==&gt; Retrieving sources...
+</span><span class='line'>  -&gt; Downloading iucode-tool_2.2.tar.xz...
+</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
+</span><span class='line'>100  146k  100  146k    0     0  74948      0  0:00:02  0:00:02 --:--:-- 63193
+</span><span class='line'>  -&gt; Downloading iucode-tool_2.2.tar.xz.asc...
+</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
+</span><span class='line'>100   833  100   833    0     0    833      0  0:00:01  0:00:01 --:--:--   478
+</span><span class='line'>==&gt; Validating source files with sha256sums...
+</span><span class='line'>    iucode-tool_2.2.tar.xz ... Passed
+</span><span class='line'>    iucode-tool_2.2.tar.xz.asc ... Skipped
+</span><span class='line'>==&gt; Verifying source file signatures with gpg...
+</span><span class='line'>    iucode-tool_2.2.tar.xz ... Passed
+</span><span class='line'>==&gt; Extracting sources...
+</span><span class='line'>  -&gt; Extracting iucode-tool_2.2.tar.xz with bsdtar
+</span><span class='line'>==&gt; Starting build()...
+</span><span class='line'>checking build system type... x86_64-pc-linux-gnu
+</span><span class='line'>checking host system type... x86_64-pc-linux-gnu
+</span><span class='line'>checking for a BSD-compatible install... /usr/bin/install -c
+</span><span class='line'>checking whether build environment is sane... yes
+</span><span class='line'>checking for a thread-safe mkdir -p... /usr/bin/mkdir -p
+</span><span class='line'>checking for gawk... gawk
+</span><span class='line'>checking whether make sets $(MAKE)... yes
+</span><span class='line'>checking whether make supports nested variables... yes
+</span><span class='line'>checking whether configure.ac should try to override CFLAGS... no
+</span><span class='line'>checking whether configure.ac should try to override LDFLAGS... no
+</span><span class='line'>checking for style of include used by make... GNU
+</span><span class='line'>checking for gcc... gcc
+</span><span class='line'>checking whether the C compiler works... yes
+</span><span class='line'>checking for C compiler default output file name... a.out
+</span><span class='line'>checking for suffix of executables... 
+</span><span class='line'>checking whether we are cross compiling... no
+</span><span class='line'>checking for suffix of object files... o
+</span><span class='line'>checking whether we are using the GNU C compiler... yes
+</span><span class='line'>checking whether gcc accepts -g... yes
+</span><span class='line'>checking for gcc option to accept ISO C89... none needed
+</span><span class='line'>checking whether gcc understands -c and -o together... yes
+</span><span class='line'>checking dependency style of gcc... gcc3
+</span><span class='line'>checking how to run the C preprocessor... gcc -E
+</span><span class='line'>checking for grep that handles long lines and -e... /usr/bin/grep
+</span><span class='line'>checking for egrep... /usr/bin/grep -E
+</span><span class='line'>checking for ANSI C header files... yes
+</span><span class='line'>checking for sys/types.h... yes
+</span><span class='line'>checking for sys/stat.h... yes
+</span><span class='line'>checking for stdlib.h... yes
+</span><span class='line'>checking for string.h... yes
+</span><span class='line'>checking for memory.h... yes
+</span><span class='line'>checking for strings.h... yes
+</span><span class='line'>checking for inttypes.h... yes
+</span><span class='line'>checking for stdint.h... yes
+</span><span class='line'>checking for unistd.h... yes
+</span><span class='line'>checking minix/config.h usability... no
+</span><span class='line'>checking minix/config.h presence... no
+</span><span class='line'>checking for minix/config.h... no
+</span><span class='line'>checking whether it is safe to define __EXTENSIONS__... yes
+</span><span class='line'>checking for gcc... (cached) gcc
+</span><span class='line'>checking whether we are using the GNU C compiler... (cached) yes
+</span><span class='line'>checking whether gcc accepts -g... (cached) yes
+</span><span class='line'>checking for gcc option to accept ISO C89... (cached) none needed
+</span><span class='line'>checking whether gcc understands -c and -o together... (cached) yes
+</span><span class='line'>checking dependency style of gcc... (cached) gcc3
+</span><span class='line'>checking for ANSI C header files... (cached) yes
+</span><span class='line'>checking fcntl.h usability... yes
+</span><span class='line'>checking fcntl.h presence... yes
+</span><span class='line'>checking for fcntl.h... yes
+</span><span class='line'>checking for stdint.h... (cached) yes
+</span><span class='line'>checking for stdlib.h... (cached) yes
+</span><span class='line'>checking for string.h... (cached) yes
+</span><span class='line'>checking for unistd.h... (cached) yes
+</span><span class='line'>checking time.h usability... yes
+</span><span class='line'>checking time.h presence... yes
+</span><span class='line'>checking for time.h... yes
+</span><span class='line'>checking cpuid.h usability... yes
+</span><span class='line'>checking cpuid.h presence... yes
+</span><span class='line'>checking for cpuid.h... yes
+</span><span class='line'>checking whether byte ordering is bigendian... no
+</span><span class='line'>checking for inline... inline
+</span><span class='line'>checking for int32_t... yes
+</span><span class='line'>checking for size_t... yes
+</span><span class='line'>checking for ssize_t... yes
+</span><span class='line'>checking for uint16_t... yes
+</span><span class='line'>checking for uint32_t... yes
+</span><span class='line'>checking for uint8_t... yes
+</span><span class='line'>checking for stdlib.h... (cached) yes
+</span><span class='line'>checking for GNU libc compatible malloc... yes
+</span><span class='line'>checking for stdlib.h... (cached) yes
+</span><span class='line'>checking for GNU libc compatible realloc... yes
+</span><span class='line'>checking whether lstat correctly handles trailing slash... yes
+</span><span class='line'>checking whether stat accepts an empty string... no
+</span><span class='line'>checking for memset... yes
+</span><span class='line'>checking for strcasecmp... yes
+</span><span class='line'>checking for strdup... yes
+</span><span class='line'>checking for strerror... yes
+</span><span class='line'>checking for strrchr... yes
+</span><span class='line'>checking for strtoul... yes
+</span><span class='line'>checking for timegm... yes
+</span><span class='line'>checking for library containing argp_parse... none required
+</span><span class='line'>checking for special C compiler options needed for large files... no
+</span><span class='line'>checking for _FILE_OFFSET_BITS value needed for large files... no
+</span><span class='line'>checking for flockfile... yes
+</span><span class='line'>checking for fgets_unlocked... yes
+</span><span class='line'>configure: project-wide base CPPFLAGS: -D_FORTIFY_SOURCE=2
+</span><span class='line'>configure: project-wide base CFLAGS:   -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt
+</span><span class='line'>configure: project-wide base LDFLAGS:  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now
+</span><span class='line'>checking that generated files are newer than configure... done
+</span><span class='line'>configure: creating ./config.status
+</span><span class='line'>config.status: creating Makefile
+</span><span class='line'>config.status: creating iucode_tool.8
+</span><span class='line'>config.status: creating iucode_tool_config.h
+</span><span class='line'>config.status: executing depfiles commands
+</span><span class='line'>make  all-am
+</span><span class='line'>make[1]: Entering directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'>gcc -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -MT intel_microcode.o -MD -MP -MF .deps/intel_microcode.Tpo -c -o intel_microcode.o intel_microcode.c
+</span><span class='line'>gcc -DHAVE_CONFIG_H -I.   -D_FORTIFY_SOURCE=2  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -MT iucode_tool.o -MD -MP -MF .deps/iucode_tool.Tpo -c -o iucode_tool.o iucode_tool.c
+</span><span class='line'>mv -f .deps/intel_microcode.Tpo .deps/intel_microcode.Po
+</span><span class='line'>mv -f .deps/iucode_tool.Tpo .deps/iucode_tool.Po
+</span><span class='line'>gcc  -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt  -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -o iucode_tool intel_microcode.o iucode_tool.o  
+</span><span class='line'>make[1]: Leaving directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'>==&gt; Entering fakeroot environment...
+</span><span class='line'>==&gt; Starting package()...
+</span><span class='line'>make[1]: Entering directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'> /usr/bin/mkdir -p '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/bin'
+</span><span class='line'> /usr/bin/mkdir -p '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/share/man/man8'
+</span><span class='line'>  /usr/bin/install -c iucode_tool '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/bin'
+</span><span class='line'> /usr/bin/install -c -m 644 iucode_tool.8 '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/pkg/iucode-tool//usr/share/man/man8'
+</span><span class='line'>make[1]: Leaving directory '/home/staf/tmp/yaourt-tmp-staf/aur-iucode-tool/src/iucode-tool-2.2'
+</span><span class='line'>==&gt; Tidying install...
+</span><span class='line'>  -&gt; Removing libtool files...
+</span><span class='line'>  -&gt; Purging unwanted files...
+</span><span class='line'>  -&gt; Removing static library files...
+</span><span class='line'>  -&gt; Stripping unneeded symbols from binaries and libraries...
+</span><span class='line'>  -&gt; Compressing man and info pages...
+</span><span class='line'>==&gt; Checking for packaging issue...
+</span><span class='line'>==&gt; Creating package "iucode-tool"...
+</span><span class='line'>  -&gt; Generating .PKGINFO file...
+</span><span class='line'>  -&gt; Generating .BUILDINFO file...
+</span><span class='line'>  -&gt; Generating .MTREE file...
+</span><span class='line'>  -&gt; Compressing package...
+</span><span class='line'>==&gt; Leaving fakeroot environment.
+</span><span class='line'>==&gt; Finished making: iucode-tool 2.2-1 (Sun Jan 21 12:48:44 CET 2018)
+</span><span class='line'>==&gt; Cleaning up...
+</span><span class='line'>
+</span><span class='line'>==&gt; Continue installing iucode-tool ? [Y/n]
+</span><span class='line'>==&gt; [v]iew package contents [c]heck package with namcap
+</span><span class='line'>==&gt; ---------------------------------------------------
+</span><span class='line'>==&gt; y
+</span><span class='line'>
+</span><span class='line'>loading packages...
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) iucode-tool-2.2-1
+</span><span class='line'>
+</span><span class='line'>Total Installed Size:  0.06 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n] y
+</span><span class='line'>(1/1) checking keys in keyring                                   [####################################] 100%
+</span><span class='line'>(1/1) checking package integrity                                 [####################################] 100%
+</span><span class='line'>(1/1) loading package files                                      [####################################] 100%
+</span><span class='line'>(1/1) checking for file conflicts                                [####################################] 100%
+</span><span class='line'>(1/1) checking available disk space                              [####################################] 100%
+</span><span class='line'>:: Processing package changes...
+</span><span class='line'>(1/1) installing iucode-tool                                     [####################################] 100%
+</span><span class='line'>ldconfig: File /usr/lib/libmlt.so.6.4.0 is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib/libmlt++.so.6.4.0 is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib32/libmng.so.2 is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib32/libmng.so is empty, not checked.
+</span><span class='line'>ldconfig: File /usr/lib32/libmng.so.2.0.2 is empty, not checked.
+</span><span class='line'>:: Running post-transaction hooks...
+</span><span class='line'>(1/1) Arming ConditionNeedsUpdate...
+</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# bsdtar -Oxf /boot/intel-ucode.img | iucode_tool -tb -lS - 
+</span><span class='line'>iucode_tool: system has processor(s) with signature 0x00040661
+</span><span class='line'>microcode bundle 1: (stdin)
+</span><span class='line'>selected microcodes:
+</span><span class='line'>  001/143: sig 0x00040661, pf_mask 0x32, 2017-11-20, rev 0x0018, size 25600
+</span><span class='line'>[root@frija ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Recreate grub.cfg</h3>
+
+<p>grub-mkconfig will detect the microcode and add it the grub configuration.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# grub-mkconfig -o /boot/grub/grub.cfg
+</span><span class='line'>Generating grub configuration file ...
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-lts
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-lts.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-lts-fallback.img
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-hardened
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-hardened.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-hardened-fallback.img
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux-ck
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux-ck.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-ck-fallback.img
+</span><span class='line'>Found linux image: /boot/vmlinuz-linux
+</span><span class='line'>Found initrd image(s) in /boot: intel-ucode.img initramfs-linux.img
+</span><span class='line'>Found fallback initrd image(s) in /boot: intel-ucode.img initramfs-linux-fallback.img
+</span><span class='line'>done
+</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>When take a look at the newly created grub.cfg you see that microcode image is added to the initrd image.
+If you new micro code cause issue you can just remove the entry in grub configuration</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# cat /boot/grub/grub.cfg | grep initrd
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-lts.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-lts-fallback.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-hardened.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-hardened-fallback.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-ck.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-ck-fallback.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux.img
+</span><span class='line'>  initrd  /__active/rootvol/boot/intel-ucode.img /__active/rootvol/boot/initramfs-linux-fallback.img
+</span><span class='line'>[root@vicky ~]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Reboot your system and verify</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ dmesg | grep -i microcode
+</span><span class='line'>[    0.000000] microcode: microcode updated early to revision 0x18, date = 2017-11-20
+</span><span class='line'>[    1.852726] microcode: sig=0x40661, pf=0x20, revision=0x18
+</span><span class='line'>[    1.853029] microcode: Microcode Update Driver: v2.2.
+</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em>Have fun</em></strong></p>
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -5734,1216 +6518,6 @@ Have fun
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2016/08/30/arch-on-an-encrypted-btrfs-partition/">Install Arch on an Encrypted Btrfs Partition</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2016-08-30T08:59:00+02:00'><span class='date'><span class='date-month'>Aug</span> <span class='date-day'>30</span><span class='date-suffix'>th</span>, <span class='date-year'>2016</span></span> <span class='time'>8:59 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="right" src="/blog/images/Arch-linux-logo.png" width="300" height="225" title="&#34;Arch Linux Logo&#34;" alt="&#34;Arch Linux Logo&#34;"></p>
-
-<p>I&rsquo;m preparing to move <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my workstation</a> to <a href="https://www.archlinux.org/">arch linux</a> Before I&rsquo;ll install it on my physical workstation I did the installation on a virtual machine. I&rsquo;ll use <a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">btrfs</a> as the filesystem during the installation. btrfs is a nice filesystem but it had some serious dataloss issue with <a href="https://btrfs.wiki.kernel.org/index.php/RAID56">RAID5/RAID6</a> recently.</p>
-
-<p>btrfs might not stable enough for a production environment but it has some nice features like snapshots, send/recieve, compression etc. I use <a href="http://www.open-zfs.org/wiki/Main_Page">zfs</a> for my important date anyway.</p>
-
-<h2>To encrypt or not to encrypt&hellip;</h2>
-
-<p>It&rsquo;s possible to encrypt your boot partition <a href="https://www.gnu.org/software/grub/">grub</a> has support for <a href="https://en.wikipedia.org/wiki/Linux_Unified_Key_Setup">luks</a> volumes. This cause grub to ask for a password during the system startup you&rsquo;ll need to type in your password a second time during the system startup when you Linux initrd image is booted. It&rsquo;s possible to avoid this by adding a keyfile to your crypttab - which migh be considered as a security risk -.</p>
-
-<p>In this howto we&rsquo;ll setup a single root partition to have full disk encryption. I&rsquo;m not sure I go with an encrypted boot partition during my final installation. I might just create an empty partition of 1G so I can move switch between an encrypted and an non-encrypted boot filesystem.</p>
-
-<p><img class="left" src="/blog/images/arch-on-an-encrypted-btrfs-partition/00_boot.png" width="440" title="&#34;00_boot.png&#34;" alt="&#34;00_boot.png&#34;"></p>
-
-<h2>Download the arch linux iso and boot it</h2>
-
-<p>After arch linux is booted verify that you have internet access if the network card is support and dchp is enabled on you network you should get a network address.</p>
-
-<h2>Network access</h2>
-
-<p>To setup the system remotely we first need to setup network to our system.</p>
-
-<h3>Verify the interface</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # ip a
-</span><span class='line'>1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default 
-</span><span class='line'>    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
-</span><span class='line'>    inet 127.0.0.1/8 scope host lo
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>    inet6 ::1/128 scope host 
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
-</span><span class='line'>    link/ether 52:54:00:69:d4:94 brd ff:ff:ff:ff:ff:ff
-</span><span class='line'>    inet 192.168.122.23/24 brd 192.168.122.255 scope global eth0
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>    inet6 fe80::a7b:481f:2f70:e688/64 scope link 
-</span><span class='line'>       valid_lft forever preferred_lft forever
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Verify internet access</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # ping -c 3 8.8.8.8                                                                                      :(
-</span><span class='line'>PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=1 ttl=49 time=49.2 ms
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=2 ttl=49 time=45.8 ms
-</span><span class='line'>64 bytes from 8.8.8.8: icmp_seq=3 ttl=49 time=46.8 ms
-</span><span class='line'>
-</span><span class='line'>--- 8.8.8.8 ping statistics ---
-</span><span class='line'>3 packets transmitted, 3 received, 0% packet loss, time 2003ms
-</span><span class='line'>rtt min/avg/max/mdev = 45.896/47.329/49.201/1.406 ms
-</span><span class='line'>root@archiso ~ # nslookup www.google.be
-</span><span class='line'>Server:         192.168.122.1
-</span><span class='line'>Address:        192.168.122.1#53
-</span><span class='line'>
-</span><span class='line'>Non-authoritative answer:
-</span><span class='line'>Name:   www.google.be
-</span><span class='line'>Address: 64.233.167.94
-</span><span class='line'>
-</span><span class='line'>root@archiso ~ # ping www.google.be
-</span><span class='line'>PING www.google.be (64.233.167.94) 56(84) bytes of data.
-</span><span class='line'>64 bytes from wl-in-f94.1e100.net (64.233.167.94): icmp_seq=1 ttl=46 time=58.7 ms
-</span><span class='line'>64 bytes from wl-in-f94.1e100.net (64.233.167.94): icmp_seq=2 ttl=46 time=58.7 ms
-</span><span class='line'>64 bytes from wl-in-f94.1e100.net (64.233.167.94): icmp_seq=3 ttl=46 time=58.4 ms
-</span><span class='line'>^C
-</span><span class='line'>--- www.google.be ping statistics ---
-</span><span class='line'>3 packets transmitted, 3 received, 0% packet loss, time 2000ms
-</span><span class='line'>rtt min/avg/max/mdev = 58.479/58.645/58.742/0.230 ms
-</span><span class='line'>root@archiso ~ #                   
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>ssh access</h2>
-
-<p>If you want to install arch linux over ssh you need to assign a root passwd and start the sshd service.</p>
-
-<h3>root password</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # passwd root       
-</span><span class='line'>Enter new UNIX password: 
-</span><span class='line'>Retype new UNIX password: 
-</span><span class='line'>passwd: password updated successfully
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>start sshd</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # systemctl list-unit-files -t service | grep ssh
-</span><span class='line'>sshd.service                               disabled
-</span><span class='line'>sshd@.service                              static  
-</span><span class='line'>sshdgenkeys.service                        static  
-</span><span class='line'>root@archiso ~ # systemctl start sshd                           
-</span><span class='line'>root@archiso ~ #
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Logon remotely</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh -l root 192.168.122.23
-</span><span class='line'>root@192.168.122.23's password: 
-</span><span class='line'>Last login: Tue Jun 30 09:06:00 2015 from 192.168.122.1
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Partition</h2>
-
-<h3>Find your harddisk device name</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cat /proc/partitions
-</span><span class='line'>major minor  #blocks  name
-</span><span class='line'>
-</span><span class='line'>   8        0  268435456 sda
-</span><span class='line'>  11        0     759808 sr0
-</span><span class='line'>   7        0     328616 loop0
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Overwrite it with random data</h3>
-
-<p>Because we are creating an ecrypted filesystem it&rsquo;s a good idea to overwrite it with random data.</p>
-
-<p>We&rsquo;ll use badblocks for this another method is to use &ldquo;dd if=/dev/random of=/dev/xxx&rdquo; the &ldquo;dd&rdquo; method is probably the best method but is a lot slower.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # badblocks -c 10240 -s -w -t random -v /dev/sda
-</span><span class='line'>Checking for bad blocks in read-write mode
-</span><span class='line'>From block 0 to 268435455
-</span><span class='line'>Testing with random pattern: done                                                 
-</span><span class='line'>Reading and comparing: done                                                 
-</span><span class='line'>Pass completed, 0 bad blocks found. (0/0/0 errors)
-</span><span class='line'>badblocks -c 10240 -s -w -t random -v /dev/sda  49.22s user 21.72s system 3% cpu 33:48.40 total
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Partition the harddisk</h3>
-
-<p>Create 3 partitions:</p>
-
-<ul>
-<li>1G /boot (we&rsquo;ll not use this during the installation - see above - )</li>
-<li>32G swap</li>
-<li>root btrfs partition</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # fdisk /dev/sda                                
-</span><span class='line'>
-</span><span class='line'>Welcome to fdisk (util-linux 2.28).                                                    
-</span><span class='line'>Changes will remain in memory only, until you decide to write them.
-</span><span class='line'>Be careful before using the write command.
-</span><span class='line'>
-</span><span class='line'>Device does not contain a recognized partition table.
-</span><span class='line'>Created a new DOS disklabel with disk identifier 0x7ff944e5.
-</span><span class='line'>
-</span><span class='line'>Command (m for help): p
-</span><span class='line'>Disk /dev/sda: 256 GiB, 274877906944 bytes, 536870912 sectors
-</span><span class='line'>Units: sectors of 1 * 512 = 512 bytes
-</span><span class='line'>Sector size (logical/physical): 512 bytes / 512 bytes
-</span><span class='line'>I/O size (minimum/optimal): 512 bytes / 512 bytes
-</span><span class='line'>Disklabel type: dos
-</span><span class='line'>Disk identifier: 0x7ff944e5
-</span><span class='line'>
-</span><span class='line'>Command (m for help): n
-</span><span class='line'>Partition type
-</span><span class='line'>   p   primary (0 primary, 0 extended, 4 free)
-</span><span class='line'>   e   extended (container for logical partitions)
-</span><span class='line'>Select (default p): p
-</span><span class='line'>Partition number (1-4, default 1): 1
-</span><span class='line'>First sector (2048-536870911, default 2048): +1G
-</span><span class='line'>Value out of range.
-</span><span class='line'>First sector (2048-536870911, default 2048): 
-</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2048-536870911, default 536870911): 
-</span><span class='line'>Do you really want to quit? y
-</span><span class='line'>1 root@archiso ~ # fdisk /dev/sda                                                   :(
-</span><span class='line'>
-</span><span class='line'>Welcome to fdisk (util-linux 2.28).                                                    
-</span><span class='line'>Changes will remain in memory only, until you decide to write them.
-</span><span class='line'>Be careful before using the write command.
-</span><span class='line'>
-</span><span class='line'>Device does not contain a recognized partition table.
-</span><span class='line'>Created a new DOS disklabel with disk identifier 0xa806e281.
-</span><span class='line'>
-</span><span class='line'>Command (m for help): p
-</span><span class='line'>Disk /dev/sda: 256 GiB, 274877906944 bytes, 536870912 sectors
-</span><span class='line'>Units: sectors of 1 * 512 = 512 bytes
-</span><span class='line'>Sector size (logical/physical): 512 bytes / 512 bytes
-</span><span class='line'>I/O size (minimum/optimal): 512 bytes / 512 bytes
-</span><span class='line'>Disklabel type: dos
-</span><span class='line'>Disk identifier: 0xa806e281
-</span><span class='line'>
-</span><span class='line'>Command (m for help): n
-</span><span class='line'>Partition type
-</span><span class='line'>   p   primary (0 primary, 0 extended, 4 free)
-</span><span class='line'>   e   extended (container for logical partitions)
-</span><span class='line'>Select (default p): p
-</span><span class='line'>Partition number (1-4, default 1): 1
-</span><span class='line'>First sector (2048-536870911, default 2048): 
-</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2048-536870911, default 536870911): +1G
-</span><span class='line'>
-</span><span class='line'>Created a new partition 1 of type 'Linux' and of size 1 GiB.
-</span><span class='line'>
-</span><span class='line'>Command (m for help): n
-</span><span class='line'>Partition type
-</span><span class='line'>   p   primary (1 primary, 0 extended, 3 free)
-</span><span class='line'>   e   extended (container for logical partitions)
-</span><span class='line'>Select (default p): p
-</span><span class='line'>Partition number (2-4, default 2): 
-</span><span class='line'>First sector (2099200-536870911, default 2099200): 
-</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (2099200-536870911, default 536870911): +32G
-</span><span class='line'>
-</span><span class='line'>Created a new partition 2 of type 'Linux' and of size 32 GiB.
-</span><span class='line'>
-</span><span class='line'>Command (m for help): n
-</span><span class='line'>Partition type
-</span><span class='line'>   p   primary (2 primary, 0 extended, 2 free)
-</span><span class='line'>   e   extended (container for logical partitions)
-</span><span class='line'>Select (default p): p
-</span><span class='line'>Partition number (3,4, default 3): 
-</span><span class='line'>First sector (69208064-536870911, default 69208064): 
-</span><span class='line'>Last sector, +sectors or +size{K,M,G,T,P} (69208064-536870911, default 536870911): 
-</span><span class='line'>
-</span><span class='line'>Created a new partition 3 of type 'Linux' and of size 223 GiB.
-</span><span class='line'>
-</span><span class='line'>Command (m for help): w
-</span><span class='line'>The partition table has been altered.
-</span><span class='line'>Calling ioctl() to re-read partition table.
-</span><span class='line'>Syncing disks.
-</span><span class='line'>
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Format the root partition</h3>
-
-<p>We&rsquo;ll continue with the root filesystem - we&rsquo;ll initialize the swapspace after the installation -</p>
-
-<h4>Create the root luks volume;</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cryptsetup luksFormat --cipher aes-xts-plain64 --key-size 256 --hash sha256 --use-random /dev/sda3
-</span><span class='line'>
-</span><span class='line'>WARNING!
-</span><span class='line'>========
-</span><span class='line'>This will overwrite data on /dev/sda3 irrevocably.
-</span><span class='line'>
-</span><span class='line'>Are you sure? (Type uppercase yes): YES
-</span><span class='line'>Enter passphrase: 
-</span><span class='line'>Verify passphrase: 
-</span><span class='line'>5.01s user 0.04s system 21% cpu 23.750 total
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Open the root luks volume</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cryptsetup luksOpen /dev/sda3 cryptroot
-</span><span class='line'>Enter passphrase for /dev/sda3: 
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Format the root volume with btrfs</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # mkfs.btrfs /dev/mapper/cryptroot
-</span><span class='line'>btrfs-progs v4.6.1
-</span><span class='line'>See http://btrfs.wiki.kernel.org for more information.
-</span><span class='line'>
-</span><span class='line'>Label:              (null)
-</span><span class='line'>UUID:               cbfcc8d6-0cf9-4656-bcda-2525faeadfe6
-</span><span class='line'>Node size:          16384
-</span><span class='line'>Sector size:        4096
-</span><span class='line'>Filesystem size:    217.00GiB
-</span><span class='line'>Block group profiles:
-</span><span class='line'>  Data:             single            8.00MiB
-</span><span class='line'>  Metadata:         DUP               1.01GiB
-</span><span class='line'>  System:           DUP              12.00MiB
-</span><span class='line'>SSD detected:       no
-</span><span class='line'>Incompat features:  extref, skinny-metadata
-</span><span class='line'>Number of devices:  1
-</span><span class='line'>Devices:
-</span><span class='line'>   ID        SIZE  PATH
-</span><span class='line'>    1   217.00GiB  /dev/mapper/cryptroot
-</span><span class='line'>
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Mount the root filesystem</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults /dev/mapper/cryptroot /mnt
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Create the subvolumes</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # cd /mnt
-</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active
-</span><span class='line'>Create subvolume './__active'
-</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active/rootvol
-</span><span class='line'>Create subvolume '__active/rootvol'
-</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active/home
-</span><span class='line'>Create subvolume '__active/home'
-</span><span class='line'>root@archiso /mnt # btrfs subvolume create __active/var
-</span><span class='line'>Create subvolume '__active/var'
-</span><span class='line'>root@archiso /mnt # btrfs subvolume create __snapshots
-</span><span class='line'>Create subvolume './__snapshots'
-</span><span class='line'>root@archiso /mnt #</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Mount the subvolumes</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso /mnt # cd 
-</span><span class='line'>root@archiso ~ # umount /mnt
-</span><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults,subvol=__active/rootvol /dev/mapper/cryptroot /mnt
-</span><span class='line'>root@archiso ~ # mkdir /mnt/{home,var}
-</span><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults,subvol=__active/home /dev/mapper/cryptroot /mnt/home
-</span><span class='line'>root@archiso ~ # mount -o noatime,compress=lzo,discard,ssd,defaults,subvol=__active/var /dev/mapper/cryptroot /mnt/var
-</span><span class='line'>root@archiso ~ # sync
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h2>System installation</h2>
-
-<h3>bootstrap the system</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # pacstrap /mnt base base-devel btrfs-progs
-</span><span class='line'>==&gt; Creating install root at /mnt
-</span><span class='line'>==&gt; Installing packages to /mnt
-</span><span class='line'>:: Synchronizing package databases...
-</span><span class='line'> core                     119.9 KiB   652K/s 00:00 [######################] 100%
-</span><span class='line'> extra                   1760.1 KiB   688K/s 00:03 [######################] 100%
-</span><span class='line'> community                  3.6 MiB   906K/s 00:04 [######################] 100%
-</span><span class='line'>:: There are 50 members in group base:
-</span><span class='line'>:: Repository core
-</span><span class='line'>   1) bash  2) bzip2  3) coreutils  4) cryptsetup  5) device-mapper  6) dhcpcd
-</span><span class='line'>   7) diffutils  8) e2fsprogs  9) file  10) filesystem  11) findutils  12) gawk
-</span><span class='line'>   13) gcc-libs  14) gettext  15) glibc  16) grep  17) gzip  18) inetutils
-</span><span class='line'>   19) iproute2  20) iputils  21) jfsutils  22) less  23) licenses  24) linux
-</span><span class='line'>   25) logrotate  26) lvm2  27) man-db  28) man-pages  29) mdadm  30) nano
-</span><span class='line'>   31) netctl  32) pacman  33) pciutils  34) pcmciautils  35) perl
-</span><span class='line'>   36) procps-ng  37) psmisc  38) reiserfsprogs  39) s-nail  40) sed
-</span><span class='line'>   41) shadow  42) sysfsutils  43) systemd-sysvcompat  44) tar  45) texinfo
-</span><span class='line'>   46) usbutils  47) util-linux  48) vi  49) which  50) xfsprogs
-</span><span class='line'>
-</span><span class='line'>Enter a selection (default=all): 
-</span><span class='line'>:: There are 25 members in group base-devel:
-</span><span class='line'>:: Repository core
-</span><span class='line'>   1) autoconf  2) automake  3) binutils  4) bison  5) fakeroot  6) file
-</span><span class='line'>   7) findutils  8) flex  9) gawk  10) gcc  11) gettext  12) grep  13) groff
-</span><span class='line'>   14) gzip  15) libtool  16) m4  17) make  18) pacman  19) patch
-</span><span class='line'>   20) pkg-config  21) sed  22) sudo  23) texinfo  24) util-linux  25) which
-</span><span class='line'>
-</span><span class='line'>Enter a selection (default=all): 
-</span><span class='line'>warning: skipping target: file
-</span><span class='line'>warning: skipping target: findutils
-</span><span class='line'>warning: skipping target: gawk
-</span><span class='line'>warning: skipping target: gettext
-</span><span class='line'>warning: skipping target: grep
-</span><span class='line'>warning: skipping target: gzip
-</span><span class='line'>warning: skipping target: pacman
-</span><span class='line'>warning: skipping target: sed
-</span><span class='line'>warning: skipping target: texinfo
-</span><span class='line'>warning: skipping target: util-linux
-</span><span class='line'>warning: skipping target: which
-</span><span class='line'>resolving dependencies...
-</span><span class='line'>looking for conflicting packages...
-</span><span class='line'>
-</span><span class='line'>Packages (144) acl-2.2.52-2  archlinux-keyring-20160812-1  attr-2.4.47-1
-</span><span class='line'>               ca-certificates-20160507-1  ca-certificates-cacert-20140824-3
-</span><span class='line'>               ca-certificates-mozilla-3.26-1  ca-certificates-utils-20160507-1
-</span><span class='line'>               cracklib-2.9.6-1  curl-7.50.1-1  db-5.3.28-3  dbus-1.10.8-1
-</span><span class='line'>               expat-2.2.0-2  gc-7.4.2-4  gdbm-1.12-2  glib2-2.48.1-1
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>               procps-ng-3.3.12-1  psmisc-22.21-3  reiserfsprogs-3.6.25-1
-</span><span class='line'>               s-nail-14.8.10-1  sed-4.2.2-4  shadow-4.2.1-3  sudo-1.8.17.p1-1
-</span><span class='line'>               sysfsutils-2.1.0-9  systemd-sysvcompat-231-1  tar-1.29-1
-</span><span class='line'>               texinfo-6.1-4  usbutils-008-1  util-linux-2.28.1-1
-</span><span class='line'>               vi-1:070224-2  which-2.21-2  xfsprogs-4.7.0-1
-</span><span class='line'>
-</span><span class='line'>Total Download Size:   231.85 MiB
-</span><span class='line'>Total Installed Size:  801.27 MiB
-</span><span class='line'>
-</span><span class='line'>:: Proceed with installation? [Y/n] 
-</span><span class='line'>:: Retrieving packages...
-</span><span class='line'> linux-api-headers-4...   810.7 KiB   891K/s 00:01 [######################] 100%
-</span><span class='line'> tzdata-2016f-1-any       215.4 KiB   909K/s 00:00 [######################] 100%
-</span><span class='line'> iana-etc-20160513-1-any  352.2 KiB   723K/s 00:00 [######################] 100%
-</span><span class='line'> filesystem-2015.09-...     8.8 KiB   875K/s 00:00 [######################] 100%
-</span><span class='line'> glibc-2.24-2-x86_64        8.1 MiB   918K/s 00:09 [######################] 100%
-</span><span class='line'> gcc-libs-6.1.1-5-x86_64   14.9 MiB   899K/s 00:17 [######################] 100%
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>(144/144) installing btrfs-progs                   [######################] 100%
-</span><span class='line'>:: Running post-transaction hooks...
-</span><span class='line'>(1/4) Updating manpage index...
-</span><span class='line'>mandb: can't set the locale; make sure $LC_* and $LANG are correct
-</span><span class='line'>(2/4) Updating the info directory file...
-</span><span class='line'>(3/4) Updating udev Hardware Database...
-</span><span class='line'>(4/4) Rebuilding certificate stores...
-</span><span class='line'>pacstrap /mnt base base-devel btrfs-progs  27.81s user 10.20s system 10% cpu 5:50.56 total
-</span><span class='line'>root@archiso ~ # </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Generate /etc/fstab</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # genfstab -p /mnt &gt;&gt; /mnt/etc/fstab
-</span><span class='line'>root@archiso ~ # vi /mnt/etc/fstab
-</span><span class='line'># 
-</span><span class='line'># /etc/fstab: static file system information
-</span><span class='line'>#
-</span><span class='line'># &lt;file system&gt; &lt;dir&gt;   &lt;type&gt;  &lt;options&gt;       &lt;dump&gt;  &lt;pass&gt;
-</span><span class='line'># UUID=c8ca38de-4e58-4c7c-8f5b-c9c3f92f6a24
-</span><span class='line'>/dev/mapper/cryptroot   /               btrfs           rw,noatime,compress=lzo,ssd,dis
-</span><span class='line'>card,space_cache,subvolid=258,subvol=/__active/rootvol,subvol=__active/rootvol  0 0
-</span><span class='line'>
-</span><span class='line'># UUID=c8ca38de-4e58-4c7c-8f5b-c9c3f92f6a24
-</span><span class='line'>/dev/mapper/cryptroot   /home           btrfs           rw,noatime,compress=lzo,ssd,dis
-</span><span class='line'>card,space_cache,subvolid=259,subvol=/__active/home,subvol=__active/home        0 0
-</span><span class='line'>
-</span><span class='line'># UUID=c8ca38de-4e58-4c7c-8f5b-c9c3f92f6a24
-</span><span class='line'>/dev/mapper/cryptroot   /var            btrfs           rw,noatime,compress=lzo,ssd,dis
-</span><span class='line'>card,space_cache,subvolid=260,subvol=/__active/var,subvol=__active/var  0 0</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>chroot</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@archiso ~ # arch-chroot /mnt
-</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Set the timezone</h3>
-
-<p>Link for timezone to /etc/localtime</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# ln -s /usr/share/zoneinfo/Europe/Brussels /etc/localtime
-</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Set the hardwareclock to UTC</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>hwclock --systohc --utc</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Generate the required locales</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/locale.gen 
-</span><span class='line'>[root@archiso /]# locale-gen
-</span><span class='line'>Generating locales...
-</span><span class='line'>  en_IE.UTF-8... done
-</span><span class='line'>  en_IE.ISO-8859-1... done
-</span><span class='line'>  en_IE.ISO-8859-15@euro... done
-</span><span class='line'>  en_US.UTF-8... done
-</span><span class='line'>  en_US.ISO-8859-1... done
-</span><span class='line'>  nl_BE.UTF-8... done
-</span><span class='line'>  nl_BE.ISO-8859-1... done
-</span><span class='line'>  nl_BE.ISO-8859-15@euro... done
-</span><span class='line'>Generation complete.
-</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Hostname</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/hostname
-</span><span class='line'>[root@archiso /]# 
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/hosts</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>mkinitcpio</h3>
-
-<h4>HOOKS</h4>
-
-<p>Add encrypt to HOOKS before filesystems in /etc/mkinitcpio.conf</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/mkinitcpio.conf </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>HOOKS="base udev autodetect modconf block encrypt filesystems keyboard fsck"</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Create boot image</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# mkinitcpio -p linux
-</span><span class='line'>==&gt; Building image from preset: /etc/mkinitcpio.d/linux.preset: 'default'
-</span><span class='line'>  -&gt; -k /boot/vmlinuz-linux -c /etc/mkinitcpio.conf -g /boot/initramfs-linux.img
-</span><span class='line'>==&gt; Starting build: 4.7.1-1-ARCH
-</span><span class='line'>  -&gt; Running build hook: [base]
-</span><span class='line'>  -&gt; Running build hook: [udev]
-</span><span class='line'>  -&gt; Running build hook: [autodetect]
-</span><span class='line'>  -&gt; Running build hook: [modconf]
-</span><span class='line'>  -&gt; Running build hook: [block]
-</span><span class='line'>  -&gt; Running build hook: [encrypt]
-</span><span class='line'>  -&gt; Running build hook: [filesystems]
-</span><span class='line'>  -&gt; Running build hook: [keyboard]
-</span><span class='line'>  -&gt; Running build hook: [fsck]
-</span><span class='line'>==&gt; Generating module dependencies
-</span><span class='line'>==&gt; Creating gzip-compressed initcpio image: /boot/initramfs-linux.img
-</span><span class='line'>==&gt; Image generation successful
-</span><span class='line'>==&gt; Building image from preset: /etc/mkinitcpio.d/linux.preset: 'fallback'
-</span><span class='line'>  -&gt; -k /boot/vmlinuz-linux -c /etc/mkinitcpio.conf -g /boot/initramfs-linux-fallback.img -S autodetect
-</span><span class='line'>==&gt; Starting build: 4.7.1-1-ARCH
-</span><span class='line'>  -&gt; Running build hook: [base]
-</span><span class='line'>  -&gt; Running build hook: [udev]
-</span><span class='line'>  -&gt; Running build hook: [modconf]
-</span><span class='line'>  -&gt; Running build hook: [block]
-</span><span class='line'>==&gt; WARNING: Possibly missing firmware for module: wd719x
-</span><span class='line'>==&gt; WARNING: Possibly missing firmware for module: aic94xx
-</span><span class='line'>  -&gt; Running build hook: [encrypt]
-</span><span class='line'>  -&gt; Running build hook: [filesystems]
-</span><span class='line'>  -&gt; Running build hook: [keyboard]
-</span><span class='line'>  -&gt; Running build hook: [fsck]
-</span><span class='line'>==&gt; Generating module dependencies
-</span><span class='line'>==&gt; Creating gzip-compressed initcpio image: /boot/initramfs-linux-fallback.img
-</span><span class='line'>==&gt; Image generation successful
-</span><span class='line'>[root@archiso /]#</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>set the root password</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# passwd root
-</span><span class='line'>New password: 
-</span><span class='line'>Retype new password: 
-</span><span class='line'>passwd: password updated successfully
-</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>GRUB</h3>
-
-<h4>install Grub</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# pacman -Sy grub
-</span><span class='line'>:: Synchronizing package databases...
-</span><span class='line'> core is up to date
-</span><span class='line'> extra                   1760.1 KiB   917K/s 00:02 [######################] 100%
-</span><span class='line'> community                  3.6 MiB   896K/s 00:04 [######################] 100%
-</span><span class='line'>resolving dependencies...
-</span><span class='line'>looking for conflicting packages...
-</span><span class='line'>
-</span><span class='line'>Packages (1) grub-1:2.02.beta3-3
-</span><span class='line'>
-</span><span class='line'>Total Download Size:    5.83 MiB
-</span><span class='line'>Total Installed Size:  28.70 MiB
-</span><span class='line'>
-</span><span class='line'>:: Proceed with installation? [Y/n] y
-</span><span class='line'>:: Retrieving packages...
-</span><span class='line'> grub-1:2.02.beta3-3...     5.8 MiB   917K/s 00:07 [######################] 100%
-</span><span class='line'>(1/1) checking keys in keyring                     [######################] 100%
-</span><span class='line'>(1/1) checking package integrity                   [######################] 100%
-</span><span class='line'>(1/1) loading package files                        [######################] 100%
-</span><span class='line'>(1/1) checking for file conflicts                  [######################] 100%
-</span><span class='line'>(1/1) checking available disk space                [######################] 100%
-</span><span class='line'>:: Processing package changes...
-</span><span class='line'>(1/1) installing grub                              [######################] 100%
-</span><span class='line'>Generating grub.cfg.example config file...
-</span><span class='line'>This may fail on some machines running a custom kernel.
-</span><span class='line'>done.
-</span><span class='line'>Optional dependencies for grub
-</span><span class='line'>    freetype2: For grub-mkfont usage
-</span><span class='line'>    fuse: For grub-mount usage
-</span><span class='line'>    dosfstools: For grub-mkrescue FAT FS and EFI support
-</span><span class='line'>    efibootmgr: For grub-install EFI support
-</span><span class='line'>    libisoburn: Provides xorriso for generating grub rescue iso using
-</span><span class='line'>    grub-mkrescue
-</span><span class='line'>    os-prober: To detect other OSes when generating grub.cfg in BIOS systems
-</span><span class='line'>    mtools: For grub-mkrescue FAT FS support
-</span><span class='line'>:: Running post-transaction hooks...
-</span><span class='line'>(1/2) Updating manpage index...
-</span><span class='line'>(2/2) Updating the info directory file...
-</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Install grub to your boot disk</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# grub-install --target=i386-pc /dev/sda
-</span><span class='line'>Installing for i386-pc platform.
-</span><span class='line'>grub-install: error: attempt to install to encrypted disk without cryptodisk enabled. Set `GRUB_ENABLE_CRYPTODISK=y' in file `/etc/default/grub'.
-</span><span class='line'>[root@archiso /]# 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Enable cryptodisk</h4>
-
-<p>Because we use an encrypted boot disk we need to enable cryptdisk support.</p>
-
-<p>Add  GRUB_ENABLE_CRYPTODISK=y to /etc/default/grub</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /etc/default/grub
-</span><span class='line'>[root@archiso /]# 
-</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>GRUB_DEFAULT=0
-</span><span class='line'>GRUB_TIMEOUT=5
-</span><span class='line'>GRUB_DISTRIBUTOR="Arch"
-</span><span class='line'>GRUB_CMDLINE_LINUX_DEFAULT="quiet"
-</span><span class='line'>GRUB_CMDLINE_LINUX=""
-</span><span class='line'>GRUB_ENABLE_CRYPTODISK=y</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And run grub-install again</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# grub-install --target=i386-pc /dev/sda
-</span><span class='line'>Installing for i386-pc platform.
-</span><span class='line'>Installation finished. No error reported.
-</span><span class='line'>[root@archiso /]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Create grub.cfg</h4>
-
-<p>Add your encrypted root partition to GRUB_CMDLINE_LINUX= in /etc/default/grub</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>GRUB_DEFAULT=0
-</span><span class='line'>GRUB_TIMEOUT=5
-</span><span class='line'>GRUB_DISTRIBUTOR="Arch"
-</span><span class='line'>GRUB_CMDLINE_LINUX_DEFAULT="quiet"
-</span><span class='line'>GRUB_CMDLINE_LINUX=""cryptdevice=/dev/sda3:cryptroot""
-</span><span class='line'>ENABLE_CRYPTODISK=y 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And generate grub.cfg</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# grub-mkconfig -o /boot/grub/grub.cfg
-</span><span class='line'>Generating grub configuration file ...
-</span><span class='line'>Found linux image: /boot/vmlinuz-linux
-</span><span class='line'>Found initrd image(s) in /boot: initramfs-linux.img
-</span><span class='line'>Found fallback initrd image(s) in /boot: initramfs-linux-fallback.img
-</span><span class='line'>done
-</span><span class='line'>[root@archiso /]# 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Reboot</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@archiso /]# vi /boot/grub/grub.cfg
-</span><span class='line'>[root@archiso /]# sync
-</span><span class='line'>[root@archiso /]# reboot
-</span><span class='line'>Running in chroot, ignoring request.
-</span><span class='line'>[root@archiso /]# exit
-</span><span class='line'>arch-chroot /mnt  9.76s user 1.37s system 0% cpu 23:13.29 total
-</span><span class='line'>root@archiso ~ # reboot</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Finish the installation</h2>
-
-<h3>1st boot</h3>
-
-<p>As mentioned before the GRUB will as for a passphrase to decrypt the boot partition.</p>
-
-<p><img class="center" src="/blog/images/arch-on-an-encrypted-btrfs-partition/01_1st_boot.png" width="700" height="274" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;">
-<img class="center" src="/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_grub_menu.png" width="700" height="484" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
-
-<p>You&rsquo;ll need to type it the password a secod time during the loading of initrd.</p>
-
-<p><img class="center" src="/blog/images/arch-on-an-encrypted-btrfs-partition/02_1st_decrypt_root.png" width="700" height="165" title="&#34;01_1st_boot.png&#34;" alt="&#34;01_1st_boot.png&#34;"></p>
-
-<h3>Setup swap space</h3>
-
-<p>Update /etc/crypttab</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>swap         /dev/sda2                                    /dev/urandom            swap,
-</span><span class='line'>cipher=aes-cbc-essiv:sha256,size=256</span></code></pre></td></tr></table></div></figure>
-
-
-<p>reboot the system to verify that the encrypted swap partition is mapper correctly during the system startup</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# ls -l /dev/mapper/
-</span><span class='line'>total 0
-</span><span class='line'>crw------- 1 root root 10, 236 Aug 29 15:43 control
-</span><span class='line'>lrwxrwxrwx 1 root root       7 Aug 29 15:43 cryptroot -&gt; ../dm-0
-</span><span class='line'>lrwxrwxrwx 1 root root       7 Aug 29 15:43 swap -&gt; ../dm-1
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Create swap</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# mkswap /dev/mapper/swap 
-</span><span class='line'>Setting up swapspace version 1, size = 32 GiB (34359734272 bytes)
-</span><span class='line'>no label, UUID=66ea5a08-0833-4e84-8b95-f1a9c2d772b2
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Activate swap</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# swapon /dev/mapper/swap
-</span><span class='line'>[root@vicky ~]# free
-</span><span class='line'>              total        used        free      shared  buff/cache   available
-</span><span class='line'>Mem:        4051236       85932     3890708         440       74596     3807084
-</span><span class='line'>Swap:      33554428           0    33554428
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Update /etc/fstab</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/dev/mapper/swap swap                    swap    defaults,discard,pri=3        0 0 </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<p style="font-style: italic;">
-Have fun
-</p>
-
-
-<h2>Links</h2>
-
-<ul>
-<li><a href="https://wiki.archlinux.org/index.php/Installation_guide"><a href="https://wiki.archlinux.org/index.php/Installation_guide">https://wiki.archlinux.org/index.php/Installation_guide</a></a></li>
-<li><a href="http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html"><a href="http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html">http://www.brunoparmentier.be/blog/how-to-install-arch-linux-on-an-encrypted-btrfs-partition.html</a></a></li>
-<li><a href="http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html"><a href="http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html">http://blog.fabio.mancinelli.me/2012/12/28/Arch_Linux_on_BTRFS.html</a></a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/3">&larr; Older</a>
@@ -6979,6 +6553,10 @@ Have fun
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/01/02/best-wishes-2019/">Best Wishes 2019</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/">How to Configure DNS-over-TLS on OPNsense</a>
       </li>
     
@@ -6992,10 +6570,6 @@ Have fun
     
       <li class="post">
         <a href="/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/">Migrate a Windows Vmware Virtual Machine to Linux KVM</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2018/06/04/nested-virtualization-in-kvm/">Nested Virtualization in KVM</a>
       </li>
     
   </ul>
@@ -7057,7 +6631,7 @@ src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - staf wagemakers -
+  Copyright &copy; 2019 - staf wagemakers -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
