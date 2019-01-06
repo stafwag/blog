@@ -73,10 +73,10 @@ Y
 [root@frija ~]# 
 ```
 
-To enable the nested feature permanently create /etc/modprobe.d/kvm.conf
+To enable the nested feature permanently create /etc/modprobe.d/kvm_intel.conf
 
 ```
-[root@frija ~]# vi /etc/modprobe.d/kvm.conf
+[root@frija ~]# vi /etc/modprobe.d/kvm_intel.conf
 ```
 
 and enable the nested option.
