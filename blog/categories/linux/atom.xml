@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2019-01-02T20:45:29+01:00</updated>
+  <updated>2019-01-06T09:52:26+01:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -922,9 +922,9 @@ Y
 [root@frija ~]# 
 </code></pre>
 
-<p>To enable the nested feature permanently create /etc/modprobe.d/kvm.conf</p>
+<p>To enable the nested feature permanently create /etc/modprobe.d/kvm_intel.conf</p>
 
-<pre><code>[root@frija ~]# vi /etc/modprobe.d/kvm.conf
+<pre><code>[root@frija ~]# vi /etc/modprobe.d/kvm_intel.conf
 </code></pre>
 
 <p>and enable the nested option.</p>
