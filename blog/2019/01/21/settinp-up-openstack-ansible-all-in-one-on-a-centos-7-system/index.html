@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Setting Up OpenStack-Ansible All-In-One on a Centos 7 System - stafwag Blog</title>
+  <meta name="author" content="staf wagemakers">
+
+  
+  <meta name="description" content="Setting Up OpenStack-Ansible All-In-One on a Centos 7 System Jan 21st, 2019 7:51 pm Openstack is nice platform to deploy an Infrastructure as a &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="https://stafwag.github.io/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/">
+  <link href="/blog/favicon.png" rel="icon">
+  <link href="/blog/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/blog/atom.xml" rel="alternate" title="stafwag Blog" type="application/atom+xml">
+  <script src="/blog/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/blog/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-37258385-2']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/blog/">stafwag Blog</a></h1>
+  
+    <h2>staf wagemakers blog</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/blog/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="stafwag.github.io/blog">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/blog/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Setting Up OpenStack-Ansible All-In-One on a Centos 7 System</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2019-01-21T19:51:32+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2019</span></span> <span class='time'>7:51 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="right" src="/blog/images/openstack-logo.png" width="150" height="150" title="&#34;openstack-logo&#34;" alt="&#34;openstack-logo&#34;"></p>
+
+<p><a href="https://www.openstack.org/">Openstack</a> is nice platform to deploy <a href="https://en.wikipedia.org/wiki/Cloud_computing#Infrastructure_as_a_service_.28IaaS.29">an Infrastructure as a service</a> and is a <a href="https://governance.openstack.org/tc/reference/projects/index.html">collection of projects</a> but it can be a bit difficult to setup. <a href="https://docs.openstack.org">The documentation</a> is really great if you want to setup openstack by hand and there are a few openstack distributions that makes it easier to install it.</p>
+
+<p><a href="https://www.ansible.org">Ansible</a> is a very nice tool for system automatisation and is one that&rsquo;s easier to learn.</p>
+
+<p><img class="left" src="/blog/images/ansible-logo-red-t.png" width="150" height="150" title="&#34;ansible-logo-red&#34;" alt="&#34;ansible-logo-red&#34;"></p>
+
+<p>Wouldn&rsquo;t be nice if we could make the openstack installation easier with ansible? That&rsquo;s exactly what <a href="https://github.com/openstack/openstack-ansible">Openstack-Ansible</a>
+ does.</p>
+
+<p>In this blog post we&rsquo;ll setup <a href="https://docs.openstack.org/openstack-ansible/latest/user/aio/quickstart.html">&ldquo;an all-in-one&rdquo; openstack installation</a> on <a href="https://www.centos.org">Centos 7</a>. The installer will install openstack into <a href="https://linuxcontainers.org/">lxc containers</a> and it&rsquo;s nice way to learn how openstack works and how to operate it.</p>
+
+<h1>Preparation</h1>
+
+<h2>System requirements</h2>
+
+<p>I use a Centos 7 virtual system running as a <a href="https://www.linux-kvm.org">KVM</a> instance with <a href="http://stafwag.github.io/blog/blog/2018/06/04/nested-virtualization-in-kvm/">nested KVM virtualasation enabled</a>. The system requiremensts
+The minimun requiremenst are:</p>
+
+<ul>
+<li>8 CPU cores</li>
+<li>50 GB of free diskspace</li>
+<li>8GB RAM</li>
+</ul>
+
+
+<h2>update &hellip;.</h2>
+
+<p>Make sure that your system is up-to-update</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@openstack ~]$ sudo yum update -y
+</span><span class='line'>
+</span><span class='line'>We trust you have received the usual lecture from the local System
+</span><span class='line'>Administrator. It usually boils down to these three things:
+</span><span class='line'>
+</span><span class='line'>    #1) Respect the privacy of others.
+</span><span class='line'>    #2) Think before you type.
+</span><span class='line'>    #3) With great power comes great responsibility.
+</span><span class='line'>
+</span><span class='line'>[sudo] password for staf: 
+</span><span class='line'>Loaded plugins: fastestmirror
+</span><span class='line'>Loading mirror speeds from cached hostfile
+</span><span class='line'> * base: distrib-coffee.ipsl.jussieu.fr
+</span><span class='line'> * extras: mirror.in2p3.fr
+</span><span class='line'> * updates: centos.mirror.fr.planethoster.net
+</span><span class='line'>base                                                                                                                                    | 3.6 kB  00:00:00     
+</span><span class='line'>extras                                                                                                                                  | 3.4 kB  00:00:00     
+</span><span class='line'>updates                                                                                                                                 | 3.4 kB  00:00:00     
+</span><span class='line'>No packages marked for update
+</span><span class='line'>[staf@openstack ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Install git</h2>
+
+<p>We&rsquo;ll need git to install the ansible playbooks and the Openstack-Ansible installation scripts.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@openstack ~]$ yum install git
+</span><span class='line'>Loaded plugins: fastestmirror
+</span><span class='line'>You need to be root to perform this command.
+</span><span class='line'>[staf@openstack ~]$ sudo yum install git
+</span><span class='line'>Loaded plugins: fastestmirror
+</span><span class='line'>Loading mirror speeds from cached hostfile
+</span><span class='line'> * base: mirror.in2p3.fr
+</span><span class='line'> * extras: mirror.in2p3.fr
+</span><span class='line'> * updates: centos.mirror.fr.planethoster.net
+</span><span class='line'>Package git-1.8.3.1-20.el7.x86_64 already installed and latest version
+</span><span class='line'>Nothing to do
+</span><span class='line'>[staf@openstack ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Ansible&hellip;.</h2>
+
+<p>This is a bit of a pitfail&hellip; The Openstack-Ansible bootstrap script will download and install his own version of ansible and create a link to <code>/usr/local/bin</code>. So <code>/usr/local/bin</code> must be in your $PATH.  Ansible shouldn&rsquo;t be installed on your system or if it is installed  it shouln&rsquo;t be executed instead of the ansible version that is builded with Openstack-Ansible.</p>
+
+<p>On most GNU/Linux distributions have <code>/usr/local/bin</code> and <code>/usr/local/sbin</code>  is in the $PATH but not on centos, so we&rsquo;ll need to add it.</p>
+
+<h3>Make sure that ansible insn&rsquo;t installed</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@openstack ~]$ sudo rpm -qa | grep -i ansible
+</span><span class='line'>[sudo] password for staf: 
+</span><span class='line'>[staf@openstack ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Update your $PATH</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack ~]# export PATH=/usr/local/bin:$PATH</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If you want to have <code>/usr/local/bin</code> in your $PATH  update <code>/etc/profile</code>  or <code>$HOME/.profile</code></p>
+
+<h2>ssh password authentication</h2>
+
+<p>The ansibe playbooks will disable <code>PasswordAuthentication</code>, make sure that you login with a ssh key. - Password authentication is obsolete anyway -</p>
+
+<h2>firewalld</h2>
+
+<p>Firewall is enabled on Centos by default, the default iptables rules prevent communication between the openstack containers.</p>
+
+<h3>stop and disable firewalld</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack ~]# systemctl stop firewalld
+</span><span class='line'>[root@openstack ~]# systemctl disable firewalld
+</span><span class='line'>Removed symlink /etc/systemd/system/multi-user.target.wants/firewalld.service.
+</span><span class='line'>Removed symlink /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service.</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>verify</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@openstack ~]# iptables -L
+</span><span class='line'>Chain INPUT (policy ACCEPT)
+</span><span class='line'>target     prot opt source               destination         
+</span><span class='line'>
+</span><span class='line'>Chain FORWARD (policy ACCEPT)
+</span><span class='line'>target     prot opt source               destination         
+</span><span class='line'>
+</span><span class='line'>Chain OUTPUT (policy ACCEPT)
+</span><span class='line'>target     prot opt source               destination         
+</span><span class='line'>[root@openstack ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Openstack installation</h1>
+
+<p>The installation will take some time therefor it&rsquo;s recommended to use an session manager like <a href="https://github.com/tmux/tmux/">tmux</a> or <a href="https://www.gnu.org/software/screen/">GNU screen</a></p>
+
+<h2>Bootstrap</h2>
+
+<h3>git clone</h3>
+
+<p>clone the <a href="https://git.openstack.org/openstack/openstack-ansible">openstack-ansible git repo</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack ~]# git clone https://git.openstack.org/openstack/openstack-ansible /opt/openstack-ansible
+</span><span class='line'>Cloning into '/opt/openstack-ansible'...
+</span><span class='line'>remote: Counting objects: 67055, done.
+</span><span class='line'>remote: Compressing objects: 100% (32165/32165), done.
+</span><span class='line'>remote: Total 67055 (delta 45474), reused 52564 (delta 32073)
+</span><span class='line'>Receiving objects: 100% (67055/67055), 14.60 MiB | 720.00 KiB/s, done.
+</span><span class='line'>Resolving deltas: 100% (45474/45474), done.
+</span><span class='line'>[root@openstack ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack ~]# cd /opt/openstack-ansible
+</span><span class='line'>[root@openstack openstack-ansible]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>choose you Openstack releases</h3>
+
+<p>Openstack has release shedule about every 6 months the current stable release is <a href="https://releases.openstack.org/rocky/index.html">Rocky</a>. Every Openstack release has his own branch in the git repo. Each Openstack-Ansible release is tagged in the git repo. So either you&rsquo;ll need checkout Openstack-Ansible release tag or the bracnh. We&rsquo;ll checkout the Rocky branch.</p>
+
+<h4>get the list of branches</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack openstack-ansible]# git branch -a
+</span><span class='line'>* master
+</span><span class='line'>  remotes/origin/HEAD -&gt; origin/master
+</span><span class='line'>  remotes/origin/master
+</span><span class='line'>  remotes/origin/stable/ocata
+</span><span class='line'>  remotes/origin/stable/pike
+</span><span class='line'>  remotes/origin/stable/queens
+</span><span class='line'>  remotes/origin/stable/rocky
+</span><span class='line'>[root@openstack openstack-ansible]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h5>checkout the branch</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack openstack-ansible]# git checkout stable/rocky
+</span><span class='line'>Branch stable/rocky set up to track remote branch stable/rocky from origin.
+</span><span class='line'>Switched to a new branch 'stable/rocky'
+</span><span class='line'>[root@openstack openstack-ansible]# 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Bootstrap ansible</h3>
+
+<p>Execute <code>scripts/bootstrap-ansible.sh</code> this will install the required packages and ansible playbooks.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack openstack-ansible]# scripts/bootstrap-ansible.sh
+</span><span class='line'>+ export HTTP_PROXY=
+</span><span class='line'>+ HTTP_PROXY=
+</span><span class='line'>+ export HTTPS_PROXY=
+</span><span class='line'>+ HTTPS_PROXY=
+</span><span class='line'>+ export ANSIBLE_PACKAGE=ansible==2.5.14
+</span><span class='line'>+ ANSIBLE_PACKAGE=ansible==2.5.14
+</span><span class='line'>+ export ANSIBLE_ROLE_FILE=ansible-role-requirements.yml
+</span><span class='line'>+ ANSIBLE_ROLE_FILE=ansible-role-requirements.yml
+</span><span class='line'>+ export SSH_DIR=/root/.ssh
+</span><span class='line'>+ SSH_DIR=/root/.ssh
+</span><span class='line'>+ export DEBIAN_FRONTEND=noninteractive
+</span><span class='line'>+ DEBIAN_FRONTEND=noninteractive
+</span><span class='line'>&lt;SNIP&gt;
+</span><span class='line'>+ unset ANSIBLE_LIBRARY
+</span><span class='line'>+ unset ANSIBLE_LOOKUP_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_FILTER_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_ACTION_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_CALLBACK_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_CALLBACK_WHITELIST
+</span><span class='line'>+ unset ANSIBLE_TEST_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_VARS_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_STRATEGY_PLUGINS
+</span><span class='line'>+ unset ANSIBLE_CONFIG
+</span><span class='line'>+ '[' false == true ']'
+</span><span class='line'>+ echo 'System is bootstrapped and ready for use.'
+</span><span class='line'>System is bootstrapped and ready for use.
+</span><span class='line'>[root@openstack openstack-ansible]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Verify</h4>
+
+<p> <code>scripts/bootstrap-ansible</code> created <code>/opt/ansible-runtime</code> and create amd updated <code>//usr/local/bin</code> with a few links.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack openstack-ansible]# ls -ld /opt/*
+</span><span class='line'>drwxr-xr-x.  5 root root   56 Jan 12 11:42 /opt/ansible-runtime
+</span><span class='line'>drwxr-xr-x. 14 root root 4096 Jan 12 11:43 /opt/openstack-ansible
+</span><span class='line'>[root@openstack openstack-ansible]# ls -ltr /usr/local/bin/
+</span><span class='line'>total 8
+</span><span class='line'>lrwxrwxrwx. 1 root root   32 Jan 12 11:43 ansible -&gt; /usr/local/bin/openstack-ansible
+</span><span class='line'>lrwxrwxrwx. 1 root root   39 Jan 12 11:43 ansible-config -&gt; /opt/ansible-runtime/bin/ansible-config
+</span><span class='line'>lrwxrwxrwx. 1 root root   43 Jan 12 11:43 ansible-connection -&gt; /opt/ansible-runtime/bin/ansible-connection
+</span><span class='line'>lrwxrwxrwx. 1 root root   40 Jan 12 11:43 ansible-console -&gt; /opt/ansible-runtime/bin/ansible-console
+</span><span class='line'>lrwxrwxrwx. 1 root root   39 Jan 12 11:43 ansible-galaxy -&gt; /opt/ansible-runtime/bin/ansible-galaxy
+</span><span class='line'>lrwxrwxrwx. 1 root root   36 Jan 12 11:43 ansible-doc -&gt; /opt/ansible-runtime/bin/ansible-doc
+</span><span class='line'>lrwxrwxrwx. 1 root root   42 Jan 12 11:43 ansible-inventory -&gt; /opt/ansible-runtime/bin/ansible-inventory
+</span><span class='line'>lrwxrwxrwx. 1 root root   32 Jan 12 11:43 ansible-playbook -&gt; /usr/local/bin/openstack-ansible
+</span><span class='line'>lrwxrwxrwx. 1 root root   37 Jan 12 11:43 ansible-pull -&gt; /opt/ansible-runtime/bin/ansible-pull
+</span><span class='line'>lrwxrwxrwx. 1 root root   38 Jan 12 11:43 ansible-vault -&gt; /opt/ansible-runtime/bin/ansible-vault
+</span><span class='line'>-rw-r--r--. 1 root root 3169 Jan 12 11:43 openstack-ansible.rc
+</span><span class='line'>-rwxr-xr-x. 1 root root 2638 Jan 12 11:43 openstack-ansible</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Verify that ansible command is one that&rsquo;s installed bu the Openstack-Ansible bootstrap script.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack openstack-ansible]# which ansible
+</span><span class='line'>/usr/local/bin/ansible</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Bootstrap AIO</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack openstack-ansible]# scripts/bootstrap-aio.sh
+</span><span class='line'>+ export BOOTSTRAP_OPTS=
+</span><span class='line'>+ BOOTSTRAP_OPTS=
+</span><span class='line'>+++ dirname scripts/bootstrap-aio.sh
+</span><span class='line'>++ readlink -f scripts/..
+</span><span class='line'>+ export OSA_CLONE_DIR=/opt/openstack-ansible
+</span><span class='line'>TASK [Gathering Facts] *****************************************************************************************************
+</span><span class='line'>ok: [localhost]
+</span><span class='line'>
+</span><span class='line'>TASK [sshd : Set OS dependent variables] ***********************************************************************************
+</span><span class='line'>ok: [localhost] =&gt; (item=/etc/ansible/roles/sshd/vars/RedHat_7.yml)
+</span><span class='line'>
+</span><span class='line'>TASK [sshd : OS is supported] **********************************************************************************************
+</span><span class='line'>ok: [localhost] =&gt; {
+</span><span class='line'>    "changed": false, 
+</span><span class='line'>    "msg": "All assertions passed"
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>TASK [sshd : Install ssh packages] 
+</span><span class='line'>&lt;SNIP&gt;
+</span><span class='line'>EXIT NOTICE [Playbook execution success] **************************************
+</span><span class='line'>===============================================================================
+</span><span class='line'>+ popd
+</span><span class='line'>/opt/openstack-ansible
+</span><span class='line'>+ unset ANSIBLE_INVENTORY
+</span><span class='line'>+ unset ANSIBLE_VARS_PLUGINS
+</span><span class='line'>+ unset HOST_VARS_PATH
+</span><span class='line'>+ unset GROUP_VARS_PATH
+</span><span class='line'>[root@openstack openstack-ansible]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Run the playbooks</h3>
+
+<p>We&rsquo;ll to run a few playbooks to setup the containers and our Openstack environment.</p>
+
+<p>Move to the openstack-ansible playbook directory.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@aio1 ~]# cd /opt/openstack-ansible/playbooks/
+</span><span class='line'>[root@aio1 playbooks]# pwd
+</span><span class='line'>/opt/openstack-ansible/playbooks
+</span><span class='line'>[root@aio1 playbooks]# </span></code></pre></td></tr></table></div></figure>
+
+
+<p>and exexcute the playbooks.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@openstack playbooks]# openstack-ansible setup-hosts.yml
+</span><span class='line'>[root@openstack playbooks]# openstack-ansible setup-infrastructure.yml
+</span><span class='line'>[root@aio1 playbooks]# openstack-ansible setup-openstack.yml</span></code></pre></td></tr></table></div></figure>
+
+
+<p>If all goes well your openstack installation is completed.</p>
+
+<p>You can verify the openstack containers with <code>lxc-ls</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@aio1 playbooks]# lxc-ls --fancy
+</span><span class='line'>NAME                                   STATE   AUTOSTART GROUPS            IPV4                                           IPV6 
+</span><span class='line'>aio1_cinder_api_container-c211b759     RUNNING 1         onboot, openstack 10.255.255.43, 172.29.237.244, 172.29.244.190  -    
+</span><span class='line'>aio1_galera_container-9a90cbd9         RUNNING 1         onboot, openstack 10.255.255.50, 172.29.239.126                  -    
+</span><span class='line'>aio1_glance_container-c05aab79         RUNNING 1         onboot, openstack 10.255.255.218, 172.29.236.160, 172.29.247.238 -    
+</span><span class='line'>aio1_horizon_container-81943ba2        RUNNING 1         onboot, openstack 10.255.255.160, 172.29.237.37                  -    
+</span><span class='line'>aio1_keystone_container-a5859104       RUNNING 1         onboot, openstack 10.255.255.40, 172.29.236.95                   -    
+</span><span class='line'>aio1_memcached_container-ab998d0e      RUNNING 1         onboot, openstack 10.255.255.175, 172.29.239.49                  -    
+</span><span class='line'>aio1_neutron_server_container-439aeb90 RUNNING 1         onboot, openstack 10.255.255.137, 172.29.239.13                  -    
+</span><span class='line'>aio1_nova_api_container-c83e5ef0       RUNNING 1         onboot, openstack 10.255.255.216, 172.29.236.52                  -    
+</span><span class='line'>aio1_rabbit_mq_container-4fd792fb      RUNNING 1         onboot, openstack 10.255.255.2, 172.29.239.62                    -    
+</span><span class='line'>aio1_repo_container-b39d88a1           RUNNING 1         onboot, openstack 10.255.255.227, 172.29.237.146                 -    
+</span><span class='line'>aio1_utility_container-fff0b6df        RUNNING 1         onboot, openstack 10.255.255.117, 172.29.237.82                  -    
+</span><span class='line'>[root@aio1 playbooks]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Find the correct ip address</h3>
+
+<p>You should see horizon running with netstat</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@aio1 ~]# netstat -pan | grep -i 443
+</span><span class='line'>tcp        0      0 172.29.236.100:443      0.0.0.0:*               LISTEN      12908/haproxy       
+</span><span class='line'>tcp        0      0 192.168.122.23:443      0.0.0.0:*               LISTEN      12908/haproxy       
+</span><span class='line'>unix  3      [ ]         STREAM     CONNECTED     73443    31134/tmux           
+</span><span class='line'>unix  2      [ ]         DGRAM                    1244303  23435/rsyslogd       
+</span><span class='line'>[root@aio1 ~]# </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Logon to the openstack GUI (Horizon)</h2>
+
+<h3>Password&hellip;</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[root@aio1 ~]# grep keystone_auth_admin_password /etc/openstack_deploy/user_secrets.yml</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img class="center" src="/blog/images/openstack-ansible-aio-login.png" width="782" height="723" title="&#34;openstack-ansible-aio-login.png&#34;" alt="&#34;openstack-ansible-aio-login.png&#34;"></p>
+
+<p><strong><em> Have fun </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://docs.openstack.org/openstack-ansible/latest/user/aio/quickstart.html">https://docs.openstack.org/openstack-ansible/latest/user/aio/quickstart.html</a></li>
+<li><a href="https://docs.openstack.org/project-deploy-guide/openstack-ansible/queens/deploymenthost.html">https://docs.openstack.org/project-deploy-guide/openstack-ansible/queens/deploymenthost.html</a></li>
+<li><a href="https://bugs.launchpad.net/openstack-ansible/+bug/1792050">https://bugs.launchpad.net/openstack-ansible/+bug/1792050</a></li>
+<li><a href="https://docs.openstack.org/openstack-ansible-security/latest/auto_controls-all.html">https://docs.openstack.org/openstack-ansible-security/latest/auto_controls-all.html</a></li>
+<li><a href="https://blog.christophersmart.com/2016/08/09/setting-up-openstack-ansible-all-in-one-behind-a-proxy/">https://blog.christophersmart.com/2016/08/09/setting-up-openstack-ansible-all-in-one-behind-a-proxy/</a></li>
+</ul>
+
+</div>
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">staf wagemakers</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2019-01-21T19:51:32+01:00'><span class='date'><span class='date-month'>Jan</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2019</span></span> <span class='time'>7:51 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/blog/categories/ansible/'>ansible</a>, <a class='category' href='/blog/blog/categories/centos/'>centos</a>, <a class='category' href='/blog/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/blog/categories/lxc/'>lxc</a>, <a class='category' href='/blog/blog/categories/openstack/'>openstack</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="https://stafwag.github.io/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/" data-via="" data-counturl="https://stafwag.github.io/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+  <span style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;">
+    <script src="//platform.linkedin.com/in.js" type="text/javascript">
+    lang: en_US
+  </script>
+  <script type="IN/Share" data-url="https://stafwag.github.io/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/" data-counter="right"></script>
+  </snap>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/blog/2019/01/02/best-wishes-2019/" title="Previous Post: best wishes 2019">&laquo; best wishes 2019</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>About Me</h1>
+  <p><a href="http://www.wagemakers.be">http://www.wagemakers.be</a></p>
+  <p><a href="http://www.linkedin.com/in/stafwagemakers">LinkedIn profile</a></p>
+  <p><a href="https://google.com/+StafWagemakers">Google Plus profile</a></p>
+<!-- Place this tag where you want the widget to render. -->
+<div class="g-person" data-width="180" data-href="http://google.com/+StafWagemakers" data-showtagline="false" data-showcoverphoto="false" data-rel="author"></div>
+
+<!-- Place this tag after the last widget tag. -->
+<script type="text/javascript">
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+</section>
+
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/">Setting Up OpenStack-Ansible All-In-One on a Centos 7 System</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2019/01/02/best-wishes-2019/">Best Wishes 2019</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/">How to Configure DNS-over-TLS on OPNsense</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/">DNS Privacy With Stubby (Part 2 FreeBSD)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">DNS Privacy With Stubby (Part 1 GNU/Linux)</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/stafwag">@stafwag</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'stafwag',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/blog/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+<hr />
+<br />
+<br />
+<br />
+<br />
+<script type="text/javascript"><!--
+google_ad_client = "ca-pub-4659298941528586";
+/* blogads_right */
+google_ad_slot = "8839948148";
+google_ad_width = 160;
+google_ad_height = 600;
+//-->
+</script>
+<script type="text/javascript"
+src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - staf wagemakers -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'stafwag';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'https://stafwag.github.io/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/';
+        var disqus_url = 'https://stafwag.github.io/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id; js.async = true;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
