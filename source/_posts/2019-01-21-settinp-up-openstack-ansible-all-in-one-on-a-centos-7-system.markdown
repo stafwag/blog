@@ -130,37 +130,6 @@ target     prot opt source               destination
 [root@openstack ~]# 
 ```
 
-## selinux
-
-There is a BUG in the selinux playbooks - [https://bugs.launchpad.net/openstack-ansible/+bug/1792050](https://bugs.launchpad.net/openstack-ansible/+bug/1792050) - I didn't check it in detail. We'll disable the selinux playbooks for now to avoid this BUG. To disable the selinux playbooks we need to set the ```security_audit_mac_changes: no``` ansible user variabele - during the installation. [https://docs.openstack.org/openstack-ansible-security/latest/auto_controls-all.html](https://docs.openstack.org/openstack-ansible-security/latest/auto_controls-all.html)
-
-### set selinux to permissive mode
-
-Edit /etc/selinux/config 
-
-```
-root@openstack selinux]# vi /etc/selinux/config 
-[root@openstack selinux]# 
-```
-
-and change the mode to permissive mode.
-
-```
-# This file controls the state of SELinux on the system.
-# SELINUX= can take one of these three values:
-#     enforcing - SELinux security policy is enforced.
-#     permissive - SELinux prints warnings instead of enforcing.
-#     disabled - No SELinux policy is loaded.
-SELINUX=permissive
-# SELINUXTYPE= can take one of three values:
-#     targeted - Targeted processes are protected,
-#     minimum - Modification of targeted policy. Only selected processes are protected.
-#     mls - Multi Level Security protection.
-SELINUXTYPE=targeted
-```
-
-Reboot your system to change your system to permissive mode.
-
 # Openstack installation
 
 The installation will take some time therefor it's recommended to use an session manager like [tmux](https://github.com/tmux/tmux/) or [GNU screen](https://www.gnu.org/software/screen/)
@@ -314,26 +283,6 @@ EXIT NOTICE [Playbook execution success] **************************************
 + unset GROUP_VARS_PATH
 [root@openstack openstack-ansible]# 
 ```
-
-### Updated the ansible user variables
-
-The ```bootstrap-aio.sh``` creates ```/etc/openstack_deploy``` directory that holds settings that'll be use by ansible to deploy our openstack platform.
-
-#### disable the selinux playbooks
-
-Edit /etc/openstack_deploy/user_variables.yml
-
-```
-[root@aio1 ~]# vi /etc/openstack_deploy/user_variables.yml
-```
-
-and add
-
-```
-security_audit_mac_changes: no
-```
-
-to the end of the file.
 
 ### Run the playbooks
 
