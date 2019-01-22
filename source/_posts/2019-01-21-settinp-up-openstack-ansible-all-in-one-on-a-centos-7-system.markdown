@@ -8,7 +8,7 @@ categories: ['openstack','ansible','centos','linux',"lxc"]
 
 {% img right /images/openstack-logo.png 150 150 "openstack-logo" %} 
 
-[Openstack](https://www.openstack.org/) is nice platform to deploy [an Infrastructure as a service](https://en.wikipedia.org/wiki/Cloud_computing#Infrastructure_as_a_service_.28IaaS.29) and is a [collection of projects](https://governance.openstack.org/tc/reference/projects/index.html) but it can be a bit difficult to setup. [The documentation](https://docs.openstack.org) is really great if you want to setup openstack by hand and there are a few openstack distributions that makes it easier to install it.
+[Openstack](https://www.openstack.org/) is a nice platform to deploy [an Infrastructure as a service](https://en.wikipedia.org/wiki/Cloud_computing#Infrastructure_as_a_service_.28IaaS.29) and is a [collection of projects](https://governance.openstack.org/tc/reference/projects/index.html) but it can be a bit difficult to setup. [The documentation](https://docs.openstack.org) is really great if you want to setup openstack by hand and there are a few openstack distributions that makes it easier to install it.
 
 [Ansible](https://www.ansible.org) is a very nice tool for system automatisation and is one that's easier to learn.
 
