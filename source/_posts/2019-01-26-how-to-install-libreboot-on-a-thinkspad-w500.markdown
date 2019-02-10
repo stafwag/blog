@@ -3,11 +3,10 @@ layout: post
 title: "How to install libreboot on a ThinkPad W500"
 date: 2019-01-26 12:17:46 +0100
 comments: true
-categories: [ "thinkpad", "libreboot", "raspberry-pi", "bios", "w500", "flashrom" ]
+categories: [ "thinkpad", "libreboot", "coreboot", "raspberry-pi", "bios", "w500", "flashrom" ]
 ---
 
-
-{% img right /images/libreboot_w500_with_pi.jpg 500 333 "libreboot_w500_with_pi.jpg" %} 
+<a href="/images/libreboot_w500_with_pi.jpg"><img src="/images/libreboot_w500_with_pi.jpg" class="right" width="500" height="333" alt="w500 and pi" /></a>
 
 I got a [Lenovo Thinkpad W500](https://en.wikipedia.org/wiki/ThinkPad_W_series#W500) from [www.2dehands.be](http://www.2dehands.be) for a nice price.
 
@@ -23,19 +22,27 @@ Keep in mind that the [core duo CPU](https://en.wikipedia.org/wiki/Intel_Core#Co
 
 Having your system vulnerable is also a bad thing of course. Can't wait to get a computer systems with an open CPU architecture like [RISC-V](https://en.wikipedia.org/wiki/RISC-V).
 
-# EC update
+# Preparation
 
-It's recommented to update your current BIOS to get the lastest [EC firmware](https://libreboot.org/faq.html#ec-embedded-controller-firmware). My system had a cdrom and I updated the BIOS with the CDROM drive.
+## Thinkpad
 
-# Prepare the Raspberry-pi
+### MAC address
 
-It isn't possible to flash the BIOS with software only on the Lenovo W500/T500, it's required to put a clip on your BIOS chip and flash the new BIOS with [flashrom](https://www.flashrom.org/). I used a [Raspberry Pi 1 model B](https://www.raspberrypi.org/products/raspberry-pi-1-model-b-plus/) with [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) to flash Libreboot .
+Your MAC address is stored in your BIOS since you'll owerwite the BIOS with Libreboot we need to have the MAC address. Your MAC address is written on Latop however I recommend to boot from GNU/Linux and copy/paste it from the ```ifconfig``` or the ```ip a``` command.
 
-## Enable the SPI port
+### EC update
+
+It's recommented to update your current BIOS to get the lastest [EC firmware](https://libreboot.org/faq.html#ec-embedded-controller-firmware). My system has a cdrom drive I updated the BIOS with a CDROM.
+
+## Prepare the Raspberry-pi
+
+It isn't possible to flash the BIOS with software only on a Lenovo W500/T500, it's required to put a clip on your BIOS chip and flash the new BIOS with [flashrom](https://www.flashrom.org/). I used a [Raspberry Pi 1 model B](https://www.raspberrypi.org/products/raspberry-pi-1-model-b-plus/) with [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) to flash Libreboot .
+
+### Enable the SPI port
 
 The [SPI port](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface) isn't enabled by default on Raspbian, so we'll need to enable it. 
 
-Open /boot/config.txt with your favortite text editor.
+Open ```/boot/config.txt``` with your favorite text editor.
 
 ```
 root@raspberrypi:~# cd /boot/
@@ -48,7 +55,7 @@ bcm2709-rpi-2-b.dtb     cmdline.txt               fixup_db.dat   LICENCE.broadco
 root@raspberrypi:/boot# vi config.txt 
 ```
 
-and uncomment ```dtparam=spi=on```
+uncomment ```dtparam=spi=on```
 
 ```
 # Uncomment some or all of these to enable the optional hardware interfaces
@@ -57,7 +64,7 @@ and uncomment ```dtparam=spi=on```
 dtparam=spi=on
 ```
 
-and reboot. And the reboot the SPI interface ```/dev/spidev*``` will be available.
+After a  reboot of the raspberry-pi the SPI interface ```/dev/spidev*``` will be available.
 
 
 ```
@@ -66,51 +73,8 @@ crw-rw---- 1 root spi 153, 0 Jan 26 20:08 /dev/spidev0.0
 crw-rw---- 1 root spi 153, 1 Jan 26 20:08 /dev/spidev0.1
 root@raspberrypi:~# 
 ```
-## Install the required software
-### flashrom
-
-```
-root@raspberrypi:~# sudo apt-get install build-essential pciutils usbutils libpci-dev libusb-dev libftdi1 libftdi-dev zlib1g-dev subversion libusb-1.0-0-dev
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-build-essential is already the newest version (12.3).
-usbutils is already the newest version (1:007-4).
-zlib1g-dev is already the newest version (1:1.2.8.dfsg-5).
-zlib1g-dev set to manually installed.
-The following additional packages will be installed:
-  libapr1 libaprutil1 libserf-1-1 libsvn1 libudev-dev libusb-1.0-doc
-Suggested packages:
-  db5.3-util subversion-tools
-The following NEW packages will be installed:
-  libapr1 libaprutil1 libftdi-dev libftdi1 libpci-dev libserf-1-1 libsvn1 libudev-dev libusb-1.0-0-dev
-  libusb-1.0-doc libusb-dev pciutils subversion
-0 upgraded, 13 newly installed, 0 to remove and 0 not upgraded.
-Need to get 3,203 kB of archives.
-After this operation, 14.5 MB of additional disk space will be used.
-Do you want to continue? [Y/n] 
-Get:1 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf libudev-dev armhf 232-25+deb9u8 [91.7 kB]
-<snip>
-Setting up libapr1:armhf (1.5.2-5) ...
-Setting up libusb-1.0-doc (2:1.0.21-1) ...
-Setting up libftdi1:armhf (0.20-4) ...
-Setting up libusb-dev (2:0.1.12-30) ...
-Processing triggers for libc-bin (2.24-11+deb9u3) ...
-Setting up libftdi-dev (0.20-4) ...
-Setting up libaprutil1:armhf (1.5.4-3) ...
-Setting up libusb-1.0-0-dev:armhf (2:1.0.21-1) ...
-Setting up pciutils (1:3.5.2-1) ...
-Processing triggers for man-db (2.7.6.1-2) ...
-Setting up libudev-dev:armhf (232-25+deb9u8) ...
-Setting up libserf-1-1:armhf (1.3.9-3+deb9u1) ...
-Setting up libsvn1:armhf (1.9.5-1+deb9u3) ...
-Setting up libpci-dev (1:3.5.2-1) ...
-Setting up subversion (1.9.5-1+deb9u3) ...
-Processing triggers for libc-bin (2.24-11+deb9u3) ...
-root@raspberrypi:~# 
-```
-
-### git
+### Install the required software
+#### git
 
 ```
 pi@raspberrypi:~ $ sudo apt install git
@@ -148,29 +112,8 @@ Processing triggers for man-db (2.7.6.1-2) ...
 Setting up git (1:2.11.0-3+deb9u4) ...
 pi@raspberrypi:~ $ 
 ```
-### make
 
-```
-pi@raspberrypi:~/flashrom $ make
-Replacing all version templates with p1.0-144-gd82be7b.
-Checking for a C compiler... found.
-Target arch is arm
-Target OS is Linux
-Checking for libpci headers... found.
-Checking version of pci_get_dev... new version (including PCI domain parameter).
-Checking if libpci is present and sufficient... yes.
-Checking for libusb-0.1/libusb-compat headers... found.
-Checking if libusb-0.1 is usable... yes.
-Checking for libusb-1.0 headers... found.
-Checking if libusb-1.0 is usable... yes.
-Checking for FTDI support... found.
-Checking for FT232H support in libftdi... found.
-Checking if Linux MTD headers are present... yes.
-Checking if Linux SPI headers are present... yes.
-<snip>
-```
-
-### flashrom
+#### flashrom
 
 ```
 root@raspberrypi:~# apt install flashrom
@@ -208,11 +151,18 @@ Processing triggers for libc-bin (2.24-11+deb9u3) ...
 root@raspberrypi:~# 
 ```
 
-{% img left /images/w500_flashchip.jpg 500 354 "w500_flashchip.jpg" %} 
+# Wiring
 
-## Wiring
+## Wire diagram
 
-### poweroff
+It's useful to get correct flash chip specs, I used a magnifying loupe and a photo camera to get my chip type. After searching the internet I found a very nice blog post from [p1trson](https://p1trson.blogspot.com) [https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html](https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html) about flashing Libreboot on a Thinkpad T400 with the same Flash chip, I used his wiring diagram. Thanks P1trson!
+
+<a href="/images/w500_flashchip.jpg"><img src="/images/w500_flashchip.jpg" width="250" height="177" alt="w500 and pi" /> </a>
+<a href="/images/pin_layout2.jpg"><img src="/images/pin_layout2.jpg" width="500" height="172" alt="pin layout" /> </a>
+
+## poweroff & wiring
+
+Poweroff your raspberry-pi and wire your flash clip to the raspberry-pi with the above diagram.
 
 ```
 root@raspberrypi:~# poweroff
@@ -221,9 +171,11 @@ Connection to pi2 closed.
 [staf@vicky ~]$ 
 ```
 
-## flashing
+# flashing
 
-### test
+## test
+
+Test the connection to your flash chip with ```flashrom```. I needed to specify the ```spispeed=512``` to get the connection established.
 
 ```
 root@raspberrypi:~# flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=512 
@@ -240,10 +192,12 @@ Please specify which chip definition to use with the -c <chipname> option.
 root@raspberrypi:~# 
 ```
 
-### read old bios
+## read old bios
 
-#### read
+### read
 
+Read the original flash twice
+ 
 ```
 pi@raspberrypi:~ $ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -r w500bios.rom
 flashrom v0.9.9-r1954 on Linux 4.14.79+ (armv6l)
@@ -264,7 +218,7 @@ Reading flash... done.
 pi@raspberrypi:~ $ 
 ```
 
-#### compare
+### compare
 
 ```
 pi@raspberrypi:~ $ sha1sum w500bios*.rom
@@ -273,9 +227,16 @@ d23effea7312dbc0f2aabe1ca1387e1d047d7334  w500bios.rom
 pi@raspberrypi:~ $ 
 ```
 
+### store
+
+Store your original BIOS image to a save place. Might be useful if need to to restore it...
+
 ### Flash libreboot
 
-#### Download
+#### Download & verify
+
+I created ```~/libreboot``` directory on my raspberry-pi to store all the downloads.
+
 ##### Download
 
 Download the libreboot version that matches your laptop with SHA512SUMS and SHA512SUMS.sig.
@@ -284,12 +245,18 @@ Download the libreboot version that matches your laptop with SHA512SUMS and SHA5
 
 ##### Verify
 
+It always a good idea to verify the gpg signature...
+
+Download the gpg key
+
 ```
 pi@raspberrypi:~ $ gpg --recv-keys 0x969A979505E8C5B2
 gpg: failed to start the dirmngr '/usr/bin/dirmngr': No such file or directory
 gpg: connecting dirmngr at '/run/user/1000/gnupg/S.dirmngr' failed: No such file or directory
 gpg: keyserver receive failed: No dirmngr
 ```
+
+I needed to install dirmgr seperately on my Raspbian installation.
 
 ```
 pi@raspberrypi:~ $ sudo apt-get install dirmngr
@@ -314,6 +281,8 @@ Setting up dirmngr (2.1.18-8~deb9u3) ...
 pi@raspberrypi:~ $ 
 ```
 
+Try it again...
+
 ```
 pi@raspberrypi:~ $ gpg --recv-keys 0x969A979505E8C5B2
 key 969A979505E8C5B2:
@@ -326,6 +295,8 @@ gpg:               imported: 1
 pi@raspberrypi:~ $ 
 
 ```
+
+Verify the signature of the checksum file...
 
 ```
 pi@raspberrypi:~ $ gpg --verify SHA512SUMS.sig 
@@ -340,6 +311,8 @@ pi@raspberrypi:~ $
 
 ```
 
+Compare the checksum...
+
 ```
 pi@raspberrypi:~/libreboot $ sha512sum libreboot_r20160907_grub_t500_8mb.tar.xz 
 5325aef526ab6ca359d6613609a4a2345eee47c6d194094553b53996c413431bccdc345838299b347f47bcba8896dd0a6ed3f9b4c88606ead61c3725b580983b  libreboot_r20160907_grub_t500_8mb.tar.xz
@@ -350,7 +323,7 @@ pi@raspberrypi:~/libreboot $ grep 5325aef526ab6ca359d6613609a4a2345eee47c6d19409
 pi@raspberrypi:~/libreboot $ 
 ```
 
-##### extract
+##### Extract
 
 ```
 pi@raspberrypi:~/libreboot $ tar xvf libreboot_r20160907_grub_t500_8mb.tar.xz
@@ -526,7 +499,6 @@ Now do: dd if=ich9fdnogbe_16m.bin of=yourrom.rom bs=1 count=4k conv=notrunc
 
 Insert the mac into your rom
 
-
 ```
 pi@raspberrypi:~/libreboot $ dd if=ich9fdgbe_8m.bin of=libreboot.rom bs=12k count=1 conv=notrunc
 1+0 records in
@@ -538,7 +510,12 @@ pi@raspberrypi:~/libreboot $
 
 ```
 
-######## flash
+######## flash it
+
+Flash your Libreboot image to your BIOS.
+
+Make sure that you get the ```Verifying flash... VERIFIED``` message, if you don't get this message try it again util you get it. I needed to do it twice...
+
 
 ```
 pi@raspberrypi:~/libreboot $ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -w libreboot.rom 
@@ -566,6 +543,95 @@ Verifying flash... VERIFIED.
 pi@raspberrypi:~/libreboot $ 
 ```
 
+# Almost done
+## GNU/Linux
+
+I use [Parabola GNU/Linux](https://www.parabola.nu/) on my W500.
+
+## Wifi Card
+
+The intel wifi card that Lenovo uses on the W500 isn't supported without a binary blob. With the original Lenovo BIOS you are forced to use certified PCI card. Libreboot doesn't have this restriction this is another advantage of using an alternative BIOS like Libreboot or [Coreboot](https://www.coreboot.org/) . I replaced wifi an Atheros from [ebay](https://www.ebay.be)
+
+```
+[staf@snuffel ~]$ sudo lspci | grep -i Atheros
+02:00.0 Network controller: Qualcomm Atheros AR93xx Wireless Network Adapter (rev 01)
+[staf@snuffel ~]$
+```
+
+## ACPI
+
+It is recommented to load the thinkpad-acpi module. Make sure that ```fan_control=1``` is enabled 
+
+```
+[staf@snuffel ~]$ cat /usr/lib/modprobe.d/thinkpad_acpi.conf
+options thinkpad_acpi fan_control=1
+[staf@snuffel ~]$
+```
+
+Execute ```modprobe thindpad_acpi``` to load the module
+
+```
+[staf@snuffel ~]$ sudo modprobe thinkpad_acpi
+[sudo] password for staf:
+[staf@snuffel ~]$
+```
+
+
+
+## thinkfan
+
+The Intel core duo is still a captable CPU. Even video playback in Full-HD is possible but it takes already a lot of the CPU and the temperature is increasing during the playback.
+
+I installed [thinkfan](https://github.com/vmatare/thinkfan/) with a more aggresive cooling profile to keep the CPU temperature under control.
+
+Install thinkfan
+
+```
+[staf@snuffel ~]$ yay -S thinkfan
+warning: thinkfan-0.9.3-1 is up to date -- reinstalling
+resolving dependencies...
+looking for conflicting packages...
+
+Packages (1) thinkfan-0.9.3-1
+
+Total Installed Size:  0.11 MiB
+Net Upgrade Size:      0.00 MiB
+
+:: Proceed with installation? [Y/n]
+```
+
+copy the sample configuration
+
+```
+[staf@snuffel ~]$ sudo cp /usr/share/doc/thinkfan/examples/thinkfan.conf.simple /etc/thinkfan.con
+```
+
+Edit ```/etc/thinkfan.conf```
+
+```
+(0,	0,	50)
+(1,	49,	52)
+(2,	51,	54)
+(3,	53,	56)
+(4,	55,	58)
+(5,	57,	60)
+(7,	59,	32767)
+```
+
+Enable and start thinkfan
+
+```
+[staf@snuffel ~]$ sudo systemctl enable thinkfan
+[sudo] password for staf:
+[staf@snuffel ~]$ sudo systemctl start thinkfan
+[staf@snuffel ~]$
+```
+
+
+
+***Have fun***
+
+
 
 # Links
 
@@ -578,3 +644,4 @@ pi@raspberrypi:~/libreboot $
 * [https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md)
 * [https://linuxhint.com/libreboot-t400-tutorial/](https://linuxhint.com/libreboot-t400-tutorial/)
 * [https://www.enisa.europa.eu/publications/info-notes/security-vs-performance-discussion-with-the-return-of-201cspectrum201d-vulnerability](https://www.enisa.europa.eu/publications/info-notes/security-vs-performance-discussion-with-the-return-of-201cspectrum201d-vulnerability)
+* [https://wiki.archlinux.org/index.php/Lenovo_ThinkPad_T420](https://wiki.archlinux.org/index.php/Lenovo_ThinkPad_T420)
