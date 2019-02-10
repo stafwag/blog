@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Setting Up OpenStack-Ansible All-In-One on a Centos 7 System Jan 21st, 2019 7:51 pm Openstack is a nice platform to deploy an Infrastructure as a &hellip;">
+  <meta name="description" content="How to Install Libreboot on a ThinkPad W500 Feb 10th, 2019 5:49 pm I got a Lenovo Thinkpad W500 from www.2dehands.be for a nice price. Actually, I &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,1015 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2019-02-10T17:49:46+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>10</span><span class='date-suffix'>th</span>, <span class='date-year'>2019</span></span> <span class='time'>5:49 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="/blog/images/libreboot_w500_with_pi.jpg"><img src="/blog/images/libreboot_w500_with_pi.jpg" class="right" width="500" height="333" alt="w500 and pi" /></a></p>
+
+<p>I got a <a href="https://en.wikipedia.org/wiki/ThinkPad_W_series#W500">Lenovo Thinkpad W500</a> from <a href="http://www.2dehands.be">www.2dehands.be</a> for a nice price.</p>
+
+<p>Actually, I got it a couple of months back but I didn&rsquo;t have time to play with it and it took some time to get some parts from <a href="https://www.aliexpress.com">Aliexpress</a>.</p>
+
+<p> The Thinkpad W500 is probably the most powerful system that is compatible with <a href="https://www.libreboot.org">Libreboot</a>, it has a nice high-resolution display with a 1920 x 1200 resolution which is even a higher screen resolution than the <a href="https://en.wikipedia.org/wiki/1080p">Full HD resolution</a> used on most new laptops today.</p>
+
+<h1>Security</h1>
+
+<p>Keep in mind that the <a href="https://en.wikipedia.org/wiki/Intel_Core#Core_2_Duo">core duo CPU</a> does not get <a href="https://www.extremetech.com/computing/266884-intel-wont-patch-older-cpus-to-resolve-spectre-flaws">microcode updates from Intel</a> for <a href="https://en.wikipedia.org/wiki/Meltdown_(security_vulnerability">spectre and meltdown</a>. There is no solution (currently) for <a href="https://nvd.nist.gov/vuln/detail/CVE-2018-3640">spectre 3a - Rogue   System Register Read - CVE-2018-3640</a> and <a href="https://nvd.nist.gov/vuln/detail/CVE-2018-3639"> Spectre 4 - Speculative Store Bypass CVE-2018-3639</a> without a microcode update.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Binary_blob">Binary blobs</a> are bad. Having a closed source binary-only piece of software on your system is not only unacceptable for <a href="https://en.wikipedia.org/wiki/Free_software_movement">Free Software activists</a> it also makes it more difficult to review what it really does and makes it more difficult to review it for security concerns.</p>
+
+<p>Having your system vulnerable is also a bad thing of course. Can&rsquo;t wait to get a computer system with an open CPU architecture like <a href="https://en.wikipedia.org/wiki/RISC-V">RISC-V</a>.</p>
+
+<h1>Preparation</h1>
+
+<h2>Thinkpad</h2>
+
+<h3>MAC address</h3>
+
+<p>Your MAC address is stored in your BIOS since you&rsquo;ll overwite the BIOS with Libreboot we need to have the MAC address. Your MAC address is written on Laptop however I recommend to boot from GNU/Linux and copy/paste it from the <code>ifconfig</code> or the <code>ip a</code> command.</p>
+
+<h3>EC update</h3>
+
+<p>It&rsquo;s recommended to update your current BIOS to get the latest <a href="https://libreboot.org/faq.html#ec-embedded-controller-firmware">EC firmware</a>. My system has a CDROM drive I updated the BIOS with a CDROM.</p>
+
+<h2>Prepare the Raspberry-pi</h2>
+
+<p>It isn&rsquo;t possible to flash the BIOS with software only on a Lenovo W500/T500, it&rsquo;s required to put a clip on your BIOS chip and flash the new BIOS with <a href="https://www.flashrom.org/">flashrom</a>. I used a <a href="https://www.raspberrypi.org/products/raspberry-pi-1-model-b-plus/">Raspberry Pi 1 model B</a> with <a href="https://www.raspberrypi.org/downloads/raspbian/">Raspbian</a> to flash Libreboot .</p>
+
+<h3>Enable the SPI port</h3>
+
+<p>The <a href="https://en.wikipedia.org/wiki/Serial_Peripheral_Interface">SPI port</a> isn&rsquo;t enabled by default on Raspbian, so we&rsquo;ll need to enable it.</p>
+
+<p>Open <code>/boot/config.txt</code> in your favorite text editor.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@raspberrypi:~# cd /boot/
+</span><span class='line'>root@raspberrypi:/boot# ls
+</span><span class='line'>bcm2708-rpi-0-w.dtb     bcm2710-rpi-3-b.dtb       config.txt     fixup_x.dat       LICENSE.oracle  start_x.elf
+</span><span class='line'>bcm2708-rpi-b.dtb       bcm2710-rpi-3-b-plus.dtb  COPYING.linux  issue.txt         overlays
+</span><span class='line'>bcm2708-rpi-b-plus.dtb  bcm2710-rpi-cm3.dtb       fixup_cd.dat   kernel7.img       start_cd.elf
+</span><span class='line'>bcm2708-rpi-cm.dtb      bootcode.bin              fixup.dat      kernel.img        start_db.elf
+</span><span class='line'>bcm2709-rpi-2-b.dtb     cmdline.txt               fixup_db.dat   LICENCE.broadcom  start.elf
+</span><span class='line'>root@raspberrypi:/boot# vi config.txt </span></code></pre></td></tr></table></div></figure>
+
+
+<p>uncomment <code>dtparam=spi=on</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Uncomment some or all of these to enable the optional hardware interfaces
+</span><span class='line'>#dtparam=i2c_arm=on
+</span><span class='line'>#dtparam=i2s=on
+</span><span class='line'>dtparam=spi=on</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After a  reboot of the raspberry-pi the SPI interface <code>/dev/spidev*</code> will be available.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@raspberrypi:~# ls -l /dev/spidev*
+</span><span class='line'>crw-rw---- 1 root spi 153, 0 Jan 26 20:08 /dev/spidev0.0
+</span><span class='line'>crw-rw---- 1 root spi 153, 1 Jan 26 20:08 /dev/spidev0.1
+</span><span class='line'>root@raspberrypi:~# </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Install the required software</h3>
+
+<h4>git</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ sudo apt install git
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>The following additional packages will be installed:
+</span><span class='line'>  git-man liberror-perl
+</span><span class='line'>Suggested packages:
+</span><span class='line'>  git-daemon-run | git-daemon-sysvinit git-doc git-el git-email git-gui gitk gitweb git-arch git-cvs
+</span><span class='line'>  git-mediawiki git-svn
+</span><span class='line'>The following NEW packages will be installed:
+</span><span class='line'>  git git-man liberror-perl
+</span><span class='line'>0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+</span><span class='line'>Need to get 4,849 kB of archives.
+</span><span class='line'>After this operation, 26.4 MB of additional disk space will be used.
+</span><span class='line'>Do you want to continue? [Y/n] y
+</span><span class='line'>Get:1 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf liberror-perl all 0.17024-1 [26.9 kB]
+</span><span class='line'>Get:2 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf git-man all 1:2.11.0-3+deb9u4 [1,433 kB]
+</span><span class='line'>Get:3 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf git armhf 1:2.11.0-3+deb9u4 [3,390 kB]
+</span><span class='line'>Fetched 4,849 kB in 3s (1,517 kB/s)
+</span><span class='line'>Selecting previously unselected package liberror-perl.
+</span><span class='line'>(Reading database ... 35178 files and directories currently installed.)
+</span><span class='line'>Preparing to unpack .../liberror-perl_0.17024-1_all.deb ...
+</span><span class='line'>Unpacking liberror-perl (0.17024-1) ...
+</span><span class='line'>Selecting previously unselected package git-man.
+</span><span class='line'>Preparing to unpack .../git-man_1%3a2.11.0-3+deb9u4_all.deb ...
+</span><span class='line'>Unpacking git-man (1:2.11.0-3+deb9u4) ...
+</span><span class='line'>Selecting previously unselected package git.
+</span><span class='line'>Preparing to unpack .../git_1%3a2.11.0-3+deb9u4_armhf.deb ...
+</span><span class='line'>Unpacking git (1:2.11.0-3+deb9u4) ...
+</span><span class='line'>Setting up git-man (1:2.11.0-3+deb9u4) ...
+</span><span class='line'>Setting up liberror-perl (0.17024-1) ...
+</span><span class='line'>Processing triggers for man-db (2.7.6.1-2) ...
+</span><span class='line'>Setting up git (1:2.11.0-3+deb9u4) ...
+</span><span class='line'>pi@raspberrypi:~ $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>flashrom</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@raspberrypi:~# apt install flashrom
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>The following additional packages will be installed:
+</span><span class='line'>  libftdi1-2 libpci3
+</span><span class='line'>The following NEW packages will be installed:
+</span><span class='line'>  flashrom libftdi1-2 libpci3
+</span><span class='line'>0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
+</span><span class='line'>Need to get 454 kB of archives.
+</span><span class='line'>After this operation, 843 kB of additional disk space will be used.
+</span><span class='line'>Do you want to continue? [Y/n] y
+</span><span class='line'>Get:1 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf libpci3 armhf 1:3.5.2-1 [50.9 kB]
+</span><span class='line'>Get:2 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf libftdi1-2 armhf 1.3-2 [26.8 kB]
+</span><span class='line'>Get:3 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf flashrom armhf 0.9.9+r1954-1 [377 kB]
+</span><span class='line'>Fetched 454 kB in 4s (108 kB/s)   
+</span><span class='line'>Selecting previously unselected package libpci3:armhf.
+</span><span class='line'>(Reading database ... 34656 files and directories currently installed.)
+</span><span class='line'>Preparing to unpack .../libpci3_1%3a3.5.2-1_armhf.deb ...
+</span><span class='line'>Unpacking libpci3:armhf (1:3.5.2-1) ...
+</span><span class='line'>Selecting previously unselected package libftdi1-2:armhf.
+</span><span class='line'>Preparing to unpack .../libftdi1-2_1.3-2_armhf.deb ...
+</span><span class='line'>Unpacking libftdi1-2:armhf (1.3-2) ...
+</span><span class='line'>Selecting previously unselected package flashrom.
+</span><span class='line'>Preparing to unpack .../flashrom_0.9.9+r1954-1_armhf.deb ...
+</span><span class='line'>Unpacking flashrom (0.9.9+r1954-1) ...
+</span><span class='line'>Setting up libftdi1-2:armhf (1.3-2) ...
+</span><span class='line'>Processing triggers for libc-bin (2.24-11+deb9u3) ...
+</span><span class='line'>Processing triggers for man-db (2.7.6.1-2) ...
+</span><span class='line'>Setting up libpci3:armhf (1:3.5.2-1) ...
+</span><span class='line'>Setting up flashrom (0.9.9+r1954-1) ...
+</span><span class='line'>Processing triggers for libc-bin (2.24-11+deb9u3) ...
+</span><span class='line'>root@raspberrypi:~# </span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Wiring</h1>
+
+<h2>Wire diagram</h2>
+
+<p>It&rsquo;s useful to get correct flash chip specs, I used a magnifying loupe and a photo camera to get my chip type. After searching the internet I found a very nice blog post from <a href="https://p1trson.blogspot.com">p1trson</a> <a href="https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html">https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html</a> about flashing Libreboot on a Thinkpad T400 with the same Flash chip, I used his wiring diagram. Thanks P1trson!</p>
+
+<p><a href="/blog/images/w500_flashchip.jpg"><img src="/blog/images/w500_flashchip.jpg" width="250" height="177" alt="w500 and pi" /> </a>
+<a href="/blog/images/pin_layout2.jpg"><img src="/blog/images/pin_layout2.jpg" width="500" height="172" alt="pin layout" /> </a></p>
+
+<h2>Power off &amp; wiring</h2>
+
+<p>Power off your raspberry-pi and wire your flash clip to the raspberry-pi with the above diagram.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@raspberrypi:~# poweroff
+</span><span class='line'>Connection to pi2 closed by remote host.
+</span><span class='line'>Connection to pi2 closed.
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h1>flashing</h1>
+
+<h2>test</h2>
+
+<p>Test the connection to your flash chip with <code>flashrom</code>. I needed to specify the <code>spispeed=512</code> to get the connection established.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@raspberrypi:~# flashrom -p linux_spi:dev=/dev/spidev0.0,spispeed=512 
+</span><span class='line'>flashrom v0.9.9-r1954 on Linux 4.14.79+ (armv6l)
+</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
+</span><span class='line'>
+</span><span class='line'>Calibrating delay loop... OK.
+</span><span class='line'>Found Macronix flash chip "MX25L6405" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Found Macronix flash chip "MX25L6405D" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Found Macronix flash chip "MX25L6406E/MX25L6408E" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Found Macronix flash chip "MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Multiple flash chip definitions match the detected chip(s): "MX25L6405", "MX25L6405D", "MX25L6406E/MX25L6408E", "MX25L6436E/MX25L6445E/MX25L6465E/MX25L6473E"
+</span><span class='line'>Please specify which chip definition to use with the -c &lt;chipname&gt; option.
+</span><span class='line'>root@raspberrypi:~# </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>read old bios</h2>
+
+<h3>read</h3>
+
+<p>Read the original flash twice</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -r w500bios.rom
+</span><span class='line'>flashrom v0.9.9-r1954 on Linux 4.14.79+ (armv6l)
+</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
+</span><span class='line'>
+</span><span class='line'>Calibrating delay loop... OK.
+</span><span class='line'>Found Macronix flash chip "MX25L6405D" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Reading flash... done.
+</span><span class='line'>pi@raspberrypi:~ $ ls
+</span><span class='line'>flashrom  test.rom  w500bios.rom
+</span><span class='line'>pi@raspberrypi:~ $ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -r w500bios2.rom
+</span><span class='line'>flashrom v0.9.9-r1954 on Linux 4.14.79+ (armv6l)
+</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
+</span><span class='line'>
+</span><span class='line'>Calibrating delay loop... OK.
+</span><span class='line'>Found Macronix flash chip "MX25L6405D" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Reading flash... done.
+</span><span class='line'>pi@raspberrypi:~ $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>compare</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ sha1sum w500bios*.rom
+</span><span class='line'>d23effea7312dbc0f2aabe1ca1387e1d047d7334  w500bios2.rom
+</span><span class='line'>d23effea7312dbc0f2aabe1ca1387e1d047d7334  w500bios.rom
+</span><span class='line'>pi@raspberrypi:~ $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>store</h3>
+
+<p>Store your original BIOS image to a safe place. Might be useful if need to restore it&hellip;</p>
+
+<h3>Flash libreboot</h3>
+
+<h4>Download &amp; verify</h4>
+
+<p>I created <code>~/libreboot</code> directory on my raspberry-pi to store all the downloads.</p>
+
+<h5>Download</h5>
+
+<p>Download the libreboot version that matches your laptop with SHA512SUMS and SHA512SUMS.sig.</p>
+
+<p><a href="https://libreboot.org/download.html">https://libreboot.org/download.html</a></p>
+
+<h5>Verify</h5>
+
+<p>It always a good idea to verify the gpg signature&hellip;</p>
+
+<p>Download the gpg key</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ gpg --recv-keys 0x969A979505E8C5B2
+</span><span class='line'>gpg: failed to start the dirmngr '/usr/bin/dirmngr': No such file or directory
+</span><span class='line'>gpg: connecting dirmngr at '/run/user/1000/gnupg/S.dirmngr' failed: No such file or directory
+</span><span class='line'>gpg: keyserver receive failed: No dirmngr</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I needed to install dirmgr separately on my Raspbian installation.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ sudo apt-get install dirmngr
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>Suggested packages:
+</span><span class='line'>  dbus-user-session pinentry-gnome3 tor
+</span><span class='line'>The following NEW packages will be installed:
+</span><span class='line'>  dirmngr
+</span><span class='line'>0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+</span><span class='line'>Need to get 547 kB of archives.
+</span><span class='line'>After this operation, 963 kB of additional disk space will be used.
+</span><span class='line'>Get:1 http://mirror.nl.leaseweb.net/raspbian/raspbian stretch/main armhf dirmngr armhf 2.1.18-8~deb9u3 [547 kB]
+</span><span class='line'>Fetched 547 kB in 9s (58.3 kB/s)         
+</span><span class='line'>Selecting previously unselected package dirmngr.
+</span><span class='line'>(Reading database ... 36051 files and directories currently installed.)
+</span><span class='line'>Preparing to unpack .../dirmngr_2.1.18-8~deb9u3_armhf.deb ...
+</span><span class='line'>Unpacking dirmngr (2.1.18-8~deb9u3) ...
+</span><span class='line'>Processing triggers for man-db (2.7.6.1-2) ...
+</span><span class='line'>Setting up dirmngr (2.1.18-8~deb9u3) ...
+</span><span class='line'>pi@raspberrypi:~ $ </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Try it again&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ gpg --recv-keys 0x969A979505E8C5B2
+</span><span class='line'>key 969A979505E8C5B2:
+</span><span class='line'>1 signature not checked due to a missing key
+</span><span class='line'>gpg: /home/pi/.gnupg/trustdb.gpg: trustdb created
+</span><span class='line'>gpg: key 969A979505E8C5B2: public key "Leah Rowe (Libreboot signing key) &lt;info@minifree.org&gt;" imported
+</span><span class='line'>gpg: no ultimately trusted keys found
+</span><span class='line'>gpg: Total number processed: 1
+</span><span class='line'>gpg:               imported: 1
+</span><span class='line'>pi@raspberrypi:~ $ 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Verify the signature of the checksum file&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~ $ gpg --verify SHA512SUMS.sig 
+</span><span class='line'>gpg: assuming signed data in 'SHA512SUMS'
+</span><span class='line'>gpg: Signature made Wed 07 Sep 2016 23:15:17 BST
+</span><span class='line'>gpg:                using RSA key 969A979505E8C5B2
+</span><span class='line'>gpg: Good signature from "Leah Rowe (Libreboot signing key) &lt;info@minifree.org&gt;" [unknown]
+</span><span class='line'>gpg: WARNING: This key is not certified with a trusted signature!
+</span><span class='line'>gpg:          There is no indication that the signature belongs to the owner.
+</span><span class='line'>Primary key fingerprint: CDC9 CAE3 2CB4 B7FC 84FD  C804 969A 9795 05E8 C5B2
+</span><span class='line'>pi@raspberrypi:~ $ 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Compare the checksum&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ sha512sum libreboot_r20160907_grub_t500_8mb.tar.xz 
+</span><span class='line'>5325aef526ab6ca359d6613609a4a2345eee47c6d194094553b53996c413431bccdc345838299b347f47bcba8896dd0a6ed3f9b4c88606ead61c3725b580983b  libreboot_r20160907_grub_t500_8mb.tar.xz
+</span><span class='line'>pi@raspberrypi:~/libreboot $ grep sha512sum 5325aef526ab6ca359d6613609a4a2345eee47c6d194094553b53996c413431bccdc345838299b347f47bcba8896dd0a6ed3f9b4c88606ead61c3725b580983b
+</span><span class='line'>grep: 5325aef526ab6ca359d6613609a4a2345eee47c6d194094553b53996c413431bccdc345838299b347f47bcba8896dd0a6ed3f9b4c88606ead61c3725b580983b: No such file or directory
+</span><span class='line'>pi@raspberrypi:~/libreboot $ grep 5325aef526ab6ca359d6613609a4a2345eee47c6d194094553b53996c413431bccdc345838299b347f47bcba8896dd0a6ed3f9b4c88606ead61c3725b580983b SHA512SUMS
+</span><span class='line'>5325aef526ab6ca359d6613609a4a2345eee47c6d194094553b53996c413431bccdc345838299b347f47bcba8896dd0a6ed3f9b4c88606ead61c3725b580983b  ./rom/grub/libreboot_r20160907_grub_t500_8mb.tar.xz
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h5>Extract</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ tar xvf libreboot_r20160907_grub_t500_8mb.tar.xz
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_deqwertz_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_esqwerty_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_frazerty_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_frdvbepo_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_itqwerty_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_svenska_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_ukdvorak_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_ukqwerty_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_usdvorak_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_usqwerty_txtmode.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_deqwertz_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_esqwerty_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_frazerty_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_frdvbepo_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_itqwerty_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_svenska_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_ukdvorak_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_ukqwerty_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_usdvorak_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/t500_8mb_usqwerty_vesafb.rom
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/ChangeLog
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/NEWS
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/version
+</span><span class='line'>libreboot_r20160907_grub_t500_8mb/versiondate
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h5>copy the image that you plan to use</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ cp libreboot_r20160907_grub_t500_8mb/t500_8mb_usqwerty_vesafb.rom libreboot.rom
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Change MAC</h4>
+
+<h5>Download the libreboot util</h5>
+
+<h6>Download</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ wget https://www.mirrorservice.org/sites/libreboot.org/release/stable/20160907/libreboot_r20160907_util.tar.xz
+</span><span class='line'>--2019-01-27 08:46:32--  https://www.mirrorservice.org/sites/libreboot.org/release/stable/20160907/libreboot_r20160907_util.tar.xz
+</span><span class='line'>Resolving www.mirrorservice.org (www.mirrorservice.org)... 212.219.56.184, 2001:630:341:12::184
+</span><span class='line'>Connecting to www.mirrorservice.org (www.mirrorservice.org)|212.219.56.184|:443... connected.
+</span><span class='line'>HTTP request sent, awaiting response... 200 OK
+</span><span class='line'>Length: 2458736 (2.3M) [application/x-tar]
+</span><span class='line'>Saving to: libreboot_r20160907_util.tar.xz
+</span><span class='line'>
+</span><span class='line'>libreboot_r20160907_util.tar 100%[===========================================&gt;]   2.34M  1.65MB/s    in 1.4s    
+</span><span class='line'>
+</span><span class='line'>2019-01-27 08:46:34 (1.65 MB/s) - libreboot_r20160907_util.tar.xz saved [2458736/2458736]
+</span><span class='line'>
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>Verify</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ sha512sum libreboot_r20160907_util.tar.xz
+</span><span class='line'>c5bfa5a06d55c61e5451e70cd8da3f430b5e06686f9a74c5a2e9fe0e9d155505867b0ca3428d85a983741146c4e024a6b0447638923423000431c98d048bd473  libreboot_r20160907_util.tar.xz
+</span><span class='line'>pi@raspberrypi:~/libreboot $ grep c5bfa5a06d55c61e5451e70cd8da3f430b5e06686f9a74c5a2e9fe0e9d155505867b0ca3428d85a983741146c4e024a6b0447638923423000431c98d048bd473 SHA512SUMS
+</span><span class='line'>c5bfa5a06d55c61e5451e70cd8da3f430b5e06686f9a74c5a2e9fe0e9d155505867b0ca3428d85a983741146c4e024a6b0447638923423000431c98d048bd473  ./libreboot_r20160907_util.tar.xz
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>Extract</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ tar xvf libreboot_r20160907_util.tar.xz 
+</span><span class='line'>libreboot_r20160907_util/
+</span><span class='line'>libreboot_r20160907_util/bucts/
+</span><span class='line'>libreboot_r20160907_util/bucts/x86_64/
+</span><span class='line'>libreboot_r20160907_util/bucts/x86_64/bucts
+</span><span class='line'>libreboot_r20160907_util/bucts/i686/
+</span><span class='line'>libreboot_r20160907_util/bucts/i686/bucts
+</span><span class='line'>libreboot_r20160907_util/flashrom/
+</span><span class='line'>libreboot_r20160907_util/flashrom/x86_64/
+</span><span class='line'>libreboot_r20160907_util/flashrom/x86_64/flashrom
+</span><span class='line'>libreboot_r20160907_util/flashrom/x86_64/flashrom_lenovobios_sst
+</span><span class='line'>libreboot_r20160907_util/flashrom/x86_64/flashrom_lenovobios_macronix
+</span><span class='line'>libreboot_r20160907_util/flashrom/armv7l/
+</span><span class='line'>libreboot_r20160907_util/flashrom/armv7l/flashrom
+</span><span class='line'>libreboot_r20160907_util/flashrom/i686/
+</span><span class='line'>libreboot_r20160907_util/flashrom/i686/flashrom
+</span><span class='line'>libreboot_r20160907_util/flashrom/i686/flashrom_lenovobios_macronix
+</span><span class='line'>libreboot_r20160907_util/flashrom/i686/flashrom_lenovobios_sst
+</span><span class='line'>libreboot_r20160907_util/cbfstool/
+</span><span class='line'>libreboot_r20160907_util/cbfstool/x86_64/
+</span><span class='line'>libreboot_r20160907_util/cbfstool/x86_64/cbfstool
+</span><span class='line'>libreboot_r20160907_util/cbfstool/i686/
+</span><span class='line'>libreboot_r20160907_util/cbfstool/i686/cbfstool
+</span><span class='line'>libreboot_r20160907_util/cbfstool/armv7l/
+</span><span class='line'>libreboot_r20160907_util/cbfstool/armv7l/cbfstool
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/x86_64/
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/x86_64/ich9deblob
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/x86_64/ich9gen
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/x86_64/demefactory
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/i686/
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/i686/ich9deblob
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/i686/ich9gen
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/i686/demefactory
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/armv7l/
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/armv7l/ich9deblob
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/armv7l/ich9gen
+</span><span class='line'>libreboot_r20160907_util/ich9deblob/armv7l/demefactory
+</span><span class='line'>libreboot_r20160907_util/nvramtool/
+</span><span class='line'>libreboot_r20160907_util/nvramtool/x86_64/
+</span><span class='line'>libreboot_r20160907_util/nvramtool/x86_64/nvramtool
+</span><span class='line'>libreboot_r20160907_util/nvramtool/i686/
+</span><span class='line'>libreboot_r20160907_util/nvramtool/i686/nvramtool
+</span><span class='line'>libreboot_r20160907_util/flash
+</span><span class='line'>libreboot_r20160907_util/powertop.trisquel7
+</span><span class='line'>libreboot_r20160907_util/ChangeLog
+</span><span class='line'>libreboot_r20160907_util/NEWS
+</span><span class='line'>libreboot_r20160907_util/version
+</span><span class='line'>libreboot_r20160907_util/versiondate
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>## find the ich9gen utility for architecture</h6>
+
+<p>find ./libreboot_r20160907_util | grep -i ich9gen</p>
+
+<p>To make our lives easier we will copy ich9gen binary to the directory that holds our libreboot images.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ find ./libreboot_r20160907_util | grep -i ich9gen
+</span><span class='line'>./libreboot_r20160907_util/ich9deblob/i686/ich9gen
+</span><span class='line'>./libreboot_r20160907_util/ich9deblob/armv7l/ich9gen
+</span><span class='line'>./libreboot_r20160907_util/ich9deblob/x86_64/ich9gen
+</span><span class='line'>pi@raspberrypi:~/libreboot $ cp ./libreboot_r20160907_util/ich9deblob/armv7l/ich9gen .</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>## burn the MAC address into the rom/save</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ ./ich9gen --macaddress XX:XX:XX:XX:XX:XX
+</span><span class='line'>You selected to change the MAC address in the Gbe section. This has been done.
+</span><span class='line'>
+</span><span class='line'>The modified gbe region has also been dumped as src files: mkgbe.c, mkgbe.h
+</span><span class='line'>To use these in ich9gen, place them in src/ich9gen/ and re-build ich9gen.
+</span><span class='line'>
+</span><span class='line'>descriptor and gbe successfully written to the file: ich9fdgbe_4m.bin
+</span><span class='line'>Now do: dd if=ich9fdgbe_4m.bin of=libreboot.rom bs=1 count=12k conv=notrunc
+</span><span class='line'>(in other words, add the modified descriptor+gbe to your ROM image)
+</span><span class='line'>
+</span><span class='line'>descriptor and gbe successfully written to the file: ich9fdgbe_8m.bin
+</span><span class='line'>Now do: dd if=ich9fdgbe_8m.bin of=libreboot.rom bs=1 count=12k conv=notrunc
+</span><span class='line'>(in other words, add the modified descriptor+gbe to your ROM image)
+</span><span class='line'>
+</span><span class='line'>descriptor and gbe successfully written to the file: ich9fdgbe_16m.bin
+</span><span class='line'>Now do: dd if=ich9fdgbe_16m.bin of=libreboot.rom bs=1 count=12k conv=notrunc
+</span><span class='line'>(in other words, add the modified descriptor+gbe to your ROM image)
+</span><span class='line'>
+</span><span class='line'>descriptor successfully written to the file: ich9fdnogbe_4m.bin
+</span><span class='line'>Now do: dd if=ich9fdnogbe_4m.bin of=yourrom.rom bs=1 count=4k conv=notrunc
+</span><span class='line'>(in other words, add the modified descriptor to your ROM image)
+</span><span class='line'>
+</span><span class='line'>descriptor successfully written to the file: ich9fdnogbe_8m.bin
+</span><span class='line'>Now do: dd if=ich9fdnogbe_8m.bin of=yourrom.rom bs=1 count=4k conv=notrunc
+</span><span class='line'>(in other words, add the modified descriptor to your ROM image)
+</span><span class='line'>
+</span><span class='line'>descriptor successfully written to the file: ich9fdnogbe_16m.bin
+</span><span class='line'>Now do: dd if=ich9fdnogbe_16m.bin of=yourrom.rom bs=1 count=4k conv=notrunc
+</span><span class='line'>(in other words, add the modified descriptor to your ROM image)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Insert the mac into your rom</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ dd if=ich9fdgbe_8m.bin of=libreboot.rom bs=12k count=1 conv=notrunc
+</span><span class='line'>1+0 records in
+</span><span class='line'>1+0 records out
+</span><span class='line'>12288 bytes (12 kB, 12 KiB) copied, 0.00883476 s, 1.4 MB/s
+</span><span class='line'>pi@raspberrypi:~/libreboot $ ls -lh libreboot.rom
+</span><span class='line'>-rw-r--r-- 1 pi pi 8.0M Jan 27 09:38 libreboot.rom
+</span><span class='line'>pi@raspberrypi:~/libreboot $ 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h6>## flash it</h6>
+
+<p>Flash your Libreboot image to your BIOS.</p>
+
+<p>Make sure that you get the <code>Verifying flash... VERIFIED</code> message, if you don&rsquo;t get this message try it again until you get it. I needed to do it twice&hellip;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>pi@raspberrypi:~/libreboot $ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -w libreboot.rom 
+</span><span class='line'>flashrom v0.9.9-r1954 on Linux 4.14.79+ (armv6l)
+</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
+</span><span class='line'>
+</span><span class='line'>Calibrating delay loop... OK.
+</span><span class='line'>Found Macronix flash chip "MX25L6405D" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Reading old flash chip contents... done.
+</span><span class='line'>Erasing and writing flash chip... Erase/write done.
+</span><span class='line'>Verifying flash... FAILED at 0x000c9f01! Expected=0x6b, Found=0xe9, failed byte count from 0x00000000-0x007fffff: 0x2
+</span><span class='line'>Your flash chip is in an unknown state.
+</span><span class='line'>Please report this on IRC at chat.freenode.net (channel #flashrom) or
+</span><span class='line'>mail flashrom@flashrom.org, thanks!
+</span><span class='line'>pi@raspberrypi:~/libreboot $ 
+</span><span class='line'>pi@raspberrypi:~/libreboot $ sudo flashrom -c "MX25L6405D" -p linux_spi:dev=/dev/spidev0.0,spispeed=512 -w libreboot.rom 
+</span><span class='line'>flashrom v0.9.9-r1954 on Linux 4.14.79+ (armv6l)
+</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
+</span><span class='line'>
+</span><span class='line'>Calibrating delay loop... OK.
+</span><span class='line'>Found Macronix flash chip "MX25L6405D" (8192 kB, SPI) on linux_spi.
+</span><span class='line'>Reading old flash chip contents... done.
+</span><span class='line'>Erasing and writing flash chip... Erase/write done.
+</span><span class='line'>Verifying flash... VERIFIED.
+</span><span class='line'>pi@raspberrypi:~/libreboot $ </span></code></pre></td></tr></table></div></figure>
+
+
+<h1>Almost done</h1>
+
+<h2>GNU/Linux</h2>
+
+<p><a href="/blog/images/w500_in_action.jpg"><img src="/blog/images/w500_in_action.jpg" width="700" height="466" alt="w500_in_action.jpg" /></a></p>
+
+<p>I use <a href="https://www.parabola.nu/">Parabola GNU/Linux</a> on my W500.</p>
+
+<h2>Wifi Card</h2>
+
+<p>The intel wifi card that Lenovo uses on the W500 isn&rsquo;t supported without a binary blob. With the original Lenovo BIOS you are forced to use certified PCI card. Libreboot doesn&rsquo;t have this restriction this is another advantage of using an alternative BIOS like Libreboot or <a href="https://www.coreboot.org/">Coreboot</a> . I replaced wifi an Atheros from <a href="https://www.ebay.be">ebay</a></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@snuffel ~]$ sudo lspci | grep -i Atheros
+</span><span class='line'>02:00.0 Network controller: Qualcomm Atheros AR93xx Wireless Network Adapter (rev 01)
+</span><span class='line'>[staf@snuffel ~]$</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>ACPI</h2>
+
+<p>It is recommended to load the thinkpad-acpi module. Make sure that <code>fan_control=1</code> is enabled.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@snuffel ~]$ cat /usr/lib/modprobe.d/thinkpad_acpi.conf
+</span><span class='line'>options thinkpad_acpi fan_control=1
+</span><span class='line'>[staf@snuffel ~]$</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Execute <code>modprobe thindpad_acpi</code> to load the module</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@snuffel ~]$ sudo modprobe thinkpad_acpi
+</span><span class='line'>[sudo] password for staf:
+</span><span class='line'>[staf@snuffel ~]$</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>thinkfan</h2>
+
+<p>The Intel core duo is still a captable CPU. Even video playback in Full-HD is possible but it takes already a lot of the CPU and the temperature is increasing during the playback.</p>
+
+<p>I installed <a href="https://github.com/vmatare/thinkfan/">thinkfan</a> with a more aggresive cooling profile to keep the CPU temperature under control.</p>
+
+<p>Install thinkfan</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@snuffel ~]$ yay -S thinkfan
+</span><span class='line'>warning: thinkfan-0.9.3-1 is up to date -- reinstalling
+</span><span class='line'>resolving dependencies...
+</span><span class='line'>looking for conflicting packages...
+</span><span class='line'>
+</span><span class='line'>Packages (1) thinkfan-0.9.3-1
+</span><span class='line'>
+</span><span class='line'>Total Installed Size:  0.11 MiB
+</span><span class='line'>Net Upgrade Size:      0.00 MiB
+</span><span class='line'>
+</span><span class='line'>:: Proceed with installation? [Y/n]</span></code></pre></td></tr></table></div></figure>
+
+
+<p>copy the sample configuration</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@snuffel ~]$ sudo cp /usr/share/doc/thinkfan/examples/thinkfan.conf.simple /etc/thinkfan.con</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Edit <code>/etc/thinkfan.conf</code></p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>(0,  0,  50)
+</span><span class='line'>(1,   49, 52)
+</span><span class='line'>(2,   51, 54)
+</span><span class='line'>(3,   53, 56)
+</span><span class='line'>(4,   55, 58)
+</span><span class='line'>(5,   57, 60)
+</span><span class='line'>(7,   59, 32767)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Enable and start thinkfan</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@snuffel ~]$ sudo systemctl enable thinkfan
+</span><span class='line'>[sudo] password for staf:
+</span><span class='line'>[staf@snuffel ~]$ sudo systemctl start thinkfan
+</span><span class='line'>[staf@snuffel ~]$</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em>Have fun</em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://libreboot.org/">https://libreboot.org/</a></li>
+<li><a href="https://libreboot.org/docs/install/rpi_setup.html">https://libreboot.org/docs/install/rpi_setup.html</a></li>
+<li><a href="https://libreboot.org/docs/install/t500_external.html">https://libreboot.org/docs/install/t500_external.html</a></li>
+<li><a href="https://p1trson.blogspot.com/2016/">https://p1trson.blogspot.com/2016/</a></li>
+<li><a href="https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto">https://www.raspberrypi-spy.co.uk/2012/06/simple-guide-to-the-rpi-gpio-header-and-pins/#prettyPhoto</a></li>
+<li><a href="https://forums.lenovo.com/t5/ThinkPad-T400-T500-and-newer-T/t500-bios-chip-lifted-pad-issue/td-p/4205719">https://forums.lenovo.com/t5/ThinkPad-T400-T500-and-newer-T/t500-bios-chip-lifted-pad-issue/td-p/4205719</a></li>
+<li><a href="https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md">https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md</a></li>
+<li><a href="https://linuxhint.com/libreboot-t400-tutorial/">https://linuxhint.com/libreboot-t400-tutorial/</a></li>
+<li><a href="https://www.enisa.europa.eu/publications/info-notes/security-vs-performance-discussion-with-the-return-of-201cspectrum201d-vulnerability">https://www.enisa.europa.eu/publications/info-notes/security-vs-performance-discussion-with-the-return-of-201cspectrum201d-vulnerability</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Lenovo_ThinkPad_T420">https://wiki.archlinux.org/index.php/Lenovo_ThinkPad_T420</a></li>
+</ul>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -3517,411 +4526,6 @@ The internet speed was below the expectations and my modem reported errors on th
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">High Screen Resolution on a KVM Virtual Machine With QXL</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2018-04-22T10:04:46+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2018</span></span> <span class='time'>10:04 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>When you create an new virtual KVM virtual system the video ram is limited to 16MB by default to use a higer screen resolution you need
-to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to
-utilize.</p>
-
-<p>You&rsquo;ll find my journey to enable higher screen resolutions in my KVM (qemu) virtual systems below.</p>
-
-<h2>Ubuntu 16.04</h2>
-
-<p>There is an issue with Ubuntu 16.04 and the latest HWE kernel <a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack"><a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack">https://wiki.ubuntu.com/Kernel/LTSEnablementStack</a></a>. Even a full HD resultion (1920 x 1080 ) if you have the latest HWE kernel on your system.</p>
-
-<p>To resolve this issue your can uninstall the latest kernel or install the LTS kernel.</p>
-
-<h4>Install the LTS Kernel</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt-get install linux-generic-lts-xenial
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>The following additional packages will be installed:
-</span><span class='line'>  linux-generic linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic linux-headers-generic
-</span><span class='line'>  linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
-</span><span class='line'>Suggested packages:
-</span><span class='line'>  fdutils linux-doc-4.4.0 | linux-source-4.4.0 linux-tools
-</span><span class='line'>The following NEW packages will be installed:
-</span><span class='line'>  linux-generic linux-generic-lts-xenial linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic
-</span><span class='line'>  linux-headers-generic linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
-</span><span class='line'>0 upgraded, 8 newly installed, 0 to remove and 0 not upgraded.
-</span><span class='line'>Need to get 69,3 MB of archives.
-</span><span class='line'>After this operation, 301 MB of additional disk space will be used.
-</span><span class='line'>Do you want to continue? [Y/n] 
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>Setting up linux-image-generic (4.4.0.119.125) ...
-</span><span class='line'>Setting up linux-headers-4.4.0-119 (4.4.0-119.143) ...
-</span><span class='line'>Setting up linux-headers-4.4.0-119-generic (4.4.0-119.143) ...
-</span><span class='line'>Setting up linux-headers-generic (4.4.0.119.125) ...
-</span><span class='line'>Setting up linux-generic (4.4.0.119.125) ...
-</span><span class='line'>Setting up linux-generic-lts-xenial (4.4.0.119.125) ...
-</span><span class='line'>staf@ubuntu:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Remove the HWE kernel</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt-get purge linux-image-4.13*
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>done
-</span><span class='line'>The link /vmlinuz.old is a damaged link
-</span><span class='line'>Removing symbolic link vmlinuz.old 
-</span><span class='line'> you may need to re-run your boot loader[grub]
-</span><span class='line'>The link /initrd.img.old is a damaged link
-</span><span class='line'>Removing symbolic link initrd.img.old 
-</span><span class='line'> you may need to re-run your boot loader[grub]
-</span><span class='line'>Purging configuration files for linux-image-4.13.0-38-generic (4.13.0-38.43~16.04.1) ...
-</span><span class='line'>Examining /etc/kernel/postrm.d .
-</span><span class='line'>run-parts: executing /etc/kernel/postrm.d/initramfs-tools 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
-</span><span class='line'>run-parts: executing /etc/kernel/postrm.d/zz-update-grub 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Cleanup</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt autoremove
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>The following packages will be REMOVED:
-</span><span class='line'>  linux-headers-4.13.0-36 linux-headers-4.13.0-36-generic linux-headers-generic-hwe-16.04
-</span><span class='line'>0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
-</span><span class='line'>After this operation, 83,1 MB disk space will be freed.
-</span><span class='line'>Do you want to continue? [Y/n] 
-</span><span class='line'>(Reading database ... 234149 files and directories currently installed.)
-</span><span class='line'>Removing linux-headers-4.13.0-36-generic (4.13.0-36.40~16.04.1) ...
-</span><span class='line'>Removing linux-headers-4.13.0-36 (4.13.0-36.40~16.04.1) ...
-</span><span class='line'>Removing linux-headers-generic-hwe-16.04 (4.13.0.38.57) ...
-</span><span class='line'>staf@ubuntu:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Reboot</h4>
-
-<p>After a reboot higher resolutions are possible on ubuntu 16.04</p>
-
-<h1>Increase the video RAM</h1>
-
-<h2>Required video ram</h2>
-
-<p>When you create a new KVM virtual machine it has 16MB of video RAM.
-Below you&rsquo;ll the calculation for the required video RAM for a 4k resolution ( 3840 x 2160 ).</p>
-
-<p>3840 x 2160 = 8294400 <br/>
-8294400 x 32 = 265420800 <br/ >
-265420800 / 8 = 33177600 <br />
-33177600 / (1024*1024) = 31.640625 MB</p>
-
-<p>So 32 MB video ram is enough for a 4k resolution, to take some overhead into account we&rsquo;ll increase the video ram to 64 MB.</p>
-
-<h2>list the domains</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[swagemakers@staflaptop ~]$ sudo virsh
-</span><span class='line'>Welcome to virsh, the virtualization interactive terminal.
-</span><span class='line'>
-</span><span class='line'>Type:  'help' for help with commands
-</span><span class='line'>       'quit' to quit
-</span><span class='line'>
-</span><span class='line'>virsh # list --all
-</span><span class='line'> Id    Name                           State
-</span><span class='line'>----------------------------------------------------
-</span><span class='line'> -     centos7.0                      shut off
-</span><span class='line'> -     debian                         shut off
-</span><span class='line'> -     fedora27                       shut off
-</span><span class='line'>
-</span><span class='line'>virsh # </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>edit the domain settings</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>virsh # edit --domain debian</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>update the memory settings</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;video&gt;
-</span><span class='line'>  &lt;model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/&gt;
-</span><span class='line'>  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
-</span><span class='line'>&lt;/video&gt;
-</span><span class='line'>&lt;redirdev bus='usb' type='spicevmc'&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>to</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;video&gt;
-</span><span class='line'>  &lt;model type='qxl' ram='65536' vram='65536' vgamem='65536' heads='1' primary='yes'/&gt;
-</span><span class='line'>  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
-</span><span class='line'>&lt;/video&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>xrandr</h4>
-
-<p>Even with the additional RAM higer resolution aren&rsquo;t possible (yet), the virtual screen doesn&rsquo;t report the higer screen resolution. It&rsquo;s possible to add the higher screen resolution with xrandr.</p>
-
-<h5>display current settings</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr 
-</span><span class='line'>Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 8192 x 8192
-</span><span class='line'>Virtual-0 connected primary 1920x1080+0+0 0mm x 0mm
-</span><span class='line'>   1024x768      59.95 +
-</span><span class='line'>   1920x1200     59.95  
-</span><span class='line'>   1920x1080     60.00* 
-</span><span class='line'>   1600x1200     59.95  
-</span><span class='line'>   1680x1050     60.00  
-</span><span class='line'>   1400x1050     60.00  
-</span><span class='line'>   1280x1024     59.95  
-</span><span class='line'>   1440x900      59.99  
-</span><span class='line'>   1280x960      59.99  
-</span><span class='line'>   1280x854      59.95  
-</span><span class='line'>   1280x800      59.96  
-</span><span class='line'>   1280x720      59.97  
-</span><span class='line'>   1152x768      59.95  
-</span><span class='line'>   800x600       59.96  
-</span><span class='line'>   848x480       59.94  
-</span><span class='line'>   720x480       59.94  
-</span><span class='line'>   640x480       59.94  
-</span><span class='line'>Virtual-1 disconnected
-</span><span class='line'>Virtual-2 disconnected
-</span><span class='line'>Virtual-3 disconnected
-</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h6>get the modeline</h6>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ cvt 2560 1440 
-</span><span class='line'># 2560x1440 59.96 Hz (CVT 3.69M9) hsync: 89.52 kHz; pclk: 312.25 MHz
-</span><span class='line'>Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
-</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h6># create the new mode line</h6>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
-</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h6># add the mode to your screen</h6>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --addmode Virtual-0 2560x1440_60.00
-</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h6># use the new mode</h6>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --output Virtual-0 --mode 2560x1440_60.00
-</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h6>## 4k</h6>
-
-<p>To use a 4k resolution you can use the commands</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$  cvt 3840 2160
-</span><span class='line'># 3840x2160 59.98 Hz (CVT 8.29M9) hsync: 134.18 kHz; pclk: 712.75 MHz
-</span><span class='line'>Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
-</span><span class='line'>staf@mydevolo:~$ xrandr --newmode "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
-</span><span class='line'>staf@mydevolo:~$ xrandr --addmode Virtual-0 3840x2160_60.00
-</span><span class='line'>staf@mydevolo:~$ xrandr --output Virtual-0 --mode 3840x2160_60.00
-</span><span class='line'>staf@mydevolo:~$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Add the new screen resolution permanently</h2>
-
-<h3>Debian &amp; Co</h3>
-
-<p>Create a monitor configuration file in /usr/share/X11/xorg.conf.d</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@mydevolo:/usr/share/X11/xorg.conf.d# vi 10-monitor.conf</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And add the modeline fgor your screen resolution.
-With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>section "Monitor"
-</span><span class='line'>    Identifier "Virtual-0 "
-</span><span class='line'>    Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
-</span><span class='line'>    Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
-</span><span class='line'>    Option "PreferredMode" "2560x1440_60.00"
-</span><span class='line'>EndSection</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Other GNU/Linux distros</h3>
-
-<p>Most other GNU/Linux distribution use /etc/X11/xorg.conf.d/</p>
-
-<p><strong><em> Have fun </em></strong></p>
-
-<h1>Links</h1>
-
-<ul>
-<li><a href="https://wiki.archlinux.org/index.php/xrandr"><a href="https://wiki.archlinux.org/index.php/xrandr">https://wiki.archlinux.org/index.php/xrandr</a></a></li>
-<li><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution"><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution">https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution</a></a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -3955,6 +4559,10 @@ With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/">Setting Up OpenStack-Ansible All-In-One on a Centos 7 System</a>
       </li>
     
@@ -3968,10 +4576,6 @@ With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.
     
       <li class="post">
         <a href="/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/">DNS Privacy With Stubby (Part 2 FreeBSD)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">DNS Privacy With Stubby (Part 1 GNU/Linux)</a>
       </li>
     
   </ul>

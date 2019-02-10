@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Postfix Smarthost With Authentication Mar 4th, 2018 8:05 am I used the relay host of my internet provider but this was causing issues since my email &hellip;">
+  <meta name="description" content="High Screen Resolution on a KVM Virtual Machine With QXL Apr 22nd, 2018 10:04 am When you create an new virtual KVM virtual system the video ram is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,411 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">High Screen Resolution on a KVM Virtual Machine With QXL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2018-04-22T10:04:46+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>22</span><span class='date-suffix'>nd</span>, <span class='date-year'>2018</span></span> <span class='time'>10:04 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>When you create an new virtual KVM virtual system the video ram is limited to 16MB by default to use a higer screen resolution you need
+to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to
+utilize.</p>
+
+<p>You&rsquo;ll find my journey to enable higher screen resolutions in my KVM (qemu) virtual systems below.</p>
+
+<h2>Ubuntu 16.04</h2>
+
+<p>There is an issue with Ubuntu 16.04 and the latest HWE kernel <a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack"><a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack">https://wiki.ubuntu.com/Kernel/LTSEnablementStack</a></a>. Even a full HD resultion (1920 x 1080 ) if you have the latest HWE kernel on your system.</p>
+
+<p>To resolve this issue your can uninstall the latest kernel or install the LTS kernel.</p>
+
+<h4>Install the LTS Kernel</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt-get install linux-generic-lts-xenial
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>The following additional packages will be installed:
+</span><span class='line'>  linux-generic linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic linux-headers-generic
+</span><span class='line'>  linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
+</span><span class='line'>Suggested packages:
+</span><span class='line'>  fdutils linux-doc-4.4.0 | linux-source-4.4.0 linux-tools
+</span><span class='line'>The following NEW packages will be installed:
+</span><span class='line'>  linux-generic linux-generic-lts-xenial linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic
+</span><span class='line'>  linux-headers-generic linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
+</span><span class='line'>0 upgraded, 8 newly installed, 0 to remove and 0 not upgraded.
+</span><span class='line'>Need to get 69,3 MB of archives.
+</span><span class='line'>After this operation, 301 MB of additional disk space will be used.
+</span><span class='line'>Do you want to continue? [Y/n] 
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>Setting up linux-image-generic (4.4.0.119.125) ...
+</span><span class='line'>Setting up linux-headers-4.4.0-119 (4.4.0-119.143) ...
+</span><span class='line'>Setting up linux-headers-4.4.0-119-generic (4.4.0-119.143) ...
+</span><span class='line'>Setting up linux-headers-generic (4.4.0.119.125) ...
+</span><span class='line'>Setting up linux-generic (4.4.0.119.125) ...
+</span><span class='line'>Setting up linux-generic-lts-xenial (4.4.0.119.125) ...
+</span><span class='line'>staf@ubuntu:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Remove the HWE kernel</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt-get purge linux-image-4.13*
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>done
+</span><span class='line'>The link /vmlinuz.old is a damaged link
+</span><span class='line'>Removing symbolic link vmlinuz.old 
+</span><span class='line'> you may need to re-run your boot loader[grub]
+</span><span class='line'>The link /initrd.img.old is a damaged link
+</span><span class='line'>Removing symbolic link initrd.img.old 
+</span><span class='line'> you may need to re-run your boot loader[grub]
+</span><span class='line'>Purging configuration files for linux-image-4.13.0-38-generic (4.13.0-38.43~16.04.1) ...
+</span><span class='line'>Examining /etc/kernel/postrm.d .
+</span><span class='line'>run-parts: executing /etc/kernel/postrm.d/initramfs-tools 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
+</span><span class='line'>run-parts: executing /etc/kernel/postrm.d/zz-update-grub 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Cleanup</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@ubuntu:~$ sudo apt autoremove
+</span><span class='line'>Reading package lists... Done
+</span><span class='line'>Building dependency tree       
+</span><span class='line'>Reading state information... Done
+</span><span class='line'>The following packages will be REMOVED:
+</span><span class='line'>  linux-headers-4.13.0-36 linux-headers-4.13.0-36-generic linux-headers-generic-hwe-16.04
+</span><span class='line'>0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
+</span><span class='line'>After this operation, 83,1 MB disk space will be freed.
+</span><span class='line'>Do you want to continue? [Y/n] 
+</span><span class='line'>(Reading database ... 234149 files and directories currently installed.)
+</span><span class='line'>Removing linux-headers-4.13.0-36-generic (4.13.0-36.40~16.04.1) ...
+</span><span class='line'>Removing linux-headers-4.13.0-36 (4.13.0-36.40~16.04.1) ...
+</span><span class='line'>Removing linux-headers-generic-hwe-16.04 (4.13.0.38.57) ...
+</span><span class='line'>staf@ubuntu:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Reboot</h4>
+
+<p>After a reboot higher resolutions are possible on ubuntu 16.04</p>
+
+<h1>Increase the video RAM</h1>
+
+<h2>Required video ram</h2>
+
+<p>When you create a new KVM virtual machine it has 16MB of video RAM.
+Below you&rsquo;ll the calculation for the required video RAM for a 4k resolution ( 3840 x 2160 ).</p>
+
+<p>3840 x 2160 = 8294400 <br/>
+8294400 x 32 = 265420800 <br/ >
+265420800 / 8 = 33177600 <br />
+33177600 / (1024*1024) = 31.640625 MB</p>
+
+<p>So 32 MB video ram is enough for a 4k resolution, to take some overhead into account we&rsquo;ll increase the video ram to 64 MB.</p>
+
+<h2>list the domains</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[swagemakers@staflaptop ~]$ sudo virsh
+</span><span class='line'>Welcome to virsh, the virtualization interactive terminal.
+</span><span class='line'>
+</span><span class='line'>Type:  'help' for help with commands
+</span><span class='line'>       'quit' to quit
+</span><span class='line'>
+</span><span class='line'>virsh # list --all
+</span><span class='line'> Id    Name                           State
+</span><span class='line'>----------------------------------------------------
+</span><span class='line'> -     centos7.0                      shut off
+</span><span class='line'> -     debian                         shut off
+</span><span class='line'> -     fedora27                       shut off
+</span><span class='line'>
+</span><span class='line'>virsh # </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>edit the domain settings</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>virsh # edit --domain debian</span></code></pre></td></tr></table></div></figure>
+
+
+<h5>update the memory settings</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;video&gt;
+</span><span class='line'>  &lt;model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/&gt;
+</span><span class='line'>  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+</span><span class='line'>&lt;/video&gt;
+</span><span class='line'>&lt;redirdev bus='usb' type='spicevmc'&gt;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>to</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;video&gt;
+</span><span class='line'>  &lt;model type='qxl' ram='65536' vram='65536' vgamem='65536' heads='1' primary='yes'/&gt;
+</span><span class='line'>  &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
+</span><span class='line'>&lt;/video&gt;</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>xrandr</h4>
+
+<p>Even with the additional RAM higer resolution aren&rsquo;t possible (yet), the virtual screen doesn&rsquo;t report the higer screen resolution. It&rsquo;s possible to add the higher screen resolution with xrandr.</p>
+
+<h5>display current settings</h5>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr 
+</span><span class='line'>Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 8192 x 8192
+</span><span class='line'>Virtual-0 connected primary 1920x1080+0+0 0mm x 0mm
+</span><span class='line'>   1024x768      59.95 +
+</span><span class='line'>   1920x1200     59.95  
+</span><span class='line'>   1920x1080     60.00* 
+</span><span class='line'>   1600x1200     59.95  
+</span><span class='line'>   1680x1050     60.00  
+</span><span class='line'>   1400x1050     60.00  
+</span><span class='line'>   1280x1024     59.95  
+</span><span class='line'>   1440x900      59.99  
+</span><span class='line'>   1280x960      59.99  
+</span><span class='line'>   1280x854      59.95  
+</span><span class='line'>   1280x800      59.96  
+</span><span class='line'>   1280x720      59.97  
+</span><span class='line'>   1152x768      59.95  
+</span><span class='line'>   800x600       59.96  
+</span><span class='line'>   848x480       59.94  
+</span><span class='line'>   720x480       59.94  
+</span><span class='line'>   640x480       59.94  
+</span><span class='line'>Virtual-1 disconnected
+</span><span class='line'>Virtual-2 disconnected
+</span><span class='line'>Virtual-3 disconnected
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>get the modeline</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ cvt 2560 1440 
+</span><span class='line'># 2560x1440 59.96 Hz (CVT 3.69M9) hsync: 89.52 kHz; pclk: 312.25 MHz
+</span><span class='line'>Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6># create the new mode line</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6># add the mode to your screen</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --addmode Virtual-0 2560x1440_60.00
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6># use the new mode</h6>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$ xrandr --output Virtual-0 --mode 2560x1440_60.00
+</span><span class='line'>staf@debian:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h6>## 4k</h6>
+
+<p>To use a 4k resolution you can use the commands</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@debian:~$  cvt 3840 2160
+</span><span class='line'># 3840x2160 59.98 Hz (CVT 8.29M9) hsync: 134.18 kHz; pclk: 712.75 MHz
+</span><span class='line'>Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+</span><span class='line'>staf@mydevolo:~$ xrandr --newmode "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+</span><span class='line'>staf@mydevolo:~$ xrandr --addmode Virtual-0 3840x2160_60.00
+</span><span class='line'>staf@mydevolo:~$ xrandr --output Virtual-0 --mode 3840x2160_60.00
+</span><span class='line'>staf@mydevolo:~$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Add the new screen resolution permanently</h2>
+
+<h3>Debian &amp; Co</h3>
+
+<p>Create a monitor configuration file in /usr/share/X11/xorg.conf.d</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@mydevolo:/usr/share/X11/xorg.conf.d# vi 10-monitor.conf</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And add the modeline fgor your screen resolution.
+With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>section "Monitor"
+</span><span class='line'>    Identifier "Virtual-0 "
+</span><span class='line'>    Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
+</span><span class='line'>    Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
+</span><span class='line'>    Option "PreferredMode" "2560x1440_60.00"
+</span><span class='line'>EndSection</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Other GNU/Linux distros</h3>
+
+<p>Most other GNU/Linux distribution use /etc/X11/xorg.conf.d/</p>
+
+<p><strong><em> Have fun </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/xrandr"><a href="https://wiki.archlinux.org/index.php/xrandr">https://wiki.archlinux.org/index.php/xrandr</a></a></li>
+<li><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution"><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution">https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution</a></a></li>
+</ul>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -5595,1011 +6000,6 @@ Have fun!
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">How to Install Libreboot on a ThinkPad X60</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2017-02-11T16:09:11+01:00'><span class='date'><span class='date-month'>Feb</span> <span class='date-day'>11</span><span class='date-suffix'>th</span>, <span class='date-year'>2017</span></span> <span class='time'>4:09 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><br />&nbsp;<br />
-I got a <a href="https://en.wikipedia.org/wiki/ThinkPad_X_Series#X60_Tablet">ThinkPad x60 (tablet version)</a> from <a href="http://ebay.be">ebay.be</a> to install <a href="https://libreboot.org/">libreboot</a> on it.
-<br />&nbsp;<br />
-I tried to compile libreboot on <a href="http://www.debian">Debian</a> and <a href="https://www.parabola.nu/">Parabola</a> GNU/Linux but both failed, compling Libreboot on <a href="https://trisquel.info/">Trisquel 7</a> works fine so I&rsquo;ll use Trisquel to replace the BIOS with libreboot.
-<br />&nbsp;<br />
-I&rsquo;m not sure that I&rsquo;ll use Trisquel 7 as my daily driver since it is a bit outdated&hellip;
-I might go with <a href="http://https://wiki.debian.org/DebianStretch">Debian Strech</a> without the non-free repositories to get a fully <a href="https://en.wikipedia.org/wiki/Free_software">Free Software</a> Laptop/tablet. I&rsquo;ll need to replace the Intel wifi adapter since this requires non-free firmware.
-<br />&nbsp;<br />
-You&rsquo;ll find a small howto install libreboot on a Thinkpad X60 below.
-<br />&nbsp;<br /></p>
-
-<p><img class="centre" src="/blog/images/x60_open.jpg" width="750" height="1050" title="&#34;Thinkpad x60 open&#34;" alt="&#34;Thinkpad x60 open&#34;"></p>
-
-<h1>Build Libreboot</h1>
-
-<p>The latest version of libreboot isn&rsquo;t available via a binary distribution so I decided to build it from source.</p>
-
-<h2>Download the Libreboot source</h2>
-
-<p>Download the latest libreboot image from <a href="https://libreboot.org/download/"><a href="https://libreboot.org/download/">https://libreboot.org/download/</a></a></p>
-
-<h3>Download the source tarball</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ wget https://libreboot.org/release/stable/20160907/libreboot_r20160907_src.tar.xz
-</span><span class='line'>--2017-02-11 10:24:41--  https://libreboot.org/release/stable/20160907/libreboot_r20160907_src.tar.xz
-</span><span class='line'>Resolving libreboot.org (libreboot.org)... 149.56.232.100
-</span><span class='line'>Connecting to libreboot.org (libreboot.org)|149.56.232.100|:443... connected.
-</span><span class='line'>HTTP request sent, awaiting response... 200 OK
-</span><span class='line'>Length: 438622508 (418M) [application/x-xz]
-</span><span class='line'>Saving to: libreboot_r20160907_src.tar.xz
-</span><span class='line'>
-</span><span class='line'>100%[==========================================================&gt;] 438.622.508  541KB/s   in 18m 35s
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>2017-02-11 10:43:17 (384 KB/s) - libreboot_r20160907_src.tar.xz saved [438622508/438622508]
-</span><span class='line'>
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Verify</h3>
-
-<p>As always verify the checksums and the gpg signature, the gpg public key is available at:
-<a href="https://libreboot.org/gpg/"</a><a href="https://libreboot.org/gpg/">https://libreboot.org/gpg/</a></a></p>
-
-<h4>Download the  SHA512SUMS and SHA512SUMS.sig</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ wget https://libreboot.org/release/stable/20160907/SHA512SUMS                                                      
-</span><span class='line'>--2017-02-11 10:52:23--  https://libreboot.org/release/stable/20160907/SHA512SUMS                                                                          
-</span><span class='line'>Resolving libreboot.org (libreboot.org)... 149.56.232.100                                                                                                            
-</span><span class='line'>Connecting to libreboot.org (libreboot.org)|149.56.232.100|:443... connected.                                                                                                  
-</span><span class='line'>HTTP request sent, awaiting response... 200 OK                                                                                                                                 
-</span><span class='line'>Length: 5112 (5,0K) [application/octet-stream]                                                                                                                                        
-</span><span class='line'>Saving to: 'SHA512SUMS'                                                                                                                                                                          
-</span><span class='line'>                                                                                                                                                                                                         
-</span><span class='line'>100%[=====================================================================================================================================================================================================&gt;] 5.112       --.-K/s   in 0,006s  
-</span><span class='line'>                                                                                                                                                                                                                          
-</span><span class='line'>2017-02-11 10:52:24 (852 KB/s) - 'SHA512SUMS' saved [5112/5112]                                                                                                                                                                      
-</span><span class='line'>                                                                                                                                                                                                                                             
-</span><span class='line'>staf@petronella:~/libreboot$ wget https://libreboot.org/release/stable/20160907/SHA512SUMS.sig
-</span><span class='line'>--2017-02-11 10:52:39--  https://libreboot.org/release/stable/20160907/SHA512SUMS.sig
-</span><span class='line'>Resolving libreboot.org (libreboot.org)... 149.56.232.100
-</span><span class='line'>Connecting to libreboot.org (libreboot.org)|149.56.232.100|:443... connected.
-</span><span class='line'>HTTP request sent, awaiting response... 200 OK
-</span><span class='line'>Length: 543 [application/pgp-signature]
-</span><span class='line'>Saving to: 'SHA512SUMS.sig'
-</span><span class='line'>
-</span><span class='line'>100%[=====================================================================================================================================================================================================&gt;] 543         --.-K/s   in 0s      
-</span><span class='line'>
-</span><span class='line'>2017-02-11 10:52:39 (11,4 MB/s) - 'SHA512SUMS.sig' saved [543/543]
-</span><span class='line'>
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Import the public gpg key</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ gpg --recv-keys 0x05E8C5B2
-</span><span class='line'>gpg: directory `/home/staf/.gnupg' created
-</span><span class='line'>gpg: new configuration file `/home/staf/.gnupg/gpg.conf' created
-</span><span class='line'>gpg: WARNING: options in `/home/staf/.gnupg/gpg.conf' are not yet active during this run
-</span><span class='line'>gpg: keyring `/home/staf/.gnupg/secring.gpg' created
-</span><span class='line'>gpg: keyring `/home/staf/.gnupg/pubring.gpg' created
-</span><span class='line'>gpg: no keyserver known (use option --keyserver)
-</span><span class='line'>gpg: keyserver receive failed: bad URI
-</span><span class='line'>staf@petronella:~/libreboot$ gpg --recv-keys 0x05E8C5B2
-</span><span class='line'>gpg: requesting key 05E8C5B2 from hkp server keys.gnupg.net
-</span><span class='line'>gpg: /home/staf/.gnupg/trustdb.gpg: trustdb created
-</span><span class='line'>gpg: key 05E8C5B2: public key "Leah Rowe (Libreboot signing key) &lt;info@minifree.org&gt;" imported
-</span><span class='line'>gpg: key 05E8C5B2: public key "Leah Rowe (Libreboot signing key) &lt;info@minifree.org&gt;" imported
-</span><span class='line'>gpg: no ultimately trusted keys found
-</span><span class='line'>gpg: Total number processed: 2
-</span><span class='line'>gpg:               imported: 2  (RSA: 2)
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Verify the checksum file</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ gpg --verify SHA512SUMS.sig SHA512SUMS
-</span><span class='line'>gpg: Signature made Don 08 Sep 2016 00:15:17 CEST using RSA key ID 05E8C5B2
-</span><span class='line'>gpg: Good signature from "Leah Rowe (Libreboot signing key) &lt;info@minifree.org&gt;"
-</span><span class='line'>gpg: WARNING: This key is not certified with a trusted signature!
-</span><span class='line'>gpg:          There is no indication that the signature belongs to the owner.
-</span><span class='line'>Primary key fingerprint: CDC9 CAE3 2CB4 B7FC 84FD  C804 969A 9795 05E8 C5B2
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Verify the checksum</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ sha512sum -c SHA512SUMS | head -2
-</span><span class='line'>sha512sum: ./libreboot_r20160907_util.tar.xz: No such file or directory
-</span><span class='line'>sha512sum: ./rom/depthcharge/libreboot_r20160907_depthcharge_veyron_speedy.tar.xz: No such file or directory
-</span><span class='line'>sha512sum: ./rom/grub/libreboot_r20160907_grub_d510mo.tar.xz: No such file or directory
-</span><span class='line'>sha512sum: ./libreboot_r20160907_src.tar.xz: OK
-</span><span class='line'>./rom/grub/libreboot_r20160907_grub_ga-g41m-es2l.tar.xz./libreboot_r20160907_util.tar.xz: FAILED open or read
-</span><span class='line'>: No such file or directory
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h2>Build the modules</h2>
-
-<h3>Git</h3>
-
-<p>It&rsquo;s required to have git installed and to set the user email &amp; name if you don&rsquo;t do this the complilation will fail.</p>
-
-<p>Install git</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ sudo apt-get install git
-</span><span class='line'>[sudo] password for staf: 
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>The following extra packages will be installed:
-</span><span class='line'>  git-man liberror-perl
-</span><span class='line'>Suggested packages:
-</span><span class='line'>  git-daemon-run git-daemon-sysvinit git-doc git-el git-email git-gui gitk
-</span><span class='line'>  gitweb git-arch git-bzr git-cvs git-mediawiki git-svn
-</span><span class='line'>The following NEW packages will be installed:
-</span><span class='line'>  git git-man liberror-perl
-</span><span class='line'>0 upgraded, 3 newly installed, 0 to remove and 0 not upgraded.
-</span><span class='line'>Need to get 3.306 kB of archives.
-</span><span class='line'>After this operation, 21,9 MB of additional disk space will be used.
-</span><span class='line'>Do you want to continue? [Y/n] y
-</span><span class='line'>Get:1 http://fr.archive.trisquel.info/trisquel/ belenos/main liberror-perl all 0.17-1.1 [21,1 kB]
-</span><span class='line'>Get:2 http://fr.archive.trisquel.info/trisquel/ belenos-security/main git-man all 1:1.9.1-1ubuntu0.3 [699 kB]
-</span><span class='line'>Get:3 http://fr.archive.trisquel.info/trisquel/ belenos-security/main git amd64 1:1.9.1-1ubuntu0.3 [2.586 kB]
-</span><span class='line'>Fetched 3.306 kB in 4s (723 kB/s)
-</span><span class='line'>Selecting previously unselected package liberror-perl.
-</span><span class='line'>(Reading database ... 206214 files and directories currently installed.)
-</span><span class='line'>Preparing to unpack .../liberror-perl_0.17-1.1_all.deb ...
-</span><span class='line'>Unpacking liberror-perl (0.17-1.1) ...
-</span><span class='line'>Selecting previously unselected package git-man.
-</span><span class='line'>Preparing to unpack .../git-man_1%3a1.9.1-1ubuntu0.3_all.deb ...
-</span><span class='line'>Unpacking git-man (1:1.9.1-1ubuntu0.3) ...
-</span><span class='line'>Selecting previously unselected package git.
-</span><span class='line'>Preparing to unpack .../git_1%3a1.9.1-1ubuntu0.3_amd64.deb ...
-</span><span class='line'>Unpacking git (1:1.9.1-1ubuntu0.3) ...
-</span><span class='line'>Processing triggers for man-db (2.6.7.1-1ubuntu1) ...
-</span><span class='line'>Setting up liberror-perl (0.17-1.1) ...
-</span><span class='line'>Setting up git-man (1:1.9.1-1ubuntu0.3) ...
-</span><span class='line'>Setting up git (1:1.9.1-1ubuntu0.3) ...
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Set the git username and password.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ git config --global user.email "staf@wagemakers.be"
-</span><span class='line'>staf@petronella:~/libreboot$ git config --global user.name "staf wagemakers"
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h3>Extract the source</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ tar xf libreboot_r20160907_src.tar.xz 
-</span><span class='line'>staf@petronella:~/libreboot$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Install the dependencies</h3>
-
-<p>cd into the extracted directory</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot$ ls
-</span><span class='line'>SHA512SUMS  SHA512SUMS.sig  libreboot_r20160907_src  libreboot_r20160907_src.tar.xz
-</span><span class='line'>staf@petronella:~/libreboot$ cd libreboot_r20160907_src</span></code></pre></td></tr></table></div></figure>
-
-
-<p>run dependencies trisquel7 to install the software dependencies.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo ./build dependencies trisquel7
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>wget is already the newest version.
-</span><span class='line'>0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>git is already the newest version.
-</span><span class='line'>0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-</span><span class='line'>Reading package lists... Done
-</span><span class='line'>Building dependency tree       
-</span><span class='line'>Reading state information... Done
-</span><span class='line'>The following extra packages will be installed:
-</span><span class='line'>  fonts-lmodern fonts-texgyre latex-beamer latex-xcolor libintl-perl
-</span><span class='line'>  liblua5.1-0 libpaper-utils libptexenc1 libruby1.9.1 libtext-unidecode-perl
-</span><span class='line'>  libxml-libxml-perl libxml-namespacesupport-perl libxml-sax-base-perl
-</span><span class='line'>  libxml-sax-expat-perl libxml-sax-perl libyaml-0-2 lmodern luatex pandoc-data
-</span><span class='line'>  pgf prosper ps2eps ruby ruby1.9.1 tcl tcl8.6 tex-common tex-gyre
-</span><span class='line'>  texlive-base texlive-binaries texlive-extra-utils texlive-font-utils</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&lt; snip &gt;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>(Reading database ... 236394 files and directories currently installed.)
-</span><span class='line'>Preparing to unpack .../lib32z1_1%3a1.2.8.dfsg-1ubuntu1_amd64.deb ...
-</span><span class='line'>Unpacking lib32z1 (1:1.2.8.dfsg-1ubuntu1) ...
-</span><span class='line'>Selecting previously unselected package lib32z1-dev.
-</span><span class='line'>Preparing to unpack .../lib32z1-dev_1%3a1.2.8.dfsg-1ubuntu1_amd64.deb ...
-</span><span class='line'>Unpacking lib32z1-dev (1:1.2.8.dfsg-1ubuntu1) ...
-</span><span class='line'>Setting up lib32z1 (1:1.2.8.dfsg-1ubuntu1) ...
-</span><span class='line'>Setting up lib32z1-dev (1:1.2.8.dfsg-1ubuntu1) ...
-</span><span class='line'>Processing triggers for libc-bin (2.19-0ubuntu6.9) ...
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Build module all</h3>
-
-<p>Build the modules by excuting build module all</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot/libreboot_r20160907_src$ ./build module all
-</span><span class='line'>Building bucts
-</span><span class='line'>rm -f bucts bucts.o
-</span><span class='line'>gcc  -DVERSION='"withoutgit"' -c bucts.c
-</span><span class='line'>gcc -o bucts bucts.o  -lpci
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Building the utilities in coreboot
-</span><span class='line'>make: Entering directory `/home/staf/libreboot/libreboot_r20160907_src/coreboot/15fca66bf08db45937ce88b950491963654805b9/15fca66bf08db45937ce88b950491963654805b9/util/cbfstool'
-</span><span class='line'>    HOSTCC     cbfstool/cbfstool.o
-</span><span class='line'>    HOSTCC     cbfstool/common.o
-</span><span class='line'>    HOSTCC     cbfstool/compress.o
-</span><span class='line'>    HOSTCC     cbfstool/cbfs_hash.o
-</span><span class='line'>    HOSTCC     cbfstool/cbfs_image.o
-</span><span class='line'>    HOSTCC     cbfstool/cbfs-mkstage.o
-</span><span class='line'>    HOSTCC     cbfstool/cbfs-mkpayload.o
-</span><span class='line'>    HOSTCC     cbfstool/elfheaders.o
-</span><span class='line'>    HOSTCC     cbfstool/rmodule.o
-</span><span class='line'>    HOSTCC     cbfstool/xdr.o
-</span><span class='line'>    HOSTCC     cbfstool/fit.o
-</span><span class='line'>    HOSTCC     cbfstool/partitioned_file.o</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&lt; snip &gt;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  Compile checking out/vgasrc/stdvgamodes.o
-</span><span class='line'>  Compile checking out/vgasrc/stdvgaio.o
-</span><span class='line'>  Compile checking out/vgasrc/clext.o
-</span><span class='line'>  Compile checking out/vgasrc/bochsvga.o
-</span><span class='line'>  Compile checking out/vgasrc/geodevga.o
-</span><span class='line'>  Compile checking out/vgasrc/cbvga.o
-</span><span class='line'>  Compiling whole program out/vgaccode16.raw.s
-</span><span class='line'>  Fixup VGA rom assembler
-</span><span class='line'>  Compiling (16bit) out/vgaentry.o
-</span><span class='line'>  Precompiling out/vgasrc/vgalayout.lds
-</span><span class='line'>  Linking out/vgarom.o
-</span><span class='line'>Version: ?-20170211_123929-petronella
-</span><span class='line'>  Extracting binary out/vgabios.bin.raw
-</span><span class='line'>  Finalizing rom out/vgabios.bin
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Build the ROMS</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ ./build roms withgrub
-</span><span class='line'>Building ROM images with the GRUB payload
-</span><span class='line'>Creating GRUB ELF executable for configuration 'txtmode'
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>Creating GRUB ELF executable for configuration 'vesafb'
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>GRUB Helper script: build ROM images for 'd510mo'
-</span><span class='line'>M       3rdparty/vboot
-</span><span class='line'>Switched to branch 'grub_d510mo'
-</span><span class='line'>Switched to branch 'grub_d510mo'
-</span><span class='line'>No submodule mapping found in .gitmodules for path '3rdparty/vboot'
-</span><span class='line'>No submodule mapping found in .gitmodules for path '3rdparty/vboot'</span></code></pre></td></tr></table></div></figure>
-
-
-<p>&lt; snip &gt;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>12288 bytes (12 kB) copied, 0,026113 s, 471 kB/s
-</span><span class='line'>12288+0 records in
-</span><span class='line'>12288+0 records out
-</span><span class='line'>12288 bytes (12 kB) copied, 0,0259776 s, 473 kB/s
-</span><span class='line'>12288+0 records in
-</span><span class='line'>12288+0 records out
-</span><span class='line'>12288 bytes (12 kB) copied, 0,0261767 s, 469 kB/s
-</span><span class='line'>12288+0 records in
-</span><span class='line'>12288+0 records out
-</span><span class='line'>12288 bytes (12 kB) copied, 0,0261144 s, 471 kB/s
-</span><span class='line'>12288+0 records in
-</span><span class='line'>12288+0 records out
-</span><span class='line'>12288 bytes (12 kB) copied, 0,0282761 s, 435 kB/s
-</span><span class='line'>12288+0 records in
-</span><span class='line'>12288+0 records out
-</span><span class='line'>12288 bytes (12 kB) copied, 0,0271539 s, 453 kB/s
-</span><span class='line'>12288+0 records in
-</span><span class='line'>12288+0 records out
-</span><span class='line'>12288 bytes (12 kB) copied, 0,0295147 s, 416 kB/s
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>The rom build command creates a bin directory, verify that required roms are available.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ cd bin/
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/bin$ ls -l
-</span><span class='line'>total 4
-</span><span class='line'>drwxrwxr-x 23 staf staf 4096 Feb  11 15:58 grub
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/bin$ cd grub/
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/bin/grub$ ls -l
-</span><span class='line'>total 84
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:28 d510mo
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:29 ga-g41m-es2l
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:30 kcma-d8
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:31 kgpe-d16
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:32 macbook21
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:33 qemu_i440fx_piix4
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:34 qemu_q35_ich9
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 r400_16mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 r400_4mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 r400_8mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 t400_16mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 t400_4mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 t400_8mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 t500_16mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 t500_4mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 t500_8mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:58 t60
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:59 x200_16mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:58 x200_4mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:58 x200_8mb
-</span><span class='line'>drwxrwxr-x 2 staf staf 4096 Feb  11 15:58 x60
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/bin/grub$ </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/bin/grub$ cd x60
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/bin/grub/x60$ ls -l
-</span><span class='line'>total 40960
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_deqwertz_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_deqwertz_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_esqwerty_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_esqwerty_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_frazerty_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_frazerty_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_frdvbepo_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_frdvbepo_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_itqwerty_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_itqwerty_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_svenska_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_svenska_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_ukdvorak_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_ukdvorak_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_ukqwerty_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_ukqwerty_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_usdvorak_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_usdvorak_vesafb.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_usqwerty_txtmode.rom
-</span><span class='line'>-rw-rw-r-- 1 staf staf 2097152 Feb  11 15:58 x60_usqwerty_vesafb.rom</span></code></pre></td></tr></table></div></figure>
-
-
-<h1>Libreboot Installation</h1>
-
-<h2>Backup</h2>
-
-<p>Backups are important. We&rsquo;ll first backup the orginal proprietary <a href="https://en.wikipedia.org/wiki/BIOS">BIOS</a> before we free the laptop and install a <a href="https://en.wikipedia.org/wiki/Free_software">Free Software firmware</a></p>
-
-<p>The documentation that I found (see Links below) describes that the backup has 2 step flashrom_lenovobios_sst &amp; flashrom_lenovobios_macronix.</p>
-
-<p>The flashrom_lenovobios_macronix command fails on my Laptop/Table but I decided to continue with the installation since I didn&rsquo;t pay a lot for the laptop on ebay.be.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo flashrom/flashrom_lenovobios_sst -p internal -r factory.bin
-</span><span class='line'>[sudo] password for staf: 
-</span><span class='line'>flashrom v0.9.9-unknown on Linux 3.13.0-108-lowlatency (x86_64)
-</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
-</span><span class='line'>
-</span><span class='line'>Calibrating delay loop... OK.
-</span><span class='line'>Found chipset "Intel ICH7M".
-</span><span class='line'>Enabling flash write... WARNING: SPI Configuration Lockdown activated.
-</span><span class='line'>OK.
-</span><span class='line'>Found SST flash chip "SST25VF016B" (2048 kB, SPI) mapped at physical address 0x00000000ffe00000.
-</span><span class='line'>Reading flash... done.
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/flashrom$ sudo ./flashrom_lenovobios_macronix -p internal -r factory.bin
-</span><span class='line'>flashrom v0.9.9-unknown on Linux 3.13.0-108-lowlatency (x86_64)
-</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
-</span><span class='line'>
-</span><span class='line'>Calibrating delay loop... OK.
-</span><span class='line'>Found chipset "Intel ICH7M".
-</span><span class='line'>Enabling flash write... WARNING: SPI Configuration Lockdown activated.
-</span><span class='line'>OK.
-</span><span class='line'>No EEPROM/flash device found.
-</span><span class='line'>Note: flashrom can never write if the flash chip isn't found automatically.
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src/flashrom$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Install the rom</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo ./flash i945lenovo_firstflash bin/grub/x
-</span><span class='line'>x200_16mb/ x200_4mb/  x200_8mb/  x60/       
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo ./flash i945lenovo_firstflash bin/grub/x60/x60_
-</span><span class='line'>x60_deqwertz_txtmode.rom  x60_frazerty_txtmode.rom  x60_itqwerty_txtmode.rom  x60_ukdvorak_txtmode.rom  x60_usdvorak_txtmode.rom
-</span><span class='line'>x60_deqwertz_vesafb.rom   x60_frazerty_vesafb.rom   x60_itqwerty_vesafb.rom   x60_ukdvorak_vesafb.rom   x60_usdvorak_vesafb.rom
-</span><span class='line'>x60_esqwerty_txtmode.rom  x60_frdvbepo_txtmode.rom  x60_svenska_txtmode.rom   x60_ukqwerty_txtmode.rom  x60_usqwerty_txtmode.rom
-</span><span class='line'>x60_esqwerty_vesafb.rom   x60_frdvbepo_vesafb.rom   x60_svenska_vesafb.rom    x60_ukqwerty_vesafb.rom   x60_usqwerty_vesafb.rom
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo ./flash i945lenovo_firstflash bin/grub/x60/x60_us
-</span><span class='line'>x60_usdvorak_txtmode.rom  x60_usdvorak_vesafb.rom   x60_usqwerty_txtmode.rom  x60_usqwerty_vesafb.rom   
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo ./flash i945lenovo_firstflash bin/grub/x60/x60_usqwerty_vesafb.rom 
-</span><span class='line'>[sudo] password for staf: 
-</span><span class='line'>Mode selected: i945lenovo_firstflash
-</span><span class='line'>bucts utility version 'withoutgit'
-</span><span class='line'>Using LPC bridge 8086:27b9 at 0000:1f.00
-</span><span class='line'>Current BUC.TS=0 - 128kb address range 0xFFFE0000-0xFFFFFFFF is untranslated
-</span><span class='line'>Updated BUC.TS=1 - 64kb address ranges at 0xFFFE0000 and 0xFFFF0000 are swapped
-</span><span class='line'>flashrom v0.9.9-unknown on Linux 3.13.0-108-lowlatency (x86_64)
-</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
-</span><span class='line'>
-</span><span class='line'>Calibrating delay loop... OK.
-</span><span class='line'>Found chipset "Intel ICH7M".
-</span><span class='line'>Enabling flash write... WARNING: SPI Configuration Lockdown activated.
-</span><span class='line'>OK.
-</span><span class='line'>Found SST flash chip "SST25VF016B" (2048 kB, SPI) mapped at physical address 0x00000000ffe00000.
-</span><span class='line'>Reading old flash chip contents... done.
-</span><span class='line'>Erasing and writing flash chip... spi_block_erase_20 failed during command execution at address 0x0
-</span><span class='line'>Reading current flash chip contents... done. Looking for another erase function.
-</span><span class='line'>spi_block_erase_52 failed during command execution at address 0x0
-</span><span class='line'>Reading current flash chip contents... done. Looking for another erase function.
-</span><span class='line'>Transaction error!
-</span><span class='line'>spi_block_erase_d8 failed during command execution at address 0x1f0000
-</span><span class='line'>Reading current flash chip contents... done. Looking for another erase function.
-</span><span class='line'>spi_chip_erase_60 failed during command execution
-</span><span class='line'>Reading current flash chip contents... done. Looking for another erase function.
-</span><span class='line'>spi_chip_erase_c7 failed during command execution
-</span><span class='line'>Looking for another erase function.
-</span><span class='line'>No usable erase functions left.
-</span><span class='line'>FAILED!
-</span><span class='line'>Uh oh. Erase/write failed. Checking if anything has changed.
-</span><span class='line'>Reading current flash chip contents... done.
-</span><span class='line'>Apparently at least some data has changed.
-</span><span class='line'>Your flash chip is in an unknown state.
-</span><span class='line'>Get help on IRC at chat.freenode.net (channel #flashrom) or
-</span><span class='line'>mail flashrom@flashrom.org with the subject "FAILED: &lt;your board name&gt;"!
-</span><span class='line'>-------------------------------------------------------------------------------
-</span><span class='line'>DO NOT REBOOT OR POWEROFF!
-</span><span class='line'>flashrom v0.9.9-unknown on Linux 3.13.0-108-lowlatency (x86_64)
-</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
-</span><span class='line'>
-</span><span class='line'>Calibrating delay loop... OK.
-</span><span class='line'>Found chipset "Intel ICH7M".
-</span><span class='line'>Enabling flash write... WARNING: SPI Configuration Lockdown activated.
-</span><span class='line'>OK.
-</span><span class='line'>No EEPROM/flash device found.
-</span><span class='line'>Note: flashrom can never write if the flash chip isn't found automatically.
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Power down your system</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo poweroff
-</span><span class='line'>
-</span><span class='line'>Broadcast message from staf@petronella
-</span><span class='line'>        (/dev/pts/7) at 16:11 ...
-</span><span class='line'>
-</span><span class='line'>The system is going down for power off NOW!
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ Connection to petronella closed by remote host.
-</span><span class='line'>Connection to petronella closed.
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Wait 2 minutes and boot the system again. If you&rsquo;re lucky the system will boot with the Free Libreboot firmware.
-Logon the system again and continue with the secondflash phase</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh petronella 
-</span><span class='line'>C_GetAttributeValue failed: 18
-</span><span class='line'>no such identity: /home/staf/.ssh/id_rsa: No such file or directory
-</span><span class='line'>no such identity: /home/staf/.ssh/id_dsa: No such file or directory
-</span><span class='line'>no such identity: /home/staf/.ssh/id_ecdsa: No such file or directory
-</span><span class='line'>no such identity: /home/staf/.ssh/id_ed25519: No such file or directory
-</span><span class='line'>staf@petronella's password: 
-</span><span class='line'>Welcome to Trisquel GNU/Linux 7.0, Belenos (GNU/Linux 3.13.0-108-lowlatency x86_64)
-</span><span class='line'>   ___        ___               ___        ___       ___        ___        ___
-</span><span class='line'>  /\  \      /\  \      ___    /\  \      /\  \     /\__\      /\  \      /\__\
-</span><span class='line'>  \ \  \    /  \  \    /\  \  /  \  \    /  \  \   / /  /     /  \  \    / /  /
-</span><span class='line'>   \ \  \  / /\ \  \   \ \  \/ /\ \  \  / /\ \  \ / /  /     / /\ \  \  / /  /
-</span><span class='line'>   /  \  \/  \ \ \  \  /  \__\ \ \ \  \/ /  \ \  \ /  /  ___/  \ \ \  \/ /  /
-</span><span class='line'>  / /\ \__\/\ \ \ \__\/ /\/__/\ \ \ \__\/__/ \ \__\__/  /\__\/\ \ \ \__\/__/
-</span><span class='line'> / /  \/__/_|  \/ /  / /  /\ \ \ \ \/__/\  \ / /  /  \ / /  /\ \ \ \/__/\  \
-</span><span class='line'>/ /  /      | |  /  / /__/  \ \ \ \__\ \ \/\/ /  / \  / /  /\ \ \ \__\ \ \  \
-</span><span class='line'>\/__/       | |\/__/\ \__\   \ \/ /  /  \    /  / \ \/ /  /  \ \ \/__/  \ \  \
-</span><span class='line'>            | |  |   \/__/    \  /  /    \  /  /   \  /  /    \ \__\     \ \__\
-</span><span class='line'>             \|__|             \/__/      \/__/     \/__/      \/__/      \/__/
-</span><span class='line'>
-</span><span class='line'>Welcome to Trisquel GNU/Linux
-</span><span class='line'>Documentation: http://trisquel.info/wiki/
-</span><span class='line'>
-</span><span class='line'>Last login: Sat Feb 11 15:43:11 2017 from 192.168.1.10
-</span><span class='line'>staf@petronella:~$ cd libreboot/libreboot
-</span><span class='line'>libreboot/               libreboot_r20160907_src/ 
-</span><span class='line'>staf@petronella:~$ cd libreboot/libreboot_r20160907_src/
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$  ./flash i945lenovo_secondflash bin/grub/x60/x60_usqwerty_vesafb.rom 
-</span><span class='line'>This script must be run as root
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ ^C libreboot/libreboot_r20160907_src/
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ sudo ./flash i945lenovo_secondflash bin/grub/x60/x60_usqwerty_vesafb.rom
-</span><span class='line'>[sudo] password for staf: 
-</span><span class='line'>Mode selected: i945lenovo_secondflash
-</span><span class='line'>flashrom v0.9.9-unknown on Linux 3.13.0-108-lowlatency (x86_64)
-</span><span class='line'>flashrom is free software, get the source code at https://flashrom.org
-</span><span class='line'>
-</span><span class='line'>Calibrating delay loop... OK.
-</span><span class='line'>coreboot table found at 0xcbe9f000.
-</span><span class='line'>Found chipset "Intel ICH7M".
-</span><span class='line'>Enabling flash write... OK.
-</span><span class='line'>Found SST flash chip "SST25VF016B" (2048 kB, SPI) mapped at physical address 0x00000000ffe00000.
-</span><span class='line'>Reading old flash chip contents... done.
-</span><span class='line'>Erasing and writing flash chip... Erase/write done.
-</span><span class='line'>Verifying flash... VERIFIED.
-</span><span class='line'>bucts utility version 'withoutgit'
-</span><span class='line'>Using LPC bridge 8086:27b9 at 0000:1f.00
-</span><span class='line'>Current BUC.TS=1 - 64kb address ranges at 0xFFFE0000 and 0xFFFF0000 are swapped
-</span><span class='line'>Updated BUC.TS=0 - 128kb address range 0xFFFE0000-0xFFFFFFFF is untranslated
-</span><span class='line'>staf@petronella:~/libreboot/libreboot_r20160907_src$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>The installation is completed! Reboot our system and enjoy your Free As In Freedom Laptop.</p>
-
-<p><img class="centre" src="/blog/images/x60_free.jpg" width="750" height="853" title="&#34;Thinkpad x60 open&#34;" alt="&#34;Thinkpad x60 open&#34;"></p>
-
-<p style="font-style: italic;">
-Have fun
-</p>
-
-
-<h1>Links</h1>
-
-<ul>
-<li><a href="https://www.libreboot.org"><a href="https://www.libreboot.org">https://www.libreboot.org</a></a></li>
-<li><a href="https://libreboot.org/docs/install/#rom"><a href="https://libreboot.org/docs/install/#rom">https://libreboot.org/docs/install/#rom</a></a></li>
-<li><a href="https://www.coreboot.org/Board:lenovo/x60/Installation"><a href="https://www.coreboot.org/Board:lenovo/x60/Installation">https://www.coreboot.org/Board:lenovo/x60/Installation</a></a></li>
-<li><a href="http://www.linuxjournal.com/content/libreboot-x60-part-ii-installation"><a href="http://www.linuxjournal.com/content/libreboot-x60-part-ii-installation">http://www.linuxjournal.com/content/libreboot-x60-part-ii-installation</a></a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/3">&larr; Older</a>
@@ -6635,6 +6035,10 @@ Have fun
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/">Setting Up OpenStack-Ansible All-In-One on a Centos 7 System</a>
       </li>
     
@@ -6648,10 +6052,6 @@ Have fun
     
       <li class="post">
         <a href="/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/">DNS Privacy With Stubby (Part 2 FreeBSD)</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">DNS Privacy With Stubby (Part 1 GNU/Linux)</a>
       </li>
     
   </ul>
