@@ -12,7 +12,7 @@ I got a [Lenovo Thinkpad W500](https://en.wikipedia.org/wiki/ThinkPad_W_series#W
 
 Actually, I got it a couple of months back but I didn't have time to play with it and it took some time to get some parts from [Aliexpress](https://www.aliexpress.com).
 
- The Thinkpad W500 is probably one the most powerful systems that's compatible with [Libreboot](https://www.libreboot.org), it has a nice high-resolution display with a 1920 x 1200 resolution which is even a higher screen resolution than the [Full HD resolution](https://en.wikipedia.org/wiki/1080p) used on most new laptops today.
+ The Thinkpad W500 is probably the most powerful system that is compatible with [Libreboot](https://www.libreboot.org), it has a nice high-resolution display with a 1920 x 1200 resolution which is even a higher screen resolution than the [Full HD resolution](https://en.wikipedia.org/wiki/1080p) used on most new laptops today.
 
 # Security
 
@@ -20,7 +20,7 @@ Keep in mind that the [core duo CPU](https://en.wikipedia.org/wiki/Intel_Core#Co
 
 [Binary blobs](https://en.wikipedia.org/wiki/Binary_blob) are bad. Having a closed source binary-only piece of software on your system is not only unacceptable for [Free Software activists](https://en.wikipedia.org/wiki/Free_software_movement) it also makes it more difficult to review what it really does and makes it more difficult to review it for security concerns.
 
-Having your system vulnerable is also a bad thing of course. Can't wait to get a computer systems with an open CPU architecture like [RISC-V](https://en.wikipedia.org/wiki/RISC-V).
+Having your system vulnerable is also a bad thing of course. Can't wait to get a computer system with an open CPU architecture like [RISC-V](https://en.wikipedia.org/wiki/RISC-V).
 
 # Preparation
 
@@ -28,11 +28,11 @@ Having your system vulnerable is also a bad thing of course. Can't wait to get a
 
 ### MAC address
 
-Your MAC address is stored in your BIOS since you'll owerwite the BIOS with Libreboot we need to have the MAC address. Your MAC address is written on Latop however I recommend to boot from GNU/Linux and copy/paste it from the ```ifconfig``` or the ```ip a``` command.
+Your MAC address is stored in your BIOS since you'll overwite the BIOS with Libreboot we need to have the MAC address. Your MAC address is written on Laptop however I recommend to boot from GNU/Linux and copy/paste it from the ```ifconfig``` or the ```ip a``` command.
 
 ### EC update
 
-It's recommented to update your current BIOS to get the lastest [EC firmware](https://libreboot.org/faq.html#ec-embedded-controller-firmware). My system has a cdrom drive I updated the BIOS with a CDROM.
+It's recommended to update your current BIOS to get the latest [EC firmware](https://libreboot.org/faq.html#ec-embedded-controller-firmware). My system has a CDROM drive I updated the BIOS with a CDROM.
 
 ## Prepare the Raspberry-pi
 
@@ -42,7 +42,7 @@ It isn't possible to flash the BIOS with software only on a Lenovo W500/T500, it
 
 The [SPI port](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface) isn't enabled by default on Raspbian, so we'll need to enable it. 
 
-Open ```/boot/config.txt``` with your favorite text editor.
+Open ```/boot/config.txt``` in your favorite text editor.
 
 ```
 root@raspberrypi:~# cd /boot/
@@ -160,9 +160,9 @@ It's useful to get correct flash chip specs, I used a magnifying loupe and a pho
 <a href="/images/w500_flashchip.jpg"><img src="/images/w500_flashchip.jpg" width="250" height="177" alt="w500 and pi" /> </a>
 <a href="/images/pin_layout2.jpg"><img src="/images/pin_layout2.jpg" width="500" height="172" alt="pin layout" /> </a>
 
-## poweroff & wiring
+## Power off & wiring
 
-Poweroff your raspberry-pi and wire your flash clip to the raspberry-pi with the above diagram.
+Power off your raspberry-pi and wire your flash clip to the raspberry-pi with the above diagram.
 
 ```
 root@raspberrypi:~# poweroff
@@ -229,7 +229,7 @@ pi@raspberrypi:~ $
 
 ### store
 
-Store your original BIOS image to a save place. Might be useful if need to to restore it...
+Store your original BIOS image to a safe place. Might be useful if need to restore it...
 
 ### Flash libreboot
 
@@ -256,7 +256,7 @@ gpg: connecting dirmngr at '/run/user/1000/gnupg/S.dirmngr' failed: No such file
 gpg: keyserver receive failed: No dirmngr
 ```
 
-I needed to install dirmgr seperately on my Raspbian installation.
+I needed to install dirmgr separately on my Raspbian installation.
 
 ```
 pi@raspberrypi:~ $ sudo apt-get install dirmngr
@@ -453,7 +453,7 @@ pi@raspberrypi:~/libreboot $
 
 find ./libreboot_r20160907_util | grep -i ich9gen
 
-To make our live easier we will copy ich9gen binary to the directory thats hold our libreboot images.
+To make our lives easier we will copy ich9gen binary to the directory that holds our libreboot images.
 
 ```
 pi@raspberrypi:~/libreboot $ find ./libreboot_r20160907_util | grep -i ich9gen
@@ -463,7 +463,7 @@ pi@raspberrypi:~/libreboot $ find ./libreboot_r20160907_util | grep -i ich9gen
 pi@raspberrypi:~/libreboot $ cp ./libreboot_r20160907_util/ich9deblob/armv7l/ich9gen .
 ```
 
-######## burn the MAC address into the rom
+######## burn the MAC address into the rom/save
 
 ```
 pi@raspberrypi:~/libreboot $ ./ich9gen --macaddress XX:XX:XX:XX:XX:XX
@@ -514,7 +514,7 @@ pi@raspberrypi:~/libreboot $
 
 Flash your Libreboot image to your BIOS.
 
-Make sure that you get the ```Verifying flash... VERIFIED``` message, if you don't get this message try it again util you get it. I needed to do it twice...
+Make sure that you get the ```Verifying flash... VERIFIED``` message, if you don't get this message try it again until you get it. I needed to do it twice...
 
 
 ```
@@ -560,7 +560,7 @@ The intel wifi card that Lenovo uses on the W500 isn't supported without a binar
 
 ## ACPI
 
-It is recommented to load the thinkpad-acpi module. Make sure that ```fan_control=1``` is enabled 
+It is recommended to load the thinkpad-acpi module. Make sure that ```fan_control=1``` is enabled.
 
 ```
 [staf@snuffel ~]$ cat /usr/lib/modprobe.d/thinkpad_acpi.conf
