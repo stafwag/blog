@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "How to install libreboot on a ThinkPad W500"
-date: 2019-01-26 12:17:46 +0100
+date: 2019-02-10 17:49:46 +0100
 comments: true
 categories: [ "thinkpad", "libreboot", "coreboot", "raspberry-pi", "bios", "w500", "flashrom" ]
 ---
