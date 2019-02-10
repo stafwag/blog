@@ -546,6 +546,8 @@ pi@raspberrypi:~/libreboot $
 # Almost done
 ## GNU/Linux
 
+<a href="/images/w500_in_action.jpg"><img src="/images/w500_in_action.jpg" width="700" height="466" alt="w500_in_action.jpg" /></a>
+
 I use [Parabola GNU/Linux](https://www.parabola.nu/) on my W500.
 
 ## Wifi Card
