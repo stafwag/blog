@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="The Benefits of Stopping Smoking... Aug 25th, 2013 12:32 pm Besides the health benefits you save a lot of money. My &ldquo;no smoking&rdquo; Piggy &hellip;">
+  <meta name="description" content="Fedora 19 Boottime on an Intel Core I7 4770 With a Samsung 840 Pro Series 256GB Ssd Sep 1st, 2013 12:21 pm I installed fedora 19 on my new pc mainly &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,202 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/09/01/fedora-19-boottime-on-an-intel-core-i7-4770-with-an-samsung-840-pro-series-256gb-ssd/">Fedora 19 Boottime on an Intel Core I7 4770 With a Samsung 840 Pro Series 256GB Ssd</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-09-01T12:21:00+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2013</span></span> <span class='time'>12:21 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I installed <a href="http://fedoraproject.org/">fedora 19</a> on <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my new pc</a> mainly to play with <a href="http://www.ovirt.org/">ovirt</a> which seems to be easier to install on  <a href="http://fedoraproject.org/">fedora</a> than on <a href="http://www.debian.org">Debian</a>.</p>
+
+<p>Don&rsquo;t worry I still have a debian system at hand&hellip;</p>
+
+<p>The boot time on a ssd is fast:</p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/V99FyD1qmzg "></iframe></div>
+
+
+<h5>Sun Sep  8 15:30:18 CEST 2013 update;</h5>
+
+<p>I did some tweaking to get a better bootime;</p>
+
+<p>disabled plymouth;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># systemctl mask plymouth-.
+</span><span class='line'># dracut -f -H -o plymouth</span></code></pre></td></tr></table></div></figure>
+
+
+<p>replaced firewalld by &ldquo;static&rdquo; iptables;</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># yum install iptables-services
+</span><span class='line'># systemctl mask firewalld.service
+</span><span class='line'># systemctl enable iptables.service
+</span><span class='line'># systemctl enable ip6tables.service</span></code></pre></td></tr></table></div></figure>
+
+
+<p>My /home was still on a regular harddisk I move it to the ssd.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>$ systemd-analyze 
+</span><span class='line'>Startup finished in 687ms (kernel) + 705ms (initrd) + 1.328s (userspace) = 2.721s
+</span><span class='line'>$ systemd-analyze blame
+</span><span class='line'>           546ms postfix.service
+</span><span class='line'>           537ms NetworkManager.service
+</span><span class='line'>           508ms accounts-daemon.service
+</span><span class='line'>           102ms nfs-lock.service
+</span><span class='line'>            62ms proc-fs-nfsd.mount
+</span><span class='line'>            59ms polkit.service
+</span><span class='line'>            55ms lvm2-monitor.service
+</span><span class='line'>            54ms NetworkManager-dispatcher.service
+</span><span class='line'>            54ms abrt-ccpp.service
+</span><span class='line'>            54ms jexec.service
+</span><span class='line'>            53ms udisks2.service
+</span><span class='line'>            52ms autofs.service
+</span><span class='line'>            49ms var-lib-nfs-rpc_pipefs.mount
+</span><span class='line'>            45ms avahi-daemon.service
+</span><span class='line'>            43ms colord.service
+</span><span class='line'>            41ms systemd-logind.service
+</span><span class='line'>            41ms rtkit-daemon.service
+</span><span class='line'>            40ms gdm.service
+</span><span class='line'>            37ms systemd-fsck-root.service
+</span><span class='line'>            33ms systemd-vconsole-setup.service
+</span><span class='line'>            32ms fedora-loadmodules.service
+</span><span class='line'>            28ms chronyd.service
+</span><span class='line'>            28ms systemd-udev-trigger.service
+</span><span class='line'>            26ms dev-hugepages.mount
+</span><span class='line'>            26ms dev-mqueue.mount
+</span><span class='line'>            26ms sys-kernel-debug.mount
+</span><span class='line'>            25ms lm_sensors.service
+</span><span class='line'>            24ms systemd-fsck@dev-disk-by\x2duuid-16608012\x2d1711\x2d42d7\x2d8652\x2d900e2d22ed40.service
+</span><span class='line'>            23ms tmp.mount
+</span><span class='line'>            22ms sys-kernel-config.mount
+</span><span class='line'>            19ms systemd-user-sessions.service
+</span><span class='line'>            16ms systemd-journal-flush.service
+</span><span class='line'>            16ms mcelog.service
+</span><span class='line'>            15ms proc-sys-fs-binfmt_misc.mount
+</span><span class='line'>            14ms bluetooth.service
+</span><span class='line'>            12ms systemd-sysctl.service
+</span><span class='line'>            12ms systemd-tmpfiles-setup-dev.service
+</span><span class='line'>            12ms rpcbind.service
+</span><span class='line'>            12ms xinetd.service
+</span><span class='line'>             8ms systemd-udevd.service
+</span><span class='line'>             7ms fedora-readonly.service
+</span><span class='line'>             7ms lvm2-lvmetad.service
+</span><span class='line'>             6ms sshd.service
+</span><span class='line'>             5ms systemd-readahead-collect.service
+</span><span class='line'>             5ms boot.mount
+</span><span class='line'>             5ms upower.service
+</span><span class='line'>             4ms dev-mapper-fedora_vicky\x2dswap.swap
+</span><span class='line'>             4ms systemd-remount-fs.service
+</span><span class='line'>             3ms systemd-tmpfiles-setup.service
+</span><span class='line'>             3ms systemd-update-utmp-runlevel.service
+</span><span class='line'>             2ms auditd.service
+</span><span class='line'>             1ms systemd-random-seed-load.service
+</span><span class='line'>             1ms systemd-readahead-done.service
+</span><span class='line'>             1ms sys-fs-fuse-connections.mount
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Result:</p>
+
+<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/gp96Tt349DM "></iframe></div>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -1642,55 +1838,6 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">Running Freebsd 9.0 on Asus C60M1-i Motherboard</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2012-12-16T12:06:00+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>16</span><span class='date-suffix'>th</span>, <span class='date-year'>2012</span></span> <span class='time'>12:06 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="left" src="/blog/images/P_500.jpg" width="250" height="250" title="&#34;RIP pluto&#34;" alt="&#34;RIP pluto&#34;"></p>
-
-<p>As my file and backup system pluto <a href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/">died</a> i&rsquo;m building a new one.</p>
-
-<p>This system will run <a href="http://www.freebsd.org">Freebsd</a> mainly for the <a href="http://en.wikipedia.org/wiki/ZFS">ZFS</a> filesystem.</p>
-
-<p>The motherbord will be a <a href="http://www.asus.com/Motherboards/AMD_CPU_on_Board/C60M1I/">Asus C60M1-I</a>. The cpu may not have not enough horsepower for deplucation at full speed but it has 6 sata ports which is not common on a mini ITX motherbord. I will reuse my old harddrives and add or replace them when I need more storage.</p>
-
-<p>The freebsd 9.0 installation with <a href="http://wiki.freebsd.org/RootOnZFS/GPTZFSBoot/9.0-RELEASE">ZFS root</a> went well but the network adapter a Realtek 8111F isn&rsquo;t supported by Freebsd 9.0. After checking google I found <a href="http://markmail.org/message/2w67d2nnx65bprqc#query:+page:1+mid:4h3efjpkq6bzxoyo+state:results">this</a> on the freebsd-net mailinglist.</p>
-
-<p>The realtek f8111F is supported in the latest driver code, after rebuilding my kernel the network adapter works fine. Very useful on a NAS ;-)</p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/7">&larr; Older</a>
@@ -1726,6 +1873,10 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init/">Howto Use Centos Cloud Images With Cloud-init on KVM/libvirtd</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a>
       </li>
     
@@ -1739,10 +1890,6 @@ Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezja
     
       <li class="post">
         <a href="/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/">How to Configure DNS-over-TLS on OPNsense</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2018/10/07/dns-privacy-with-stubby-part-2-freebsd/">DNS Privacy With Stubby (Part 2 FreeBSD)</a>
       </li>
     
   </ul>

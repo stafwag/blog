@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/linux/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2019-02-10T17:49:46+01:00</updated>
+  <updated>2019-03-03T10:08:04+01:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,336 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Howto Use Centos Cloud Images With Cloud-init on KVM/libvirtd]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init/"/>
+    <updated>2019-03-03T09:55:55+01:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init</id>
+    <content type="html"><![CDATA[<h1>Images versus unattended setup</h1>
+
+<h2>Old-school</h2>
+
+<h3>Unattended setup</h3>
+
+<p>In a traditional environment, systems are installed from a CDROM. The configuration is executed by the system administrator through the installer. This soon becomes a borning and unpractical task when we need to set up a lot of systems also it is important  that systems are configured in same - and hopefully correct - way.</p>
+
+<p>In a traditional environment, this can be automated by booting via BOOTP/PXE boot and configured is by a system that &ldquo;feeds&rdquo; the installer. Examples are:</p>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/JumpStart_(Solaris">Solaris Jumpstart</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Kickstart_(Linux">Redhat Kickstart</a>)</li>
+<li><a href="https://wiki.debian.org/DebianInstaller/Preseed">DebianInstaller Preseed</a></li>
+<li><a href="https://en.wikipedia.org/wiki/YaST#AutoYaST">Suse Autoyast</a></li>
+<li>&hellip;</li>
+</ul>
+
+
+<h2>Cloud &amp; co</h2>
+
+<h3>Cloud-init</h3>
+
+<p>In a cloud environment, we use images to install systems. The system automation is generally done by <a href="https://cloud-init.io/">cloud-init</a>. Cloud-init was originally developed for Ubuntu GNU/Linux on the Amazon EC2 cloud. It has become the de facto installation configuration tool for most Unix like systems on most cloud environments.</p>
+
+<p>Cloud-init uses a YAML file to configure the system.</p>
+
+<h3>Images</h3>
+
+<p>Most GNU/Linux distributions provide images that can be used to provision a new system.
+You can find the complete list on the OpenStack website</p>
+
+<p><a href="https://docs.openstack.org/image-guide/obtain-images.html">https://docs.openstack.org/image-guide/obtain-images.html</a></p>
+
+<p>The OpenStack documentation also describes how you can create your own base images in the <a href="https://docs.openstack.org/image-guide/">OpenStack Virtual Machine Image Guide</a></p>
+
+<h1>Use a centos cloud image with libvirtd</h1>
+
+<h2>Download the cloud image</h2>
+
+<h3>Download</h3>
+
+<p>Download the latest &ldquo;GenericCloud&rdquo; centos 7 cloud image and sha256sum.txt.asc sha256sum.txt from:</p>
+
+<p><a href="https://cloud.centos.org/centos/7/images/">https://cloud.centos.org/centos/7/images/</a></p>
+
+<h3>Verify</h3>
+
+<p>You should verify your download - as always against a trusted signing key -</p>
+
+<p>On a centos 7 system, the public gpg is already installed at <code>/etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7</code></p>
+
+<h4>Verify the fingerprint</h4>
+
+<p>Execute</p>
+
+<pre><code>staf@centos7 iso]$ gpg --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+pub  4096R/F4A80EB5 2014-06-23 CentOS-7 Key (CentOS 7 Official Signing Key) &lt;security@centos.org&gt;
+      Key fingerprint = 6341 AB27 53D7 8A78 A7C2  7BB1 24C6 A8A7 F4A8 0EB5
+[staf@centos7 iso]$ gpg --with-fingerprint /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+</code></pre>
+
+<p>and verify the fingerprint, the fingerprints that are used by centos are listed at:</p>
+
+<p><a href="https://www.centos.org/keys/">https://www.centos.org/keys/</a></p>
+
+<h4>Import key</h4>
+
+<p>Import the pub centos gpg key:</p>
+
+<pre><code>[staf@centos7 iso]$ gpg --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+gpg: key F4A80EB5: public key "CentOS-7 Key (CentOS 7 Official Signing Key) &lt;security@centos.org&gt;" imported
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+[staf@centos7 iso]$ 
+</code></pre>
+
+<p>List the trusted gpg key:</p>
+
+<pre><code>staf@centos7 iso]$ gpg --list-keys
+/home/staf/.gnupg/pubring.gpg
+-----------------------------
+pub   4096R/F4A80EB5 2014-06-23
+uid                  CentOS-7 Key (CentOS 7 Official Signing Key) &lt;security@centos.org&gt;
+
+[staf@centos7 iso]$ gpg --list-keys
+</code></pre>
+
+<h4>Verify the sha256sum file</h4>
+
+<pre><code>[staf@centos7 iso]$ gpg --verify sha256sum.txt.asc
+gpg: Signature made Thu 31 Jan 2019 04:28:30 PM CET using RSA key ID F4A80EB5
+gpg: Good signature from "CentOS-7 Key (CentOS 7 Official Signing Key) &lt;security@centos.org&gt;"
+gpg: WARNING: This key is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: 6341 AB27 53D7 8A78 A7C2  7BB1 24C6 A8A7 F4A8 0EB5
+[staf@centos7 iso]$ 
+</code></pre>
+
+<p>The key fingerprint must match the one of RPM-GPG-KEY-CentOS-7.</p>
+
+<h4>Verify the iso file</h4>
+
+<pre><code>[staf@centos7 iso]$ xz -d CentOS-7-x86_64-GenericCloud-1901.qcow2.xz
+[staf@centos7 iso]$ sha256sum -c sha256sum.txt.asc 2&gt;&amp;1 | grep OK
+CentOS-7-x86_64-GenericCloud-1901.qcow2: OK
+[staf@centos7 iso]$ 
+</code></pre>
+
+<h2>Image</h2>
+
+<h3>info</h3>
+
+<p>The image we download is a normal qcow2 image, we can see the image information with <code>qemu-info</code></p>
+
+<pre><code>[root@centos7 iso]# qemu-img info CentOS-7-x86_64-GenericCloud-1901.qcow2
+image: CentOS-7-x86_64-GenericCloud-1901.qcow2
+file format: qcow2
+virtual size: 8.0G (8589934592 bytes)
+disk size: 895M
+cluster_size: 65536
+Format specific information:
+    compat: 0.10
+[root@centos7 iso]# 
+</code></pre>
+
+<h3>Copy &amp; resize</h3>
+
+<p>The default image is small - 8GB - we might be using the image to provision other systems so it better to leave it untouched.</p>
+
+<p>Copy the image to the location where we&rsquo;ll run the virtual system.</p>
+
+<pre><code>[root@centos7 iso]# cp -v CentOS-7-x86_64-GenericCloud-1901.qcow2 /var/lib/libvirt/images/tst/tst.qcow2
+'CentOS-7-x86_64-GenericCloud-1901.qcow2' -&gt; '/var/lib/libvirt/images/tst/tst.qcow2'
+[root@centos7 iso]# 
+</code></pre>
+
+<p>and resize it to the required size:</p>
+
+<pre><code>[root@centos7 iso]# cd /var/lib/libvirt/images/tst
+[root@centos7 tst]# qemu-img resize tst.qcow2 20G
+Image resized.
+[root@centos7 tst]# 
+</code></pre>
+
+<h2>cloud-init</h2>
+
+<p>We&rsquo;ll create a simple cloud-init configuration file and generate an iso image with <code>cloud-localds</code>. This iso image holds the cloud-init configuration and will be used to setup the system during the bootstrap.</p>
+
+<h3>Install cloud-utils</h3>
+
+<p><span style="color:red"><strong> It&rsquo;s important to NOT install cloud-init on your KVM host machine. </strong></span> This creates a cloud-init service that runs during the boot and tries to reconfigure your host. Something that you probably don&rsquo;t want on your KVM hypervisor host.</p>
+
+<p>The cloud-util package has all the tool we need to convert the cloud-init configuration files to an iso image.</p>
+
+<pre><code>[root@centos7 tst]# yum install -y cloud-utils
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * base: centos.cu.be
+ * extras: centos.cu.be
+ * updates: centos.mirror.ate.info
+Resolving Dependencies
+--&gt; Running transaction check
+---&gt; Package cloud-utils.x86_64 0:0.27-20.el7.centos will be installed
+--&gt; Processing Dependency: python-paramiko for package: cloud-utils-0.27-20.el7.centos.x86_64
+--&gt; Processing Dependency: euca2ools for package: cloud-utils-0.27-20.el7.centos.x86_64
+--&gt; Processing Dependency: cloud-utils-growpart for package: cloud-utils-0.27-20.el7.centos.x86_64
+--&gt; Running transaction check
+---&gt; Package cloud-utils-growpart.noarch 0:0.29-2.el7 will be installed
+---&gt; Package euca2ools.noarch 0:2.1.4-1.el7.centos will be installed
+--&gt; Processing Dependency: python-boto &gt;= 2.13.3-1 for package: euca2ools-2.1.4-1.el7.centos.noarch
+--&gt; Processing Dependency: m2crypto for package: euca2ools-2.1.4-1.el7.centos.noarch
+---&gt; Package python-paramiko.noarch 0:2.1.1-9.el7 will be installed
+--&gt; Running transaction check
+---&gt; Package m2crypto.x86_64 0:0.21.1-17.el7 will be installed
+---&gt; Package python-boto.noarch 0:2.25.0-2.el7.centos will be installed
+--&gt; Finished Dependency Resolution
+
+Dependencies Resolved
+
+=======================================================================================
+ Package                    Arch         Version                   Repository     Size
+=======================================================================================
+Installing:
+ cloud-utils                x86_64       0.27-20.el7.centos        extras         43 k
+Installing for dependencies:
+ cloud-utils-growpart       noarch       0.29-2.el7                base           26 k
+ euca2ools                  noarch       2.1.4-1.el7.centos        extras        319 k
+ m2crypto                   x86_64       0.21.1-17.el7             base          429 k
+ python-boto                noarch       2.25.0-2.el7.centos       extras        1.5 M
+ python-paramiko            noarch       2.1.1-9.el7               updates       269 k
+
+Transaction Summary
+=======================================================================================
+Install  1 Package (+5 Dependent packages)
+
+Total download size: 2.5 M
+Installed size: 12 M
+Downloading packages:
+(1/6): cloud-utils-growpart-0.29-2.el7.noarch.rpm               |  26 kB  00:00:01     
+(2/6): cloud-utils-0.27-20.el7.centos.x86_64.rpm                |  43 kB  00:00:01     
+(3/6): euca2ools-2.1.4-1.el7.centos.noarch.rpm                  | 319 kB  00:00:01     
+(4/6): m2crypto-0.21.1-17.el7.x86_64.rpm                        | 429 kB  00:00:01     
+(5/6): python-boto-2.25.0-2.el7.centos.noarch.rpm               | 1.5 MB  00:00:02     
+(6/6): python-paramiko-2.1.1-9.el7.noarch.rpm                   | 269 kB  00:00:03     
+---------------------------------------------------------------------------------------
+Total                                                     495 kB/s | 2.5 MB  00:05     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : python-boto-2.25.0-2.el7.centos.noarch                              1/6 
+  Installing : python-paramiko-2.1.1-9.el7.noarch                                  2/6 
+  Installing : cloud-utils-growpart-0.29-2.el7.noarch                              3/6 
+  Installing : m2crypto-0.21.1-17.el7.x86_64                                       4/6 
+  Installing : euca2ools-2.1.4-1.el7.centos.noarch                                 5/6 
+  Installing : cloud-utils-0.27-20.el7.centos.x86_64                               6/6 
+  Verifying  : m2crypto-0.21.1-17.el7.x86_64                                       1/6 
+  Verifying  : cloud-utils-growpart-0.29-2.el7.noarch                              2/6 
+  Verifying  : python-paramiko-2.1.1-9.el7.noarch                                  3/6 
+  Verifying  : python-boto-2.25.0-2.el7.centos.noarch                              4/6 
+  Verifying  : euca2ools-2.1.4-1.el7.centos.noarch                                 5/6 
+  Verifying  : cloud-utils-0.27-20.el7.centos.x86_64                               6/6 
+
+Installed:
+  cloud-utils.x86_64 0:0.27-20.el7.centos                                                                                                                                     
+
+Dependency Installed:
+  cloud-utils-growpart.noarch 0:0.29-2.el7      euca2ools.noarch 0:2.1.4-1.el7.centos      m2crypto.x86_64 0:0.21.1-17.el7      python-boto.noarch 0:2.25.0-2.el7.centos     
+  python-paramiko.noarch 0:2.1.1-9.el7         
+
+Complete!
+[root@centos7 tst]# 
+</code></pre>
+
+<h3>Cloud-init configuration</h3>
+
+<p>A complete overview of cloud-init configuration directives is available at <a href="https://cloudinit.readthedocs.io/en/latest/">https://cloudinit.readthedocs.io/en/latest/</a>.</p>
+
+<p>We&rsquo;ll create a cloud-init configuration file to update all the packages - which is always a good idea - and to add a user to the system.</p>
+
+<p>A cloud-init configuration file has to start with <code>#cloud-config</code>, remember this is YAML so only use spaces&hellip;</p>
+
+<p>We&rsquo;ll create a password hash that we&rsquo;ll put into your cloud-init configuration, it&rsquo;s also possible to use a plain-text password in the configuration with <code>chpasswd</code> or to set the password for the default user. But it&rsquo;s better to use a hash so nobody can see the password. Keep in mind that is still possible to brute-force the password hash.</p>
+
+<p>Some GNU/Linux distributions have the <code>mkpasswd</code> utility this is not available on centos. The <code>mkpasswd</code> utility is part of the <code>expect</code> package and is something else&hellip;</p>
+
+<p>I used a python one-liner to generate the SHA512 password hash</p>
+
+<pre><code>python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))'
+</code></pre>
+
+<p>Execute the one-liner and type in your password:</p>
+
+<pre><code>[staf@centos7 ~]$ python -c 'import crypt,getpass; print(crypt.crypt(getpass.getpass(), crypt.mksalt(crypt.METHOD_SHA512)))'
+Password: 
+&lt;your hash&gt;
+[staf@centos7 ~]$ 
+</code></pre>
+
+<p>Create config.yaml - replace <code>&lt;your_user&gt;</code>, <code>&lt;your_hash&gt;</code>, <code>&lt;your_ssh_pub_key&gt;</code> -  with your data:</p>
+
+<pre><code>#cloud-config
+package_upgrade: true
+users:
+  - name: &lt;your_user&gt;
+    groups: wheel
+    lock_passwd: false
+    passwd: &lt;your_passord_hash&gt;
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - &lt;your_public_ssh_key&gt;
+</code></pre>
+
+<p>And generate the configuration iso image:</p>
+
+<pre><code>root@centos7 tst]# cloud-localds config.iso config.yaml
+wrote config.iso with filesystem=iso9660 and diskformat=raw
+[root@centos7 tst]# 
+</code></pre>
+
+<h3>Create the virtual system</h3>
+
+<p>Libvirt has predefined definitions for operating systems. You can query the predefined operation systems with the <code>osinfo-query os</code> command.</p>
+
+<p>We use centos 7, we use <code>osinfo-query os</code> to find the correct definition.</p>
+
+<pre><code>[root@centos7 tst]# osinfo-query  os | grep -i centos7
+ centos7.0            | CentOS 7.0                                         | 7.0      | http://centos.org/centos/7.0            
+[root@centos7 tst]# 
+</code></pre>
+
+<p>Create the virtual system:</p>
+
+<pre><code>virt-install \
+  --memory 2048 \
+  --vcpus 2 \
+  --name tst \
+  --disk /var/lib/libvirt/images/tst/tst.qcow2,device=disk \
+  --disk /var/lib/libvirt/images/tst/config.iso,device=cdrom \
+  --os-type Linux \
+  --os-variant centos7.0 \
+  --virt-type kvm \
+  --graphics none \
+  --network default \
+  --import
+</code></pre>
+
+<p>The default escape key - to get out the console is ^[  ( Ctrl + [ )</p>
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://wiki.centos.org/Download/Verify">https://wiki.centos.org/Download/Verify</a></li>
+<li><a href="https://www.theurbanpenguin.com/using-cloud-images-in-kvm/">https://www.theurbanpenguin.com/using-cloud-images-in-kvm/</a></li>
+<li><a href="https://docs.openstack.org/image-guide/">https://docs.openstack.org/image-guide/</a></li>
+<li><a href="https://unix.stackexchange.com/questions/52108/how-to-create-sha512-password-hashes-on-command-line#76337">https://unix.stackexchange.com/questions/52108/how-to-create-sha512-password-hashes-on-command-line#76337</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Setting Up OpenStack-Ansible All-In-One on a Centos 7 System]]></title>
@@ -1419,254 +1749,6 @@ flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov 
 <li><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html"><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html">https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html</a></a></li>
 <li><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization"><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization">https://wiki.archlinux.org/index.php/KVM#Nested_virtualization</a></a></li>
 <li><a href="https://www.linux-kvm.org/page/Nested_Guests"><a href="https://www.linux-kvm.org/page/Nested_Guests">https://www.linux-kvm.org/page/Nested_Guests</a></a></li>
-</ul>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[High Screen Resolution on a KVM Virtual Machine With QXL]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/"/>
-    <updated>2018-04-22T10:04:46+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl</id>
-    <content type="html"><![CDATA[<p>When you create an new virtual KVM virtual system the video ram is limited to 16MB by default to use a higer screen resolution you need
-to increase the video ram. The available resolution reported by the virtual screen may also not include the resolution that you want to
-utilize.</p>
-
-<p>You&rsquo;ll find my journey to enable higher screen resolutions in my KVM (qemu) virtual systems below.</p>
-
-<h2>Ubuntu 16.04</h2>
-
-<p>There is an issue with Ubuntu 16.04 and the latest HWE kernel <a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack"><a href="https://wiki.ubuntu.com/Kernel/LTSEnablementStack">https://wiki.ubuntu.com/Kernel/LTSEnablementStack</a></a>. Even a full HD resultion (1920 x 1080 ) if you have the latest HWE kernel on your system.</p>
-
-<p>To resolve this issue your can uninstall the latest kernel or install the LTS kernel.</p>
-
-<h4>Install the LTS Kernel</h4>
-
-<pre><code>staf@ubuntu:~$ sudo apt-get install linux-generic-lts-xenial
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-The following additional packages will be installed:
-  linux-generic linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic linux-headers-generic
-  linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
-Suggested packages:
-  fdutils linux-doc-4.4.0 | linux-source-4.4.0 linux-tools
-The following NEW packages will be installed:
-  linux-generic linux-generic-lts-xenial linux-headers-4.4.0-119 linux-headers-4.4.0-119-generic
-  linux-headers-generic linux-image-4.4.0-119-generic linux-image-extra-4.4.0-119-generic linux-image-generic
-0 upgraded, 8 newly installed, 0 to remove and 0 not upgraded.
-Need to get 69,3 MB of archives.
-After this operation, 301 MB of additional disk space will be used.
-Do you want to continue? [Y/n] 
-&lt;snip&gt;
-Setting up linux-image-generic (4.4.0.119.125) ...
-Setting up linux-headers-4.4.0-119 (4.4.0-119.143) ...
-Setting up linux-headers-4.4.0-119-generic (4.4.0-119.143) ...
-Setting up linux-headers-generic (4.4.0.119.125) ...
-Setting up linux-generic (4.4.0.119.125) ...
-Setting up linux-generic-lts-xenial (4.4.0.119.125) ...
-staf@ubuntu:~$ 
-</code></pre>
-
-<h4>Remove the HWE kernel</h4>
-
-<pre><code>staf@ubuntu:~$ sudo apt-get purge linux-image-4.13*
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-&lt;snip&gt;
-done
-The link /vmlinuz.old is a damaged link
-Removing symbolic link vmlinuz.old 
- you may need to re-run your boot loader[grub]
-The link /initrd.img.old is a damaged link
-Removing symbolic link initrd.img.old 
- you may need to re-run your boot loader[grub]
-Purging configuration files for linux-image-4.13.0-38-generic (4.13.0-38.43~16.04.1) ...
-Examining /etc/kernel/postrm.d .
-run-parts: executing /etc/kernel/postrm.d/initramfs-tools 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
-run-parts: executing /etc/kernel/postrm.d/zz-update-grub 4.13.0-38-generic /boot/vmlinuz-4.13.0-38-generic
-</code></pre>
-
-<h4>Cleanup</h4>
-
-<pre><code>staf@ubuntu:~$ sudo apt autoremove
-Reading package lists... Done
-Building dependency tree       
-Reading state information... Done
-The following packages will be REMOVED:
-  linux-headers-4.13.0-36 linux-headers-4.13.0-36-generic linux-headers-generic-hwe-16.04
-0 upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
-After this operation, 83,1 MB disk space will be freed.
-Do you want to continue? [Y/n] 
-(Reading database ... 234149 files and directories currently installed.)
-Removing linux-headers-4.13.0-36-generic (4.13.0-36.40~16.04.1) ...
-Removing linux-headers-4.13.0-36 (4.13.0-36.40~16.04.1) ...
-Removing linux-headers-generic-hwe-16.04 (4.13.0.38.57) ...
-staf@ubuntu:~$ 
-</code></pre>
-
-<h4>Reboot</h4>
-
-<p>After a reboot higher resolutions are possible on ubuntu 16.04</p>
-
-<h1>Increase the video RAM</h1>
-
-<h2>Required video ram</h2>
-
-<p>When you create a new KVM virtual machine it has 16MB of video RAM.
-Below you&rsquo;ll the calculation for the required video RAM for a 4k resolution ( 3840 x 2160 ).</p>
-
-<p>3840 x 2160 = 8294400 <br/>
-8294400 x 32 = 265420800 <br/ >
-265420800 / 8 = 33177600 <br />
-33177600 / (1024*1024) = 31.640625 MB</p>
-
-<p>So 32 MB video ram is enough for a 4k resolution, to take some overhead into account we&rsquo;ll increase the video ram to 64 MB.</p>
-
-<h2>list the domains</h2>
-
-<pre><code>[swagemakers@staflaptop ~]$ sudo virsh
-Welcome to virsh, the virtualization interactive terminal.
-
-Type:  'help' for help with commands
-       'quit' to quit
-
-virsh # list --all
- Id    Name                           State
-----------------------------------------------------
- -     centos7.0                      shut off
- -     debian                         shut off
- -     fedora27                       shut off
-
-virsh # 
-</code></pre>
-
-<h4>edit the domain settings</h4>
-
-<pre><code>virsh # edit --domain debian
-</code></pre>
-
-<h5>update the memory settings</h5>
-
-<pre><code>    &lt;video&gt;
-      &lt;model type='qxl' ram='65536' vram='65536' vgamem='16384' heads='1' primary='yes'/&gt;
-      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
-    &lt;/video&gt;
-    &lt;redirdev bus='usb' type='spicevmc'&gt;
-</code></pre>
-
-<p>to</p>
-
-<pre><code>    &lt;video&gt;
-      &lt;model type='qxl' ram='65536' vram='65536' vgamem='65536' heads='1' primary='yes'/&gt;
-      &lt;address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/&gt;
-    &lt;/video&gt;
-</code></pre>
-
-<h4>xrandr</h4>
-
-<p>Even with the additional RAM higer resolution aren&rsquo;t possible (yet), the virtual screen doesn&rsquo;t report the higer screen resolution. It&rsquo;s possible to add the higher screen resolution with xrandr.</p>
-
-<h5>display current settings</h5>
-
-<pre><code>staf@debian:~$ xrandr 
-Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 8192 x 8192
-Virtual-0 connected primary 1920x1080+0+0 0mm x 0mm
-   1024x768      59.95 +
-   1920x1200     59.95  
-   1920x1080     60.00* 
-   1600x1200     59.95  
-   1680x1050     60.00  
-   1400x1050     60.00  
-   1280x1024     59.95  
-   1440x900      59.99  
-   1280x960      59.99  
-   1280x854      59.95  
-   1280x800      59.96  
-   1280x720      59.97  
-   1152x768      59.95  
-   800x600       59.96  
-   848x480       59.94  
-   720x480       59.94  
-   640x480       59.94  
-Virtual-1 disconnected
-Virtual-2 disconnected
-Virtual-3 disconnected
-staf@debian:~$ 
-</code></pre>
-
-<h6>get the modeline</h6>
-
-<pre><code>staf@debian:~$ cvt 2560 1440 
-# 2560x1440 59.96 Hz (CVT 3.69M9) hsync: 89.52 kHz; pclk: 312.25 MHz
-Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
-staf@debian:~$ 
-</code></pre>
-
-<h6># create the new mode line</h6>
-
-<pre><code>staf@debian:~$ xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
-staf@debian:~$ 
-</code></pre>
-
-<h6># add the mode to your screen</h6>
-
-<pre><code>staf@debian:~$ xrandr --addmode Virtual-0 2560x1440_60.00
-staf@debian:~$ 
-</code></pre>
-
-<h6># use the new mode</h6>
-
-<pre><code>staf@debian:~$ xrandr --output Virtual-0 --mode 2560x1440_60.00
-staf@debian:~$ 
-</code></pre>
-
-<h6>## 4k</h6>
-
-<p>To use a 4k resolution you can use the commands</p>
-
-<pre><code>staf@debian:~$  cvt 3840 2160
-# 3840x2160 59.98 Hz (CVT 8.29M9) hsync: 134.18 kHz; pclk: 712.75 MHz
-Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
-staf@mydevolo:~$ xrandr --newmode "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
-staf@mydevolo:~$ xrandr --addmode Virtual-0 3840x2160_60.00
-staf@mydevolo:~$ xrandr --output Virtual-0 --mode 3840x2160_60.00
-staf@mydevolo:~$ 
-</code></pre>
-
-<h2>Add the new screen resolution permanently</h2>
-
-<h3>Debian &amp; Co</h3>
-
-<p>Create a monitor configuration file in /usr/share/X11/xorg.conf.d</p>
-
-<pre><code>root@mydevolo:/usr/share/X11/xorg.conf.d# vi 10-monitor.conf
-</code></pre>
-
-<p>And add the modeline fgor your screen resolution.
-With the Option &ldquo;PreferredMode&rdquo; you can set the prferred resolution.</p>
-
-<pre><code>section "Monitor"
-    Identifier "Virtual-0 "
-    Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
-    Modeline "3840x2160_60.00"  712.75  3840 4160 4576 5312  2160 2163 2168 2237 -hsync +vsync
-    Option "PreferredMode" "2560x1440_60.00"
-EndSection
-</code></pre>
-
-<h3>Other GNU/Linux distros</h3>
-
-<p>Most other GNU/Linux distribution use /etc/X11/xorg.conf.d/</p>
-
-<p><strong><em> Have fun </em></strong></p>
-
-<h1>Links</h1>
-
-<ul>
-<li><a href="https://wiki.archlinux.org/index.php/xrandr"><a href="https://wiki.archlinux.org/index.php/xrandr">https://wiki.archlinux.org/index.php/xrandr</a></a></li>
-<li><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution"><a href="https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution">https://askubuntu.com/questions/994449/ubuntu-16-04-kvm-qxl-guest-cant-change-resolution</a></a></li>
 </ul>
 
 ]]></content>

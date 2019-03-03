@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init/</loc>
+    <lastmod>2019-03-03T09:55:55+01:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/</loc>
     <lastmod>2019-02-10T17:49:46+01:00</lastmod>
   </url>
@@ -610,5 +614,14 @@
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/flashrom/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/cloud-init/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/cloud/</loc>
+  </url>
+  <url>
+    <loc>https://stafwag.github.io/blog/blog/categories/ubuntu/</loc>
   </url>
 </urlset>
