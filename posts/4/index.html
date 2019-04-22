@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Starting to Protect My Private Keys With SmartCard-Hsm Nov 21st, 2015 10:32 am I still have too many private keys on a local filesystem, I started &hellip;">
+  <meta name="description" content="Protecting Your SSH Keys With SmartCard-HSM Dec 5th, 2015 9:37 am I use a yubi key for my ssh authentication. But I&rsquo;ve other ssh keys for my &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,350 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2015/12/05/protecting-your-ssh-keys-with-smartcard-hsm/">Protecting Your SSH Keys With SmartCard-HSM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-12-05T09:37:41+01:00'><span class='date'><span class='date-month'>Dec</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>9:37 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I <a href="http://stafwag.github.io/blog/blog/2015/06/16/using-yubikey-neo-as-gpg-smartcard-for-ssh-authentication/">use</a> a  <a href="https://www.yubico.com/products/yubikey-hardware/yubikey-neo/">yubi key</a> for my ssh authentication. But I&rsquo;ve other ssh keys for my remote services so wanted something that allows me to take a backup of my keys see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">this post</a> for more information on to backup/restore a <a href="http://www.smartcard-hsm.com">SmartCard-HSM</a></p>
+
+<h2>Create your first ssh keypair</h2>
+
+<h3>Verify your smartcard connection</h3>
+
+<p>Insert you smartcard and verify the connection, see <a href="http://stafwag.github.io/blog/blog/2015/11/21/starting-to-protect-my-private-keys-with-smartcard-hsm/">my previous post</a> if  you need more information about the smartcard initialization</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs11-tool -L
+</span><span class='line'>Available slots:
+</span><span class='line'>Slot 0 (0xffffffffffffffff): Virtual hotplug slot
+</span><span class='line'>  (empty)
+</span><span class='line'>Slot 1 (0x1): Generic Smart Card Reader Interface [Smart Card Reader Interface
+</span><span class='line'>  token label        : SmartCard-HSM (UserPIN)
+</span><span class='line'>  token manufacturer : www.CardContact.de
+</span><span class='line'>  token model        : PKCS#15 emulated
+</span><span class='line'>  token flags        : rng, login required, PIN initialized, token initialized
+</span><span class='line'>  hardware version   : 24.13
+</span><span class='line'>  firmware version   : 1.2
+</span><span class='line'>  serial num         : DECM0102331
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Create your keypair</h3>
+
+<p>Create your ssh key pair and give the a meaningful label</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs11-tool --slot 1 --keypairgen --key-type rsa:2048 --label my_ssh_key --login
+</span><span class='line'>Logging in to "SmartCard-HSM (UserPIN)".
+</span><span class='line'>Please enter User PIN: 
+</span><span class='line'>Key pair generated:
+</span><span class='line'>Private Key Object; RSA 
+</span><span class='line'>  label:      my_ssh_key
+</span><span class='line'>  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>  Usage:      decrypt, sign, unwrap
+</span><span class='line'>Public Key Object; RSA 2048 bits
+</span><span class='line'>  label:      my_ssh_key
+</span><span class='line'>  ID:         fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>  Usage:      encrypt, verify, wrap
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Extract your public key</h3>
+
+<p>We used <a href="https://en.wikipedia.org/wiki/PKCS_11">PKCS11</a> to generate the keypair, <a href="https://en.wikipedia.org/wiki/PKCS">PKCS15</a> is designed identify users to applications.</p>
+
+<h4>Dump the token content</h4>
+
+<p>Dump the token content to get the id of your ssh keypair.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs15-tool -D
+</span><span class='line'>Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
+</span><span class='line'>PKCS#15 Card [SmartCard-HSM]:
+</span><span class='line'>        Version        : 0
+</span><span class='line'>        Serial number  : DECM0102331
+</span><span class='line'>        Manufacturer ID: www.CardContact.de
+</span><span class='line'>        Flags          : 
+</span><span class='line'>
+</span><span class='line'>PIN [UserPIN]
+</span><span class='line'>        Object Flags   : [0x3], private, modifiable
+</span><span class='line'>        ID             : 01
+</span><span class='line'>        Flags          : [0x81A], local, unblock-disabled, initialized, exchangeRefData
+</span><span class='line'>        Length         : min_len:6, max_len:15, stored_len:0
+</span><span class='line'>        Pad char       : 0x00
+</span><span class='line'>        Reference      : 129 (0x81)
+</span><span class='line'>        Type           : ascii-numeric
+</span><span class='line'>        Tries left     : 3
+</span><span class='line'>
+</span><span class='line'>PIN [SOPIN]
+</span><span class='line'>        Object Flags   : [0x1], private
+</span><span class='line'>        ID             : 02
+</span><span class='line'>        Flags          : [0x9E], local, change-disabled, unblock-disabled, initialized, soPin
+</span><span class='line'>        Length         : min_len:16, max_len:16, stored_len:0
+</span><span class='line'>        Pad char       : 0x00
+</span><span class='line'>        Reference      : 136 (0x88)
+</span><span class='line'>        Type           : bcd
+</span><span class='line'>        Tries left     : 3
+</span><span class='line'>
+</span><span class='line'>Private EC Key [myfirst_keypair]
+</span><span class='line'>        Object Flags   : [0x3], private, modifiable
+</span><span class='line'>        Usage          : [0x10C], sign, signRecover, derive
+</span><span class='line'>        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
+</span><span class='line'>        FieldLength    : 256
+</span><span class='line'>        Key ref        : 1 (0x1)
+</span><span class='line'>        Native         : yes
+</span><span class='line'>        Path           : e82b0601040181c31f0201::
+</span><span class='line'>        Auth ID        : 01
+</span><span class='line'>        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
+</span><span class='line'>        MD:guid        : {efac9b29-2289-658c-98d1-af5af965d484}
+</span><span class='line'>          :cmap flags  : 0x0
+</span><span class='line'>          :sign        : 0
+</span><span class='line'>          :key-exchange: 0
+</span><span class='line'>
+</span><span class='line'>Private RSA Key [my_ssh_key]
+</span><span class='line'>        Object Flags   : [0x3], private, modifiable
+</span><span class='line'>        Usage          : [0x2E], decrypt, sign, signRecover, unwrap
+</span><span class='line'>        Access Flags   : [0x1D], sensitive, alwaysSensitive, neverExtract, local
+</span><span class='line'>        ModLength      : 2048
+</span><span class='line'>        Key ref        : 2 (0x2)
+</span><span class='line'>        Native         : yes
+</span><span class='line'>        Path           : e82b0601040181c31f0201::
+</span><span class='line'>        Auth ID        : 01
+</span><span class='line'>        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>        MD:guid        : {a272b2ad-ff6f-606c-801a-4153be498018}
+</span><span class='line'>          :cmap flags  : 0x0
+</span><span class='line'>          :sign        : 0
+</span><span class='line'>          :key-exchange: 0
+</span><span class='line'>
+</span><span class='line'>Public EC Key [myfirst_keypair]
+</span><span class='line'>        Object Flags   : [0x0]
+</span><span class='line'>        Usage          : [0x0]
+</span><span class='line'>        Access Flags   : [0x2], extract
+</span><span class='line'>        FieldLength    : 256
+</span><span class='line'>        Key ref        : 0 (0x0)
+</span><span class='line'>        Native         : no
+</span><span class='line'>        ID             : ae79417e809ed19b9a69d4c14f444462ad0bd66c
+</span><span class='line'>        DirectValue    : &lt;present&gt;
+</span><span class='line'>
+</span><span class='line'>Public RSA Key [my_ssh_key]
+</span><span class='line'>        Object Flags   : [0x0]
+</span><span class='line'>        Usage          : [0x0]
+</span><span class='line'>        Access Flags   : [0x2], extract
+</span><span class='line'>        ModLength      : 2048
+</span><span class='line'>        Key ref        : 0 (0x0)
+</span><span class='line'>        Native         : no
+</span><span class='line'>        ID             : fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>        DirectValue    : &lt;present&gt;
+</span><span class='line'>
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h4>Get the public key</h4>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pkcs15-tool --read-ssh-key fca6240eeef8d3156f0c4dfc591b2d938d6104cb
+</span><span class='line'>Using reader with a card: Generic Smart Card Reader Interface [Smart Card Reader Interface] (20070818000000000) 00 00
+</span><span class='line'>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCWShfPjqh+pU8lCoIhXIXh+cGpSem1iNFH6TuluQQLPiqPIeObCTfqC8q9TjR/2FYzG+3ECdiRr0fiywE9OnzUgJI5oOjXfMwY3xE1PbYBrSvYERofhkEv2ejlyRifN3sbLGSU0V7pX+BNOuiJCquCehPMV9+ehkjbk9hPRFUzL1GywsOkmWUoIzrdjH0dlhPX3TUCdoizWAIdUqg+RX4DCEc52RvaGdX4Tn2THxeffXqFJ/gKkParZSLmOND1iRhtJeJ8CmgAqfD8ReshbcSs231h/QvUl3JaThcrLbPrSQFzVUH+rN+pGlSl722NWyPNPWlwwE+SreTLbQRoWayN my_ssh_key
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Configure the remote host</h3>
+
+<p>Add the key to the remote host</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky .ssh]$ vi authorized_keys 
+</span><span class='line'>[staf@vicky .ssh]$ 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Test the connection</h3>
+
+<p>Test you ssh connection with the PKCS11 interface:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh localhost
+</span><span class='line'>Permission denied (publickey,gssapi-keyex,gssapi-with-mic).</span></code></pre></td></tr></table></div></figure>
+
+
+<p>With the PKCS11 interface enabled:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ ssh -o "PKCS11Provider opensc-pkcs11.so" localhost
+</span><span class='line'>C_GetAttributeValue failed: 18
+</span><span class='line'>Enter PIN for 'SmartCard-HSM (UserPIN)': 
+</span><span class='line'>Last login: Thu Dec  3 09:55:23 2015 from ::1
+</span><span class='line'>gpg-agent[17327]: enabled debug flags: command cache ipc
+</span><span class='line'>gpg-agent: a gpg-agent is already running - not starting a new one
+</span><span class='line'>gpg-agent: secmem usage: 0/32768 bytes in 0 blocks
+</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Update your ssh_config</h3>
+
+<p>Add PKCS11Provider opensc-pkcs11.so to your ~/.ssh/config or your global ssh_config</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@vicky ~]$ cd .ssh/
+</span><span class='line'>[staf@vicky .ssh]$ vim config
+</span><span class='line'>PKCS11Provider opensc-pkcs11.so
+</span><span class='line'>[staf@vicky .ssh]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p><strong><em> Have fun &hellip; </em></strong></p>
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -3466,75 +3810,6 @@ Happy new year!
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2014/11/23/cgipaf-1-dot-3-4-released/">CGIpaf 1.3.4 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2014-11-23T10:16:00+01:00'><span class='date'><span class='date-month'>Nov</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>10:16 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>CGIpaf 1.3.4 has been released</p>
-
-<h3>ChangeLog</h3>
-
-<h5>version 1.3.4         ( 23 Nov 2014 )</h5>
-
-<blockquote><ul>
-<li>Cracklib configuration checking has been improved</li>
-<li>LDFLAGS is passed to the linker correctly</li>
-</ul>
-</blockquote>
-
-<h5>CGIpaf 1.3.4pre1 (15 Sep 2013)</h5>
-
-<blockquote><ul>
-<li>PAM is enabled on FreeBSD 7.3 or above</li>
-<li>PAM is enabled on NetBSD 6.0 or above</li>
-<li>xmalloc is updated to support systems with non GNU compatible malloc</li>
-</ul>
-</blockquote>
-
-<p>CGIpaf 1.3.4 is  available at: <a href="http://www.wagemakers.be/english/programs/cgipaf"><a href="http://www.wagemakers.be/english/programs/cgipaf">http://www.wagemakers.be/english/programs/cgipaf</a></a></p>
-
-<p>Download the tarball directly at:  <a href="http://www.wagemakers.be/downloads/cgipaf/"><a href="http://www.wagemakers.be/downloads/cgipaf/">http://www.wagemakers.be/downloads/cgipaf/</a></a></p>
-
-<p>Or at the the Git repository  on github: <a href="https://github.com/stafwag/cgipaf"><a href="https://github.com/stafwag/cgipaf">https://github.com/stafwag/cgipaf</a></a></p>
-
-<p style="font-style: italic;">
-Have fun...
-</p>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/5">&larr; Older</a>
@@ -3570,6 +3845,10 @@ Have fun...
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/04/22/building-your-own-docker-images_part1/">Building Your Own Docker Base Images (Part 1: Debian GNU/Linux & Co)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init/">Howto Use Centos Cloud Images With Cloud-init on KVM/libvirtd</a>
       </li>
     
@@ -3583,10 +3862,6 @@ Have fun...
     
       <li class="post">
         <a href="/blog/blog/2019/01/02/best-wishes-2019/">Best Wishes 2019</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2018/12/09/configure-dns-tls-on-opnsense/">How to Configure DNS-over-TLS on OPNsense</a>
       </li>
     
   </ul>
