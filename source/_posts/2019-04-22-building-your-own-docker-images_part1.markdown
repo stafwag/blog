@@ -350,5 +350,5 @@ root@665cec6ee24f:/#
 
 # Links
 
-[https://docs.docker.com/docker-hub/official_images/](https://docs.docker.com/docker-hub/official_images/)
-[https://docs.docker.com/engine/security/trust/content_trust/](https://docs.docker.com/engine/security/trust/content_trust/)
+* [https://docs.docker.com/docker-hub/official_images/](https://docs.docker.com/docker-hub/official_images/)
+* [https://docs.docker.com/engine/security/trust/content_trust/](https://docs.docker.com/engine/security/trust/content_trust/)
