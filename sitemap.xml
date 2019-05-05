@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2019/05/05/building-your-own-docker-images-part2/</loc>
+    <lastmod>2019-05-05T11:03:05+02:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/</loc>
     <lastmod>2019-04-22T10:36:01+02:00</lastmod>
   </url>

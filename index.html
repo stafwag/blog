@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Building Your Own Docker Base Images (Part 1: Debian GNU/Linux & Co) Apr 22nd, 2019 10:36 am I was using docker on an Odroid U3, but my Odroid &hellip;">
+  <meta name="description" content="Building Your Own Docker Images (Part2: Arch GNU/Linux & Co) May 5th, 2019 11:03 am In my previous post, we started with creating Debian based &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,265 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2019/05/05/building-your-own-docker-images-part2/">Building Your Own Docker Images (Part2: Arch GNU/Linux & Co)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2019-05-05T11:03:05+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>5</span><span class='date-suffix'>th</span>, <span class='date-year'>2019</span></span> <span class='time'>11:03 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In <a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">my previous post</a>, we started with creating <a href="https://www.debian.org/">Debian</a> based docker images from scratch for the <a href="https://en.wikipedia.org/wiki/Intel_80386">i386 architecture</a>.</p>
+
+<p>In this blog post, we&rsquo;ll create Arch GNU/Linux based images.</p>
+
+<h1>Arch GNU/Linux</h1>
+
+<p><a href="https://www.archlinux.org/">Arch Linux</a> stopped supporting i386 systems. When you want to run Archlinux on an i386 system there is a community maintained <a href="https://archlinux32.org/">Archlinux32</a> project and the <a href="https://en.wikipedia.org/wiki/Free_software">Free software</a> version <a href="https://www.parabola.nu/">Parabola GNU/Linux-libre</a>.</p>
+
+<p>For the <a href="https://en.wikipedia.org/wiki/ARM_architecture">arm architecture</a>, there is <a href="https://archlinuxarm.org/">Archlinux Arm</a> project that I <a href="https://stafwag.github.io/blog/blog/2015/12/26/running-docker-on-arm/">used</a>.</p>
+
+<h2>mkimage-arch.sh in moby</h2>
+
+<p>I used <code>mkimage-arch.sh</code> from the <a href="https://mobyproject.org/">Moby/Docker project</a> in the past, but it failed when
+I tried it this time&hellip;</p>
+
+<p>I created a small patch to fix it and created <a href="https://github.com/moby/moby/pull/39165">a pull request</a>.
+Till the issue is resolved, you can use the version in my <a href="https://github.com/stafwag/moby/blob/">cloned git repository</a>.</p>
+
+<h2>Build the docker image</h2>
+
+<h3>Install the required packages</h3>
+
+<p>Make sure that your system is up-to-date.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@archlinux32 contrib]$ sudo pacman -Syu</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Install the required packages.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 contrib]$ sudo pacman -S arch-install-scripts expect wget</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<h3>Directory</h3>
+
+<p>Create a directory that will hold the image data.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 ~]$ mkdir -p dockerbuild/archlinux32
+</span><span class='line'>[staf@archlinux32 ~]$ cd dockerbuild/archlinux32
+</span><span class='line'>[staf@archlinux32 archlinux32]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Get mkimage-arch.sh</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 archlinux32]$ wget https://raw.githubusercontent.com/stafwag/moby/master/contrib/mkimage-arch.sh
+</span><span class='line'>--2019-05-05 07:46:32--  https://raw.githubusercontent.com/stafwag/moby/master/contrib/mkimage-arch.sh
+</span><span class='line'>Loaded CA certificate '/etc/ssl/certs/ca-certificates.crt'
+</span><span class='line'>Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 151.101.36.133
+</span><span class='line'>Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|151.101.36.133|:443... connected.
+</span><span class='line'>HTTP request sent, awaiting response... 200 OK
+</span><span class='line'>Length: 3841 (3.8K) [text/plain]
+</span><span class='line'>Saving to: 'mkimage-arch.sh'
+</span><span class='line'>
+</span><span class='line'>mkimage-arch.sh                 100%[====================================================&gt;]   3.75K  --.-KB/s    in 0s      
+</span><span class='line'>
+</span><span class='line'>2019-05-05 07:46:33 (34.5 MB/s) - 'mkimage-arch.sh' saved [3841/3841]
+</span><span class='line'>
+</span><span class='line'>[staf@archlinux32 archlinux32]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p>Make it executable.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 archlinux32]$ chmod +x mkimage-arch.sh
+</span><span class='line'>[staf@archlinux32 archlinux32]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Setup your pacman.conf</h3>
+
+<p>Copy your pacmnan.conf to the directory that holds <code>mkimage-arch.sh</code>.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 contrib]$ cp /etc/pacman.conf mkimage-arch-pacman.conf
+</span><span class='line'>[staf@archlinux32 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Build your image</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 archlinux32]$ TMPDIR=`pwd` sudo ./mkimage-arch.sh
+</span><span class='line'>spawn pacstrap -C ./mkimage-arch-pacman.conf -c -d -G -i /var/tmp/rootfs-archlinux-wqxW0uxy8X base bash haveged pacman pacman-mirrorlist --ignore dhcpcd,diffutils,file,inetutils,iproute2,iputils,jfsutils,licenses,linux,linux-firmware,lvm2,man-db,man-pages,mdadm,nano,netctl,openresolv,pciutils,pcmciautils,psmisc,reiserfsprogs,s-nail,sysfsutils,systemd-sysvcompat,usbutils,vi,which,xfsprogs
+</span><span class='line'>==&gt; Creating install root at /var/tmp/rootfs-archlinux-wqxW0uxy8X
+</span><span class='line'>==&gt; Installing packages to /var/tmp/rootfs-archlinux-wqxW0uxy8X
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> core                                              198.0 KiB   676K/s 00:00 [##########################################] 100%
+</span><span class='line'> extra                                               2.4 MiB  1525K/s 00:02 [##########################################] 100%
+</span><span class='line'> community                                           6.3 MiB   396K/s 00:16 [##########################################] 100%
+</span><span class='line'>:: dhcpcd is in IgnorePkg/IgnoreGroup. Install anyway? [Y/n] n
+</span><span class='line'>:: diffutils is in IgnorePkg/IgnoreGroup. Install anyway? [Y/n] n
+</span><span class='line'>:: file is in IgnorePkg/IgnoreGroup. Install anyway? [Y/n] n
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>==&gt; WARNING: /var/tmp/rootfs-archlinux-wqxW0uxy8X is not a mountpoint. This may have undesirable side effects.
+</span><span class='line'>Generating locales...
+</span><span class='line'>  en_US.UTF-8... done
+</span><span class='line'>Generation complete.
+</span><span class='line'>tar: ./etc/pacman.d/gnupg/S.gpg-agent.ssh: socket ignored
+</span><span class='line'>tar: ./etc/pacman.d/gnupg/S.gpg-agent.extra: socket ignored
+</span><span class='line'>tar: ./etc/pacman.d/gnupg/S.gpg-agent: socket ignored
+</span><span class='line'>tar: ./etc/pacman.d/gnupg/S.gpg-agent.browser: socket ignored
+</span><span class='line'>sha256:41cd9d9163a17e702384168733a9ca1ade0c6497d4e49a2c641b3eb34251bde1
+</span><span class='line'>Success.
+</span><span class='line'>[staf@archlinux32 archlinux32]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Rename</h3>
+
+<p>A new image is created with the name archlinux.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 archlinux32]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED              SIZE
+</span><span class='line'>archlinux           latest              18e74c4d823c        About a minute ago   472MB
+</span><span class='line'>[staf@archlinux32 archlinux32]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might want to rename it. You can do this by retag the image and remove the old image name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 archlinux32]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED              SIZE
+</span><span class='line'>archlinux           latest              18e74c4d823c        About a minute ago   472MB
+</span><span class='line'>[staf@archlinux32 archlinux32]$ docker tag stafwag/archlinux:386 18e74c4d823c
+</span><span class='line'>Error response from daemon: No such image: stafwag/archlinux:386
+</span><span class='line'>[staf@archlinux32 archlinux32]$ docker tag 18e74c4d823c stafwag/archlinux:386             
+</span><span class='line'>[staf@archlinux32 archlinux32]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>archlinux           latest              18e74c4d823c        3 minutes ago       472MB
+</span><span class='line'>stafwag/archlinux   386                 18e74c4d823c        3 minutes ago       472MB
+</span><span class='line'>[staf@archlinux32 archlinux32]$ docker rmi archlinux
+</span><span class='line'>Untagged: archlinux:latest
+</span><span class='line'>[staf@archlinux32 archlinux32]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>stafwag/archlinux   386                 18e74c4d823c        3 minutes ago       472MB
+</span><span class='line'>[staf@archlinux32 archlinux32]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Test</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@archlinux32 archlinux32]$ docker run --rm -it stafwag/archlinux:386 /bin/sh
+</span><span class='line'>sh-5.0# pacman -Syu
+</span><span class='line'>:: Synchronizing package databases...
+</span><span class='line'> core is up to date
+</span><span class='line'> extra is up to date
+</span><span class='line'> community is up to date
+</span><span class='line'>:: Starting full system upgrade...
+</span><span class='line'> there is nothing to do
+</span><span class='line'>sh-5.0# </span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun! </em></strong></p>
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -5106,378 +5365,6 @@ and shutdown you virtual machine.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2018/06/04/nested-virtualization-in-kvm/">Nested Virtualization in KVM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2018-06-04T19:58:06+02:00'><span class='date'><span class='date-month'>Jun</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>7:58 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2>KVM</h2>
-
-<p><a href="https://www.linux-kvm.org">Kernel-based Virtual Machine (KVM)</a> has become the defacto hypervisor on GNU/Linux systems it works with great performance as it utilizes the CPU virtualization extensions <a href="https://en.wikipedia.org/wiki/X86_virtualization#Intel_virtualization_(VT-x)">Inetl VT-x</a> or <a href="https://en.wikipedia.org/wiki/X86_virtualization#AMD_virtualization_(AMD-V)">AMD-V</a>). KVM doesn&rsquo;t emulate hardware but uses <a href="https://www.qemu.org/">QEMU</a> for this.</p>
-
-<h2>Nested Virtual guest</h2>
-
-<p>It&rsquo;s possible to use nested virtualization this make it possible to run a hypervisor inside a KVM virtual machine.</p>
-
-<h2>Enabling nested virtualization in KVM</h2>
-
-<h3>Verify</h3>
-
-<p>To verify if nested virtualization is enabled on your system can check /sys/module/kvm_intel/parameters/nested on Intal systems or /sys/module/kvm_amd/parameters/nested</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@frija ~]$ cat /sys/module/kvm_intel/parameters/nested
-</span><span class='line'>N
-</span><span class='line'>[staf@frija ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Enable</h3>
-
-<h4>Shutdown all virtual machines</h4>
-
-<p>Make sure that there no virtual machines running.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# virsh 
-</span><span class='line'>Welcome to virsh, the virtualization interactive terminal.
-</span><span class='line'>
-</span><span class='line'>Type:  'help' for help with commands
-</span><span class='line'>       'quit' to quit
-</span><span class='line'>
-</span><span class='line'>virsh # list
-</span><span class='line'> Id    Name                           State
-</span><span class='line'>----------------------------------------------------
-</span><span class='line'>
-</span><span class='line'>virsh # </span></code></pre></td></tr></table></div></figure>
-
-
-<p></p>
-
-<h4>Unload KVM</h4>
-
-<p>Unload the KVM kernel module.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# modprobe -r kvm_intel
-</span><span class='line'>[root@frija ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Load KVM and activate nested</h4>
-
-<p>Reload the KVM with the nested feature enabled.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# modprobe kvm_intel nested=1
-</span><span class='line'>[root@frija ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Verify</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# cat /sys/module/kvm_intel/parameters/nested
-</span><span class='line'>Y
-</span><span class='line'>[root@frija ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>To enable the nested feature permanently create /etc/modprobe.d/kvm_intel.conf</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija ~]# vi /etc/modprobe.d/kvm_intel.conf</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and enable the nested option.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>options kvm_intel nested=1</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Enabling nested virtialization in the virtual machine</h2>
-
-<p>When you logon to a virtual machine and verify the virtualization extensions on the cpu the flags aren&rsquo;t available.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos7 ~]$ cat /proc/cpuinfo | grep  -i -E "vmx|svm"
-</span><span class='line'>[staf@centos7 ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>To enable nested virtualization in a vritual machine you can</p>
-
-<ul>
-<li>start <code>virsh</code> and and edit the the virtual machine and change the CPU line to <code>&lt;cpu mode='host-model' check='partial'/&gt;</code></li>
-<li>Open virt-manager and select <strong>Copy host CPU configuration</strong> on the CPU configuration</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@frija ~]# virsh 
-</span><span class='line'>Welcome to virsh, the virtualization interactive terminal.
-</span><span class='line'>
-</span><span class='line'>Type:  'help' for help with commands
-</span><span class='line'>       'quit' to quit
-</span><span class='line'>
-</span><span class='line'>virsh # list
-</span><span class='line'> Id    Name                           State
-</span><span class='line'>----------------------------------------------------
-</span><span class='line'> 1     centos7.0                      running
-</span><span class='line'>
-</span><span class='line'>virsh # edit centos7.0 </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Change the cpu settings</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>  &lt;features&gt;
-</span><span class='line'>    &lt;acpi/&gt;
-</span><span class='line'>    &lt;apic/&gt;
-</span><span class='line'>    &lt;vmport state='off'/&gt;
-</span><span class='line'>  &lt;/features&gt;
-</span><span class='line'>  &lt;cpu mode='host-model' check='partial'&gt;
-</span><span class='line'>    &lt;model fallback='allow'/&gt;
-</span><span class='line'>  &lt;/cpu&gt;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Shutdown the virtual machine</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>virsh # reboot centos7.0 
-</span><span class='line'>Domain centos7.0 is being rebooted
-</span><span class='line'>
-</span><span class='line'>virsh # 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Start the virtual machine</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>virsh # start centos7.0  
-</span><span class='line'>Domain centos7.0 started</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Verify that the <code>feature policies</code> on the cpu are updated.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>virsh # dumpxml centos7.0 </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'> &lt;cpu mode='custom' match='exact' check='full'&gt;
-</span><span class='line'>    &lt;model fallback='forbid'&gt;Haswell-noTSX-IBRS&lt;/model&gt;
-</span><span class='line'>    &lt;vendor&gt;Intel&lt;/vendor&gt;
-</span><span class='line'>    &lt;feature policy='require' name='vme'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='ss'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='f16c'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='rdrand'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='hypervisor'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='arat'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='tsc_adjust'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='xsaveopt'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='pdpe1gb'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='abm'/&gt;
-</span><span class='line'>    &lt;feature policy='require' name='ibpb'/&gt;
-</span><span class='line'> &lt;/cpu&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Logon to the virtual machine and verify the cpu flags;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos7 ~]$ cat /proc/cpuinfo | grep -i vmx
-</span><span class='line'>flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
-</span><span class='line'>flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
-</span><span class='line'>[staf@centos7 ~]$ cat /proc/cpuinfo | grep  -i "vmx|svm"
-</span><span class='line'>[staf@centos7 ~]$ cat /proc/cpuinfo | grep  -i -E "vmx|svm"
-</span><span class='line'>flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl
-</span><span class='line'>flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ibpb ibrs arat spec_ctrl</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Execute the <code>virt-host-validate</code></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos7 ~]$ virt-host-validate
-</span><span class='line'>  QEMU: Checking for hardware virtualization                                 : PASS
-</span><span class='line'>  QEMU: Checking if device /dev/kvm exists                                   : PASS
-</span><span class='line'>  QEMU: Checking if device /dev/kvm is accessible                            : PASS
-</span><span class='line'>  QEMU: Checking if device /dev/vhost-net exists                             : PASS
-</span><span class='line'>  QEMU: Checking if device /dev/net/tun exists                               : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'memory' controller support                      : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'memory' controller mount-point                  : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'cpu' controller support                         : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'cpu' controller mount-point                     : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'cpuacct' controller support                     : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'cpuacct' controller mount-point                 : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'cpuset' controller support                      : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'cpuset' controller mount-point                  : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'devices' controller support                     : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'devices' controller mount-point                 : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'blkio' controller support                       : PASS
-</span><span class='line'>  QEMU: Checking for cgroup 'blkio' controller mount-point                   : PASS
-</span><span class='line'>  QEMU: Checking for device assignment IOMMU support                         : WARN (No ACPI DMAR table found, IOMMU either disabled in BIOS or not supported by this hardware platform)
-</span><span class='line'>   LXC: Checking for Linux &gt;= 2.6.26                                         : PASS
-</span><span class='line'>   LXC: Checking for namespace ipc                                           : PASS
-</span><span class='line'>   LXC: Checking for namespace mnt                                           : PASS
-</span><span class='line'>   LXC: Checking for namespace pid                                           : PASS
-</span><span class='line'>   LXC: Checking for namespace uts                                           : PASS
-</span><span class='line'>   LXC: Checking for namespace net                                           : PASS
-</span><span class='line'>   LXC: Checking for namespace user                                          : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'memory' controller support                      : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'memory' controller mount-point                  : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'cpu' controller support                         : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'cpu' controller mount-point                     : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'cpuacct' controller support                     : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'cpuacct' controller mount-point                 : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'cpuset' controller support                      : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'cpuset' controller mount-point                  : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'devices' controller support                     : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'devices' controller mount-point                 : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'blkio' controller support                       : PASS
-</span><span class='line'>   LXC: Checking for cgroup 'blkio' controller mount-point                   : PASS
-</span><span class='line'>   LXC: Checking if device /sys/fs/fuse/connections exists                   : FAIL (Load the 'fuse' module to enable /proc/ overrides)
-</span><span class='line'>[staf@centos7 ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong><em>Have fun</em></strong></p>
-
-<h2>Links</h2>
-
-<ul>
-<li><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html"><a href="https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html">https://docs.fedoraproject.org/quick-docs/en-US/using-nested-virtualization-in-kvm.html</a></a></li>
-<li><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization"><a href="https://wiki.archlinux.org/index.php/KVM#Nested_virtualization">https://wiki.archlinux.org/index.php/KVM#Nested_virtualization</a></a></li>
-<li><a href="https://www.linux-kvm.org/page/Nested_Guests"><a href="https://www.linux-kvm.org/page/Nested_Guests">https://www.linux-kvm.org/page/Nested_Guests</a></a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -5511,6 +5398,10 @@ and shutdown you virtual machine.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/05/05/building-your-own-docker-images-part2/">Building Your Own Docker Images (Part2: Arch GNU/Linux & Co)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/04/22/building-your-own-docker-images_part1/">Building Your Own Docker Base Images (Part 1: Debian GNU/Linux & Co)</a>
       </li>
     
@@ -5524,10 +5415,6 @@ and shutdown you virtual machine.</p>
     
       <li class="post">
         <a href="/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/">Setting Up OpenStack-Ansible All-In-One on a Centos 7 System</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2019/01/02/best-wishes-2019/">Best Wishes 2019</a>
       </li>
     
   </ul>
