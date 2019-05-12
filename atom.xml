@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2019-05-05T10:55:07+02:00</updated>
+  <updated>2019-05-12T09:59:28+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,252 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Building Your Own Docker Base Images (Part 3: Yum)]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/"/>
+    <updated>2019-05-12T10:06:11+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum</id>
+    <content type="html"><![CDATA[<p><img class="right" src="https://stafwag.github.io/blog/images/fedora_logo_small.png" width="140" height="140" title="&#34;fedora_logo_small.png&#34;" alt="&#34;fedora_logo_small.png&#34;"></p>
+
+<p>In my previous two posts (<a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">1</a>,
+<a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">2</a> ), we created Docker <a href="https://www.debian.org/">Debian</a> and
+ <a href="https://www.archlinux.org/">Arch</a>-based images from scratch for the <a href="https://en.wikipedia.org/wiki/Intel_80386">i386 architecture</a>.</p>
+
+<p>In this blog post - last one in this series - we&rsquo;ll do the same for <a href="https://en.wikipedia.org/wiki/Yum_(software)">yum</a> based distributions like <a href="https://www.centos.org/">CentOS</a> and <a href="https://getfedora.org/">Fedora</a>.</p>
+
+<p>Building your own Docker base images isn&rsquo;t difficult and let you trust your distribution Gpg signing keys instead of the <a href="https://hub.docker.com/">docker hub</a>. As explained in <a href="http://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">the first blog post</a>. The mkimage scripts in the contrib directory of the <a href="https://mobyproject.org/">Moby project</a> git repository is a good place to start if you want to build own docker images.</p>
+
+<p><img class="left" src="https://stafwag.github.io/blog/images/centos_logo_small.png" width="267" height="79" title="&#34;centos_logo_small.png&#34;" alt="&#34;centos_logo_small.png&#34;"></p>
+
+<p>Fedora is one of the GNU/Linux distributions that supports 32 bits systems. Centos has a <a href="https://wiki.centos.org/SpecialInterestGroup">Special Interest Groups</a>
+ to support <a href="https://wiki.centos.org/SpecialInterestGroup/AltArch">alternative architectures</a>.
+ <a href="https://wiki.centos.org/SpecialInterestGroup/AltArch">The Alternative Architecture SIG</a> create installation images for power, i386, armhfp (arm v732 bits)
+ and aarch64 (arm v8 64-bit).</p>
+
+<h1>Centos</h1>
+
+<p>In this blog post, we will create centos based docker images. The procedure to create Fedora images is the same.</p>
+
+<h2>Clone moby</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@centos386 github]$ git clone https://github.com/moby/moby
+</span><span class='line'>Cloning into 'moby'...
+</span><span class='line'>remote: Enumerating objects: 7, done.
+</span><span class='line'>remote: Counting objects: 100% (7/7), done.
+</span><span class='line'>remote: Compressing objects: 100% (7/7), done.
+</span><span class='line'>remote: Total 269517 (delta 0), reused 1 (delta 0), pack-reused 269510
+</span><span class='line'>Receiving objects: 100% (269517/269517), 139.16 MiB | 3.07 MiB/s, done.
+</span><span class='line'>Resolving deltas: 100% (182765/182765), done.
+</span><span class='line'>[staf@centos386 github]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Go to the contrib directory</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 github]$ cd moby/contrib/
+</span><span class='line'>[staf@centos386 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>mkimage-yum.sh</h2>
+
+<p>When you run <code>mkimage-yum.sh</code> you get the usage message.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ ./mkimage-yum.sh 
+</span><span class='line'>mkimage-yum.sh [OPTIONS] &lt;name&gt;
+</span><span class='line'>OPTIONS:
+</span><span class='line'>  -p "&lt;packages&gt;"  The list of packages to install in the container.
+</span><span class='line'>                   The default is blank. Can use multiple times.
+</span><span class='line'>  -g "&lt;groups&gt;"    The groups of packages to install in the container.
+</span><span class='line'>                   The default is "Core". Can use multiple times.
+</span><span class='line'>  -y &lt;yumconf&gt;     The path to the yum config to install packages from. The
+</span><span class='line'>                   default is /etc/yum.conf for Centos/RHEL and /etc/dnf/dnf.conf for Fedora
+</span><span class='line'>  -t &lt;tag&gt;         Specify Tag information.
+</span><span class='line'>                   default is reffered at /etc/{redhat,system}-release
+</span><span class='line'>[staf@centos386 contrib]$</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>build the image</h2>
+
+<p>The <code>mkimage-yum.sh</code> script will use /etc/yum.conf or /etc/dnf.conf to build the image. <code>mkimage-yum.sh &lt;name&gt;</code> will create the image with name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ sudo ./mkimage-yum.sh centos
+</span><span class='line'>[sudo] password for staf: 
+</span><span class='line'>+ mkdir -m 755 /tmp/mkimage-yum.sh.LeZQNh/dev
+</span><span class='line'>+ mknod -m 600 /tmp/mkimage-yum.sh.LeZQNh/dev/console c 5 1
+</span><span class='line'>+ mknod -m 600 /tmp/mkimage-yum.sh.LeZQNh/dev/initctl p
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/full c 1 7
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/null c 1 3
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/ptmx c 5 2
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/random c 1 8
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/tty c 5 0
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/tty0 c 4 0
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/urandom c 1 9
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/zero c 1 5
+</span><span class='line'>+ '[' -d /etc/yum/vars ']'
+</span><span class='line'>+ mkdir -p -m 755 /tmp/mkimage-yum.sh.LeZQNh/etc/yum
+</span><span class='line'>+ cp -a /etc/yum/vars /tmp/mkimage-yum.sh.LeZQNh/etc/yum/
+</span><span class='line'>+ [[ -n Core ]]
+</span><span class='line'>+ yum -c /etc/yum.conf --installroot=/tmp/mkimage-yum.sh.LeZQNh --releasever=/ --setopt=tsflags=nodocs --setopt=group_package_types=mandatory -y groupinstall Core
+</span><span class='line'>Loaded plugins: fastestmirror, langpacks
+</span><span class='line'>There is no installed groups file.
+</span><span class='line'>Maybe run: yum groups mark convert (see man yum)
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>+ tar --numeric-owner -c -C /tmp/mkimage-yum.sh.LeZQNh .
+</span><span class='line'>+ docker import - centos:7.6.1810
+</span><span class='line'>sha256:7cdb02046bff4c5065de670604fb3252b1221c4853cb4a905ca04488f44f52a8
+</span><span class='line'>+ docker run -i -t --rm centos:7.6.1810 /bin/bash -c 'echo success'
+</span><span class='line'>success
+</span><span class='line'>+ rm -rf /tmp/mkimage-yum.sh.LeZQNh
+</span><span class='line'>[staf@centos386 contrib]$</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Rename</h2>
+
+<p>A new image is created with the name centos.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos              7.6.1810            7cdb02046bff        3 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might want to rename to include your name or project name. You can do this by retag the image and remove the old image name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos              7.6.1810            7cdb02046bff        20 seconds ago      281 MB
+</span><span class='line'>[staf@centos386 contrib]$ docker rmi centos
+</span><span class='line'>Error response from daemon: No such image: centos:latest
+</span><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos              7.6.1810            7cdb02046bff        3 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ docker tag 7cdb02046bff stafwag/centos_386:7.6.1810 
+</span><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos               7.6.1810            7cdb02046bff        7 minutes ago       281 MB
+</span><span class='line'>stafwag/centos_386   7.6.1810            7cdb02046bff        7 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ docker rmi centos:7.6.1810
+</span><span class='line'>Untagged: centos:7.6.1810
+</span><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>stafwag/centos_386   7.6.1810            7cdb02046bff        8 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Test</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ docker run -it --rm stafwag/centos_386:7.6.1810 /bin/sh
+</span><span class='line'>sh-4.2# yum update -y
+</span><span class='line'>Loaded plugins: fastestmirror
+</span><span class='line'>Determining fastest mirrors
+</span><span class='line'> * base: mirror.usenet.farm
+</span><span class='line'> * extras: mirror.usenet.farm
+</span><span class='line'> * updates: mirror.usenet.farm
+</span><span class='line'>base                                                                                                                   | 3.6 kB  00:00:00     
+</span><span class='line'>extras                                                                                                                 | 2.9 kB  00:00:00     
+</span><span class='line'>updates                                                                                                                | 2.9 kB  00:00:00     
+</span><span class='line'>(1/4): updates/7/i386/primary_db                                                                                       | 2.5 MB  00:00:00     
+</span><span class='line'>(2/4): extras/7/i386/primary_db                                                                                        | 157 kB  00:00:01     
+</span><span class='line'>(3/4): base/7/i386/group_gz                                                                                            | 166 kB  00:00:01     
+</span><span class='line'>(4/4): base/7/i386/primary_db                                                                                          | 4.6 MB  00:00:02     
+</span><span class='line'>No packages marked for update
+</span><span class='line'>sh-4.2# </span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun! </em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Building Your Own Docker Images (Part2: Arch GNU/Linux & Co)]]></title>
@@ -6970,44 +7216,6 @@ If you new micro code cause issue you can just remove the entry in grub configur
 <p>I&rsquo;m able to run all test on multiple operation systems now. I still need to review this setup and perhaps move some tests to <a href="https://www.docker.io">docker</a> instead of the virtual machines to save some memory. &hellip;but this jenkins setup was configured before docker was a thing.</p>
 
 <p><strong><em>Have fun</em></strong></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[20 Core Dual Processor Jenkins Build Workstation]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/"/>
-    <updated>2017-09-16T14:29:51+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation</id>
-    <content type="html"><![CDATA[<p><img class="left" src="https://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg" width="400" height="388" title="&#34;Xeon CPU Side&#34;" alt="&#34;Xeon CPU Side&#34;"></p>
-
-<p><br /></p>
-
-<p>My jenkins builds are taking too long mainly due the lack of memory. I mainly use jenkins to verify that my software work on different operation systems (GNU/Linux distributions / *BSD / Solaris).</p>
-
-<p>Looking for a solution that is still affordable I ended up with building a dual Xeon workstation. CPU and memory comes from <a href="http://www.ebay.be">www.ebay.be</a></p>
-
-<p><br />&nbsp;<br />
-<br /></p>
-
-<h3>Part list:</h3>
-
-<ul>
-<li><strong>CPU:</strong> 2 * <a href="http://ark.intel.com/products/75272/Intel-Xeon-Processor-E5-2660-v2-25M-Cache-2_20-GHz">Intel Xeon E5-2660v2</a> This CPU has 10 cores and 20 thread, so I get 40 threads.</li>
-<li><strong>Motherboard:</strong> <a href="http://www.asrockrack.com/general/productdetail.asp?Model=EP2C602-4L/D16#Specifications">Asrock EP2C602-4L/D16</a> I choose this motherboard because it has a lot of DIMM slots so I can upgrade the memory in the further. Downside is that layout is SSI EEB that limits the case choose.</li>
-<li><strong>Memory:</strong> 4 * SAMSUNG M393B2G70BH0-CK0 16GB which gives me 64 GB <a href="https://en.wikipedia.org/wiki/ECC_memory">ECC memory</a></li>
-<li><strong>CPU Cooler</strong> 2 * <a href="http://www.thermaltake.com/products-model.aspx?id=C_00002470">Thermaltake Water 3.0 Performer C</a> For the first I used watercooling mainly because I wanted to make sure that the cooling will not block the access to the DIMM slots.</li>
-<li><strong>PSU:</strong> <a href="https://seasonic.com/product/focus-plus-750-gold/">Seasonic FOCUS Plus 750 Gold</a> I needed a power supply with 2 * 8 pins CPU connectors.</li>
-<li><strong>Case:</strong> <a href="http://www.phanteks.com/Enthoo-Pro.html">Phanteks Enthoo Pro</a> This case supports SSI EEB and is not too expensive.</li>
-</ul>
-
-
-<h3>Pictures</h3>
-
-<p><a href="https://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg"><img src="https://stafwag.github.io/blog/images/201709_xeon_cpu_side.jpg" height="291" width="300" alt="Xeon CPU side" /></a>
-<a href="https://stafwag.github.io/blog/images/201709_xeon_hd_side.jpg"><img src="https://stafwag.github.io/blog/images/201709_xeon_hd_side.jpg" height="291" width="317" alt="Xeon CPU side" /></a>
-<a href="https://stafwag.github.io/blog/images/201709_xeon_front_side.jpg"><img src="https://stafwag.github.io/blog/images/201709_xeon_front_side.jpg" height="291" width="151" alt="Xeon CPU side" /></a></p>
-
-<p><strong><em>Still need to verify if jenkins works on this system :-) </em></strong></p>
 ]]></content>
   </entry>
   

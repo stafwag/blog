@@ -9,7 +9,8 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Building Your Own Docker Images (Part2: Arch GNU/Linux & Co) May 5th, 2019 11:03 am In my previous post, we started with creating Debian based &hellip;">
+  <meta name="description" content="Building Your Own Docker Base Images (Part 3: Yum) May 12th, 2019 10:06 am In my previous two posts (1,
+2 ), we created Docker Debian and Arch-based &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +78,282 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/">Building Your Own Docker Base Images (Part 3: Yum)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2019-05-12T10:06:11+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>12</span><span class='date-suffix'>th</span>, <span class='date-year'>2019</span></span> <span class='time'>10:06 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="right" src="/blog/images/fedora_logo_small.png" width="140" height="140" title="&#34;fedora_logo_small.png&#34;" alt="&#34;fedora_logo_small.png&#34;"></p>
+
+<p>In my previous two posts (<a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">1</a>,
+<a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">2</a> ), we created Docker <a href="https://www.debian.org/">Debian</a> and
+ <a href="https://www.archlinux.org/">Arch</a>-based images from scratch for the <a href="https://en.wikipedia.org/wiki/Intel_80386">i386 architecture</a>.</p>
+
+<p>In this blog post - last one in this series - we&rsquo;ll do the same for <a href="https://en.wikipedia.org/wiki/Yum_(software)">yum</a> based distributions like <a href="https://www.centos.org/">CentOS</a> and <a href="https://getfedora.org/">Fedora</a>.</p>
+
+<p>Building your own Docker base images isn&rsquo;t difficult and let you trust your distribution Gpg signing keys instead of the <a href="https://hub.docker.com/">docker hub</a>. As explained in <a href="http://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">the first blog post</a>. The mkimage scripts in the contrib directory of the <a href="https://mobyproject.org/">Moby project</a> git repository is a good place to start if you want to build own docker images.</p>
+
+<p><img class="left" src="/blog/images/centos_logo_small.png" width="267" height="79" title="&#34;centos_logo_small.png&#34;" alt="&#34;centos_logo_small.png&#34;"></p>
+
+<p>Fedora is one of the GNU/Linux distributions that supports 32 bits systems. Centos has a <a href="https://wiki.centos.org/SpecialInterestGroup">Special Interest Groups</a>
+ to support <a href="https://wiki.centos.org/SpecialInterestGroup/AltArch">alternative architectures</a>.
+ <a href="https://wiki.centos.org/SpecialInterestGroup/AltArch">The Alternative Architecture SIG</a> create installation images for power, i386, armhfp (arm v732 bits)
+ and aarch64 (arm v8 64-bit).</p>
+
+<h1>Centos</h1>
+
+<p>In this blog post, we will create centos based docker images. The procedure to create Fedora images is the same.</p>
+
+<h2>Clone moby</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>staf@centos386 github]$ git clone https://github.com/moby/moby
+</span><span class='line'>Cloning into 'moby'...
+</span><span class='line'>remote: Enumerating objects: 7, done.
+</span><span class='line'>remote: Counting objects: 100% (7/7), done.
+</span><span class='line'>remote: Compressing objects: 100% (7/7), done.
+</span><span class='line'>remote: Total 269517 (delta 0), reused 1 (delta 0), pack-reused 269510
+</span><span class='line'>Receiving objects: 100% (269517/269517), 139.16 MiB | 3.07 MiB/s, done.
+</span><span class='line'>Resolving deltas: 100% (182765/182765), done.
+</span><span class='line'>[staf@centos386 github]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Go to the contrib directory</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 github]$ cd moby/contrib/
+</span><span class='line'>[staf@centos386 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>mkimage-yum.sh</h2>
+
+<p>When you run <code>mkimage-yum.sh</code> you get the usage message.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ ./mkimage-yum.sh 
+</span><span class='line'>mkimage-yum.sh [OPTIONS] &lt;name&gt;
+</span><span class='line'>OPTIONS:
+</span><span class='line'>  -p "&lt;packages&gt;"  The list of packages to install in the container.
+</span><span class='line'>                   The default is blank. Can use multiple times.
+</span><span class='line'>  -g "&lt;groups&gt;"    The groups of packages to install in the container.
+</span><span class='line'>                   The default is "Core". Can use multiple times.
+</span><span class='line'>  -y &lt;yumconf&gt;     The path to the yum config to install packages from. The
+</span><span class='line'>                   default is /etc/yum.conf for Centos/RHEL and /etc/dnf/dnf.conf for Fedora
+</span><span class='line'>  -t &lt;tag&gt;         Specify Tag information.
+</span><span class='line'>                   default is reffered at /etc/{redhat,system}-release
+</span><span class='line'>[staf@centos386 contrib]$</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>build the image</h2>
+
+<p>The <code>mkimage-yum.sh</code> script will use /etc/yum.conf or /etc/dnf.conf to build the image. <code>mkimage-yum.sh &lt;name&gt;</code> will create the image with name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ sudo ./mkimage-yum.sh centos
+</span><span class='line'>[sudo] password for staf: 
+</span><span class='line'>+ mkdir -m 755 /tmp/mkimage-yum.sh.LeZQNh/dev
+</span><span class='line'>+ mknod -m 600 /tmp/mkimage-yum.sh.LeZQNh/dev/console c 5 1
+</span><span class='line'>+ mknod -m 600 /tmp/mkimage-yum.sh.LeZQNh/dev/initctl p
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/full c 1 7
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/null c 1 3
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/ptmx c 5 2
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/random c 1 8
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/tty c 5 0
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/tty0 c 4 0
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/urandom c 1 9
+</span><span class='line'>+ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/zero c 1 5
+</span><span class='line'>+ '[' -d /etc/yum/vars ']'
+</span><span class='line'>+ mkdir -p -m 755 /tmp/mkimage-yum.sh.LeZQNh/etc/yum
+</span><span class='line'>+ cp -a /etc/yum/vars /tmp/mkimage-yum.sh.LeZQNh/etc/yum/
+</span><span class='line'>+ [[ -n Core ]]
+</span><span class='line'>+ yum -c /etc/yum.conf --installroot=/tmp/mkimage-yum.sh.LeZQNh --releasever=/ --setopt=tsflags=nodocs --setopt=group_package_types=mandatory -y groupinstall Core
+</span><span class='line'>Loaded plugins: fastestmirror, langpacks
+</span><span class='line'>There is no installed groups file.
+</span><span class='line'>Maybe run: yum groups mark convert (see man yum)
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>+ tar --numeric-owner -c -C /tmp/mkimage-yum.sh.LeZQNh .
+</span><span class='line'>+ docker import - centos:7.6.1810
+</span><span class='line'>sha256:7cdb02046bff4c5065de670604fb3252b1221c4853cb4a905ca04488f44f52a8
+</span><span class='line'>+ docker run -i -t --rm centos:7.6.1810 /bin/bash -c 'echo success'
+</span><span class='line'>success
+</span><span class='line'>+ rm -rf /tmp/mkimage-yum.sh.LeZQNh
+</span><span class='line'>[staf@centos386 contrib]$</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Rename</h2>
+
+<p>A new image is created with the name centos.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos              7.6.1810            7cdb02046bff        3 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<p>You might want to rename to include your name or project name. You can do this by retag the image and remove the old image name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos              7.6.1810            7cdb02046bff        20 seconds ago      281 MB
+</span><span class='line'>[staf@centos386 contrib]$ docker rmi centos
+</span><span class='line'>Error response from daemon: No such image: centos:latest
+</span><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos              7.6.1810            7cdb02046bff        3 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ docker tag 7cdb02046bff stafwag/centos_386:7.6.1810 
+</span><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>centos               7.6.1810            7cdb02046bff        7 minutes ago       281 MB
+</span><span class='line'>stafwag/centos_386   7.6.1810            7cdb02046bff        7 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ docker rmi centos:7.6.1810
+</span><span class='line'>Untagged: centos:7.6.1810
+</span><span class='line'>[staf@centos386 contrib]$ docker images
+</span><span class='line'>REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+</span><span class='line'>stafwag/centos_386   7.6.1810            7cdb02046bff        8 minutes ago       281 MB
+</span><span class='line'>[staf@centos386 contrib]$ </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Test</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@centos386 contrib]$ docker run -it --rm stafwag/centos_386:7.6.1810 /bin/sh
+</span><span class='line'>sh-4.2# yum update -y
+</span><span class='line'>Loaded plugins: fastestmirror
+</span><span class='line'>Determining fastest mirrors
+</span><span class='line'> * base: mirror.usenet.farm
+</span><span class='line'> * extras: mirror.usenet.farm
+</span><span class='line'> * updates: mirror.usenet.farm
+</span><span class='line'>base                                                                                                                   | 3.6 kB  00:00:00     
+</span><span class='line'>extras                                                                                                                 | 2.9 kB  00:00:00     
+</span><span class='line'>updates                                                                                                                | 2.9 kB  00:00:00     
+</span><span class='line'>(1/4): updates/7/i386/primary_db                                                                                       | 2.5 MB  00:00:00     
+</span><span class='line'>(2/4): extras/7/i386/primary_db                                                                                        | 157 kB  00:00:01     
+</span><span class='line'>(3/4): base/7/i386/group_gz                                                                                            | 166 kB  00:00:01     
+</span><span class='line'>(4/4): base/7/i386/primary_db                                                                                          | 4.6 MB  00:00:02     
+</span><span class='line'>No packages marked for update
+</span><span class='line'>sh-4.2# </span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun! </em></strong></p>
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -4939,432 +5216,6 @@ Therefor I ended up with building stubby from the source code.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2018/07/01/migrate-a-windows-vmware-vrtual-machine-to-kvm/">Migrate a Windows Vmware Virtual Machine to Linux KVM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2018-07-01T10:49:41+02:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>1</span><span class='date-suffix'>st</span>, <span class='date-year'>2018</span></span> <span class='time'>10:49 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="https://www.linux-kvm.org">Linux KVM</a> is getting more and more useable for desktop virtualization thanks to the the <a href="https://www.linux-kvm.org/page/Virtio">virtio</a> and <a href="https://www.linux-kvm.org/page/SPICE">QXL/SPICE</a> drivers.</p>
-
-<p>Most Linux distributes have the virtio &amp; QXL drivers you might need to install the spice-vdagent.</p>
-
-<p>On Windows you can download and install the virtio and QXL drivers.</p>
-
-<p>Using the virtio drivers will improve your guest system performance and your virtualization experience.</p>
-
-<h2>Convert the disk image</h2>
-
-<h3>merge the vmware disk images&hellip;</h3>
-
-<p>If you use split disk images on vmware ( or vmware player ) migrate them to a single disk images with the vmware-vdiskmanager command.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ vmware-vdiskmanager -r mywin.vmdk -t 0 /tmp/mywin._combined.vmdk
-</span><span class='line'>Creating disk '/var/lib/libvirt/images/tmp/mywin._combined.vmdk'
-</span><span class='line'>  Convert: 100% done.
-</span><span class='line'>Virtual disk conversion successful.
-</span><span class='line'>$</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>convert the vmdk  image to qcow2</h3>
-
-<p>Convert the VMDK disk image to qcow2</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky vboxes]$ qemu-img convert -f vmdk -O qcow2 mywin._combined.vmdk mywin.qcow2</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>mv</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky vboxes]$ sudo mv mywin_combined.qcow2 /var/lib/libvirt/images/
-</span><span class='line'>[sudo] password for staf: 
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Import the disk image to KVM</h2>
-
-<p>We&rsquo;ll inport the disk image with <code>virt-install</code> it&rsquo;s also posible to import the images with <code>virt-manager</code> if you prefer a graphical interface or or just being lazy :-)</p>
-
-<h2>Available os options</h2>
-
-<p>To list the supported operation system you can use the <code>osinfo-query os</code> command</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ osinfo-query os | head
-</span><span class='line'> Short ID             | Name                                               | Version  | ID                                      
-</span><span class='line'>----------------------+----------------------------------------------------+----------+-----------------------------------------
-</span><span class='line'> alpinelinux3.5       | Alpine Linux 3.5                                   | 3.5      | http://alpinelinux.org/alpinelinux/3.5  
-</span><span class='line'> alpinelinux3.6       | Alpine Linux 3.6                                   | 3.6      | http://alpinelinux.org/alpinelinux/3.6  
-</span><span class='line'> alpinelinux3.7       | Alpine Linux 3.7                                   | 3.7      | http://alpinelinux.org/alpinelinux/3.7  
-</span><span class='line'> altlinux1.0          | Mandrake RE Spring 2001                            | 1.0      | http://altlinux.org/altlinux/1.0        
-</span><span class='line'> altlinux2.0          | ALT Linux 2.0                                      | 2.0      | http://altlinux.org/altlinux/2.0        
-</span><span class='line'> altlinux2.2          | ALT Linux 2.2                                      | 2.2      | http://altlinux.org/altlinux/2.2        
-</span><span class='line'> altlinux2.4          | ALT Linux 2.4                                      | 2.4      | http://altlinux.org/altlinux/2.4        
-</span><span class='line'> altlinux3.0          | ALT Linux 3.0                                      | 3.0      | http://altlinux.org/altlinux/3.0        </span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ osinfo-query os |  grep -i windows
-</span><span class='line'> win1.0               | Microsoft Windows 1.0                              | 1.0      | http://microsoft.com/win/1.0            
-</span><span class='line'> win10                | Microsoft Windows 10                               | 10.0     | http://microsoft.com/win/10             
-</span><span class='line'> win2.0               | Microsoft Windows 2.0                              | 2.0      | http://microsoft.com/win/2.0            
-</span><span class='line'> win2.1               | Microsoft Windows 2.1                              | 2.1      | http://microsoft.com/win/2.1            
-</span><span class='line'> win2k                | Microsoft Windows 2000                             | 5.0      | http://microsoft.com/win/2k             
-</span><span class='line'> win2k12              | Microsoft Windows Server 2012                      | 6.3      | http://microsoft.com/win/2k12           
-</span><span class='line'> win2k12r2            | Microsoft Windows Server 2012 R2                   | 6.3      | http://microsoft.com/win/2k12r2         
-</span><span class='line'> win2k16              | Microsoft Windows Server 2016                      | 10.0     | http://microsoft.com/win/2k16           
-</span><span class='line'> win2k3               | Microsoft Windows Server 2003                      | 5.2      | http://microsoft.com/win/2k3            
-</span><span class='line'> win2k3r2             | Microsoft Windows Server 2003 R2                   | 5.2      | http://microsoft.com/win/2k3r2          
-</span><span class='line'> win2k8               | Microsoft Windows Server 2008                      | 6.0      | http://microsoft.com/win/2k8            
-</span><span class='line'> win2k8r2             | Microsoft Windows Server 2008 R2                   | 6.1      | http://microsoft.com/win/2k8r2          
-</span><span class='line'> win3.1               | Microsoft Windows 3.1                              | 3.1      | http://microsoft.com/win/3.1            
-</span><span class='line'> win7                 | Microsoft Windows 7                                | 6.1      | http://microsoft.com/win/7              
-</span><span class='line'> win8                 | Microsoft Windows 8                                | 6.2      | http://microsoft.com/win/8              
-</span><span class='line'> win8.1               | Microsoft Windows 8.1                              | 6.3      | http://microsoft.com/win/8.1            
-</span><span class='line'> win95                | Microsoft Windows 95                               | 4.0      | http://microsoft.com/win/95             
-</span><span class='line'> win98                | Microsoft Windows 98                               | 4.1      | http://microsoft.com/win/98             
-</span><span class='line'> winme                | Microsoft Windows Millennium Edition               | 4.9      | http://microsoft.com/win/me             
-</span><span class='line'> winnt3.1             | Microsoft Windows NT Server 3.1                    | 3.1      | http://microsoft.com/winnt/3.1          
-</span><span class='line'> winnt3.5             | Microsoft Windows NT Server 3.5                    | 3.5      | http://microsoft.com/winnt/3.5          
-</span><span class='line'> winnt3.51            | Microsoft Windows NT Server 3.51                   | 3.51     | http://microsoft.com/winnt/3.51         
-</span><span class='line'> winnt4.0             | Microsoft Windows NT Server 4.0                    | 4.0      | http://microsoft.com/winnt/4.0          
-</span><span class='line'> winvista             | Microsoft Windows Vista                            | 6.0      | http://microsoft.com/win/vista          
-</span><span class='line'> winxp                | Microsoft Windows XP                               | 5.1      | http://microsoft.com/win/xp             
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>import</h3>
-
-<p>We need to import the disk image as IDE device since we don&rsquo;t have the virtio driver in our windows disk image (yet).</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# virt-install --name "mywin" --ram 8192 --cpu host --os-variant win10 --vcpu 8 --disk /var/lib/libvirt/images/mywin_combined.qcow2,bus=ide --network bridge=virbr0 --import
-</span><span class='line'>
-</span><span class='line'>Starting install...
-</span><span class='line'>
-</span><span class='line'>(virt-viewer:3361): GSpice-WARNING **: 16:49:26.546: Warning no automount-inhibiting implementation available
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>Install the virtio drivers and QXL graphics drivers</h2>
-
-<h3>Get them&hellip;</h3>
-
-<h4>Type of virtio drivers</h4>
-
-<p>The following virtio windows drivers are available.</p>
-
-<ul>
-<li>block (disk drivers)</li>
-<li>network</li>
-<li>baloon ((dynamic memory management)</li>
-</ul>
-
-
-<p>The fedoraproject provides pre compiled iso images containig all the virtio drivers and installation images for
-windows XP.</p>
-
-<h4>ISO contents</h4>
-
-<ul>
-<li>NetKVM/ - Virtio network driver</li>
-<li>viostor/ - Virtio block driver</li>
-<li>vioscsi/ - Virtio Small Computer System Interface (SCSI) driver</li>
-<li>viorng/ - Virtio RNG driver</li>
-<li>vioser/ - Virtio serial driver</li>
-<li>Balloon/ - Virtio memory balloon driver</li>
-<li>qxl/ - QXL graphics driver for Windows 7 and earlier. (build virtio-win-0.1.103-1 and later)</li>
-<li>qxldod/ - QXL graphics driver for Windows 8 and later. (build virtio-win-0.1.103-2 and later)</li>
-<li>pvpanic/ - QEMU pvpanic device driver (build virtio-win-0.1.103-2 and later)</li>
-<li>guest-agent/ - QEMU Guest Agent 32bit and 64bit MSI installers</li>
-<li>qemupciserial/ - QEMU PCI serial device driver</li>
-<li>*.vfd VFD floppy images for using during install of Windows XP</li>
-</ul>
-
-
-<h4>Download</h4>
-
-<p>The virtio windows driver images are available from
-<a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html</a></p>
-
-<p>I use arch linux and download virtio-win AUR package with pacaur. You can download the images directly or use the installation packages for your Linux distribution.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ pacaur -S virtio-win
-</span><span class='line'>:: Package virtio-win not found in repositories, trying AUR...
-</span><span class='line'>:: resolving dependencies...
-</span><span class='line'>:: looking for inter-conflicts...
-</span><span class='line'>
-</span><span class='line'>AUR Packages  (1) virtio-win-0.1.149.2-1  
-</span><span class='line'>
-</span><span class='line'>:: Proceed with installation? [Y/n] 
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>  -&gt; Compressing package...
-</span><span class='line'>==&gt; Leaving fakeroot environment.
-</span><span class='line'>==&gt; Finished making: virtio-win 0.1.149.2-1 (Sat Jun 16 20:00:22 2018)
-</span><span class='line'>==&gt; Cleaning up...
-</span><span class='line'>:: Installing virtio-win package(s)...
-</span><span class='line'>loading packages...
-</span><span class='line'>resolving dependencies...
-</span><span class='line'>looking for conflicting packages...
-</span><span class='line'>
-</span><span class='line'>Packages (1) virtio-win-0.1.149.2-1
-</span><span class='line'>
-</span><span class='line'>Total Installed Size:  314.84 MiB
-</span><span class='line'>
-</span><span class='line'>:: Proceed with installation? [Y/n] 
-</span><span class='line'>(1/1) checking keys in keyring                                         [#######################################] 100%
-</span><span class='line'>(1/1) checking package integrity                                       [#######################################] 100%
-</span><span class='line'>(1/1) loading package files                                            [#######################################] 100%
-</span><span class='line'>(1/1) checking for file conflicts                                      [#######################################] 100%
-</span><span class='line'>(1/1) checking available disk space                                    [#######################################] 100%
-</span><span class='line'>:: Processing package changes...
-</span><span class='line'>(1/1) installing virtio-win                                            [#######################################] 100%
-</span><span class='line'>Optional dependencies for virtio-win
-</span><span class='line'>    qemu [installed]
-</span><span class='line'>:: Running post-transaction hooks...
-</span><span class='line'>(1/1) Arming ConditionNeedsUpdate...
-</span><span class='line'>[staf@vicky ~]$ ls -l /var/li</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This install virtio images to <code>/usr/share/virtio/</code></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$  ls -l /usr/share/virtio/
-</span><span class='line'>total 321308
-</span><span class='line'>-rw-r--r-- 1 root root 324233216 Jun 16 19:58 virtio-win.iso
-</span><span class='line'>-rw-r--r-- 1 root root   2949120 Jun 16 19:58 virtio-win_x86_32.vfd
-</span><span class='line'>-rw-r--r-- 1 root root   2949120 Jun 16 19:58 virtio-win_x86_64.vfd
-</span><span class='line'>[staf@vicky ~]$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p><code>virtio-win.iso</code> is the ISO cdrom image containing all the drivers.</p>
-
-<h2>Installation</h2>
-
-<h3>mount the iso image</h3>
-
-<p><img src="/blog/images/virto_windows_install/mount_cdrom_000.png" width="816" height="689" title="&#34;mount_cdrom_000.png&#34;" alt="&#34;mount_cdrom_000.png&#34;"></p>
-
-<p>Make sure that the cdrom is mounted in windows.</p>
-
-<p><img src="/blog/images/virto_windows_install/cdrom_mounted_000.png" width="798" height="605" title="&#34;mount_cdrom_000.png&#34;" alt="&#34;mount_cdrom_000.png&#34;"></p>
-
-<h3>Install</h3>
-
-<h4>Open Device Manager</h4>
-
-<p>Open device Manager in the control panel or type <code>devmgmt.msc</code> on the command prompt.</p>
-
-<p><img src="/blog/images/virto_windows_install/devmgmt_msc_000.png" width="835" height="728" title="&#34;mount_cdrom_000.png&#34;" alt="&#34;mount_cdrom_000.png&#34;"></p>
-
-<h4>Update the drivers</h4>
-
-<ul>
-<li>balloon, the balloon driver affects the PCI device</li>
-<li>vioserial, affects the PCI simple communication controler</li>
-<li>NetKVM, the network driver affects the Network adapters.</li>
-<li>viostor, the block driver affects the Disk drives.</li>
-</ul>
-
-
-<h5>Update the PCI drivers</h5>
-
-<p>In windows 10 the <strong>PCI device</strong> and the <strong>PCI Simple Communications Controller</strong> have the missing driver icon.
-Right click on the <strong>PCI device</strong> and select <strong>update driver</strong> -> click on <strong>Browse my computer for driver software</strong>
-Specify the cdrom as the search location and click <strong>Next</strong>, this will install the Balloon driver.</p>
-
-<p>Do the same for the <strong>PCI Simple Communications Controller</strong> this will install the &ldquo;VirtIO Serial Driver&rdquo;</p>
-
-<p><img src="/blog/images/virto_windows_install/update_pci_000.png" width="790" height="586" title="&#34;update_pci_000.png&#34;" alt="&#34;update_pci_000.png&#34;">
-<img src="/blog/images/virto_windows_install/update_pci_001.png" width="792" height="594" title="&#34;update_pci_001.png&#34;" alt="&#34;update_pci_001.png&#34;">
-<img src="/blog/images/virto_windows_install/update_pci_002.png" width="792" height="577" title="&#34;update_pci_002.png&#34;" alt="&#34;update_pci_002.png&#34;">
-<img src="/blog/images/virto_windows_install/update_pci_003.png" width="788" height="578" title="&#34;update_pci_003.png&#34;" alt="&#34;update_pci_003.png&#34;"></p>
-
-<h5>install the VioStor driver</h5>
-
-<p>Add a temporary disk to the virtual machine and use <strong>VirtIO</strong> as the <strong>Bus Type</strong>
-In the <strong>Device Manager</strong> you&rsquo;ll get a new device <strong>SCSI Controller</strong> right click it and update the driver.
-This will install the <strong>Red Hat VirtIO SCSI controller</strong></p>
-
-<p><img src="/blog/images/virto_windows_install/install_viostor_000.png" width="552" height="567" title="&#34;install_viostor_000.png&#34;" alt="&#34;install_viostor_000.png&#34;">
-<img src="/blog/images/virto_windows_install/install_viostor_001.png" width="786" height="576" title="&#34;install_viostor_001.png&#34;" alt="&#34;install_viostor_001.png&#34;">
-<img src="/blog/images/virto_windows_install/install_viostor_002.png" width="622" height="461" title="&#34;install_viostor_002.png&#34;" alt="&#34;install_viostor_002.png&#34;"></p>
-
-<p>Go to the device settings of your virtual machine and change the <strong>Disk bus</strong> to <strong>VirtIO</strong>
-and shutdown you virtual machine.</p>
-
-<p><img src="/blog/images/virto_windows_install/install_viostor_003.png" width="705" height="689" title="&#34;install_viostor_003.png&#34;" alt="&#34;install_viostor_003.png&#34;"></p>
-
-<p>You can remove the temporary disk now or leave it if you can find some use for it&hellip;</p>
-
-<p>Make sure that you disk is selected as the bootable device.</p>
-
-<p><img src="/blog/images/virto_windows_install/install_viostor_004.png" width="885" height="689" title="&#34;install_viostor_004.png&#34;" alt="&#34;install_viostor_004.png&#34;"></p>
-
-<p>Start the virtual machine and make sure that the system is bootable.</p>
-
-<h6>install the netKVM driver</h6>
-
-<p>Update the <strong>Device model</strong> to <strong>virtio</strong>.</p>
-
-<p><img src="/blog/images/virto_windows_install/use_virtio_net_000.png" width="699" height="689" title="&#34;use_virtio_net_000.png&#34;" alt="&#34;use_virtio_net_000.png&#34;"></p>
-
-<p>Start <code>devmgmt.msc</code> and update the driver as we did before&hellip;.</p>
-
-<p><img src="/blog/images/virto_windows_install/install_netkvm_000.png" width="809" height="737" title="&#34;install_netkvm_000.png&#34;" alt="&#34;install_netkvm_000.png&#34;">
-<img src="/blog/images/virto_windows_install/install_netkvm_001.png" width="788" height="586" title="&#34;install_netkvm_001.png&#34;" alt="&#34;install_netkvm_001.png&#34;"></p>
-
-<p>And verify that you network card works correctly.</p>
-
-<p><img src="/blog/images/virto_windows_install/install_netkvm_002.png" width="902" height="645" title="&#34;install_netkvm_002.png&#34;" alt="&#34;install_netkvm_002.png&#34;"></p>
-
-<h6>install the QXL graphical driver</h6>
-
-<p>Update the <strong>Microsoft Basic Display Adapter</strong></p>
-
-<p><img src="/blog/images/virto_windows_install/install_qxl_000.png" width="792" height="581" title="&#34;install_qxl_000.png&#34;" alt="&#34;install_qxl_000.png&#34;">
-<img src="/blog/images/virto_windows_install/install_qxl_001.png" width="788" height="582" title="&#34;install_qxl_001.png&#34;" alt="&#34;install_qxl_001.png&#34;">
-<img src="/blog/images/virto_windows_install/install_qxl_002.png" width="863" height="597" title="&#34;install_qxl_002.png&#34;" alt="&#34;install_qxl_002.png&#34;"></p>
-
-<p>After the installation you can change the the display resolution.</p>
-
-<p><img src="/blog/images/virto_windows_install/install_qxl_003.png" width="812" height="651" title="&#34;install_qxl_003.png&#34;" alt="&#34;install_qxl_003.png&#34;"></p>
-
-<p>If you want to use higher screen resolutions you need to <a href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">increase the video ram</a></p>
-
-<p><strong><em>Have fun!</em></strong></p>
-
-<h2>Links</h2>
-
-<ul>
-<li><a href="https://raymii.org/s/articles/virt-install_introduction_and_copy_paste_distro_install_commands.html">https://raymii.org/s/articles/virt-install_introduction_and_copy_paste_distro_install_commands.html</a></li>
-<li><a href="http://bart.vanhauwaert.org/hints/installing-win10-on-KVM.html">http://bart.vanhauwaert.org/hints/installing-win10-on-KVM.html</a></li>
-<li><a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html</a></li>
-<li><a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers">https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers</a></li>
-<li><a href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/form-virtualization_host_configuration_and_guest_installation_guide-para_virtualized_drivers-mounting_the_image_with_virt_manager">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/virtualization_host_configuration_and_guest_installation_guide/form-virtualization_host_configuration_and_guest_installation_guide-para_virtualized_drivers-mounting_the_image_with_virt_manager</a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -5398,6 +5249,10 @@ and shutdown you virtual machine.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/">Building Your Own Docker Base Images (Part 3: Yum)</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/05/05/building-your-own-docker-images-part2/">Building Your Own Docker Images (Part2: Arch GNU/Linux & Co)</a>
       </li>
     
@@ -5411,10 +5266,6 @@ and shutdown you virtual machine.</p>
     
       <li class="post">
         <a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2019/01/21/settinp-up-openstack-ansible-all-in-one-on-a-centos-7-system/">Setting Up OpenStack-Ansible All-In-One on a Centos 7 System</a>
       </li>
     
   </ul>

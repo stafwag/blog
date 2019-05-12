@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Centos | stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/blog/categories/centos/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2019-05-05T10:55:07+02:00</updated>
+  <updated>2019-05-12T09:59:28+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,161 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Building Your Own Docker Base Images (Part 3: Yum)]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/"/>
+    <updated>2019-05-12T10:06:11+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum</id>
+    <content type="html"><![CDATA[<p><img class="right" src="/images/fedora_logo_small.png" width="140" height="140" title="&ldquo;fedora_logo_small.png&rdquo;" ></p>
+
+<p>In my previous two posts (<a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">1</a>,
+<a href="https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">2</a> ), we created Docker <a href="https://www.debian.org/">Debian</a> and
+ <a href="https://www.archlinux.org/">Arch</a>-based images from scratch for the <a href="https://en.wikipedia.org/wiki/Intel_80386">i386 architecture</a>.</p>
+
+<p>In this blog post - last one in this series - we&rsquo;ll do the same for <a href="https://en.wikipedia.org/wiki/Yum_(software)">yum</a> based distributions like <a href="https://www.centos.org/">CentOS</a> and <a href="https://getfedora.org/">Fedora</a>.</p>
+
+<p>Building your own Docker base images isn&rsquo;t difficult and let you trust your distribution Gpg signing keys instead of the <a href="https://hub.docker.com/">docker hub</a>. As explained in <a href="http://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/">the first blog post</a>. The mkimage scripts in the contrib directory of the <a href="https://mobyproject.org/">Moby project</a> git repository is a good place to start if you want to build own docker images.</p>
+
+<p><img class="left" src="/images/centos_logo_small.png" width="267" height="79" title="&ldquo;centos_logo_small.png&rdquo;" ></p>
+
+<p>Fedora is one of the GNU/Linux distributions that supports 32 bits systems. Centos has a <a href="https://wiki.centos.org/SpecialInterestGroup">Special Interest Groups</a>
+ to support <a href="https://wiki.centos.org/SpecialInterestGroup/AltArch">alternative architectures</a>.
+ <a href="https://wiki.centos.org/SpecialInterestGroup/AltArch">The Alternative Architecture SIG</a> create installation images for power, i386, armhfp (arm v732 bits)
+ and aarch64 (arm v8 64-bit).</p>
+
+<h1>Centos</h1>
+
+<p>In this blog post, we will create centos based docker images. The procedure to create Fedora images is the same.</p>
+
+<h2>Clone moby</h2>
+
+<pre><code>staf@centos386 github]$ git clone https://github.com/moby/moby
+Cloning into 'moby'...
+remote: Enumerating objects: 7, done.
+remote: Counting objects: 100% (7/7), done.
+remote: Compressing objects: 100% (7/7), done.
+remote: Total 269517 (delta 0), reused 1 (delta 0), pack-reused 269510
+Receiving objects: 100% (269517/269517), 139.16 MiB | 3.07 MiB/s, done.
+Resolving deltas: 100% (182765/182765), done.
+[staf@centos386 github]$ 
+</code></pre>
+
+<h2>Go to the contrib directory</h2>
+
+<pre><code>[staf@centos386 github]$ cd moby/contrib/
+[staf@centos386 contrib]$ 
+</code></pre>
+
+<h2>mkimage-yum.sh</h2>
+
+<p>When you run <code>mkimage-yum.sh</code> you get the usage message.</p>
+
+<pre><code>[staf@centos386 contrib]$ ./mkimage-yum.sh 
+mkimage-yum.sh [OPTIONS] &lt;name&gt;
+OPTIONS:
+  -p "&lt;packages&gt;"  The list of packages to install in the container.
+                   The default is blank. Can use multiple times.
+  -g "&lt;groups&gt;"    The groups of packages to install in the container.
+                   The default is "Core". Can use multiple times.
+  -y &lt;yumconf&gt;     The path to the yum config to install packages from. The
+                   default is /etc/yum.conf for Centos/RHEL and /etc/dnf/dnf.conf for Fedora
+  -t &lt;tag&gt;         Specify Tag information.
+                   default is reffered at /etc/{redhat,system}-release
+[staf@centos386 contrib]$
+</code></pre>
+
+<h2>build the image</h2>
+
+<p>The <code>mkimage-yum.sh</code> script will use /etc/yum.conf or /etc/dnf.conf to build the image. <code>mkimage-yum.sh &lt;name&gt;</code> will create the image with name.</p>
+
+<pre><code>[staf@centos386 contrib]$ sudo ./mkimage-yum.sh centos
+[sudo] password for staf: 
++ mkdir -m 755 /tmp/mkimage-yum.sh.LeZQNh/dev
++ mknod -m 600 /tmp/mkimage-yum.sh.LeZQNh/dev/console c 5 1
++ mknod -m 600 /tmp/mkimage-yum.sh.LeZQNh/dev/initctl p
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/full c 1 7
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/null c 1 3
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/ptmx c 5 2
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/random c 1 8
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/tty c 5 0
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/tty0 c 4 0
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/urandom c 1 9
++ mknod -m 666 /tmp/mkimage-yum.sh.LeZQNh/dev/zero c 1 5
++ '[' -d /etc/yum/vars ']'
++ mkdir -p -m 755 /tmp/mkimage-yum.sh.LeZQNh/etc/yum
++ cp -a /etc/yum/vars /tmp/mkimage-yum.sh.LeZQNh/etc/yum/
++ [[ -n Core ]]
++ yum -c /etc/yum.conf --installroot=/tmp/mkimage-yum.sh.LeZQNh --releasever=/ --setopt=tsflags=nodocs --setopt=group_package_types=mandatory -y groupinstall Core
+Loaded plugins: fastestmirror, langpacks
+There is no installed groups file.
+Maybe run: yum groups mark convert (see man yum)
+&lt;snip&gt;
++ tar --numeric-owner -c -C /tmp/mkimage-yum.sh.LeZQNh .
++ docker import - centos:7.6.1810
+sha256:7cdb02046bff4c5065de670604fb3252b1221c4853cb4a905ca04488f44f52a8
++ docker run -i -t --rm centos:7.6.1810 /bin/bash -c 'echo success'
+success
++ rm -rf /tmp/mkimage-yum.sh.LeZQNh
+[staf@centos386 contrib]$
+</code></pre>
+
+<h2>Rename</h2>
+
+<p>A new image is created with the name centos.</p>
+
+<pre><code>[staf@centos386 contrib]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos              7.6.1810            7cdb02046bff        3 minutes ago       281 MB
+[staf@centos386 contrib]$ 
+</code></pre>
+
+<p>You might want to rename to include your name or project name. You can do this by retag the image and remove the old image name.</p>
+
+<pre><code>[staf@centos386 contrib]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos              7.6.1810            7cdb02046bff        20 seconds ago      281 MB
+[staf@centos386 contrib]$ docker rmi centos
+Error response from daemon: No such image: centos:latest
+[staf@centos386 contrib]$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+centos              7.6.1810            7cdb02046bff        3 minutes ago       281 MB
+[staf@centos386 contrib]$ docker tag 7cdb02046bff stafwag/centos_386:7.6.1810 
+[staf@centos386 contrib]$ docker images
+REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+centos               7.6.1810            7cdb02046bff        7 minutes ago       281 MB
+stafwag/centos_386   7.6.1810            7cdb02046bff        7 minutes ago       281 MB
+[staf@centos386 contrib]$ docker rmi centos:7.6.1810
+Untagged: centos:7.6.1810
+[staf@centos386 contrib]$ docker images
+REPOSITORY           TAG                 IMAGE ID            CREATED             SIZE
+stafwag/centos_386   7.6.1810            7cdb02046bff        8 minutes ago       281 MB
+[staf@centos386 contrib]$ 
+</code></pre>
+
+<h2>Test</h2>
+
+<pre><code>[staf@centos386 contrib]$ docker run -it --rm stafwag/centos_386:7.6.1810 /bin/sh
+sh-4.2# yum update -y
+Loaded plugins: fastestmirror
+Determining fastest mirrors
+ * base: mirror.usenet.farm
+ * extras: mirror.usenet.farm
+ * updates: mirror.usenet.farm
+base                                                                                                                   | 3.6 kB  00:00:00     
+extras                                                                                                                 | 2.9 kB  00:00:00     
+updates                                                                                                                | 2.9 kB  00:00:00     
+(1/4): updates/7/i386/primary_db                                                                                       | 2.5 MB  00:00:00     
+(2/4): extras/7/i386/primary_db                                                                                        | 157 kB  00:00:01     
+(3/4): base/7/i386/group_gz                                                                                            | 166 kB  00:00:01     
+(4/4): base/7/i386/primary_db                                                                                          | 4.6 MB  00:00:02     
+No packages marked for update
+sh-4.2# 
+</code></pre>
+
+<p><strong><em> Have fun! </em></strong></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Howto Use Centos Cloud Images With Cloud-init on KVM/libvirtd]]></title>
