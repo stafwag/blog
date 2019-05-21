@@ -3,7 +3,7 @@ layout: post
 title: "OPNsense upgrade failed: Out of inodes"
 date: 2019-05-21 19:20:37 +0200
 comments: true
-categories: 
+categories: [ "opnsense", "freebsd" ] 
 ---
 
 <a href="/images/opnsense_out_of_inodes.jpg"><img src="/images/opnsense_out_of_inodes.jpg" class="left" width="500" height="382" alt="opnsense with no inodes" /></a>
