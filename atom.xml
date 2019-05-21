@@ -4,7 +4,7 @@
   <title><![CDATA[stafwag Blog]]></title>
   <link href="https://stafwag.github.io/blog/atom.xml" rel="self"/>
   <link href="https://stafwag.github.io/blog/"/>
-  <updated>2019-05-12T09:59:28+02:00</updated>
+  <updated>2019-05-21T19:16:01+02:00</updated>
   <id>https://stafwag.github.io/blog/</id>
   <author>
     <name><![CDATA[staf wagemakers]]></name>
@@ -12,6 +12,557 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[OPNsense Upgrade Failed: Out of Inodes]]></title>
+    <link href="https://stafwag.github.io/blog/blog/2019/05/21/opnsense-out-of-inodes/"/>
+    <updated>2019-05-21T19:20:37+02:00</updated>
+    <id>https://stafwag.github.io/blog/blog/2019/05/21/opnsense-out-of-inodes</id>
+    <content type="html"><![CDATA[<p><a href="https://stafwag.github.io/blog/images/opnsense_out_of_inodes.jpg"><img src="https://stafwag.github.io/blog/images/opnsense_out_of_inodes.jpg" class="left" width="500" height="382" alt="opnsense with no inodes" /></a></p>
+
+<p>I use <a href="https://opnsense.org/">OPNsense</a> as <a href="http://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/">my firewall</a> on a <a href="https://pcengines.ch/">Pcengines</a> <a href="https://pcengines.ch/alix2d13.htm">Alix</a>.</p>
+
+<p>The primary reason is to have a firewall that will be always up-to-update, unlike most commercial customer grade firewalls that are only supported for a few years. Having a firewall that runs opensource software - it&rsquo;s based on <a href="https://www.freebsd.org">FreeBSD</a> - also make it easier to review and to verify that there are no <a href="https://en.wikipedia.org/wiki/Backdoor_(computing)">back doors</a>.</p>
+
+<p>When I tried to upgrade it to the latest release - 19.1.7 - the upgrade failed because the filesystem ran out of inodes. There is already <a href="https://forum.opnsense.org/index.php?topic=12639.15">a topic</a> about this at the <a href="https://forum.opnsense.org/index.php?topic=12639.15">OPNsense forum</a> and <a href="https://github.com/opnsense/tools/commit/0657a0ae479b4">a fix available</a> for the upcoming nano OPNsense images.</p>
+
+<p>But this will only resolve the issue when a new image becomes available and would require a reinstallation of the firewall.</p>
+
+<p>Unlike <a href="https://en.wikipedia.org/wiki/Ext2">ext2/&frac34;</a> or <a href="https://en.wikipedia.org/wiki/Silicon_Graphics">Sgi</a>&rsquo;s <a href="https://en.wikipedia.org/wiki/XFS">XFS</a> on <a href="https://www.gnu.org/">GNU</a>/<a href="https://www.kernel.org/">Linux</a>, it isn&rsquo;t possible to increase the number of inodes on a <a href="https://en.wikipedia.org/wiki/Unix_File_System">UFS filesystem</a> on <a href="https://www.freebsd.org/">FreeBSD</a>.</p>
+
+<p>To resolve the upgrade issue I created a backup of the existing filesystem, created a new filesystem with enough inodes, and restored the backup.</p>
+
+<p>You&rsquo;ll find my journey of fixing the out of inodes issue below all commands are executed on a FreeBSD system. Hopefully this useful for someone.</p>
+
+<h1>Fixing the out of inodes</h1>
+
+<p>I connected the OPNsense <a href="https://en.wikipedia.org/wiki/CompactFlash">CF disk </a> to a USB cardreader on a FreeBSD virtual system.</p>
+
+<h2>Find the disk</h2>
+
+<p>Find the CF disk I use <code>gpart show</code> as this will also display the disk labels etc.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # gpart show
+</span><span class='line'>=&gt;      40  41942960  vtbd0  GPT  (20G)
+</span><span class='line'>        40      1024      1  freebsd-boot  (512K)
+</span><span class='line'>      1064       984         - free -  (492K)
+</span><span class='line'>      2048   4194304      2  freebsd-swap  (2.0G)
+</span><span class='line'>   4196352  37744640      3  freebsd-zfs  (18G)
+</span><span class='line'>  41940992      2008         - free -  (1.0M)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  da0  BSD  (3.7G)
+</span><span class='line'>        0  7847280    1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufsid/5a6b137a11c4f909  BSD  (3.7G)
+</span><span class='line'>        0  7847280                       1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufs/OPNsense_Nano  BSD  (3.7G)
+</span><span class='line'>        0  7847280                  1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Backup</h2>
+
+<p>Create a backup with the old-school <code>dd</code>, just in case.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # dd if=/dev/da0 of=/home/staf/opnsense.dd bs=4M status=progress
+</span><span class='line'>  4013948928 bytes (4014 MB, 3828 MiB) transferred 415.226s, 9667 kB/s
+</span><span class='line'>957+1 records in
+</span><span class='line'>957+1 records out
+</span><span class='line'>4017807360 bytes transferred in 415.634273 secs (9666689 bytes/sec)
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mount</h3>
+
+<p>Verify that we can mount the filesystem.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # mount /dev/da0a /mnt
+</span><span class='line'>root@freebsd:/ # cd /mnt
+</span><span class='line'>root@freebsd:/mnt # ls
+</span><span class='line'>.cshrc                          dev                             net
+</span><span class='line'>.probe.for.install.media        entropy                         proc
+</span><span class='line'>.profile                        etc                             rescue
+</span><span class='line'>.rnd                            home                            root
+</span><span class='line'>COPYRIGHT                       lib                             sbin
+</span><span class='line'>bin                             libexec                         sys
+</span><span class='line'>boot                            lost+found                      tmp
+</span><span class='line'>boot.config                     media                           usr
+</span><span class='line'>conf                            mnt                             var
+</span><span class='line'>root@freebsd:/mnt # cd ..
+</span><span class='line'>root@freebsd:/ #  df -i /mnt
+</span><span class='line'>Filesystem 1K-blocks    Used   Avail Capacity iused ifree %iused  Mounted on
+</span><span class='line'>/dev/da0a    3916903 1237690 2365861    34%   38203  6595   85%   /mnt
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>umount</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # umount /mnt</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>dump</h3>
+
+<p>We&rsquo;ll a create a backup with <code>dump</code>, we&rsquo;ll use this backup to restore it again after we created a new filesystem with enough inodes.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # dump 0uaf /home/staf/opensense.dump /dev/da0a
+</span><span class='line'>  DUMP: Date of this level 0 dump: Sun May 19 10:43:56 2019
+</span><span class='line'>  DUMP: Date of last level 0 dump: the epoch
+</span><span class='line'>  DUMP: Dumping /dev/da0a to /home/staf/opensense.dump
+</span><span class='line'>  DUMP: mapping (Pass I) [regular files]
+</span><span class='line'>  DUMP: mapping (Pass II) [directories]
+</span><span class='line'>  DUMP: estimated 1264181 tape blocks.
+</span><span class='line'>  DUMP: dumping (Pass III) [directories]
+</span><span class='line'>  DUMP: dumping (Pass IV) [regular files]
+</span><span class='line'>  DUMP: 16.21% done, finished in 0:25 at Sun May 19 11:14:51 2019
+</span><span class='line'>  DUMP: 33.27% done, finished in 0:20 at Sun May 19 11:14:03 2019
+</span><span class='line'>  DUMP: 49.65% done, finished in 0:15 at Sun May 19 11:14:12 2019
+</span><span class='line'>  DUMP: 66.75% done, finished in 0:09 at Sun May 19 11:13:57 2019
+</span><span class='line'>  DUMP: 84.20% done, finished in 0:04 at Sun May 19 11:13:41 2019
+</span><span class='line'>  DUMP: 99.99% done, finished soon
+</span><span class='line'>  DUMP: DUMP: 1267205 tape blocks on 1 volume
+</span><span class='line'>  DUMP: finished in 1800 seconds, throughput 704 KBytes/sec
+</span><span class='line'>  DUMP: level 0 dump on Sun May 19 10:43:56 2019
+</span><span class='line'>  DUMP: Closing /home/staf/opensense.dump
+</span><span class='line'>  DUMP: DUMP IS DONE
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>newfs</h2>
+
+<p>According to the <a href="https://www.freebsd.org/cgi/man.cgi?newfs(8)">newfs manpage</a>:
+We can specify the inode density with the <code>-i</code> option. A lower number will give use more inodes.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # newfs -i 1 /dev/da0a
+</span><span class='line'>density increased from 1 to 4096
+</span><span class='line'>/dev/da0a: 3831.7MB (7847280 sectors) block size 32768, fragment size 4096
+</span><span class='line'>        using 8 cylinder groups of 479.00MB, 15328 blks, 122624 inodes.
+</span><span class='line'>super-block backups (for fsck_ffs -b #) at:
+</span><span class='line'> 192, 981184, 1962176, 2943168, 3924160, 4905152, 5886144, 6867136
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>mount and verify</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # mount /dev/da0a /mnt
+</span><span class='line'>root@freebsd:/ # df -i
+</span><span class='line'>Filesystem         1K-blocks    Used    Avail Capacity iused    ifree %iused  Mounted on
+</span><span class='line'>zroot/ROOT/default  14562784 1819988 12742796    12%   29294 25485592    0%   /
+</span><span class='line'>devfs                      1       1        0   100%       0        0  100%   /dev
+</span><span class='line'>zroot/tmp           12742884      88 12742796     0%      11 25485592    0%   /tmp
+</span><span class='line'>zroot/usr/home      14522868 1780072 12742796    12%      17 25485592    0%   /usr/home
+</span><span class='line'>zroot/usr/ports     13473616  730820 12742796     5%  178143 25485592    1%   /usr/ports
+</span><span class='line'>zroot/usr/src       13442804  700008 12742796     5%   84122 25485592    0%   /usr/src
+</span><span class='line'>zroot/var/audit     12742884      88 12742796     0%       9 25485592    0%   /var/audit
+</span><span class='line'>zroot/var/crash     12742884      88 12742796     0%       8 25485592    0%   /var/crash
+</span><span class='line'>zroot/var/log       12742932     136 12742796     0%      21 25485592    0%   /var/log
+</span><span class='line'>zroot/var/mail      12742884      88 12742796     0%       8 25485592    0%   /var/mail
+</span><span class='line'>zroot/var/tmp       12742884      88 12742796     0%       8 25485592    0%   /var/tmp
+</span><span class='line'>zroot               12742884      88 12742796     0%       7 25485592    0%   /zroot
+</span><span class='line'>/dev/da0a            3677780       8  3383552     0%       2   980988    0%   /mnt
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>restore</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/mnt # restore rf /home/staf/opensense.dump
+</span><span class='line'>root@freebsd:/mnt # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>verify</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/mnt # df -ih /mnt
+</span><span class='line'>Filesystem    Size    Used   Avail Capacity iused ifree %iused  Mounted on
+</span><span class='line'>/dev/da0a     3.5G    1.2G    2.0G    39%     38k  943k    4%   /mnt
+</span><span class='line'>root@freebsd:/mnt # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Label</h2>
+
+<p>The installation had a <code>OPNsense_Nano</code> label, underscores are not allowed anymore in label name on FreeBSD 12.
+So I used OPNsense instead, we&rsquo;ll update <code>/etc/fstab</code> with the new label name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # tunefs -L OPNsense /dev/da0a
+</span><span class='line'>root@freebsd:~ # gpart show
+</span><span class='line'>=&gt;      40  41942960  vtbd0  GPT  (20G)
+</span><span class='line'>        40      1024      1  freebsd-boot  (512K)
+</span><span class='line'>      1064       984         - free -  (492K)
+</span><span class='line'>      2048   4194304      2  freebsd-swap  (2.0G)
+</span><span class='line'>   4196352  37744640      3  freebsd-zfs  (18G)
+</span><span class='line'>  41940992      2008         - free -  (1.0M)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  da0  BSD  (3.7G)
+</span><span class='line'>        0  7847280    1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufsid/5ce123f5836f7018  BSD  (3.7G)
+</span><span class='line'>        0  7847280                       1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufs/OPNsense  BSD  (3.7G)
+</span><span class='line'>        0  7847280             1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>update /etc/fstab</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # mount /dev/da0a /mnt
+</span><span class='line'>root@freebsd:~ # cd /mnt
+</span><span class='line'>root@freebsd:/mnt # cd etc
+</span><span class='line'>root@freebsd:/mnt/etc # vi fstab </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Device                Mountpoint      FStype  Options         Dump    Pass#
+</span><span class='line'>/dev/ufs/OPNsense       /               ufs     rw              1       1</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>umount</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/mnt/etc # cd
+</span><span class='line'>root@freebsd:~ # umount /mnt
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>test</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>              ______  _____  _____                         
+</span><span class='line'>             /  __  |/ ___ |/ __  |                        
+</span><span class='line'>             | |  | | |__/ | |  | |___  ___ _ __  ___  ___ 
+</span><span class='line'>             | |  | |  ___/| |  | / __|/ _ \ '_ \/ __|/ _ \
+</span><span class='line'>             | |__| | |    | |  | \__ \  __/ | | \__ \  __/
+</span><span class='line'>             |_____/|_|    |_| /__|___/\___|_| |_|___/\___|
+</span><span class='line'>
+</span><span class='line'> +=========================================+     @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</span><span class='line'> |                                         |   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</span><span class='line'> |  1. Boot Multi User [Enter]             |   @@@@@                    @@@@@
+</span><span class='line'> |  2. Boot [S]ingle User                  |       @@@@@            @@@@@    
+</span><span class='line'> |  3. [Esc]ape to loader prompt           |    @@@@@@@@@@@       @@@@@@@@@@@
+</span><span class='line'> |  4. Reboot                              |         \\\\\         /////     
+</span><span class='line'> |                                         |   ))))))))))))       (((((((((((
+</span><span class='line'> |  Options:                               |         /////         \\\\\     
+</span><span class='line'> |  5. [K]ernel: kernel (1 of 2)           |    @@@@@@@@@@@       @@@@@@@@@@@
+</span><span class='line'> |  6. Configure Boot [O]ptions...         |       @@@@@            @@@@@    
+</span><span class='line'> |                                         |   @@@@@                    @@@@@
+</span><span class='line'> |                                         |   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</span><span class='line'> |                                         |   @@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+</span><span class='line'> +=========================================+                                  
+</span><span class='line'>                                             19.1  ``Inspiring Iguana''   
+</span><span class='line'>
+</span><span class='line'>/boot/kernel/kernel text=0x1406faf data=0xf2af4+0x2abeec syms=[0x4+0xf9f50+0x4+0x1910f5]
+</span><span class='line'>/boot/entropy size=0x1000
+</span><span class='line'>/boot/kernel/carp.ko text=0x7f90 data=0x374+0x74 syms=[0x4+0xeb0+0x4+0xf40]
+</span><span class='line'>/boot/kernel/if_bridge.ko text=0x7b74 data=0x364+0x3c syms=[0x4+0x1020+0x4+0x125f]
+</span><span class='line'>loading required module 'bridgestp'
+</span><span class='line'>/boot/kernel/bridgestp.ko text=0x4878 data=0xe0+0x18 syms=[0x4+0x6c0+0x4+0x65c]
+</span><span class='line'>/boot/kernel/if_enc.ko text=0x1198 data=0x2b8+0x8 syms=[0x4+0x690+0x4+0x813]
+</span><span class='line'>/boot/kernel/if_gre.ko text=0x31d8 data=0x278+0x30 syms=[0x4+0xa30+0x4+0xab8]
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>Root file system: /dev/ufs/OPNsense
+</span><span class='line'>Sun May 19 10:28:00 UTC 2019
+</span><span class='line'>
+</span><span class='line'>*** OPNsense.stafnet: OPNsense 19.1.6 (i386/OpenSSL) ***
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>
+</span><span class='line'> HTTPS: SHA256 E8 9F B2 8B BE F9 D7 2D 00 AD D3 D5 60 E3 77 53
+</span><span class='line'>           3D AC AB 81 38 E4 D2 75 9E 04 F9 33 FF 76 92 28
+</span><span class='line'> SSH:   SHA256 FbjqnefrisCXn8odvUSsM8HtzNNs+9xR/mGFMqHXjfs (ECDSA)
+</span><span class='line'> SSH:   SHA256 B6R7GRL/ucRL3JKbHL1OGsdpHRDyotYukc77jgmIJjQ (ED25519)
+</span><span class='line'> SSH:   SHA256 8BOmgp8lSFF4okrOUmL4YK60hk7LTg2N08Hifgvlq04 (RSA)
+</span><span class='line'>
+</span><span class='line'>FreeBSD/i386 (OPNsense.stafnet) (ttyu0)
+</span><span class='line'>
+</span><span class='line'>login: </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@OPNsense:~ # df -ih
+</span><span class='line'>Filesystem           Size    Used   Avail Capacity iused ifree %iused  Mounted on
+</span><span class='line'>/dev/ufs/OPNsense    3.5G    1.2G    2.0G    39%     38k  943k    4%   /
+</span><span class='line'>devfs                1.0K    1.0K      0B   100%       0     0  100%   /dev
+</span><span class='line'>tmpfs                307M     15M    292M     5%     203  2.1G    0%   /var
+</span><span class='line'>tmpfs                292M     88K    292M     0%      27  2.1G    0%   /tmp
+</span><span class='line'>devfs                1.0K    1.0K      0B   100%       0     0  100%   /var/unbound/dev
+</span><span class='line'>devfs                1.0K    1.0K      0B   100%       0     0  100%   /var/dhcpd/dev
+</span><span class='line'>root@OPNsense:~ # 
+</span><span class='line'>CTRL-A Z for help | 115200 8N1 | NOR | Minicom 2.7.1 | VT102 | Offline | ttyUSB0                                    </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>update</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>login: root
+</span><span class='line'>Password:
+</span><span class='line'>----------------------------------------------
+</span><span class='line'>|      Hello, this is OPNsense 19.1          |         @@@@@@@@@@@@@@@
+</span><span class='line'>|                                            |        @@@@         @@@@
+</span><span class='line'>| Website:      https://opnsense.org/        |         @@@\\\   ///@@@
+</span><span class='line'>| Handbook:     https://docs.opnsense.org/   |       ))))))))   ((((((((
+</span><span class='line'>| Forums:       https://forum.opnsense.org/  |         @@@///   \\\@@@
+</span><span class='line'>| Lists:        https://lists.opnsense.org/  |        @@@@         @@@@
+</span><span class='line'>| Code:         https://github.com/opnsense  |         @@@@@@@@@@@@@@@
+</span><span class='line'>----------------------------------------------
+</span><span class='line'>
+</span><span class='line'>*** OPNsense.stafnet: OPNsense 19.1.6 (i386/OpenSSL) ***
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>
+</span><span class='line'> HTTPS: SHA256 E8 9F B2 8B BE F9 D7 2D 00 AD D3 D5 60 E3 77 53
+</span><span class='line'>               3D AC AB 81 38 E4 D2 75 9E 04 F9 33 FF 76 92 28
+</span><span class='line'> SSH:   SHA256 FbjqnefrisCXn8odvUSsM8HtzNNs+9xR/mGFMqHXjfs (ECDSA)
+</span><span class='line'> SSH:   SHA256 B6R7GRL/ucRL3JKbHL1OGsdpHRDyotYukc77jgmIJjQ (ED25519)
+</span><span class='line'> SSH:   SHA256 8BOmgp8lSFF4okrOUmL4YK60hk7LTg2N08Hifgvlq04 (RSA)
+</span><span class='line'>
+</span><span class='line'>  0) Logout                              7) Ping host
+</span><span class='line'>  1) Assign interfaces                   8) Shell
+</span><span class='line'>  2) Set interface IP address            9) pfTop
+</span><span class='line'>  3) Reset the root password            10) Firewall log
+</span><span class='line'>  4) Reset to factory defaults          11) Reload all services
+</span><span class='line'>  5) Power off system                   12) Update from console
+</span><span class='line'>  6) Reboot system                      13) Restore a backup
+</span><span class='line'>
+</span><span class='line'>Enter an option: 12
+</span><span class='line'>
+</span><span class='line'>Fetching change log information, please wait... done
+</span><span class='line'>
+</span><span class='line'>This will automatically fetch all available updates, apply them,
+</span><span class='line'>and reboot if necessary.
+</span><span class='line'>
+</span><span class='line'>This update requires a reboot.
+</span><span class='line'>
+</span><span class='line'>Proceed with this action? [y/N]: y 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://forum.opnsense.org/index.php?topic=12639.15">https://forum.opnsense.org/index.php?topic=12639.15</a></li>
+<li><a href="https://forums.freebsd.org/threads/ufs-backup.185/">https://forums.freebsd.org/threads/ufs-backup.185/</a></li>
+<li><a href="https://www.freebsd.org/doc/handbook/geom-glabel.html">https://www.freebsd.org/doc/handbook/geom-glabel.html</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Building Your Own Docker Base Images (Part 3: Yum)]]></title>
@@ -7200,22 +7751,6 @@ If you new micro code cause issue you can just remove the entry in grub configur
 <a href="https://stafwag.github.io/blog/images/modelm_all_keys.jpg"><img src="https://stafwag.github.io/blog/images/modelm_all_keys.jpg" height="250" width="375" alt="modelm_all_keys.jpg" /></a>
 <a href="https://stafwag.github.io/blog/images/modelm_tux_only.jpg"><img src="https://stafwag.github.io/blog/images/modelm_tux_only.jpg" height="250" width="375" alt="modelm_tux_only.jpg" /></a>
 <a href="https://stafwag.github.io/blog/images/modelm_with_tux_keys.jpg"><img src="https://stafwag.github.io/blog/images/modelm_with_tux_keys.jpg" height="250" width="375" alt="modelm_with_tux_keys.jpg" /></a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Jenkins Build With 20 Cores]]></title>
-    <link href="https://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores/"/>
-    <updated>2017-09-30T19:18:14+02:00</updated>
-    <id>https://stafwag.github.io/blog/blog/2017/09/30/jenkins-build-with-20-cores</id>
-    <content type="html"><![CDATA[<p>I finally got the time to try out my jenkins build on my new <a href="http://stafwag.github.io/blog/blog/2017/09/16/20-core-dual-processor-jenkins-build-workstation/">20 Core Dual Processor Jenkins Build Workstation</a></p>
-
-<div class="embed-video-container"><iframe src="http://www.youtube.com/embed/BNn9absXkE8 "></iframe></div>
-
-
-<p>I&rsquo;m able to run all test on multiple operation systems now. I still need to review this setup and perhaps move some tests to <a href="https://www.docker.io">docker</a> instead of the virtual machines to save some memory. &hellip;but this jenkins setup was configured before docker was a thing.</p>
-
-<p><strong><em>Have fun</em></strong></p>
 ]]></content>
   </entry>
   

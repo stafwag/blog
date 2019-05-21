@@ -9,8 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Building Your Own Docker Base Images (Part 3: Yum) May 12th, 2019 10:06 am In my previous two posts (1,
-2 ), we created Docker Debian and Arch-based &hellip;">
+  <meta name="description" content="OPNsense Upgrade Failed: Out of Inodes May 21st, 2019 7:20 pm I use OPNsense as my firewall on a Pcengines Alix. The primary reason is to have a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,587 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2019/05/21/opnsense-out-of-inodes/">OPNsense Upgrade Failed: Out of Inodes</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2019-05-21T19:20:37+02:00'><span class='date'><span class='date-month'>May</span> <span class='date-day'>21</span><span class='date-suffix'>st</span>, <span class='date-year'>2019</span></span> <span class='time'>7:20 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="/blog/images/opnsense_out_of_inodes.jpg"><img src="/blog/images/opnsense_out_of_inodes.jpg" class="left" width="500" height="382" alt="opnsense with no inodes" /></a></p>
+
+<p>I use <a href="https://opnsense.org/">OPNsense</a> as <a href="http://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/">my firewall</a> on a <a href="https://pcengines.ch/">Pcengines</a> <a href="https://pcengines.ch/alix2d13.htm">Alix</a>.</p>
+
+<p>The primary reason is to have a firewall that will be always up-to-update, unlike most commercial customer grade firewalls that are only supported for a few years. Having a firewall that runs opensource software - it&rsquo;s based on <a href="https://www.freebsd.org">FreeBSD</a> - also make it easier to review and to verify that there are no <a href="https://en.wikipedia.org/wiki/Backdoor_(computing)">back doors</a>.</p>
+
+<p>When I tried to upgrade it to the latest release - 19.1.7 - the upgrade failed because the filesystem ran out of inodes. There is already <a href="https://forum.opnsense.org/index.php?topic=12639.15">a topic</a> about this at the <a href="https://forum.opnsense.org/index.php?topic=12639.15">OPNsense forum</a> and <a href="https://github.com/opnsense/tools/commit/0657a0ae479b4">a fix available</a> for the upcoming nano OPNsense images.</p>
+
+<p>But this will only resolve the issue when a new image becomes available and would require a reinstallation of the firewall.</p>
+
+<p>Unlike <a href="https://en.wikipedia.org/wiki/Ext2">ext2/&frac34;</a> or <a href="https://en.wikipedia.org/wiki/Silicon_Graphics">Sgi</a>&rsquo;s <a href="https://en.wikipedia.org/wiki/XFS">XFS</a> on <a href="https://www.gnu.org/">GNU</a>/<a href="https://www.kernel.org/">Linux</a>, it isn&rsquo;t possible to increase the number of inodes on a <a href="https://en.wikipedia.org/wiki/Unix_File_System">UFS filesystem</a> on <a href="https://www.freebsd.org/">FreeBSD</a>.</p>
+
+<p>To resolve the upgrade issue I created a backup of the existing filesystem, created a new filesystem with enough inodes, and restored the backup.</p>
+
+<p>You&rsquo;ll find my journey of fixing the out of inodes issue below all commands are executed on a FreeBSD system. Hopefully this useful for someone.</p>
+
+<h1>Fixing the out of inodes</h1>
+
+<p>I connected the OPNsense <a href="https://en.wikipedia.org/wiki/CompactFlash">CF disk </a> to a USB cardreader on a FreeBSD virtual system.</p>
+
+<h2>Find the disk</h2>
+
+<p>Find the CF disk I use <code>gpart show</code> as this will also display the disk labels etc.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # gpart show
+</span><span class='line'>=&gt;      40  41942960  vtbd0  GPT  (20G)
+</span><span class='line'>        40      1024      1  freebsd-boot  (512K)
+</span><span class='line'>      1064       984         - free -  (492K)
+</span><span class='line'>      2048   4194304      2  freebsd-swap  (2.0G)
+</span><span class='line'>   4196352  37744640      3  freebsd-zfs  (18G)
+</span><span class='line'>  41940992      2008         - free -  (1.0M)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  da0  BSD  (3.7G)
+</span><span class='line'>        0  7847280    1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufsid/5a6b137a11c4f909  BSD  (3.7G)
+</span><span class='line'>        0  7847280                       1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufs/OPNsense_Nano  BSD  (3.7G)
+</span><span class='line'>        0  7847280                  1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Backup</h2>
+
+<p>Create a backup with the old-school <code>dd</code>, just in case.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # dd if=/dev/da0 of=/home/staf/opnsense.dd bs=4M status=progress
+</span><span class='line'>  4013948928 bytes (4014 MB, 3828 MiB) transferred 415.226s, 9667 kB/s
+</span><span class='line'>957+1 records in
+</span><span class='line'>957+1 records out
+</span><span class='line'>4017807360 bytes transferred in 415.634273 secs (9666689 bytes/sec)
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>mount</h3>
+
+<p>Verify that we can mount the filesystem.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # mount /dev/da0a /mnt
+</span><span class='line'>root@freebsd:/ # cd /mnt
+</span><span class='line'>root@freebsd:/mnt # ls
+</span><span class='line'>.cshrc                          dev                             net
+</span><span class='line'>.probe.for.install.media        entropy                         proc
+</span><span class='line'>.profile                        etc                             rescue
+</span><span class='line'>.rnd                            home                            root
+</span><span class='line'>COPYRIGHT                       lib                             sbin
+</span><span class='line'>bin                             libexec                         sys
+</span><span class='line'>boot                            lost+found                      tmp
+</span><span class='line'>boot.config                     media                           usr
+</span><span class='line'>conf                            mnt                             var
+</span><span class='line'>root@freebsd:/mnt # cd ..
+</span><span class='line'>root@freebsd:/ #  df -i /mnt
+</span><span class='line'>Filesystem 1K-blocks    Used   Avail Capacity iused ifree %iused  Mounted on
+</span><span class='line'>/dev/da0a    3916903 1237690 2365861    34%   38203  6595   85%   /mnt
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h3>umount</h3>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # umount /mnt</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>dump</h3>
+
+<p>We&rsquo;ll a create a backup with <code>dump</code>, we&rsquo;ll use this backup to restore it again after we created a new filesystem with enough inodes.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # dump 0uaf /home/staf/opensense.dump /dev/da0a
+</span><span class='line'>  DUMP: Date of this level 0 dump: Sun May 19 10:43:56 2019
+</span><span class='line'>  DUMP: Date of last level 0 dump: the epoch
+</span><span class='line'>  DUMP: Dumping /dev/da0a to /home/staf/opensense.dump
+</span><span class='line'>  DUMP: mapping (Pass I) [regular files]
+</span><span class='line'>  DUMP: mapping (Pass II) [directories]
+</span><span class='line'>  DUMP: estimated 1264181 tape blocks.
+</span><span class='line'>  DUMP: dumping (Pass III) [directories]
+</span><span class='line'>  DUMP: dumping (Pass IV) [regular files]
+</span><span class='line'>  DUMP: 16.21% done, finished in 0:25 at Sun May 19 11:14:51 2019
+</span><span class='line'>  DUMP: 33.27% done, finished in 0:20 at Sun May 19 11:14:03 2019
+</span><span class='line'>  DUMP: 49.65% done, finished in 0:15 at Sun May 19 11:14:12 2019
+</span><span class='line'>  DUMP: 66.75% done, finished in 0:09 at Sun May 19 11:13:57 2019
+</span><span class='line'>  DUMP: 84.20% done, finished in 0:04 at Sun May 19 11:13:41 2019
+</span><span class='line'>  DUMP: 99.99% done, finished soon
+</span><span class='line'>  DUMP: DUMP: 1267205 tape blocks on 1 volume
+</span><span class='line'>  DUMP: finished in 1800 seconds, throughput 704 KBytes/sec
+</span><span class='line'>  DUMP: level 0 dump on Sun May 19 10:43:56 2019
+</span><span class='line'>  DUMP: Closing /home/staf/opensense.dump
+</span><span class='line'>  DUMP: DUMP IS DONE
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>newfs</h2>
+
+<p>According to the <a href="https://www.freebsd.org/cgi/man.cgi?newfs(8)">newfs manpage</a>:
+We can specify the inode density with the <code>-i</code> option. A lower number will give use more inodes.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # newfs -i 1 /dev/da0a
+</span><span class='line'>density increased from 1 to 4096
+</span><span class='line'>/dev/da0a: 3831.7MB (7847280 sectors) block size 32768, fragment size 4096
+</span><span class='line'>        using 8 cylinder groups of 479.00MB, 15328 blks, 122624 inodes.
+</span><span class='line'>super-block backups (for fsck_ffs -b #) at:
+</span><span class='line'> 192, 981184, 1962176, 2943168, 3924160, 4905152, 5886144, 6867136
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>mount and verify</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/ # mount /dev/da0a /mnt
+</span><span class='line'>root@freebsd:/ # df -i
+</span><span class='line'>Filesystem         1K-blocks    Used    Avail Capacity iused    ifree %iused  Mounted on
+</span><span class='line'>zroot/ROOT/default  14562784 1819988 12742796    12%   29294 25485592    0%   /
+</span><span class='line'>devfs                      1       1        0   100%       0        0  100%   /dev
+</span><span class='line'>zroot/tmp           12742884      88 12742796     0%      11 25485592    0%   /tmp
+</span><span class='line'>zroot/usr/home      14522868 1780072 12742796    12%      17 25485592    0%   /usr/home
+</span><span class='line'>zroot/usr/ports     13473616  730820 12742796     5%  178143 25485592    1%   /usr/ports
+</span><span class='line'>zroot/usr/src       13442804  700008 12742796     5%   84122 25485592    0%   /usr/src
+</span><span class='line'>zroot/var/audit     12742884      88 12742796     0%       9 25485592    0%   /var/audit
+</span><span class='line'>zroot/var/crash     12742884      88 12742796     0%       8 25485592    0%   /var/crash
+</span><span class='line'>zroot/var/log       12742932     136 12742796     0%      21 25485592    0%   /var/log
+</span><span class='line'>zroot/var/mail      12742884      88 12742796     0%       8 25485592    0%   /var/mail
+</span><span class='line'>zroot/var/tmp       12742884      88 12742796     0%       8 25485592    0%   /var/tmp
+</span><span class='line'>zroot               12742884      88 12742796     0%       7 25485592    0%   /zroot
+</span><span class='line'>/dev/da0a            3677780       8  3383552     0%       2   980988    0%   /mnt
+</span><span class='line'>root@freebsd:/ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>restore</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/mnt # restore rf /home/staf/opensense.dump
+</span><span class='line'>root@freebsd:/mnt # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>verify</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/mnt # df -ih /mnt
+</span><span class='line'>Filesystem    Size    Used   Avail Capacity iused ifree %iused  Mounted on
+</span><span class='line'>/dev/da0a     3.5G    1.2G    2.0G    39%     38k  943k    4%   /mnt
+</span><span class='line'>root@freebsd:/mnt # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Label</h2>
+
+<p>The installation had a <code>OPNsense_Nano</code> label, underscores are not allowed anymore in label name on FreeBSD 12.
+So I used OPNsense instead, we&rsquo;ll update <code>/etc/fstab</code> with the new label name.</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # tunefs -L OPNsense /dev/da0a
+</span><span class='line'>root@freebsd:~ # gpart show
+</span><span class='line'>=&gt;      40  41942960  vtbd0  GPT  (20G)
+</span><span class='line'>        40      1024      1  freebsd-boot  (512K)
+</span><span class='line'>      1064       984         - free -  (492K)
+</span><span class='line'>      2048   4194304      2  freebsd-swap  (2.0G)
+</span><span class='line'>   4196352  37744640      3  freebsd-zfs  (18G)
+</span><span class='line'>  41940992      2008         - free -  (1.0M)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  da0  BSD  (3.7G)
+</span><span class='line'>        0  7847280    1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufsid/5ce123f5836f7018  BSD  (3.7G)
+</span><span class='line'>        0  7847280                       1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>=&gt;      0  7847280  ufs/OPNsense  BSD  (3.7G)
+</span><span class='line'>        0  7847280             1  freebsd-ufs  (3.7G)
+</span><span class='line'>
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>update /etc/fstab</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:~ # mount /dev/da0a /mnt
+</span><span class='line'>root@freebsd:~ # cd /mnt
+</span><span class='line'>root@freebsd:/mnt # cd etc
+</span><span class='line'>root@freebsd:/mnt/etc # vi fstab </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'># Device                Mountpoint      FStype  Options         Dump    Pass#
+</span><span class='line'>/dev/ufs/OPNsense       /               ufs     rw              1       1</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>umount</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@freebsd:/mnt/etc # cd
+</span><span class='line'>root@freebsd:~ # umount /mnt
+</span><span class='line'>root@freebsd:~ # </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>test</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>              ______  _____  _____                         
+</span><span class='line'>             /  __  |/ ___ |/ __  |                        
+</span><span class='line'>             | |  | | |__/ | |  | |___  ___ _ __  ___  ___ 
+</span><span class='line'>             | |  | |  ___/| |  | / __|/ _ \ '_ \/ __|/ _ \
+</span><span class='line'>             | |__| | |    | |  | \__ \  __/ | | \__ \  __/
+</span><span class='line'>             |_____/|_|    |_| /__|___/\___|_| |_|___/\___|
+</span><span class='line'>
+</span><span class='line'> +=========================================+     @@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</span><span class='line'> |                                         |   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</span><span class='line'> |  1. Boot Multi User [Enter]             |   @@@@@                    @@@@@
+</span><span class='line'> |  2. Boot [S]ingle User                  |       @@@@@            @@@@@    
+</span><span class='line'> |  3. [Esc]ape to loader prompt           |    @@@@@@@@@@@       @@@@@@@@@@@
+</span><span class='line'> |  4. Reboot                              |         \\\\\         /////     
+</span><span class='line'> |                                         |   ))))))))))))       (((((((((((
+</span><span class='line'> |  Options:                               |         /////         \\\\\     
+</span><span class='line'> |  5. [K]ernel: kernel (1 of 2)           |    @@@@@@@@@@@       @@@@@@@@@@@
+</span><span class='line'> |  6. Configure Boot [O]ptions...         |       @@@@@            @@@@@    
+</span><span class='line'> |                                         |   @@@@@                    @@@@@
+</span><span class='line'> |                                         |   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</span><span class='line'> |                                         |   @@@@@@@@@@@@@@@@@@@@@@@@@@@@  
+</span><span class='line'> +=========================================+                                  
+</span><span class='line'>                                             19.1  ``Inspiring Iguana''   
+</span><span class='line'>
+</span><span class='line'>/boot/kernel/kernel text=0x1406faf data=0xf2af4+0x2abeec syms=[0x4+0xf9f50+0x4+0x1910f5]
+</span><span class='line'>/boot/entropy size=0x1000
+</span><span class='line'>/boot/kernel/carp.ko text=0x7f90 data=0x374+0x74 syms=[0x4+0xeb0+0x4+0xf40]
+</span><span class='line'>/boot/kernel/if_bridge.ko text=0x7b74 data=0x364+0x3c syms=[0x4+0x1020+0x4+0x125f]
+</span><span class='line'>loading required module 'bridgestp'
+</span><span class='line'>/boot/kernel/bridgestp.ko text=0x4878 data=0xe0+0x18 syms=[0x4+0x6c0+0x4+0x65c]
+</span><span class='line'>/boot/kernel/if_enc.ko text=0x1198 data=0x2b8+0x8 syms=[0x4+0x690+0x4+0x813]
+</span><span class='line'>/boot/kernel/if_gre.ko text=0x31d8 data=0x278+0x30 syms=[0x4+0xa30+0x4+0xab8]
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>Root file system: /dev/ufs/OPNsense
+</span><span class='line'>Sun May 19 10:28:00 UTC 2019
+</span><span class='line'>
+</span><span class='line'>*** OPNsense.stafnet: OPNsense 19.1.6 (i386/OpenSSL) ***
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>
+</span><span class='line'> HTTPS: SHA256 E8 9F B2 8B BE F9 D7 2D 00 AD D3 D5 60 E3 77 53
+</span><span class='line'>           3D AC AB 81 38 E4 D2 75 9E 04 F9 33 FF 76 92 28
+</span><span class='line'> SSH:   SHA256 FbjqnefrisCXn8odvUSsM8HtzNNs+9xR/mGFMqHXjfs (ECDSA)
+</span><span class='line'> SSH:   SHA256 B6R7GRL/ucRL3JKbHL1OGsdpHRDyotYukc77jgmIJjQ (ED25519)
+</span><span class='line'> SSH:   SHA256 8BOmgp8lSFF4okrOUmL4YK60hk7LTg2N08Hifgvlq04 (RSA)
+</span><span class='line'>
+</span><span class='line'>FreeBSD/i386 (OPNsense.stafnet) (ttyu0)
+</span><span class='line'>
+</span><span class='line'>login: </span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>root@OPNsense:~ # df -ih
+</span><span class='line'>Filesystem           Size    Used   Avail Capacity iused ifree %iused  Mounted on
+</span><span class='line'>/dev/ufs/OPNsense    3.5G    1.2G    2.0G    39%     38k  943k    4%   /
+</span><span class='line'>devfs                1.0K    1.0K      0B   100%       0     0  100%   /dev
+</span><span class='line'>tmpfs                307M     15M    292M     5%     203  2.1G    0%   /var
+</span><span class='line'>tmpfs                292M     88K    292M     0%      27  2.1G    0%   /tmp
+</span><span class='line'>devfs                1.0K    1.0K      0B   100%       0     0  100%   /var/unbound/dev
+</span><span class='line'>devfs                1.0K    1.0K      0B   100%       0     0  100%   /var/dhcpd/dev
+</span><span class='line'>root@OPNsense:~ # 
+</span><span class='line'>CTRL-A Z for help | 115200 8N1 | NOR | Minicom 2.7.1 | VT102 | Offline | ttyUSB0                                    </span></code></pre></td></tr></table></div></figure>
+
+
+<h2>update</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>login: root
+</span><span class='line'>Password:
+</span><span class='line'>----------------------------------------------
+</span><span class='line'>|      Hello, this is OPNsense 19.1          |         @@@@@@@@@@@@@@@
+</span><span class='line'>|                                            |        @@@@         @@@@
+</span><span class='line'>| Website:      https://opnsense.org/        |         @@@\\\   ///@@@
+</span><span class='line'>| Handbook:     https://docs.opnsense.org/   |       ))))))))   ((((((((
+</span><span class='line'>| Forums:       https://forum.opnsense.org/  |         @@@///   \\\@@@
+</span><span class='line'>| Lists:        https://lists.opnsense.org/  |        @@@@         @@@@
+</span><span class='line'>| Code:         https://github.com/opnsense  |         @@@@@@@@@@@@@@@
+</span><span class='line'>----------------------------------------------
+</span><span class='line'>
+</span><span class='line'>*** OPNsense.stafnet: OPNsense 19.1.6 (i386/OpenSSL) ***
+</span><span class='line'>&lt;snip&gt;
+</span><span class='line'>
+</span><span class='line'> HTTPS: SHA256 E8 9F B2 8B BE F9 D7 2D 00 AD D3 D5 60 E3 77 53
+</span><span class='line'>               3D AC AB 81 38 E4 D2 75 9E 04 F9 33 FF 76 92 28
+</span><span class='line'> SSH:   SHA256 FbjqnefrisCXn8odvUSsM8HtzNNs+9xR/mGFMqHXjfs (ECDSA)
+</span><span class='line'> SSH:   SHA256 B6R7GRL/ucRL3JKbHL1OGsdpHRDyotYukc77jgmIJjQ (ED25519)
+</span><span class='line'> SSH:   SHA256 8BOmgp8lSFF4okrOUmL4YK60hk7LTg2N08Hifgvlq04 (RSA)
+</span><span class='line'>
+</span><span class='line'>  0) Logout                              7) Ping host
+</span><span class='line'>  1) Assign interfaces                   8) Shell
+</span><span class='line'>  2) Set interface IP address            9) pfTop
+</span><span class='line'>  3) Reset the root password            10) Firewall log
+</span><span class='line'>  4) Reset to factory defaults          11) Reload all services
+</span><span class='line'>  5) Power off system                   12) Update from console
+</span><span class='line'>  6) Reboot system                      13) Restore a backup
+</span><span class='line'>
+</span><span class='line'>Enter an option: 12
+</span><span class='line'>
+</span><span class='line'>Fetching change log information, please wait... done
+</span><span class='line'>
+</span><span class='line'>This will automatically fetch all available updates, apply them,
+</span><span class='line'>and reboot if necessary.
+</span><span class='line'>
+</span><span class='line'>This update requires a reboot.
+</span><span class='line'>
+</span><span class='line'>Proceed with this action? [y/N]: y 
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong><em> Have fun! </em></strong></p>
+
+<h1>Links</h1>
+
+<ul>
+<li><a href="https://forum.opnsense.org/index.php?topic=12639.15">https://forum.opnsense.org/index.php?topic=12639.15</a></li>
+<li><a href="https://forums.freebsd.org/threads/ufs-backup.185/">https://forums.freebsd.org/threads/ufs-backup.185/</a></li>
+<li><a href="https://www.freebsd.org/doc/handbook/geom-glabel.html">https://www.freebsd.org/doc/handbook/geom-glabel.html</a></li>
+</ul>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -4325,897 +4905,6 @@ There are two options</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/">DNS Privacy With Stubby (Part 1 GNU/Linux)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2018-09-09T10:30:03+02:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>9</span><span class='date-suffix'>th</span>, <span class='date-year'>2018</span></span> <span class='time'>10:30 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><strong><em> Installing and configuring an encrypted dns server is straightforward, there is no reason to use an unencrypted dns service. </em></strong></p>
-
-<h1>DNS is not secure or private</h1>
-
-<p>DNS traffic is insecure and runs over <a href="https://nl.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a> port 53 (<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol">TCP</a> for <a href="https://en.wikipedia.org/wiki/DNS_zone_transfer">zone transfers</a> ) unecrypted by default.</p>
-
-<p>This make your unencrypted DNS traffic a <strong>privacy risk</strong> and a <strong>security risk</strong>:</p>
-
-<ul>
-<li>anyone that is able to sniff your network traffic can collect a lot information from your leaking DNS traffic.</li>
-<li>with a DNS spoofing attack an attacker can trick you let go to malicious website or try to intercept your email traffic.</li>
-</ul>
-
-
-<h1>Encrypt your dns traffic</h1>
-
-<p>Encrypting your network traffic is always a good idea for privacy and security reasons - <strong><em> we encrypt, because we can! </em></strong> -  .
-More information about dns privacy can be found at <a href="https://dnsprivacy.org/">https://dnsprivacy.org/</a></p>
-
-<p>On this site you&rsquo;ll find also the <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby">DNS Privacy Daemon - Stubby</a> that let&rsquo;s you send your DNS request over TLS to an alternative DNS provider. You should use a DNS provider that you trust and has a no logging policy.  <a href="https://www.quad9.net/">quad9</a>, <a href="https://www.cloudflare.com/learning/dns/what-is-1.1.1.1/">cloudflare</a> and google dns are well-known alternative dns providers. At <a href="https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers">https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Test+Servers</a> you can find a few other options.</p>
-
-<p>You&rsquo;ll find my journey to setup Stubby on a few operation systems I use (or I&rsquo;m force to use) below &hellip;</p>
-
-<h1>GNU/Linux</h1>
-
-<h2>Arch Linux</h2>
-
-<p>I use <a href="https://www.archlinux.org/">Arch Linux</a> on my main workstation. Stubby is already in the Arch repositories this make installation straightforward.</p>
-
-<h3>Install stubby</h3>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# pacman -S stubby
-</span><span class='line'>resolving dependencies...
-</span><span class='line'>looking for conflicting packages...
-</span><span class='line'>
-</span><span class='line'>Packages (5) fstrm-0.4.0-1  getdns-1.4.2-1  protobuf-c-1.3.0-3  unbound-1.7.3-4
-</span><span class='line'>             stubby-0.2.3-1
-</span><span class='line'>
-</span><span class='line'>Total Download Size:   1.09 MiB
-</span><span class='line'>Total Installed Size:  5.68 MiB
-</span><span class='line'>
-</span><span class='line'>:: Proceed with installation? [Y/n] 
-</span><span class='line'>:: Retrieving packages...
-</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
-</span><span class='line'>100 88476  100 88476    0     0   403k      0 --:--:-- --:--:-- --:--:--  403k
-</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
-</span><span class='line'>100 62480  100 62480    0     0  1271k      0 --:--:-- --:--:-- --:--:-- 1271k
-</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
-</span><span class='line'>100  632k  100  632k    0     0   750k      0 --:--:-- --:--:-- --:--:--  749k
-</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
-</span><span class='line'>100  302k  100  302k    0     0  1615k      0 --:--:-- --:--:-- --:--:-- 1606k
-</span><span class='line'>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-</span><span class='line'>                                 Dload  Upload   Total   Spent    Left  Speed
-</span><span class='line'>100 34052  100 34052    0     0   831k      0 --:--:-- --:--:-- --:--:--  831k
-</span><span class='line'>(5/5) checking keys in keyring                       [###########################] 100%
-</span><span class='line'>(5/5) checking package integrity                     [###########################] 100%
-</span><span class='line'>(5/5) loading package files                          [###########################] 100%
-</span><span class='line'>(5/5) checking for file conflicts                    [###########################] 100%
-</span><span class='line'>(5/5) checking available disk space                  [###########################] 100%
-</span><span class='line'>:: Processing package changes...
-</span><span class='line'>(1/5) installing fstrm                               [###########################] 100%
-</span><span class='line'>(2/5) installing protobuf-c                          [###########################] 100%
-</span><span class='line'>(3/5) installing unbound                             [###########################] 100%
-</span><span class='line'>Optional dependencies for unbound
-</span><span class='line'>    expat: unbound-anchor [installed]
-</span><span class='line'>(4/5) installing getdns                              [###########################] 100%
-</span><span class='line'>(5/5) installing stubby                              [###########################] 100%
-</span><span class='line'>:: Running post-transaction hooks...
-</span><span class='line'>(1/4) Reloading system manager configuration...
-</span><span class='line'>(2/4) Creating system user accounts...
-</span><span class='line'>(3/4) Creating temporary files...
-</span><span class='line'>(4/4) Arming ConditionNeedsUpdate...
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>choose your upstream dns provider</h4>
-
-<p>Edit the stubby.yml file and uncomment the upstream dns server that you want the use.
-Stubby will loadbalance the dns traffic to all configured upstream dns servers by default.
-This is configured with the <code>round_robin_upstreams</code> directive, if set to <code>1</code> the traffic is loadbalanced, if set <code>0</code> stubby will use the first configured dns server.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[staf@vicky ~]$ sudo vi /etc/stubby/stubby.yml</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>enable and start stubby</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# systemctl enable stubby
-</span><span class='line'>Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service -&gt; /usr/lib/systemd/system/stubby.service.
-</span><span class='line'>[root@vicky ~]# systemctl start stubby
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>test</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
-</span><span class='line'>
-</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
-</span><span class='line'>; (1 server found)
-</span><span class='line'>;; global options: +cmd
-</span><span class='line'>;; Got answer:
-</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 18226
-</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-</span><span class='line'>
-</span><span class='line'>;; OPT PSEUDOSECTION:
-</span><span class='line'>; EDNS: version: 0, flags:; udp: 4096
-</span><span class='line'>; COOKIE: fe9d3618b821614f174436385b7acb64a4f4cc6657e14626 (good)
-</span><span class='line'>;; QUESTION SECTION:
-</span><span class='line'>;www.wagemakers.be.             IN      A
-</span><span class='line'>
-</span><span class='line'>;; ANSWER SECTION:
-</span><span class='line'>www.wagemakers.be.      86000   IN      CNAME   wagemakers.be.
-</span><span class='line'>wagemakers.be.          86000   IN      A       95.215.185.144
-</span><span class='line'>
-</span><span class='line'>;; Query time: 128 msec
-</span><span class='line'>;; SERVER: 127.0.0.1#53(127.0.0.1)
-</span><span class='line'>;; WHEN: Mon Aug 20 16:08:36 CEST 2018
-</span><span class='line'>;; MSG SIZE  rcvd: 147
-</span><span class='line'>
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h3>Local dns cache with dnsmasq</h3>
-
-<h4>Change the stubby port.</h4>
-
-<p>Edit /etc/stubby/stubby.yml</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# vi /etc/stubby/stubby.yml</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And change the port by modifing the <code>listen_addresses</code> directive</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>listen_addresses:
-</span><span class='line'>  - 127.0.0.1@53000
-</span><span class='line'>  - 0::1@53000</span></code></pre></td></tr></table></div></figure>
-
-
-<p>restart stubby</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# systemctl restart stubby.service</span></code></pre></td></tr></table></div></figure>
-
-
-<p>and verify that the dns on 127.0.0.1:53 doesn&rsquo;t work anymore.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# dig @127.0.0.1 www.wagemakers.be
-</span><span class='line'>
-</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
-</span><span class='line'>; (1 server found)
-</span><span class='line'>;; global options: +cmd
-</span><span class='line'>;; connection timed out; no servers could be reached
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>ensure that stubby does work on port 53000</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@frija etc]# dig @127.0.0.1 -p 53000 www.wagemakers.be
-</span><span class='line'>
-</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.13.2 &lt;&lt;&gt;&gt; @127.0.0.1 -p 53000 www.wagemakers.be
-</span><span class='line'>; (1 server found)
-</span><span class='line'>;; global options: +cmd
-</span><span class='line'>;; Got answer:
-</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 27173
-</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-</span><span class='line'>
-</span><span class='line'>;; OPT PSEUDOSECTION:
-</span><span class='line'>; EDNS: version: 0, flags:; udp: 65535
-</span><span class='line'>;; QUESTION SECTION:
-</span><span class='line'>;www.wagemakers.be.             IN      A
-</span><span class='line'>
-</span><span class='line'>;; ANSWER SECTION:
-</span><span class='line'>www.wagemakers.be.      43200   IN      CNAME   wagemakers.be.
-</span><span class='line'>wagemakers.be.          43200   IN      A       95.215.185.144
-</span><span class='line'>
-</span><span class='line'>;; Query time: 250 msec
-</span><span class='line'>;; SERVER: 127.0.0.1#53000(127.0.0.1)
-</span><span class='line'>;; WHEN: Tue Aug 21 13:26:37 CEST 2018
-</span><span class='line'>;; MSG SIZE  rcvd: 119
-</span><span class='line'>
-</span><span class='line'>[root@frija etc]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Install dnsmasq</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# pacman -S dnsmasq
-</span><span class='line'>warning: dnsmasq-2.79-1 is up to date -- reinstalling
-</span><span class='line'>resolving dependencies...
-</span><span class='line'>looking for conflicting packages...
-</span><span class='line'>
-</span><span class='line'>Packages (1) dnsmasq-2.79-1
-</span><span class='line'>
-</span><span class='line'>Total Installed Size:  0.70 MiB
-</span><span class='line'>Net Upgrade Size:      0.00 MiB
-</span><span class='line'>
-</span><span class='line'>:: Proceed with installation? [Y/n] y
-</span><span class='line'>(1/1) checking keys in keyring                       [###########################] 100%
-</span><span class='line'>(1/1) checking package integrity                     [###########################] 100%
-</span><span class='line'>(1/1) loading package files                          [###########################] 100%
-</span><span class='line'>(1/1) checking for file conflicts                    [###########################] 100%
-</span><span class='line'>(1/1) checking available disk space                  [###########################] 100%
-</span><span class='line'>:: Processing package changes...
-</span><span class='line'>(1/1) reinstalling dnsmasq                           [###########################] 100%
-</span><span class='line'>:: Running post-transaction hooks...
-</span><span class='line'>(1/3) Reloading system manager configuration...
-</span><span class='line'>(2/3) Creating system user accounts...
-</span><span class='line'>(3/3) Arming ConditionNeedsUpdate...
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Configure dnsmasq</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky etc]# cd /etc
-</span><span class='line'>[root@vicky etc]# mv /etc/dnsmasq.conf /etc/dnsmasq.conf_org
-</span><span class='line'>[root@vicky etc]# vi dnsmasq.conf</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It is import to configure stubby to listen the localhost interface only.
-If you use Linux KVM you probably have a dns serivce running on your bridge interfaces for your virtual machines.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server=127.0.0.1#53000
-</span><span class='line'>listen-address=127.0.0.1
-</span><span class='line'>interface=lo
-</span><span class='line'>bind-interfaces</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Start and enable dnsmasq</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky ~]# systemctl start dnsmasq
-</span><span class='line'>[root@vicky ~]# systemctl enable dnsmasq
-</span><span class='line'>Created symlink /etc/systemd/system/multi-user.target.wants/dnsmasq.service -&gt; /usr/lib/systemd/system/dnsmasq.service.
-</span><span class='line'>[root@vicky ~]# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Reconfigure your system</h4>
-
-<p>reconfigure your system to use dnsmasq as the dns service.</p>
-
-<p>I use <a href="https://wiki.archlinux.org/index.php/Netctl">netctl</a> on my system. You can update the network configuration with <code>netctl</code></p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[root@vicky netctl]# netctl edit &lt;network_name&gt;
-</span><span class='line'>[root@vicky netctl]# netctl restart  &lt;network_name&gt;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>If you networkmanager you can use <code>nmcli</code>, <code>nmtui</code> or the GUI network configuration in your desktop environment.</p>
-
-<h2>GNU/Linux is GNU/Linux</h2>
-
-<p>The configuration on other GNU/Linux distributions is the same as on Arch apart from the installation process.
-The same method can be use if your (favorite) Linux distribution doesn&rsquo;t have a stubby package, the installation method of the required package will be different of course.</p>
-
-<h3>Debian</h3>
-
-<h4>Current testing release Debian &ldquo;buster&rdquo;</h4>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>$ sudo apt install stubby dnsmasq</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Current stable Debian 9 &ldquo;strech&rdquo;</h4>
-
-<p>Stubby in the <code>getdns-utils</code> in Debian stretch, it&rsquo;s an older version.
-Therefor I ended up with building stubby from the source code.</p>
-
-<h5>Install the required packages</h5>
-
-<p>Install the required packages to build stubby.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github$ sudo apt install build-essential git libtool autoconf libssl-dev libyaml-dev</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>git clone</h5>
-
-<p>The getdns git repo;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github$ git clone https://github.com/getdnsapi/getdns.git
-</span><span class='line'>Cloning into 'getdns'...
-</span><span class='line'>remote: Counting objects: 16154, done.
-</span><span class='line'>remote: Total 16154 (delta 0), reused 0 (delta 0), pack-reused 16154
-</span><span class='line'>Receiving objects: 100% (16154/16154), 9.72 MiB | 1.13 MiB/s, done.
-</span><span class='line'>Resolving deltas: 100% (12413/12413), done.
-</span><span class='line'>staf@stretch:~/github$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h5>checkout the latest stable release</h5>
-
-<p>Verify the lastest release tag. The current stable release 1.4.2</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns$ git tag
-</span><span class='line'>TNW2015
-</span><span class='line'>list
-</span><span class='line'>v0.1.0
-</span><span class='line'>v0.1.1
-</span><span class='line'>v0.1.2
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>v1.4.0
-</span><span class='line'>v1.4.0-rc1
-</span><span class='line'>v1.4.1
-</span><span class='line'>v1.4.1-rc1
-</span><span class='line'>v1.4.2
-</span><span class='line'>v1.4.2-rc1
-</span><span class='line'>staf@stretch:~/github/getdns$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>checkout the latest stable release.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns$ git checkout v1.4.2
-</span><span class='line'>Note: checking out 'v1.4.2'.
-</span><span class='line'>
-</span><span class='line'>You are in 'detached HEAD' state. You can look around, make experimental
-</span><span class='line'>changes and commit them, and you can discard any commits you make in this
-</span><span class='line'>state without impacting any branches by performing another checkout.
-</span><span class='line'>
-</span><span class='line'>If you want to create a new branch to retain commits you create, you may
-</span><span class='line'>do so (now or later) by using -b with the checkout command again. Example:
-</span><span class='line'>
-</span><span class='line'>  git checkout -b &lt;new-branch-name&gt;
-</span><span class='line'>
-</span><span class='line'>HEAD is now at e481273... Last minute update
-</span><span class='line'>staf@stretch:~/github/getdns$ </span></code></pre></td></tr></table></div></figure>
-
-
-<h5>build it&hellip;</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns$ git submodule update --init
-</span><span class='line'>staf@stretch:~/github/getdns$ libtoolize -ci
-</span><span class='line'>staf@stretch:~/github/getdns$ autoreconf -fi
-</span><span class='line'>staf@stretch:~/github/getdns$ mkdir build
-</span><span class='line'>staf@stretch:~/github/getdns$ cd build/
-</span><span class='line'>staf@stretch:~/github/getdns/build$ ../configure --prefix=/usr/local --without-libidn --without-libidn2 --enable-stub-only --with-stubby
-</span><span class='line'>staf@stretch:~/github/getdns/build$ make</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>make install</h5>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns/build$ sudo make install
-</span><span class='line'>[sudo] password for staf: 
-</span><span class='line'>cd src && make install
-</span><span class='line'>make[1]: Entering directory '/home/staf/github/getdns/build/src'
-</span><span class='line'>&lt;snip&gt;
-</span><span class='line'>make[1]: Leaving directory '/home/staf/github/getdns/build/doc'
-</span><span class='line'>***
-</span><span class='line'>***  !!! IMPORTANT !!!!
-</span><span class='line'>***
-</span><span class='line'>***  From release 1.2.0, getdns comes with built-in DNSSEC
-</span><span class='line'>***  trust anchor management.  External trust anchor management,
-</span><span class='line'>***  for example with unbound-anchor, is no longer necessary
-</span><span class='line'>***  and no longer recommended.
-</span><span class='line'>***
-</span><span class='line'>***  Previously installed trust anchors, in the default location -
-</span><span class='line'>***
-</span><span class='line'>***        /usr/local/etc/unbound/getdns-root.key
-</span><span class='line'>***
-</span><span class='line'>***  - will be preferred and used for DNSSEC validation, however
-</span><span class='line'>***  getdns will fallback to trust-anchors obtained via built-in
-</span><span class='line'>***  trust anchor management when the anchors from the default
-</span><span class='line'>***  location fail to validate the root DNSKEY rrset.
-</span><span class='line'>***
-</span><span class='line'>***  To prevent expired DNSSEC trust anchors to be used for
-</span><span class='line'>***  validation, we strongly recommend removing the trust anchors
-</span><span class='line'>***  on the default location when there is no active external
-</span><span class='line'>***  trust anchor management keeping it up-to-date.
-</span><span class='line'>***
-</span><span class='line'>staf@stretch:~/github/getdns/build$ sudo make install</span></code></pre></td></tr></table></div></figure>
-
-
-<h5>systemd service</h5>
-
-<p>Stubby comes with a systemd service definition. Copy it to the correct location.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns/build$ cd ..
-</span><span class='line'>staf@stretch:~/github/getdns$ cd stubby/systemd/
-</span><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo cp stubby.service /lib/systemd/system/</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Update the path to /usr/local</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo vi /lib/systemd/system/stubby.service</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>[Unit]
-</span><span class='line'>Description=stubby DNS resolver
-</span><span class='line'>
-</span><span class='line'>[Service]
-</span><span class='line'>User=stubby
-</span><span class='line'>DynamicUser=yes
-</span><span class='line'>CacheDirectory=stubby
-</span><span class='line'>WorkingDirectory=/var/cache/stubby
-</span><span class='line'>ExecStart=/usr/local/bin/stubby
-</span><span class='line'>AmbientCapabilities=CAP_NET_BIND_SERVICE
-</span><span class='line'>CapabilityBoundingSet=CAP_NET_BIND_SERVICE
-</span><span class='line'>
-</span><span class='line'>[Install]
-</span><span class='line'>WantedBy=multi-user.target</span></code></pre></td></tr></table></div></figure>
-
-
-<p>And create the stubby working directory</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:~# mkdir /var/cache/stubby</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>ldconfig</h4>
-
-<p>update your library cache</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo ldconfig -v</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>Update the configuration</h4>
-
-<p>Edit the stubby.yml configuration file.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo nvi /usr/local/etc/stubby/stubby.yml</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Update the port where stubby will listen to and select the upstream dns service you want to use.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>listen_addresses:
-</span><span class='line'>  - 127.0.0.1@53000
-</span><span class='line'>  - 0::1@53000</span></code></pre></td></tr></table></div></figure>
-
-
-<h4>start and test</h4>
-
-<p>Start stubby&hellip;.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl list-unit-files | grep -i stubby
-</span><span class='line'>stubby.service                              disabled
-</span><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl enable stubby
-</span><span class='line'>Created symlink /etc/systemd/system/multi-user.target.wants/stubby.service /lib/systemd/system/stubby.service.
-</span><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ sudo systemctl start stubby
-</span><span class='line'>staf@stretch:~/github/getdns/stubby/systemd$ </span></code></pre></td></tr></table></div></figure>
-
-
-<p>and test it</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:~# dig @127.0.0.1 -p 53000 www.wagemakers.be
-</span><span class='line'>
-</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.10.3-P4-Debian &lt;&lt;&gt;&gt; @127.0.0.1 -p 53000 www.wagemakers.be
-</span><span class='line'>; (1 server found)
-</span><span class='line'>;; global options: +cmd
-</span><span class='line'>;; Got answer:
-</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 17510
-</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-</span><span class='line'>
-</span><span class='line'>;; OPT PSEUDOSECTION:
-</span><span class='line'>; EDNS: version: 0, flags:; udp: 4096
-</span><span class='line'>;; QUESTION SECTION:
-</span><span class='line'>;www.wagemakers.be.             IN      A
-</span><span class='line'>
-</span><span class='line'>;; ANSWER SECTION:
-</span><span class='line'>www.wagemakers.be.      49704   IN      CNAME   wagemakers.be.
-</span><span class='line'>wagemakers.be.          81815   IN      A       95.215.185.144
-</span><span class='line'>
-</span><span class='line'>;; Query time: 72 msec
-</span><span class='line'>;; SERVER: 127.0.0.1#53000(127.0.0.1)
-</span><span class='line'>;; WHEN: Sun Sep 02 10:33:53 CEST 2018
-</span><span class='line'>;; MSG SIZE  rcvd: 119
-</span><span class='line'>
-</span><span class='line'>root@stretch:~# </span></code></pre></td></tr></table></div></figure>
-
-
-<h4>dnsmasq</h4>
-
-<p>Install dnsmasq</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:/etc# apt-get install dnsmasq</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Configure dnsmasq</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:/etc# mv dnsmasq.conf dnsmasq.conf_org
-</span><span class='line'>root@stretch:/etc# vi dnsmasq.conf</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>server=127.0.0.1#53000
-</span><span class='line'>listen-address=127.0.0.1
-</span><span class='line'>interface=lo
-</span><span class='line'>bind-interfaces</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Enable and start it&hellip;</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:/etc# systemctl enable dnsmasq
-</span><span class='line'>Synchronizing state of dnsmasq.service with SysV service script with /lib/systemd/systemd-sysv-install.
-</span><span class='line'>Executing: /lib/systemd/systemd-sysv-install enable dnsmasq
-</span><span class='line'>root@stretch:/etc# systemctl restart dnsmasq</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Verify</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:/etc# dig @127.0.0.1 www.wagemakers.be
-</span><span class='line'>
-</span><span class='line'>; &lt;&lt;&gt;&gt; DiG 9.10.3-P4-Debian &lt;&lt;&gt;&gt; @127.0.0.1 www.wagemakers.be
-</span><span class='line'>; (1 server found)
-</span><span class='line'>;; global options: +cmd
-</span><span class='line'>;; Got answer:
-</span><span class='line'>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 57295
-</span><span class='line'>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-</span><span class='line'>
-</span><span class='line'>;; OPT PSEUDOSECTION:
-</span><span class='line'>; EDNS: version: 0, flags:; udp: 4096
-</span><span class='line'>;; QUESTION SECTION:
-</span><span class='line'>;www.wagemakers.be.             IN      A
-</span><span class='line'>
-</span><span class='line'>;; ANSWER SECTION:
-</span><span class='line'>www.wagemakers.be.      48645   IN      CNAME   wagemakers.be.
-</span><span class='line'>wagemakers.be.          80756   IN      A       95.215.185.144
-</span><span class='line'>
-</span><span class='line'>;; Query time: 72 msec
-</span><span class='line'>;; SERVER: 127.0.0.1#53(127.0.0.1)
-</span><span class='line'>;; WHEN: Sun Sep 02 10:51:32 CEST 2018
-</span><span class='line'>;; MSG SIZE  rcvd: 119
-</span><span class='line'>
-</span><span class='line'>root@stretch:/etc# </span></code></pre></td></tr></table></div></figure>
-
-
-<p>reconfigure you system to use dnsmasq&hellip;.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>root@stretch:/etc# nvi resolv.conf</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>nameserver 127.0.0.1</span></code></pre></td></tr></table></div></figure>
-
-
-<p><strong><em>Have fun!</em></strong></p>
-
-<h2>Links</h2>
-
-<ul>
-<li><a href="https://dnsprivacy.org">https://dnsprivacy.org</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Stubby">https://wiki.archlinux.org/index.php/Stubby</a></li>
-</ul>
-
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/2">&larr; Older</a>
@@ -5249,6 +4938,10 @@ Therefor I ended up with building stubby from the source code.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/05/21/opnsense-out-of-inodes/">OPNsense Upgrade Failed: Out of Inodes</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/">Building Your Own Docker Base Images (Part 3: Yum)</a>
       </li>
     
@@ -5262,10 +4955,6 @@ Therefor I ended up with building stubby from the source code.</p>
     
       <li class="post">
         <a href="/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init/">Howto Use Centos Cloud Images With Cloud-init on KVM/libvirtd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a>
       </li>
     
   </ul>

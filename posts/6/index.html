@@ -9,7 +9,7 @@
   <meta name="author" content="staf wagemakers">
 
   
-  <meta name="description" content="Yum Update on Fedora 19 and Zfs on Linux Oct 13th, 2013 5:51 pm I use zfs on linux on fedora now. The installation was pretty straightforward but &hellip;">
+  <meta name="description" content="Bash Saved My Day Oct 20th, 2013 10:04 am I was creating an ugly quick-and-dirty script to setup the squid cache_dir automatically with puppet based &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +77,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/blog/2013/10/20/bash-saved-my-day/">Bash Saved My Day</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2013-10-20T10:04:00+02:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>20</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>10:04 am</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I was creating an ugly quick-and-dirty script to setup the <a href="http://www.squid-cache.org/">squid</a> cache_dir automatically with <a href="http://puppetlabs.com/">puppet</a> based on the diskspace and memory available.</p>
+
+<p>When you are developing you sometimes forget to create backups and push it to git, and mistakes are around the corner.</p>
+
+<p>Lucky <a href="http://www.gnu.org/software/bash/">bash</a> saved my day!</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ ./create_cache_entries.sh  &gt; create_cache_entries.sh 
+</span><span class='line'>-bash: ./create_cache_entries.sh: /bin/bash: bad interpreter: Text file busy
+</span><span class='line'>$ vi create_cache_entries.sh </span></code></pre></td></tr></table></div></figure>
+
+</div>
+  
+  
+
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_actrikel -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-4659298941528586"
+     data-ad-slot="7394058542"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+    </article>
   
   
     <article>
@@ -1046,61 +1097,6 @@ After a quick test it seems to work like a charm. I might install <a href="http:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/blog/2013/04/27/lookat-slash-bekijk-1-dot-4-3rc1-released/">Lookat/Bekijk 1.4.3rc1 Released</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-<time class='entry-date' datetime='2013-04-27T09:21:00+02:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>27</span><span class='date-suffix'>th</span>, <span class='date-year'>2013</span></span> <span class='time'>9:21 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Trying to release more often&hellip;</p>
-
-<p>The first release candicate of lookat 1.4.3 has been released.</p>
-
-<h3>ChangeLog</h3>
-
-<h5>Lookat / Bekijk 1.4.3rc1  ( 27 Apr 2013 )</h5>
-
-<blockquote><ul>
-<li>Fixed compile issue with llvm clang</li>
-</ul>
-</blockquote>
-
-<p>Lookat 1.4.3rc1 is available at: <a href="http://www.wagemakers.be/english/programs/lookat"><a href="http://www.wagemakers.be/english/programs/lookat">http://www.wagemakers.be/english/programs/lookat</a></a>
-, download it directly <a href="http://www.wagemakers.be/downloads/lookat/lookat_bekijk-1.4.3rc1.tar.gz">Download latest development release (1.4.3rc1)</a>.</p>
-
-<p>Or at the Git repository at GNU savannah <a href="http://git.savannah.gnu.org/cgit/lookat.git/"><a href="http://git.savannah.gnu.org/cgit/lookat.git/">http://git.savannah.gnu.org/cgit/lookat.git/</a></a></p>
-</div>
-  
-  
-
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- blog_actrikel -->
-<ins class="adsbygoogle"
-     style="display:block"
-     data-ad-client="ca-pub-4659298941528586"
-     data-ad-slot="7394058542"
-     data-ad-format="auto"></ins>
-<script>
-(adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/posts/7">&larr; Older</a>
@@ -1136,6 +1132,10 @@ After a quick test it seems to work like a charm. I might install <a href="http:
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/blog/2019/05/21/opnsense-out-of-inodes/">OPNsense Upgrade Failed: Out of Inodes</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/">Building Your Own Docker Base Images (Part 3: Yum)</a>
       </li>
     
@@ -1149,10 +1149,6 @@ After a quick test it seems to work like a charm. I might install <a href="http:
     
       <li class="post">
         <a href="/blog/blog/2019/03/03/howto-use-centos-cloud-images-with-cloud-init/">Howto Use Centos Cloud Images With Cloud-init on KVM/libvirtd</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/blog/2019/02/10/how-to-install-libreboot-on-a-thinkspad-w500/">How to Install Libreboot on a ThinkPad W500</a>
       </li>
     
   </ul>

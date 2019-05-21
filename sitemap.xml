@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://stafwag.github.io/blog/blog/2019/05/21/opnsense-out-of-inodes/</loc>
+    <lastmod>2019-05-21T19:20:37+02:00</lastmod>
+  </url>
+  <url>
     <loc>https://stafwag.github.io/blog/blog/2019/05/12/building-your-own-docker-base-images-part-3-yum/</loc>
     <lastmod>2019-05-12T10:06:11+02:00</lastmod>
   </url>
@@ -635,23 +639,5 @@
   </url>
   <url>
     <loc>https://stafwag.github.io/blog/blog/categories/ubuntu/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/posts/2/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/posts/3/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/posts/4/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/posts/5/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/posts/6/</loc>
-  </url>
-  <url>
-    <loc>https://stafwag.github.io/blog/posts/7/</loc>
   </url>
 </urlset>
