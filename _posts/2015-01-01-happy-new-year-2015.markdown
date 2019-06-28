@@ -1,0 +1,13 @@
+---
+layout: post
+title: "happy_new_year_2015"
+date: 2015-01-01 12:20
+comments: true
+categories: ["2015"] 
+---
+
+<p>
+Happy new year!
+</p>
+
+{% img center /blog/images/2015.jpg 1000 625 "2014.jpg" %}

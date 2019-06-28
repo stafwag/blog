@@ -1,0 +1,230 @@
+---
+layout: post
+title: "Freebsd 9.1 jails with Qjail"
+date: 2013-02-16 12:35
+comments: true
+categories: freebsd jails qjail solaris 
+---
+
+<hr />
+<strong>
+
+I'm using _ezjail_ <a href="/blog/2013/04/10/migrating-from-qjail-to-ezjail/">now</a>.
+
+The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
+Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.
+
+
+</strong>
+
+<hr />
+
+I'm adding more services to my <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">freebsd system</a>
+
+I'm coming from the <a href="http://en.wikipedia.org/wiki/Solaris_(operating_system)">solaris world</a> where it's a common practice to run services in separated <a href="http://en.wikipedia.org/wiki/Solaris_Containers">containers</a> for security reasons.
+
+On FreeBSD there are <a href="http://en.wikipedia.org/wiki/FreeBSD_jail">jails</a> to isolate services and improve security.
+
+At first I didn't like jails the way the <a href="http://www.freebsd.org/doc/handbook/jails.html">freebsd handbook</a> describes it requires a buildworld which takes a long time on my system with a AMD C-60 CPU.
+
+Lucky <a href="http://sourceforge.net/projects/qjail/">Qjail</a> makes the deployment a lot easier.
+
+### Installing Qjail
+
+```
+[root@rataplan ~]# cd /usr/ports/sysutils/qjail/
+[root@rataplan /usr/ports/sysutils/qjail]# make install clean
+===>  License BSD accepted by the user
+=> qjail-1.7.tar.bz2 doesn't seem to exist in /usr/ports/distfiles/.
+=> Attempting to fetch http://heanet.dl.sourceforge.net/project/qjail/qjail-1.7.tar.bz2
+qjail-1.7.tar.bz2                             100% of   39 kB  139 kBps
+===>  Extracting for qjail-1.7
+=> SHA256 Checksum OK for qjail-1.7.tar.bz2.
+===>  Patching for qjail-1.7
+===>  Configuring for qjail-1.7
+===>  Installing for qjail-1.7
+===>   Generating temporary packing list
+===>  Checking if sysutils/qjail already installed
+#
+Use the qjail utility to deploy small or large numbers of jails quickly.
+
+First issue "rehash" command to enable the qjail command (if using csh).
+Then issue "man qjail-intro" to read the qjail introduction.
+After reading that do "man qjail" for the usage details.
+#
+===>   Compressing manual pages for qjail-1.7
+===>   Registering installation for qjail-1.7
+===>  Cleaning for qjail-1.7
+[root@rataplan /usr/ports/sysutils/qjail]# 
+```
+
+
+### Create /usr/jails
+```
+[root@rataplan ~]# zfs create zroot/usr/jails
+```
+
+### mount the freebsd 9.1 dvd
+```
+root@rataplan:/root # mount_cd9660 /dev/cd0 /mnt/
+```
+
+### qjail install
+
+```
+root@rataplan:/root # qjail install -f /mnt/usr/freebsd-dist/
+
+The base RELEASE distribution files are populating the fulljail.
+Est LT 1 minute elapse time for this to complete.
+
+The lib32 RELEASE distribution files are populating the fulljail.
+Est LT 1 minute elapse time for this to complete.
+ 
+Basejail & newjail are being populated.
+Est LT 1 minute elapse time for this to complete.
+ 
+Successfully installed qjail system.
+ 
+root@rataplan:/root # 
+
+```
+
+### Creating a zfs filesystem for the jail
+
+```
+root@rataplan:/usr/local/etc # zfs create zroot/usr/jails/stafdb
+root@rataplan:/usr/local/etc # 
+
+```
+
+### Creating a jail with Qjail
+```
+[root@rataplan ~]# qjail create -n re0 stafdb 192.168.1.43
+Successfully created  stafdb
+[root@rataplan ~]# 
+```
+
+### Start the jail
+
+```
+root@rataplan:/usr/local/etc # qjail start stafdb
+Jail started successfully. stafdb
+root@rataplan:/usr/local/etc # 
+```
+
+### List the jails
+
+```
+root@rataplan:/usr/local/etc # qjail list
+ 
+
+STA JID  NIC IP              Jailname
+--- ---- --- --------------- ---------------------------------------------------
+DR  4    re0 192.168.1.42    stafmail
+DR  3    re0 192.168.1.41    staffs
+DR  6    re0 192.168.1.43    stafdb
+ 
+ 
+root@rataplan:/usr/local/etc # 
+
+```
+
+### console access
+
+```
+root@rataplan:/usr/local/etc # qjail console stafdb
+Last login: Sat Feb 23 16:19:32 on pts/0
+FreeBSD 9.1-RELEASE (GENERIC) #0 r244912: Tue Jan  1 14:13:25 CET 2013
+
+Welcome to your FreeBSD jail
+stafdb /root >
+```
+
+### install the freebsd ports to the jail
+
+```
+root@rataplan:/usr/local/etc # qjail update -p stafdb
+ 
+Sat Feb 23 16:21:55 CET 2013
+ 
+The elapse download time of the portsnap compressed ports file
+is estimated at 25 minutes for the initial fetch.
+Subsequent fetches will generally take less than a minute.
+ 
+Looking up portsnap.FreeBSD.org mirrors... 6 mirrors found.
+Fetching snapshot tag from ec2-eu-west-1.portsnap.freebsd.org... done.
+Fetching snapshot metadata... done.
+Updating from Sat Feb 16 11:47:49 CET 2013 to Sat Feb 23 15:58:32 CET 2013.
+Fetching 4 metadata patches... done.
+Applying metadata patches... done.
+Fetching 0 metadata files... done.
+Fetching 524 patches.....10....20....30....40....50....60....70....80....90....100....110....120....130....140....150....160....170....180....190....200....210....220....230....240....250....260....270....280....290....300....310....320....330....340....350....360....370....380....390....400....410....420....430....440....450....460....470....480....490....500....510....520.. done.
+Applying patches... done.
+Fetching 42 new ports or files... done.
+Portsnap fetch completed successfully
+ 
+Sat Feb 23 16:22:40 CET 2013
+ 
+The ports basejail/usr/ports directory tree is being updated.
+The elapse time for this to complete is estimated at 1 minute
+to 10 minutes depending on how current your ports system is.
+ 
+Portsnap update completed successfully
+root@rataplan:/usr/local/etc # 
+```
+
+### update the base jail
+
+```
+root@rataplan:/usr/local/etc # qjail stop
+Jail stopped successfully. stafmail
+Jail stopped successfully. staffs
+Jail already stopped.      stafdb
+root@rataplan:/usr/local/etc # 
+
+root@rataplan:/usr/local/etc # qjail update -b 
+ 
+Deletion of basejail binaries successful for bin.
+Deletion of basejail binaries successful for lib.
+Deletion of basejail binaries successful for libexec.
+Deletion of basejail binaries successful for sbin.
+Deletion of basejail binaries successful for usr/bin.
+Deletion of basejail binaries successful for usr/include.
+Deletion of basejail binaries successful for usr/lib.
+Deletion of basejail binaries successful for usr/libdata.
+Deletion of basejail binaries successful for usr/libexec.
+Deletion of basejail binaries successful for usr/sbin.
+Deletion of basejail binaries successful for usr/lib32.
+ 
+Copied host's binaries to basejail successfully for bin.
+Copied host's binaries to basejail successfully for lib.
+Copied host's binaries to basejail successfully for libexec.
+Copied host's binaries to basejail successfully for sbin.
+Copied host's binaries to basejail successfully for usr/bin.
+Copied host's binaries to basejail successfully for usr/include.
+Copied host's binaries to basejail successfully for usr/lib.
+Copied host's binaries to basejail successfully for usr/libdata.
+Copied host's binaries to basejail successfully for usr/libexec.
+Copied host's binaries to basejail successfully for usr/sbin.
+Copied host's binaries to basejail successfully for usr/lib32.
+ 
+Host to basejail binaries update completed successfully.
+root@rataplan:/usr/local/etc # 
+
+root@rataplan:/usr/local/etc # qjail start
+Jail started successfully. stafmail
+Jail started successfully. staffs
+Jail started successfully. stafdb
+root@rataplan:/usr/local/etc # 
+
+```
+
+### update /etc/rc.conf
+```
+#
+# qjails
+#
+
+qjail_enable="YES"
+
+```

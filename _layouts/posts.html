@@ -2,6 +2,12 @@
 layout: archive
 ---
 
+Date: {{ page.date | date: "%d %B, %Y" }}
+{% if page.read_time %}
+   <p class="page__meta"><i class="far fa-clock" aria-hidden="true"></i> {% include read-time.html %}</p>
+{% endif %}
+<hr />
+
 {{ content }}
 
 <ul class="taxonomy__index">

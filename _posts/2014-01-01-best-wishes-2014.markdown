@@ -1,0 +1,13 @@
+---
+layout: post
+title: "Best Wishes 2014"
+date: 2014-01-01 22:01
+comments: true
+categories: [tux,"2014"] 
+---
+
+<p>
+Best wishes 2014
+</p>
+
+{% img center /blog/images/tux2014.png 759 446 "tux2014.png" %}
