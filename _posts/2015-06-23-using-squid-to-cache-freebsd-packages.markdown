@@ -3,7 +3,7 @@ layout: post
 title: "Using squid to cache FreeBSD packages"
 date: 2015-06-23 08:43
 comments: true
-categories: [squid ,FreeBSD ,pkgng, jails]  
+categories: [ "squid" , "freebsd" , "pkgng" , "jails" ]  
 excerpt_separator: <!--more-->
 ---
 

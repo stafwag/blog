@@ -3,7 +3,7 @@ layout: post
 title: "best wishes 2019"
 date: 2019-01-02 20:36:31 +0100
 comments: true
-categories: [2019] 
+categories: [ "2019" ] 
 excerpt_separator: <!--more-->
 ---
 <p>

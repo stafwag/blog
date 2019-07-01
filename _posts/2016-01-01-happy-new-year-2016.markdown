@@ -3,7 +3,7 @@ layout: post
 title: "happy new year 2016"
 date: 2016-01-01 10:24:48 +0100
 comments: true
-categories: [ 2016 ] 
+categories: [ "2016" ] 
 ---
 
 *** Happy new year! ***

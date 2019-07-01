@@ -3,7 +3,7 @@ layout: post
 title: "Migrating from Qjail to ezjail"
 date: 2013-04-10 12:36
 comments: true
-categories: freebsd, jails, qjail, ezjail 
+categories: [ "freebsd", "jails", "qjail", "ezjail" ]
 ---
 
 I was using <a href="http://qjail.sourceforge.net/">qjail</a> on <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">my freebsd system</a> but I'm migrating to <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a>.

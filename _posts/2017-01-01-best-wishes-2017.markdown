@@ -3,7 +3,7 @@ layout: post
 title: "Best Wishes 2017!"
 date: 2017-01-01 09:43:34 +0100
 comments: true
-categories:  [ 2017 ]  
+categories:  [ "2017" ]  
 ---
 
 *** Best Wishes 2017! ***
