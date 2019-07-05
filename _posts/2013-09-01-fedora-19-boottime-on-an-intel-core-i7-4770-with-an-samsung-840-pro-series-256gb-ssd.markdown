@@ -14,7 +14,7 @@ Don't worry I still have a debian system at hand...
 The boot time on a ssd is fast:
 
 
-{% youtube V99FyD1qmzg %}
+youtube V99FyD1qmzg
 
 
 ##### Sun Sep  8 15:30:18 CEST 2013 update;
