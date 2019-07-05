@@ -6,7 +6,7 @@ comments: true
 categories: [ monitor, dell 2713, diabetes, no smoking ] 
 ---
 
-{% img right /blog/images/dell2713.jpg 400 266 "dell2713" %} 
+<img src="{{ '/images/dell2713.jpg'  | relative_url }}" class="right" width="400" height="266" alt="dell2713" /> 
 Size matters, but ... resolution and image quality are as import.
 
 Since I was diagnosed with diabetes I have eyes issues things are getting better recently but I still needs glasses for reading etc. 

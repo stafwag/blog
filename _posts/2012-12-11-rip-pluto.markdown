@@ -6,7 +6,7 @@ comments: true
 related: true
 categories: [ nas, blog, git, cvs ]
 ---
-{% img right /blog/images/rip_pluto.jpg 300 375 "RIP pluto" %} 
+<img src="{{ '/images/rip_pluto.jpg'  | relative_url }}" class="right" width="300" height="375" alt="RIP /> 
 After 10 year, my fileserver pluto died.
 Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).
 

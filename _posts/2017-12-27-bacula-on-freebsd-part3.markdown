@@ -6,7 +6,7 @@ comments: true
 categories: [ bacula, freebsd, backup ]
 ---
 
-{% img right /blog/images/bacula_setup.jpg 500 416 "bacula setup" %} 
+<img src="{{ '/images/bacula_setup.jpg'  | relative_url }}" class="right" width="500" height="416" alt="bacula /> 
 
 
 I finally got the time to continue with my <a href="https://blog.bacula.org/">bacula</a> backup setup. See my previous posts about the start of my bacula setup.

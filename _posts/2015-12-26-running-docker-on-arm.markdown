@@ -5,14 +5,14 @@ date: 2015-12-26 14:55:59 +0100
 comments: true
 categories: [ docker, arm, arch, odroid ] 
 ---
-{% img right /blog/images/odroid_2_euro.jpg 500 256 "odroid u3 2 euro" %} 
+<img src="{{ '/images/odroid_2_euro.jpg'  | relative_url }}" class="right" width="500" height="256" alt="odroid /> 
 
 I own an <a href="http://www.hardkernel.com/main/products/prdt_info.php?g_code=g138745696275">odroid u3</a> that I used for my media center with <a href="https://xbmc.org/">xbmc</a> while I like the performance of the <a href="https://en.wikipedia.org/wiki/Exynos">Exynos4412 CPU</a> but the drivers for the <a href="https://en.wikipedia.org/wiki/Mali_%28GPU%29">Mali GPU</a> aren't <a href="https://en.wikipedia.org/wiki/Open_source">opensource</a>.
 
 I like <a href="https://en.wikipedia.org/wiki/ARM_architecture">ARM</a> but unfortunatelly a lot of the ARM <a href="https://en.wikipedia.org/wiki/System_on_a_chip">soc</a>'s  have no opensource drivers for the <a href="https://en.wikipedia.org/wiki/Graphics_processing_unit">GPU</a>
 
 The manufacturer of the odroid u3 - <a href="http://www.hardkernel.com/">hardkernel</a> - provides <a href="http://com.odroid.com/sigong/nf_file_board/nfile_board.php?tag=ODROID-U3">ubuntu 14.04 images</a> with xbmc and mali support. It isn't possible to get the newer of version of xbmc - now <a href="http://www.kodi.org">kodi</a> - running, or I didn't succeed withit. I'll look for another solution for my media server needs this might be my <a href="https://www.raspberrypi.org/">raspberry pi</a> <a href="https://www.raspberrypi.org/products/model-b-plus/">1 model B+</a> that is laying around doing nothing running <a href="http://openelec.tv/">openelec</a><br /><br />
-{% img left /blog/images/odroid_u3_with_usbdisk.jpg 500 352 "odroid u3 with usb disk" %} 
+<img src="{{ '/images/odroid_u3_with_usbdisk.jpg'  | relative_url }}" class="left" width="500" height="352" alt="odroid /> 
 
 Like I said I like the performance of the ordoid U3 that why I installed <a href="http://archlinuxarm.org/">archLinuxArm</a> to play with <a href="https://www.docker.com/">Docker</a>. I could have sticked with Ubuntu 14.04 but with Arch Linux I get more up-to-date software.
 

@@ -6,13 +6,13 @@ comments: true
 categories: ['openstack','ansible','centos','linux',"lxc"] 
 ---
 
-{% img right /blog/images/openstack-logo.png 150 150 "openstack-logo" %} 
+<img src="{{ '/images/openstack-logo.png'  | relative_url }}" class="right" width="150" height="150" alt="openstack-logo" /> 
 
 [Openstack](https://www.openstack.org/) is a nice platform to deploy [an Infrastructure as a service](https://en.wikipedia.org/wiki/Cloud_computing#Infrastructure_as_a_service_.28IaaS.29) and is a [collection of projects](https://governance.openstack.org/tc/reference/projects/index.html) but it can be a bit difficult to setup. [The documentation](https://docs.openstack.org) is really great if you want to setup openstack by hand and there are a few openstack distributions that makes it easier to install it.
 
 [Ansible](https://www.ansible.org) is a very nice tool for system automatisation and is one that's easier to learn.
 
-{% img left /blog/images/ansible-logo-red-t.png 150 150 "ansible-logo-red" %} 
+<img src="{{ '/images/ansible-logo-red-t.png'  | relative_url }}" class="left" width="150" height="150" alt="ansible-logo-red" /> 
 
 Wouldn't be nice if we could make the openstack installation easier with ansible? That's exactly what [Openstack-Ansible](https://github.com/openstack/openstack-ansible)
  does.
@@ -349,7 +349,7 @@ unix  2      [ ]         DGRAM                    1244303  23435/rsyslogd
 [root@aio1 ~]# grep keystone_auth_admin_password /etc/openstack_deploy/user_secrets.yml
 ```
 
-{% img center /blog/images/openstack-ansible-aio-login.png 782 723 "openstack-ansible-aio-login.png" %} 
+<img src="{{ '/images/openstack-ansible-aio-login.png'  | relative_url }}" class="center" width="782" height="723" alt="openstack-ansible-aio-login.png" /> 
 
 *** Have fun ***
 

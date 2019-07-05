@@ -7,7 +7,7 @@ categories: [ "docker", "containers", "yum", "centos", "fedora" ]
 excerpt_separator: <!--more-->
 ---
 
-{% img right /blog/images/fedora_logo_small.png 140 140 "fedora_logo_small.png" %}
+<img src="{{ '/images/fedora_logo_small.png'  | relative_url }}" class="right" width="140" height="140" alt="fedora_logo_small.png" />
 
 In my previous two posts ([1](https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/),
 [2](https://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/) ), we created Docker [Debian](https://www.debian.org/) and
@@ -18,7 +18,7 @@ In this blog post - last one in this series - we'll do the same for [yum](https:
 Building your own Docker base images isn't difficult and let you trust your distribution Gpg signing keys instead of the [docker hub](https://hub.docker.com/). As explained in [the first blog post](http://stafwag.github.io/blog/blog/2019/04/22/building-your-own-docker-images_part1/). The mkimage scripts in the contrib directory of the [Moby project](https://mobyproject.org/) git repository is a good place to start if you want to build own docker images.
  <!--more-->
 
-{% img left /blog/images/centos_logo_small.png 267 79 "centos_logo_small.png" %}
+<img src="{{ '/images/centos_logo_small.png'  | relative_url }}" class="left" width="267" height="79" alt="centos_logo_small.png" />
 
 Fedora is one of the GNU/Linux distributions that supports 32 bits systems. Centos has a [Special Interest Groups](https://wiki.centos.org/SpecialInterestGroup)
  to support [alternative architectures](https://wiki.centos.org/SpecialInterestGroup/AltArch).

@@ -10,7 +10,7 @@ categories: [ freebsd, opnsense, security, dns, unbound, stubby, dnsmasq ]
 
 In my [previous blog posts](https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/) we configured [Stubby ](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) on GNU/Linux and FreeBSD.
 
-{% img right /blog/images/Logo_OPNsense.jpg 300 85 "Logo_OPNsense.jpg" %} 
+<img src="{{ '/images/Logo_OPNsense.jpg'  | relative_url }}" class="right" width="300" height="85" alt="Logo_OPNsense.jpg" /> 
 
 In this blog article we'll configure [DNS-over-TLS](https://en.wikipedia.org/wiki/DNS_over_TLS) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) on [OPNsense](https://opnsense.org/). Both [Stubby](https://nlnetlabs.nl/projects/getdns/) and [Unbound](https://nlnetlabs.nl/projects/unbound/about/) are written by [NLnet](https://nlnet.nl/).
 

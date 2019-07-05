@@ -6,7 +6,7 @@ comments: true
 categories: [ smoking, intel, haswell, i7, ssd ] 
 ---
 
-{% img right /blog/images/i7_internals.jpg 500 384 "RIP pluto" %} 
+<img src="{{ '/images/i7_internals.jpg'  | relative_url }}" class="right" width="500" height="384" alt="RIP /> 
 Besides the health benefits you save a lot of money. 
 
 My "no smoking" <a href="http://en.wikipedia.org/wiki/Piggy_bank">Piggy Bank</a> was fat enough to sponsor a pc upgrade.

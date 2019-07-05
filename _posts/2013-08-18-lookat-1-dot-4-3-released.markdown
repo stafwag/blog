@@ -6,7 +6,7 @@ comments: true
 categories:  [lookat, clang, LLVM]
 ---
 
-{% img right /blog/images/lookat_143.png 360 217 "lookat" %}
+<img src="{{ '/images/lookat_143.png'  | relative_url }}" class="right" width="360" height="217" alt="lookat" />
 I'm pleased to anounce that Lookat/Bekijk 1.4.3 has been released.
 
 

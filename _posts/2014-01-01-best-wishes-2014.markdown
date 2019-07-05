@@ -10,4 +10,4 @@ categories: [tux,"2014"]
 Best wishes 2014
 </p>
 
-{% img center /blog/images/tux2014.png 759 446 "tux2014.png" %}
+<img src="{{ '/images/tux2014.png'  | relative_url }}" class="center" width="759" height="446" alt="tux2014.png" />

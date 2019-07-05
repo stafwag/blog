@@ -6,7 +6,7 @@ comments: true
 categories: [ kndle, wine, linux, fedora ] 
 ---
 
-{% img left /blog/images/i7_desktop.jpg 400 300 "desktop" %} 
+<img src="{{ '/images/i7_desktop.jpg'  | relative_url }}" class="left" width="400" height="300" alt="desktop" /> 
 
 I enjoy reading <a href="http://en.wikipedia.org/wiki/E-book">ebooks</a> during my train trip to work on <a href="http://en.wikipedia.org/wiki/Nexus_7_(2012_version)">my nexus 7</a>.
 
