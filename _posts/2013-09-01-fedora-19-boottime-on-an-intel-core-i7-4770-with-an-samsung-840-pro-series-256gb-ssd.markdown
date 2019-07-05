@@ -101,4 +101,4 @@ $ systemd-analyze blame
 ```
 
 Result:
-{% youtube gp96Tt349DM %}
+youtube gp96Tt349DM
