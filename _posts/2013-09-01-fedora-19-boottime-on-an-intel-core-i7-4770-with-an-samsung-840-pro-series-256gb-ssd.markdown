@@ -13,9 +13,7 @@ Don't worry I still have a debian system at hand...
 
 The boot time on a ssd is fast:
 
-
-youtube V99FyD1qmzg
-
+[![ssd boottime](https://img.youtube.com/vi/V99FyD1qmzg/0.jpg)](https://www.youtube.com/watch?v=V99FyD1qmzg)
 
 ##### Sun Sep  8 15:30:18 CEST 2013 update;
 
@@ -100,5 +98,5 @@ $ systemd-analyze blame
 
 ```
 
-Result:
-youtube gp96Tt349DM
+## Result:
+[![ssd boottime](https://img.youtube.com/vi/gp96Tt349DM/0.jpg)](https://www.youtube.com/watch?v=gp96Tt349DM)
