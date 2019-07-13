@@ -7,6 +7,6 @@ categories: [ "2019" ]
 excerpt_separator: <!--more-->
 ---
 <p>
-<a href="/blog/images/2019.jpg"><img src="/blog/images/2019.jpg" width="500" height="511" alt="2019" /> </a>
+<a href="{{ '/images/2019.jpg' | relative_url }}"><img src="{{ '/images/2019.jpg' | relative_url }}" width="500" height="511" alt="2019" /> </a>
 </p>
 <!--more-->

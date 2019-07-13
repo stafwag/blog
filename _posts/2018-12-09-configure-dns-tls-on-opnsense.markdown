@@ -45,7 +45,7 @@ In this article we'll use Quad9 but you could also with cloudfare or another dns
 
 ## Enable DNS-over-TLS
 
-<a href="/blog/images/opnsense_enable_dns_tls.png"><img src="/blog/images/opnsense_enable_dns_tls.png" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a>
+<a href="{{ '/images/opnsense_enable_dns_tls.png' | relative_url }}"><img src="{{ '/images/opnsense_enable_dns_tls.png' | relative_url }}" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a>
 
 You need to configure your firewall to use your upstream dns provider. You also want to make sure your isp dns servers aren't used.
 
@@ -82,7 +82,7 @@ If your snif TCP PORT 853 ```tcpdump -i vr1 tcp port 853``` we'll see your encry
 
 You also want to make sure that your firewall isn't configure to use an unecrypted DNS server.
 
-<a href="/blog/images/opnsense_set_dns.png"><img src="/blog/images/opnsense_set_dns.png" class="right" width="300" height="693" alt="opnsense_set_dns.png" /> </a>
+<a href="{{ '/images/opnsense_set_dns.png' | relative_url }}"><img src="{{ '/images/opnsense_set_dns.png' | relative_url }}" class="right" width="300" height="693" alt="opnsense_set_dns.png" /> </a>
 
 ### Configuration
 

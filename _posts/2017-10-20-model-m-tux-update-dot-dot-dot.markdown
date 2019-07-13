@@ -16,7 +16,7 @@ I don't use super key(s), and would prefer to have a keyboard without it.  But w
 
 ### Pictures
 
-<a href="/blog/images/modelm_tux_package.jpg"><img src="/blog/images/modelm_tux_package.jpg" width="375" height="250" alt="modelm_tux_package.jpg" /></a>
-<a href="/blog/images/modelm_all_keys.jpg"><img src="/blog/images/modelm_all_keys.jpg" width="375" height="250" alt="modelm_all_keys.jpg" /></a>
-<a href="/blog/images/modelm_tux_only.jpg"><img src="/blog/images/modelm_tux_only.jpg" width="375" height="250" alt="modelm_tux_only.jpg" /></a>
-<a href="/blog/images/modelm_with_tux_keys.jpg"><img src="/blog/images/modelm_with_tux_keys.jpg" width="375" height="250" alt="modelm_with_tux_keys.jpg" /></a>
+<a href="{{ '/images/modelm_tux_package.jpg' | relative_url }}"><img src="{{ '/images/modelm_tux_package.jpg' | relative_url }}" width="375" height="250" alt="modelm_tux_package.jpg" /></a>
+<a href="{{ '/images/modelm_all_keys.jpg' | relative_url }}"><img src="{{ '/images/modelm_all_keys.jpg' | relative_url }}" width="375" height="250" alt="modelm_all_keys.jpg" /></a>
+<a href="{{ '/images/modelm_tux_only.jpg' | relative_url }}"><img src="{{ '/images/modelm_tux_only.jpg' | relative_url }}" width="375" height="250" alt="modelm_tux_only.jpg" /></a>
+<a href="{{ '/images/modelm_with_tux_keys.jpg' | relative_url }}"><img src="{{ '/images/modelm_with_tux_keys.jpg' | relative_url }}" width="375" height="250" alt="modelm_with_tux_keys.jpg" /></a>

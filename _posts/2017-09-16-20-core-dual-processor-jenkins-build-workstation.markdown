@@ -28,8 +28,8 @@ Looking for a solution that is still affordable I ended up with building a dual 
 
 ### Pictures
 
-<a href="/blog/images/201709_xeon_cpu_side.jpg"><img src="/blog/images/201709_xeon_cpu_side.jpg" width="300" height="291" alt="201709_xeon_cpu_side.jpg" /></a>
-<a href="/blog/images/201709_xeon_hd_side.jpg"><img src="/blog/images/201709_xeon_hd_side.jpg" width="317" height="291" alt="201709_xeon_hd_side.jpg" /></a>
-<a href="/blog/images/201709_xeon_front_side.jpg"><img src="/blog/images/201709_xeon_front_side.jpg" width="151" height="291" alt="201709_xeon_front_side.jpg" /></a>
+<a href="{{ '/images/201709_xeon_cpu_side.jpg' | relative_url }}"><img src="{{ '/images/201709_xeon_cpu_side.jpg' | relative_url }}" width="300" height="291" alt="201709_xeon_cpu_side.jpg" /></a>
+<a href="{{ '/images/201709_xeon_hd_side.jpg' | relative_url }}"><img src="{{ '/images/201709_xeon_hd_side.jpg' | relative_url }}" width="317" height="291" alt="201709_xeon_hd_side.jpg" /></a>
+<a href="{{ '/images/201709_xeon_front_side.jpg' | relative_url }}"><img src="{{ '/images/201709_xeon_front_side.jpg' | relative_url }}" width="151" height="291" alt="201709_xeon_front_side.jpg" /></a>
 
 ***Still need to verify if jenkins works on this system :-) ***

@@ -6,3 +6,4 @@ sed -e "s/{% img *\([^ ]*\) \/blog\/\([^ ]*\) .*%}/<img src=\"{{ '\/\2'  | relat
 sed -e "s/{%.*img *\([^ ]*\) \/blog\/\([^ ]*\) \([^ ]*\) \([^ ]*\).*%}/<img src=\"{{ '\/\2'  | relative_url }}\" class=\"\1\" width=\"\3\" height=\"\4\" \/>/g" -i *.markdown 
 sed -e 's/{% img *\([^ ]*\) \([^ ]*\) \([^ ]*\) \([^ ]*\) \([^ ]*\).*%}/<img src="\2" class=\"\1\" width=\"\3\" height=\"\4\" alt=\"\5\" \/>/g' -i *.markdown 
 sed -e "s!\(<img src=\"\)/blog\(/[^\"]*\)\"!\1{{ '\2' | relative_url }}\"!g" -i *.markdown
+sed -e "s!\(<a href=\"\)/blog\(/[^\"]*\)\"!\1{{ '\2' | relative_url }}\"!g" -i *.markdown
