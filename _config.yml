@@ -239,6 +239,8 @@ plugins:
   - jemoji
   - jekyll-include-cache
   - jekyll-archives
+  - octopress-image-tag
+
 
 # mimic GitHub Pages with --safe
 whitelist:
