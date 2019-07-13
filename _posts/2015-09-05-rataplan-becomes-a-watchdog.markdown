@@ -6,7 +6,7 @@ comments: true
 categories: freebsd  
 ---
 
-{% img left /blog/images/watchdog_rataplan.jpg %}
+<img src="{{ '/images/watchdog_rataplan.jpg'  | relative_url }}" class="left" />
 <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">My NAS</a> runs on <a href="http://www.freebsd.org">FreeBSD</a> I'm quiet happy with it. It's named after the dog <a href="https://nl.wikipedia.org/wiki/Rataplan">rataplan</a> from the <a href="https://en.wikipedia.org/wiki/Lucky_Luke">Lucky Luke comic</a>
 
 However transferring large data files to it causes the network to hang. The realtek network interface had issues with freebsd from the <a href="http://stafwag.github.io/blog/blog/2012/12/16/running-freebsd-9.0-on-asus-c60m1-i-motherboard/">beginning</a>. On the screen and in syslog the entry "re0: watchdog timeout" is printed.
