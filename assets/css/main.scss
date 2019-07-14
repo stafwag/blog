@@ -1,0 +1,20 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+img.left {
+
+    float: left;
+    margin-right: 1.5em;
+
+}
+
+img.right {
+    float: right;
+    margin-left: 1.5em;
+}
+
+@charset "utf-8";
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
+@import "minimal-mistakes"; // main partials

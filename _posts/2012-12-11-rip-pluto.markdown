@@ -1,0 +1,26 @@
+---
+layout: single
+title: "RIP: pluto"
+date: 2012-12-11 23:19
+comments: true
+related: true
+categories: [ nas, blog, git, cvs ]
+---
+<img src="{{ '/images/rip_pluto.jpg'  | relative_url }}" class="right" width="300" height="375" alt="RIP"/>
+After 10 year, my fileserver pluto died.
+Pluto was a AMD64 had 1GB RAM and 4 too loud samsung drives (160GB).
+
+
+( 1 minute silence .... )
+<br />
+<br />
+
+I take backups of course ;-)
+I already ordered the parts to build a new pluto.
+
+
+Pluto still hosted some <a href="http://en.wikipedia.org/wiki/Concurrent_Versions_System">CSV</a> repositorties like <a href="http://www.wagemakers.be/english/programs/cgipaf">CGIpaf</a>.
+But it's time to move the source to a safer place. This will be <a href="http://www.github.com">github</a>.  
+
+I also decided to create a blog and I wanted something that integrated well with github. <a href="http://octopress.org/">Octopress</a>  seems to be the most logical choose. It's written in ruby which is a nice bonus.
+

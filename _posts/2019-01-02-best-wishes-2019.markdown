@@ -1,0 +1,12 @@
+---
+layout: post
+title: "best wishes 2019"
+date: 2019-01-02 20:36:31 +0100
+comments: true
+categories: [ "2019" ] 
+excerpt_separator: <!--more-->
+---
+<p>
+<a href="{{ '/images/2019.jpg' | relative_url }}"><img src="{{ '/images/2019.jpg' | relative_url }}" width="500" height="511" alt="2019" /> </a>
+</p>
+<!--more-->
