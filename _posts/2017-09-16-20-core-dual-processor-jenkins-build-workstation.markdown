@@ -6,7 +6,7 @@ comments: true
 categories: [ xeon, jenkins, linux, bsd, solaris ] 
 ---
 
-<img src="{{ '/images/201709_xeon_cpu_side.jpg'  | relative_url }}" class="left" width="400" height="388" alt="Xeon /> 
+<img src="{{ '/images/201709_xeon_cpu_side.jpg' | relative_url }}" class="left" width="400" height="388" alt="Xeon" /> 
 
 <br />
 

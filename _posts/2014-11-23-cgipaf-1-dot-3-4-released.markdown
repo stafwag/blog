@@ -7,13 +7,13 @@ categories: [ cgipaf, bsd, netbsd, freebsd, pam ]
 ---
 CGIpaf 1.3.4 has been released
 
-###ChangeLog
+### ChangeLog
 
 ##### version 1.3.4         ( 23 Nov 2014 )
 > * Cracklib configuration checking has been improved
 > * LDFLAGS is passed to the linker correctly
 
-#####CGIpaf 1.3.4pre1 (15 Sep 2013)
+##### CGIpaf 1.3.4pre1 (15 Sep 2013)
 
 > * PAM is enabled on FreeBSD 7.3 or above
 > * PAM is enabled on NetBSD 6.0 or above

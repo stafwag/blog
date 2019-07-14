@@ -20,7 +20,7 @@ Unfortunately this books is not compatible with cloud reader.
 <a href="http://en.wikipedia.org/wiki/Proprietary_format">Proprietary_formats</a> should be avoid, lesson learned (again). 
 </strong>
 
-To read my book at home I decided to give <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"</a> the windows version of kindle</a> on <a href="http://www.winehq.org/">wine</a> a try
+To read my book at home I decided to give <a href="http://www.amazon.com/gp/feature.html/ref=kcp_pc_ln_ar?docId=1000426311"> the windows version of kindle</a> on <a href="http://www.winehq.org/">wine</a> a try
 
 The installation was pretty straightforward on <a href="http://fedoraproject.org/">Fedora 19</a>.
 

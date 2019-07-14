@@ -6,7 +6,7 @@ comments: true
 categories: [ security, thunderbird ] 
 ---
 
-<img src="{{ '/images/thunderbird_import_smime_failed.png'  | relative_url }}" class="left" width="1000" height="835" alt="thunderbird /> 
+<img src="{{ '/images/thunderbird_import_smime_failed.png'  | relative_url }}" class="left" width="1000" height="835" alt="thunderbird"/>
 
 On <a href="http://kb.mozillazine.org/Getting_an_SMIME_certificate">http://kb.mozillazine.org/Getting_an_SMIME_certificate</a>
 you get a list of free <a href="https://en.wikipedia.org/wiki/S/MIME">s/mime</a> certificate.
@@ -134,7 +134,7 @@ Verifying - Enter Export Password:
 
 # Import the the new pkcs12 file
 
-<img src="{{ '/images/thunderbird_import_smime_ok.png'  | relative_url }}" class="right" width="598" height="152" alt="thunderbird /> 
+<img src="{{ '/images/thunderbird_import_smime_ok.png'  | relative_url }}" class="right" width="598" height="152" alt="thunderbird"/>
 Not sure what the issue was with original pkcs12 but the import works now....
  - it might have been the 32 characters password -.   After I was able to use the signing and encryption part in thunderbird.
 

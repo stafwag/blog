@@ -6,7 +6,7 @@ comments: true
 categories: [ archlinux, btrfs, luks ] 
 ---
 
-<img src="{{ '/images/Arch-linux-logo.png'  | relative_url }}" class="right" width="300" height="225" alt="Arch /> 
+<img src="{{ '/images/Arch-linux-logo.png'  | relative_url }}" class="right" width="300" height="225" alt="Arch"/>
 
 I'm preparing to move <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my workstation</a> to <a href="https://www.archlinux.org/">arch linux</a> Before I'll install it on my physical workstation I did the installation on a virtual machine. I'll use <a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">btrfs</a> as the filesystem during the installation. btrfs is a nice filesystem but it had some serious dataloss issue with <a href="https://btrfs.wiki.kernel.org/index.php/RAID56">RAID5/RAID6</a> recently.
 

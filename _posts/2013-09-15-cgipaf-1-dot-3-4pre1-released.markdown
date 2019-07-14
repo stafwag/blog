@@ -8,9 +8,9 @@ categories: [ cgipaf, bsd, netbsd, freebsd, pam ]
 
 This is the first pre-release of CGIpaf 1.3.4.
 
-###ChangeLog
+### ChangeLog
 
-#####CGIpaf 1.3.4pre1 (15 Sep 2013)
+##### CGIpaf 1.3.4pre1 (15 Sep 2013)
 
 > * PAM is enabled on FreeBSD 7.3 or above
 > * PAM is enabled on NetBSD 6.0 or above

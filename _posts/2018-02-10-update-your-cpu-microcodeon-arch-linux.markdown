@@ -3,7 +3,7 @@ layout: post
 title: "Update your CPU microcode on Arch Linux"
 date: 2018-02-10 08:33:01 +0100
 comments: true
-categories: [ "security", "spetre", "meltdown", "linux", "arch linux", "microcode" ] 
+categories: [ "security", "spectre", "meltdown", "linux", "arch linux", "microcode" ] 
 ---
 
 # Meltdown & spectre

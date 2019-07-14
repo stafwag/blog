@@ -18,7 +18,7 @@ I might go with <a href="http://https://wiki.debian.org/DebianStretch">Debian St
 You'll find a small howto install libreboot on a Thinkpad X60 below.
 <br />&nbsp;<br />
 
-<img src="{{ '/images/x60_open.jpg'  | relative_url }}" class="centre" width="750" height="1050" alt="Thinkpad /> 
+<img src="{{ '/images/x60_open.jpg'  | relative_url }}" class="centre" width="750" height="1050" alt="Thinkpad"/>
 
 # Build Libreboot
 
@@ -569,7 +569,7 @@ staf@petronella:~/libreboot/libreboot_r20160907_src$
 
 The installation is completed! Reboot our system and enjoy your Free As In Freedom Laptop.
 
-<img src="{{ '/images/x60_free.jpg'  | relative_url }}" class="centre" width="750" height="853" alt="Thinkpad /> 
+<img src="{{ '/images/x60_free.jpg'  | relative_url }}" class="centre" width="750" height="853" alt="Thinkpad"/>
 
 <p style="font-style: italic;">
 Have fun

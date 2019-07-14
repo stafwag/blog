@@ -10,9 +10,9 @@ Trying to release more often...
 
 The first release candicate of lookat 1.4.3 has been released.
 
-###ChangeLog
+### ChangeLog
 
-#####Lookat / Bekijk 1.4.3rc1  ( 27 Apr 2013 )
+##### Lookat / Bekijk 1.4.3rc1  ( 27 Apr 2013 )
 > * Fixed compile issue with llvm clang
 
 

@@ -6,7 +6,7 @@ comments: true
 categories: [ zfs, yum, fedora, linux ] 
 ---
 
-<img src="http://zfsonlinux.org/images/zfs-linux.png" class="left" width="200" height="125" alt=""zfs" />
+<img src="http://zfsonlinux.org/images/zfs-linux.png" class="left" width="200" height="125" alt="zfs" />
 
 I use  <a href="http://zfsonlinux.org/"> zfs on linux</a> on <a href="http://fedoraproject.org/">fedora</a> now.
 

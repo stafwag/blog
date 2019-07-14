@@ -3,7 +3,7 @@ layout: post
 title: "Bacula on FreeBSD (part 1 PostgresSQL in a jail)"
 date: 2017-08-06 08:43:28 +0200
 comments: true
-categories: bacula, freebsd, backup, postgresql 
+categories: [ bacula, freebsd, backup, postgresql ]
 ---
 
 I do take backups; my current solution are couple of shell script wrapper around dump/zfs send/btrfs send/rsync which is a mess.

@@ -15,13 +15,13 @@ Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a hr
 1.4.2 is a maintenance release. When there are more than 24 hours in a day I'll start with the long waited utf-8 support ;-)
 
 
-###ChangeLog
+### ChangeLog
 
-#####Lookat / Bekijk 1.4.2     ( 11 Dec 2012 )
+##### Lookat / Bekijk 1.4.2     ( 11 Dec 2012 )
 
 > * Lookat 1.4.2rc2 has been released as 1.4.2</li>
 
-#####Lookat / Bekijk 1.4.2rc2  ( 2 Sep 2012 )
+##### Lookat / Bekijk 1.4.2rc2  ( 2 Sep 2012 )
 > 
 > * Added FreeBSD patch
 > * Added redhat specfile
@@ -29,5 +29,5 @@ Or at the <a href="http://git-scm.com/">Git</a> repository at GNU savannah <a hr
 > * Corrected mirror manpage errors
 > * xmalloc.c updated for non compatible GNU malloc for systems like AIX 
  
-#####Lookat / Bekijk 1.4.2rc1  ( 2 Nov 2011 )
+##### Lookat / Bekijk 1.4.2rc1  ( 2 Nov 2011 )
 > * Lookat 1.4.2rc1 is a maintenance release that resolves compile issues on some 64bits systems.
