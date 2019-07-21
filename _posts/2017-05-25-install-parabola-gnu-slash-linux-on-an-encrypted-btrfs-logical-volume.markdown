@@ -7,7 +7,7 @@ categories: [libreboot, parabola, btrfs, luks]
 excerpt_separator: <!--more-->
 ---
 
-<img src="{{ '/images/413px-Gnu10-mascot-logo_100ppi.png'  | relative_url }}" class="left" width="200" height="291" alt="413px-Gnu10-mascot-logo_100ppi.png" /> 
+<img src="{{ '/images/413px-Gnu10-mascot-logo_100ppi.png'  | absolute_url }}" class="left" width="200" height="291" alt="413px-Gnu10-mascot-logo_100ppi.png" /> 
 
 I finally found time to complete the installation of my <a href="http://stafwag.github.io/blog/blog/2017/02/11/how-to-install-libreboot-on-a-thinkpad-x60/">Libreboot laptop</a>
 

@@ -10,7 +10,7 @@ categories: [ freebsd, opnsense, security, dns, unbound, stubby, dnsmasq ]
 
 In my [previous blog posts](https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/) we configured [Stubby ](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) on GNU/Linux and FreeBSD.
 
-<img src="{{ '/images/Logo_OPNsense.jpg'  | relative_url }}" class="right" width="300" height="85" alt="Logo_OPNsense.jpg" /> 
+<img src="{{ '/images/Logo_OPNsense.jpg'  | absolute_url }}" class="right" width="300" height="85" alt="Logo_OPNsense.jpg" /> 
 
 In this blog article we'll configure [DNS-over-TLS](https://en.wikipedia.org/wiki/DNS_over_TLS) with [Unbound](https://nlnetlabs.nl/projects/unbound/about/) on [OPNsense](https://opnsense.org/). Both [Stubby](https://nlnetlabs.nl/projects/getdns/) and [Unbound](https://nlnetlabs.nl/projects/unbound/about/) are written by [NLnet](https://nlnet.nl/).
 
@@ -45,7 +45,7 @@ In this article we'll use Quad9 but you could also with cloudfare or another dns
 
 ## Enable DNS-over-TLS
 
-<a href="{{ '/images/opnsense_enable_dns_tls.png' | relative_url }}"><img src="{{ '/images/opnsense_enable_dns_tls.png' | relative_url }}" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a>
+<a href="{{ '/images/opnsense_enable_dns_tls.png' | absolute_url }}"><img src="{{ '/images/opnsense_enable_dns_tls.png' | relative_url }}" class="left" width="300" height="458" alt="opnsense_enable_dns_tls.png" /> </a>
 
 You need to configure your firewall to use your upstream dns provider. You also want to make sure your isp dns servers aren't used.
 
@@ -82,7 +82,7 @@ If your snif TCP PORT 853 ```tcpdump -i vr1 tcp port 853``` we'll see your encry
 
 You also want to make sure that your firewall isn't configure to use an unecrypted DNS server.
 
-<a href="{{ '/images/opnsense_set_dns.png' | relative_url }}"><img src="{{ '/images/opnsense_set_dns.png' | relative_url }}" class="right" width="300" height="693" alt="opnsense_set_dns.png" /> </a>
+<a href="{{ '/images/opnsense_set_dns.png' | absolute_url }}"><img src="{{ '/images/opnsense_set_dns.png' | relative_url }}" class="right" width="300" height="693" alt="opnsense_set_dns.png" /> </a>
 
 ### Configuration
 

@@ -7,7 +7,7 @@ categories: [ "blog", "octopress", "jekyll" ]
 excerpt_separator: <!--more-->
 ---
 
-<img src="{{ '/images/octopress.png' | relative_url }}" class="left" width="227" height="227" alt="octopress_logo" />
+<img src="{{ '/images/octopress.png' | absolute_url  }}" class="left" width="227" height="227" alt="octopress_logo" />
 I migrated [my blog](https://stafwag.github.io/blog) from [Octopress](http://octopress.org) to [Jekyll](https://jekyllrb.com). The primary reason is that octopress isn't maintained any more. I'm sure its great theme will live on in a lot of projects.
 
 I like static webpage creators, they allow you to create nice websites without the need to have any code on the remote website. Anything that runs code has the possibility to be cracked, having a static website limit the [attack vectors](https://en.wikipedia.org/wiki/Vector_(malware)). You still need to protect the upload of the website and the system(s) that hosts your site of course.
@@ -16,7 +16,7 @@ I like static webpage creators, they allow you to create nice websites without t
 Octopress was/is based on Jekyll, so Jekyll seems to be the logical choice as my next website creator. My blog posts are written in [markdown](https://en.wikipedia.org/wiki/Markdown), this makes it easier to migrate to a new site creator.
 
 There are a lot of Jekyll themes available, I'm not the greatest website designer so after reviewing a few themes I went with the [Minimal Mistakes](https://mademistakes.com/work/minimal-mistakes-jekyll-theme/) theme.
-<img src="{{ '/images/jekyll.png' | relative_url }}" class="right" width="452" height="230" alt="jekyll_logo" />
+<img src="{{ '/images/jekyll.png' | absolute_url }}" class="right" width="452" height="230" alt="jekyll_logo" />
 It has a nice layout and is very well [documented](https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/).
 
 The migration was straight-forward ... as simple as copying the blog posts markdown files to the new location.
@@ -34,7 +34,7 @@ Images - or the image location - are bit of a problem in markdown. I was using t
 This can be resolved with a ```relative_url``` pre-processed script.
 
 {% raw %}
-```{{ '/images/opnsense_out_of_inodes.jpg' | relative_url }}```
+```{{ '/images/opnsense_out_of_inodes.jpg' | absolute_url }}```
 {% endraw %}
 
 So I create a few [sed](https://en.wikipedia.org/wiki/Sed) scripts to transfor the octopress img tags.

@@ -8,4 +8,4 @@ categories:  [ "2017" ]
 
 *** Best Wishes 2017! ***
 
-<img src="{{ '/images/best_wishes_2017_scaled.jpg'  | relative_url }}" class="center" width="1000" height="667" alt="best_wishes_2017_scaled.jpg" />
+<img src="{{ '/images/best_wishes_2017_scaled.jpg'  | absolute_url }}" class="center" width="1000" height="667" alt="best_wishes_2017_scaled.jpg" />

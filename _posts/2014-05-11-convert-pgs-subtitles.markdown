@@ -6,7 +6,7 @@ comments: true
 categories: [ convertPgsSub, wd live, mkv ] 
 ---
 
-<img src="{{ '/images/wdlive.jpg'  | relative_url }}" class="left" width="300" height="200" alt="wdlive" />
+<img src="{{ '/images/wdlive.jpg'  | absolute_url }}" class="left" width="300" height="200" alt="wdlive" />
 
 I own a <a href="http://en.wikipedia.org/wiki/WD_TV">western digital tv live 1st generation</a> the user interface is a bit slow but it's still a nice media player.
 
