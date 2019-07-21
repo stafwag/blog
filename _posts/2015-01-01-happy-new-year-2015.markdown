@@ -10,4 +10,4 @@ categories: ["2015"]
 Happy new year!
 </p>
 
-<img src="{{ '/images/2015.jpg'  | relative_url }}" class="center" width="1000" height="625" alt="2014.jpg" />
+<img src="{{ '/images/2015.jpg'  | remove_first:'/' | absolute_url }}" class="center" width="1000" height="625" alt="2014.jpg" />

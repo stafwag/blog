@@ -6,7 +6,7 @@ comments: true
 categories: [ archlinux, btrfs, luks ] 
 ---
 
-<img src="{{ '/images/Arch-linux-logo.png'  | relative_url }}" class="right" width="300" height="225" alt="Arch"/>
+<img src="{{ '/images/Arch-linux-logo.png'  | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="Arch"/>
 
 I'm preparing to move <a href="http://stafwag.github.io/blog/blog/2013/08/25/the-benefits-of-stopping-smoking-dot-dot-dot/">my workstation</a> to <a href="https://www.archlinux.org/">arch linux</a> Before I'll install it on my physical workstation I did the installation on a virtual machine. I'll use <a href="https://btrfs.wiki.kernel.org/index.php/Main_Page">btrfs</a> as the filesystem during the installation. btrfs is a nice filesystem but it had some serious dataloss issue with <a href="https://btrfs.wiki.kernel.org/index.php/RAID56">RAID5/RAID6</a> recently.
 
@@ -18,7 +18,7 @@ It's possible to encrypt your boot partition <a href="https://www.gnu.org/softwa
 
 In this howto we'll setup a single root partition to have full disk encryption. I'm not sure I go with an encrypted boot partition during my final installation. I might just create an empty partition of 1G so I can move switch between an encrypted and an non-encrypted boot filesystem. 
 
-<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/00_boot.png'  | relative_url }}" class="left" width="440" height="" alt="00_boot.png" /> 
+<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/00_boot.png'  | remove_first:'/' | absolute_url }}" class="left" width="440" height="" alt="00_boot.png" /> 
 
 ## Download the arch linux iso and boot it
 
@@ -681,12 +681,12 @@ root@archiso ~ # reboot
 
 As mentioned before the GRUB will as for a passphrase to decrypt the boot partition.
 
-<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/01_1st_boot.png'  | relative_url }}" class="center" width="700" height="274" alt="01_1st_boot.png" /> 
-<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/02_1st_grub_menu.png'  | relative_url }}" class="center" width="700" height="484" alt="01_1st_boot.png" /> 
+<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/01_1st_boot.png'  | remove_first:'/' | absolute_url }}" class="center" width="700" height="274" alt="01_1st_boot.png" /> 
+<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/02_1st_grub_menu.png'  | remove_first:'/' | absolute_url }}" class="center" width="700" height="484" alt="01_1st_boot.png" /> 
 
 You'll need to type it the password a secod time during the loading of initrd.
 
-<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/02_1st_decrypt_root.png'  | relative_url }}" class="center" width="700" height="165" alt="01_1st_boot.png" /> 
+<img src="{{ '/images/arch-on-an-encrypted-btrfs-partition/02_1st_decrypt_root.png'  | remove_first:'/' | absolute_url }}" class="center" width="700" height="165" alt="01_1st_boot.png" /> 
 
 
 ### Setup swap space

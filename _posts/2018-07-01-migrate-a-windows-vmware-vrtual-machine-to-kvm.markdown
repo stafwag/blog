@@ -199,11 +199,11 @@ total 321308
 
 ### mount the iso image
 
-<img src="{{ '/images/virto_windows_install/mount_cdrom_000.png' | relative_url }}" width="816" height="689" alt="mount_cdrom_000.png" /> 
+<img src="{{ '/images/virto_windows_install/mount_cdrom_000.png' | remove_first:'/' | absolute_url }}" width="816" height="689" alt="mount_cdrom_000.png" /> 
 
 Make sure that the cdrom is mounted in windows.
 
-<img src="{{ '/images/virto_windows_install/cdrom_mounted_000.png' | relative_url }}" width="798" height="605" alt="mount_cdrom_000.png" /> 
+<img src="{{ '/images/virto_windows_install/cdrom_mounted_000.png' | remove_first:'/' | absolute_url }}" width="798" height="605" alt="mount_cdrom_000.png" /> 
 
 
 ### Install
@@ -212,7 +212,7 @@ Make sure that the cdrom is mounted in windows.
 
 Open device Manager in the control panel or type ```devmgmt.msc``` on the command prompt.
 
-<img src="{{ '/images/virto_windows_install/devmgmt_msc_000.png' | relative_url }}" width="835" height="728" alt="mount_cdrom_000.png" /> 
+<img src="{{ '/images/virto_windows_install/devmgmt_msc_000.png' | remove_first:'/' | absolute_url }}" width="835" height="728" alt="mount_cdrom_000.png" /> 
 
 #### Update the drivers
 
@@ -230,10 +230,10 @@ Specify the cdrom as the search location and click **Next**, this will install t
 Do the same for the **PCI Simple Communications Controller** this will install the "VirtIO Serial Driver"
 
 
-<img src="{{ '/images/virto_windows_install/update_pci_000.png' | relative_url }}" width="790" height="586" alt="update_pci_000.png" /> 
-<img src="{{ '/images/virto_windows_install/update_pci_001.png' | relative_url }}" width="792" height="594" alt="update_pci_001.png" /> 
-<img src="{{ '/images/virto_windows_install/update_pci_002.png' | relative_url }}" width="792" height="577" alt="update_pci_002.png" /> 
-<img src="{{ '/images/virto_windows_install/update_pci_003.png' | relative_url }}" width="788" height="578" alt="update_pci_003.png" /> 
+<img src="{{ '/images/virto_windows_install/update_pci_000.png' | remove_first:'/' | absolute_url }}" width="790" height="586" alt="update_pci_000.png" /> 
+<img src="{{ '/images/virto_windows_install/update_pci_001.png' | remove_first:'/' | absolute_url }}" width="792" height="594" alt="update_pci_001.png" /> 
+<img src="{{ '/images/virto_windows_install/update_pci_002.png' | remove_first:'/' | absolute_url }}" width="792" height="577" alt="update_pci_002.png" /> 
+<img src="{{ '/images/virto_windows_install/update_pci_003.png' | remove_first:'/' | absolute_url }}" width="788" height="578" alt="update_pci_003.png" /> 
 
 
 ##### install the VioStor driver
@@ -243,20 +243,20 @@ In the **Device Manager** you'll get a new device **SCSI Controller** right clic
 This will install the **Red Hat VirtIO SCSI controller**
 
 
-<img src="{{ '/images/virto_windows_install/install_viostor_000.png' | relative_url }}" width="552" height="567" alt="install_viostor_000.png" /> 
-<img src="{{ '/images/virto_windows_install/install_viostor_001.png' | relative_url }}" width="786" height="576" alt="install_viostor_001.png" /> 
-<img src="{{ '/images/virto_windows_install/install_viostor_002.png' | relative_url }}" width="622" height="461" alt="install_viostor_002.png" /> 
+<img src="{{ '/images/virto_windows_install/install_viostor_000.png' | remove_first:'/' | absolute_url }}" width="552" height="567" alt="install_viostor_000.png" /> 
+<img src="{{ '/images/virto_windows_install/install_viostor_001.png' | remove_first:'/' | absolute_url }}" width="786" height="576" alt="install_viostor_001.png" /> 
+<img src="{{ '/images/virto_windows_install/install_viostor_002.png' | remove_first:'/' | absolute_url }}" width="622" height="461" alt="install_viostor_002.png" /> 
 
 Go to the device settings of your virtual machine and change the **Disk bus** to **VirtIO**
 and shutdown you virtual machine.
 
-<img src="{{ '/images/virto_windows_install/install_viostor_003.png' | relative_url }}" width="705" height="689" alt="install_viostor_003.png" /> 
+<img src="{{ '/images/virto_windows_install/install_viostor_003.png' | remove_first:'/' | absolute_url }}" width="705" height="689" alt="install_viostor_003.png" /> 
 
 You can remove the temporary disk now or leave it if you can find some use for it...
 
 Make sure that you disk is selected as the bootable device.
 
-<img src="{{ '/images/virto_windows_install/install_viostor_004.png' | relative_url }}" width="885" height="689" alt="install_viostor_004.png" /> 
+<img src="{{ '/images/virto_windows_install/install_viostor_004.png' | remove_first:'/' | absolute_url }}" width="885" height="689" alt="install_viostor_004.png" /> 
 
 Start the virtual machine and make sure that the system is bootable.
 
@@ -264,28 +264,28 @@ Start the virtual machine and make sure that the system is bootable.
 
 Update the **Device model** to **virtio**.
 
-<img src="{{ '/images/virto_windows_install/use_virtio_net_000.png' | relative_url }}" width="699" height="689" alt="use_virtio_net_000.png" /> 
+<img src="{{ '/images/virto_windows_install/use_virtio_net_000.png' | remove_first:'/' | absolute_url }}" width="699" height="689" alt="use_virtio_net_000.png" /> 
 
 Start ```devmgmt.msc``` and update the driver as we did before....
 
-<img src="{{ '/images/virto_windows_install/install_netkvm_000.png' | relative_url }}" width="809" height="737" alt="install_netkvm_000.png" /> 
-<img src="{{ '/images/virto_windows_install/install_netkvm_001.png' | relative_url }}" width="788" height="586" alt="install_netkvm_001.png" /> 
+<img src="{{ '/images/virto_windows_install/install_netkvm_000.png' | remove_first:'/' | absolute_url }}" width="809" height="737" alt="install_netkvm_000.png" /> 
+<img src="{{ '/images/virto_windows_install/install_netkvm_001.png' | remove_first:'/' | absolute_url }}" width="788" height="586" alt="install_netkvm_001.png" /> 
 
 And verify that you network card works correctly.
 
-<img src="{{ '/images/virto_windows_install/install_netkvm_002.png' | relative_url }}" width="902" height="645" alt="install_netkvm_002.png" /> 
+<img src="{{ '/images/virto_windows_install/install_netkvm_002.png' | remove_first:'/' | absolute_url }}" width="902" height="645" alt="install_netkvm_002.png" /> 
 
 ###### install the QXL graphical driver
 
 Update the **Microsoft Basic Display Adapter**
 
-<img src="{{ '/images/virto_windows_install/install_qxl_000.png' | relative_url }}" width="792" height="581" alt="install_qxl_000.png" /> 
-<img src="{{ '/images/virto_windows_install/install_qxl_001.png' | relative_url }}" width="788" height="582" alt="install_qxl_001.png" /> 
-<img src="{{ '/images/virto_windows_install/install_qxl_002.png' | relative_url }}" width="863" height="597" alt="install_qxl_002.png" /> 
+<img src="{{ '/images/virto_windows_install/install_qxl_000.png' | remove_first:'/' | absolute_url }}" width="792" height="581" alt="install_qxl_000.png" /> 
+<img src="{{ '/images/virto_windows_install/install_qxl_001.png' | remove_first:'/' | absolute_url }}" width="788" height="582" alt="install_qxl_001.png" /> 
+<img src="{{ '/images/virto_windows_install/install_qxl_002.png' | remove_first:'/' | absolute_url }}" width="863" height="597" alt="install_qxl_002.png" /> 
 
 After the installation you can change the the display resolution.
 
-<img src="{{ '/images/virto_windows_install/install_qxl_003.png' | relative_url }}" width="812" height="651" alt="install_qxl_003.png" /> 
+<img src="{{ '/images/virto_windows_install/install_qxl_003.png' | remove_first:'/' | absolute_url }}" width="812" height="651" alt="install_qxl_003.png" /> 
 
 If you want to use higher screen resolutions you need to <a href="https://stafwag.github.io/blog/blog/2018/04/22/high-screen-resolution-on-a-kvm-virtual-machine-with-qxl/">increase the video ram</a>    
 

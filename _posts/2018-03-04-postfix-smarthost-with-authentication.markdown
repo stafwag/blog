@@ -6,7 +6,7 @@ comments: true
 categories: [ mail, freebsd, postfix ] 
 ---
 
-<img src="{{ '/images/postfix.png'  | relative_url }}" class="right" width="400" height="266" alt="postfix" /> 
+<img src="{{ '/images/postfix.png'  | remove_first:'/' | absolute_url }}" class="right" width="400" height="266" alt="postfix" /> 
 
 I used the relay host of my internet provider but this was causing issues since my email was getting mark as <a href="https://en.wikipedia.org/wiki/Email_spam">SPAM</a> in <a href="https://en.wikipedia.org/wiki/Gmail">gmail</a>.
 <br />&nbsp;<br />

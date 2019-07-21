@@ -6,7 +6,7 @@ comments: true
 categories: freebsd
 ---
 
-<img src="{{ '/images/P_500.jpg'  | relative_url }}" class="left" width="250" height="250" alt="RIP"/>
+<img src="{{ '/images/P_500.jpg'  | remove_first:'/' | absolute_url }}" class="left" width="250" height="250" alt="RIP"/>
 
 As my file and backup system pluto <a href="http://stafwag.github.io/blog/blog/2012/12/11/rip-pluto/">died</a> i'm building a new one.
 
