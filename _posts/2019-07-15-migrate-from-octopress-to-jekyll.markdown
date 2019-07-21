@@ -7,7 +7,7 @@ categories: [ "blog", "octopress", "jekyll" ]
 excerpt_separator: <!--more-->
 ---
 
-<img src="{{ '/images/octopress.png' |  remove_first:'/' | remove_first:'/' | absolute_url }}" class="left" width="227" height="227" alt="octopress_logo" />
+<img src="{{ '/images/octopress.png' |  remove_first:'/' | absolute_url }}" class="left" width="227" height="227" alt="octopress_logo" />
 I migrated [my blog](https://stafwag.github.io/blog) from [Octopress](http://octopress.org) to [Jekyll](https://jekyllrb.com). The primary reason is that octopress isn't maintained any more. I'm sure its great theme will live on in a lot of projects.
 
 I like static webpage creators, they allow you to create nice websites without the need to have any code on the remote website. Anything that runs code has the possibility to be cracked, having a static website limit the [attack vectors](https://en.wikipedia.org/wiki/Vector_(malware)). You still need to protect the upload of the website and the system(s) that hosts your site of course.
