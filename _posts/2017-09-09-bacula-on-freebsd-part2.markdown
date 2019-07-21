@@ -5,7 +5,7 @@ date: 2017-09-09 10:27:03 +0200
 comments: true
 categories:  [ bacula, freebsd, backup, postgresql, ssl ]
 ---
-<img src="{{ '/images/postgressl.png'  | absolute_url }}" class="right" width="300" height="300" alt="PostgreSSL" /> 
+<img src="{{ '/images/postgressl.png'  | remove_first:'/' | absolute_url }}" class="right" width="300" height="300" alt="PostgreSSL" /> 
 
 In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.
 

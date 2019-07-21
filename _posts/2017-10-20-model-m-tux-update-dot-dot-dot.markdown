@@ -5,7 +5,7 @@ date: 2017-10-20 17:27:41 +0200
 comments: true
 categories: [keyboard, linux, modelm] 
 ---
-<img src="{{ '/images/modelm_tux_only.jpg'  | absolute_url }}" class="right" width="400" height="266" alt="modelm_tux_only.jpg" /> 
+<img src="{{ '/images/modelm_tux_only.jpg'  | remove_first:'/' | absolute_url }}" class="right" width="400" height="266" alt="modelm_tux_only.jpg" /> 
 
 I own a <a href="https://en.wikipedia.org/wiki/Unicomp">Unicomp</a> <a herf="https://en.wikipedia.org/wiki/Model_M_keyboard">model-m keyboard</a>. The keyboard has a nice key feel but it has windows super key(s). 
 
@@ -16,7 +16,7 @@ I don't use super key(s), and would prefer to have a keyboard without it.  But w
 
 ### Pictures
 
-<a href="{{ '/images/modelm_tux_package.jpg' | absolute_url }}"><img src="{{ '/images/modelm_tux_package.jpg' | relative_url }}" width="375" height="250" alt="modelm_tux_package.jpg" /></a>
-<a href="{{ '/images/modelm_all_keys.jpg' | absolute_url }}"><img src="{{ '/images/modelm_all_keys.jpg' | relative_url }}" width="375" height="250" alt="modelm_all_keys.jpg" /></a>
-<a href="{{ '/images/modelm_tux_only.jpg' | absolute_url }}"><img src="{{ '/images/modelm_tux_only.jpg' | relative_url }}" width="375" height="250" alt="modelm_tux_only.jpg" /></a>
-<a href="{{ '/images/modelm_with_tux_keys.jpg' | absolute_url }}"><img src="{{ '/images/modelm_with_tux_keys.jpg' | relative_url }}" width="375" height="250" alt="modelm_with_tux_keys.jpg" /></a>
+<a href="{{ '/images/modelm_tux_package.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/modelm_tux_package.jpg' | remove_first:'/' | absolute_url }}" width="375" height="250" alt="modelm_tux_package.jpg" /></a>
+<a href="{{ '/images/modelm_all_keys.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/modelm_all_keys.jpg' | remove_first:'/' | absolute_url }}" width="375" height="250" alt="modelm_all_keys.jpg" /></a>
+<a href="{{ '/images/modelm_tux_only.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/modelm_tux_only.jpg' | remove_first:'/' | absolute_url }}" width="375" height="250" alt="modelm_tux_only.jpg" /></a>
+<a href="{{ '/images/modelm_with_tux_keys.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/modelm_with_tux_keys.jpg' | remove_first:'/' | absolute_url }}" width="375" height="250" alt="modelm_with_tux_keys.jpg" /></a>

@@ -8,4 +8,4 @@ categories: [ "2016" ]
 
 *** Happy new year! ***
 
-<img src="{{ '/images/2016.jpg'  | absolute_url }}" class="center" width="1000" height="625" alt="2016.jpg" />
+<img src="{{ '/images/2016.jpg'  | remove_first:'/' | absolute_url }}" class="center" width="1000" height="625" alt="2016.jpg" />

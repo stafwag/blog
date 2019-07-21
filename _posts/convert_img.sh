@@ -9,4 +9,5 @@
 # sed -e "s!\(<img src=\"\)/blog\(/[^\"]*\)\"!\1{{ '\2' | relative_url }}\"!g" -i *.markdown
 # sed -e "s!\(<a href=\"\)/blog\(/[^\"]*\)\"!\1{{ '\2' | relative_url }}\"!g" -i *.markdown
 # sed -e 's!\(<img.* alt="[^"]*\) !\1"!g' -i *.markdown
-sed -e 's/ | relative_url }}/ | absolute_url }}/' -i *.markdown
+# sed -e 's/ | relative_url }}/ | absolute_url }}/g' -i *.markdown
+sed -e "s/| absolute_url *}}/| remove_first:'\/' | absolute_url }}/g" -i *.markdown

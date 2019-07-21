@@ -9,7 +9,7 @@ categories: freebsd jails qjail solaris
 <hr />
 <strong>
 
-I'm using _ezjail_ <a href="{{ '/2013/04/10/migrating-from-qjail-to-ezjail/' | absolute_url }}">now</a>.
+I'm using _ezjail_ <a href="{{ '/2013/04/10/migrating-from-qjail-to-ezjail/' | remove_first:'/' | absolute_url }}">now</a>.
 
 The reason for this is that the <a href="http://www.freshports.org/sysutils/qjail">port</a> is marked as RESTRICTED.
 Since it seems to be a fork from <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> without respecting the copyright and license <a href="https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html">https://lists.freebsd.org/pipermail/freebsd-jail/2013-March/002149.html</a>.

@@ -6,7 +6,7 @@ comments: true
 categories: [ "thinkpad", "libreboot", "coreboot", "raspberry-pi", "bios", "w500", "flashrom" ]
 ---
 
-<a href="{{ '/images/libreboot_w500_with_pi.jpg' | absolute_url }}"><img src="{{ '/images/libreboot_w500_with_pi.jpg' | relative_url }}" class="right" width="500" height="333" alt="w500 and pi" /></a>
+<a href="{{ '/images/libreboot_w500_with_pi.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/libreboot_w500_with_pi.jpg' | remove_first:'/' | absolute_url }}" class="right" width="500" height="333" alt="w500 and pi" /></a>
 
 I got a [Lenovo Thinkpad W500](https://en.wikipedia.org/wiki/ThinkPad_W_series#W500) from [www.2dehands.be](http://www.2dehands.be) for a nice price.
 
@@ -157,8 +157,8 @@ root@raspberrypi:~#
 
 It's useful to get correct flash chip specs, I used a magnifying loupe and a photo camera to get my chip type. After searching the internet I found a very nice blog post from [p1trson](https://p1trson.blogspot.com) [https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html](https://p1trson.blogspot.com/2017/01/journey-to-freedom-part-ii.html) about flashing Libreboot on a Thinkpad T400 with the same Flash chip, I used his wiring diagram. Thanks P1trson!
 
-<a href="{{ '/images/w500_flashchip.jpg' | absolute_url }}"><img src="{{ '/images/w500_flashchip.jpg' | relative_url }}" width="250" height="177" alt="w500 and pi" /> </a>
-<a href="{{ '/images/pin_layout2.jpg' | absolute_url }}"><img src="{{ '/images/pin_layout2.jpg' | relative_url }}" width="500" height="172" alt="pin layout" /> </a>
+<a href="{{ '/images/w500_flashchip.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/w500_flashchip.jpg' | remove_first:'/' | absolute_url }}" width="250" height="177" alt="w500 and pi" /> </a>
+<a href="{{ '/images/pin_layout2.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/pin_layout2.jpg' | remove_first:'/' | absolute_url }}" width="500" height="172" alt="pin layout" /> </a>
 
 ## Power off & wiring
 
@@ -546,7 +546,7 @@ pi@raspberrypi:~/libreboot $
 # Almost done
 ## GNU/Linux
 
-<a href="{{ '/images/w500_in_action.jpg' | absolute_url }}"><img src="{{ '/images/w500_in_action.jpg' | relative_url }}" width="700" height="466" alt="w500_in_action.jpg" /></a>
+<a href="{{ '/images/w500_in_action.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/w500_in_action.jpg' | remove_first:'/' | absolute_url }}" width="700" height="466" alt="w500_in_action.jpg" /></a>
 
 I use [Parabola GNU/Linux](https://www.parabola.nu/) on my W500.
 

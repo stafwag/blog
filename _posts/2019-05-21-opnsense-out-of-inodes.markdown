@@ -7,7 +7,7 @@ categories: [ "opnsense", "freebsd" ]
 excerpt_separator: <!--more-->
 ---
 
-<a href="{{ '/images/opnsense_out_of_inodes.jpg' | absolute_url }}"><img src="{{ '/images/opnsense_out_of_inodes.jpg' | relative_url }}" class="left" width="500" height="382" alt="opnsense with no inodes" /></a>
+<a href="{{ '/images/opnsense_out_of_inodes.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/opnsense_out_of_inodes.jpg' | remove_first:'/' | absolute_url }}" class="left" width="500" height="382" alt="opnsense with no inodes" /></a>
 
 I use [OPNsense](https://opnsense.org/) as [my firewall](http://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/) on a [Pcengines](https://pcengines.ch/) [Alix](https://pcengines.ch/alix2d13.htm).
 

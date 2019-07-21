@@ -6,7 +6,7 @@ comments: true
 categories: [ xeon, jenkins, linux, bsd, solaris ] 
 ---
 
-<img src="{{ '/images/201709_xeon_cpu_side.jpg' | absolute_url }}" class="left" width="400" height="388" alt="Xeon" /> 
+<img src="{{ '/images/201709_xeon_cpu_side.jpg' | remove_first:'/' | absolute_url }}" class="left" width="400" height="388" alt="Xeon" /> 
 
 <br />
 
@@ -28,8 +28,8 @@ Looking for a solution that is still affordable I ended up with building a dual 
 
 ### Pictures
 
-<a href="{{ '/images/201709_xeon_cpu_side.jpg' | absolute_url }}"><img src="{{ '/images/201709_xeon_cpu_side.jpg' | relative_url }}" width="300" height="291" alt="201709_xeon_cpu_side.jpg" /></a>
-<a href="{{ '/images/201709_xeon_hd_side.jpg' | absolute_url }}"><img src="{{ '/images/201709_xeon_hd_side.jpg' | relative_url }}" width="317" height="291" alt="201709_xeon_hd_side.jpg" /></a>
-<a href="{{ '/images/201709_xeon_front_side.jpg' | absolute_url }}"><img src="{{ '/images/201709_xeon_front_side.jpg' | relative_url }}" width="151" height="291" alt="201709_xeon_front_side.jpg" /></a>
+<a href="{{ '/images/201709_xeon_cpu_side.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/201709_xeon_cpu_side.jpg' | remove_first:'/' | absolute_url }}" width="300" height="291" alt="201709_xeon_cpu_side.jpg" /></a>
+<a href="{{ '/images/201709_xeon_hd_side.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/201709_xeon_hd_side.jpg' | remove_first:'/' | absolute_url }}" width="317" height="291" alt="201709_xeon_hd_side.jpg" /></a>
+<a href="{{ '/images/201709_xeon_front_side.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/201709_xeon_front_side.jpg' | remove_first:'/' | absolute_url }}" width="151" height="291" alt="201709_xeon_front_side.jpg" /></a>
 
 ***Still need to verify if jenkins works on this system :-) ***

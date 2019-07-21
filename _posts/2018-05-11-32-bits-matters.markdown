@@ -7,7 +7,7 @@ categories: [ opnsense, pfsense, pcengines, duckdns ]
 excerpt_separator: <!--more-->
 ---
 
-<img src="{{ '/images/32bits_opnsense.jpg'  | absolute_url }}" class="right" width="500" height="411" alt="32bits_opnsense.jpg" /> 
+<img src="{{ '/images/32bits_opnsense.jpg'  | remove_first:'/' | absolute_url }}" class="right" width="500" height="411" alt="32bits_opnsense.jpg" /> 
 
 ### pfsense 2.3
 
@@ -26,7 +26,7 @@ The nice thing about opensource software is that we've options to choose from if
 
 So I decided to give <a href="https://opnsense.org/">opnsense</a> a try. OPNsense is a fork of pfsense, both are a fork of <a href="https://m0n0.ch/wall/index.php">m0n0wall</a>.
 
-<img src="{{ '/images/opnsense_swapspace.png'  | absolute_url }}" class="left" width="500" height="584" alt="opnsense_swapspace.png" />
+<img src="{{ '/images/opnsense_swapspace.png'  | remove_first:'/' | absolute_url }}" class="left" width="500" height="584" alt="opnsense_swapspace.png" />
 
 #### swapspace
 
@@ -36,7 +36,7 @@ The OPNsense developers made it very easy to add swapspace from the GUI. To add 
 
 I'm verify satisfied with the upgrade from pfsense to OPNsense, OPNsense has a new release very month which is nice to get the latest security updates and it's possible to audit the systems for security updates from the GUI.
 
-<img src="{{ '/images/duckdns_icon.png'  | absolute_url }}" class="right" width="150" height="150" alt="duckdns" />
+<img src="{{ '/images/duckdns_icon.png'  | remove_first:'/' | absolute_url }}" class="right" width="150" height="150" alt="duckdns" />
 
 ### DuckDns
 
