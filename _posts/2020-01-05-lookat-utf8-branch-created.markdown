@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Lookat utf8 branch created"
-date: 2019-10-17 19:20:37 +0200
+date: 2020-01-05 10:00:37 +0200
 comments: true
 categories: [ "bekijk", "lookat", "utf8" ] 
 ---
