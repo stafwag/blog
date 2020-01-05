@@ -1,0 +1,12 @@
+---
+layout: post
+title: "Best wishes 2020!"
+date: 2020-01-05 11:36:31 +0100
+comments: true
+categories: [ "2020" ] 
+excerpt_separator: <!--more-->
+---
+<p>
+<a href="{{ '/images/2020.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/2020.jpg' | remove_first:'/' | absolute_url }}" width="500" height="511" alt="321" /> </a>
+</p>
+<!--more-->
