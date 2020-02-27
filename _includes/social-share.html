@@ -21,7 +21,7 @@ function shareMastodon() {
        	if (!default_url)
                default_url = "https://";
 
-       	var instance = prompt("Enter your instance's address: (ex: https://mastodon.social", default_url);
+       	var instance = prompt("Enter your instance's address: (ex: https://mastodon.social )", default_url);
        	if (instance) {
                	// Handle URL formats
                	if ( !instance.startsWith("https://") && !instance.startsWith("http://") )
