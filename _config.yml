@@ -82,6 +82,12 @@ yandex_site_verification :
 naver_site_verification  :
 
 # Social Sharing
+share_buttons:
+   twitter               : true
+   facebook              : true
+   linkedin              : true
+   reddit                : true
+   mastodon              : true
 twitter:
   username               : stafwag
 facebook:
