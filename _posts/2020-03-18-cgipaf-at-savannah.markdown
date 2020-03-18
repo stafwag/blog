@@ -14,7 +14,7 @@ The [CGIpaf project](http://www.wagemakers.be/english/programs/cgipaf) has a new
 The source code was - and is still also hosted - on GitHub.
 
 There are a few reasons for the move;
-* I was looking for an easy way to store binary releases. Binary releases aren't really suported by GitHub.
+* I was looking for an easy way to store binary releases. Binary releases aren't supported by GitHub.
   There might be a solution for this at [GitLab](https://www.gitlab.com) but [scp](https://en.wikipedia.org/wiki/Secure_copy) to upload a release is more convenient.
 * [GitHub](https://www.github.com) is becoming too dominant.
 * I prefer a solution that is based on [Free Software](https://en.wikipedia.org/wiki/Free_software).
