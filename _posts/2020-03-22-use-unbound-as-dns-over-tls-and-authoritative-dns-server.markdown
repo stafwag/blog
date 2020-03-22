@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Use unbound as DNS-over-TLS resolver and authoritative dns server"
+title: "Use unbound as an DNS-over-TLS resolver and authoritative dns server"
 date: 2020-03-22 19:48:50 +0100
 comments: true
 categories: [ unbound, stubby, dns, container, docker ] 
