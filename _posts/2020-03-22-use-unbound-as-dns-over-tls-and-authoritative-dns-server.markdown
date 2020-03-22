@@ -13,7 +13,7 @@ In previous blog posts, I described [howto setup stubby](https://stafwag.github.
 
 But I'm migrating away from stubby in favour of unbound.
 
-Unbound is a popular DNS resolver, it less known that you can also use it as an authoritative DNS server.
+Unbound is a popular DNS resolver, it's less known that you can also use it as an authoritative DNS server.
 
 I created a [docker container](https://en.wikipedia.org/wiki/Docker_(software)) that can serve both purposes, although you can use the same logic without docker.
 
