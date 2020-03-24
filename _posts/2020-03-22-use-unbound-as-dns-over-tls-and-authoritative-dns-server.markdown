@@ -9,7 +9,7 @@ excerpt_separator: <!--more-->
 
 <a href="{{ '/images/unbound/Unbound_FC_Shaded_cropped.svg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/unbound/Unbound_FC_Shaded_cropped.svg' | remove_first:'/' | absolute_url }}" class="right" width="400" height="91" alt="Unbound" /> </a>
 
-In previous blog posts, I described [howto setup stubby](https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/) as DNS-over-TLS resolver. I used [stubby](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) on my laptop(s) and [unbound](https://nlnetlabs.nl/projects/unbound/about/) on my internal network.
+In previous blog posts, I described [howto setup stubby](https://stafwag.github.io/blog/blog/2018/09/09/dns-privacy-with-stubby-part1-gnulinux/) as an DNS-over-TLS resolver. I used [stubby](https://dnsprivacy.org/wiki/display/DP/DNS+Privacy+Daemon+-+Stubby) on my laptop(s) and [unbound](https://nlnetlabs.nl/projects/unbound/about/) on my internal network.
 
 But I'm migrating away from stubby in favour of unbound.
 
