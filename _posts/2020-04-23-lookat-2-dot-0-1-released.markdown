@@ -9,7 +9,9 @@ excerpt_separator: <!--more-->
 
 <a href="{{ '/images/lookat/lookat_2_0_1.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/lookat/lookat_2_0_1.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="296" alt="lookat 2.0.1" /> </a>
 
-Lookat 2.0.1 is the latest stable release of Lookat/Bekijk the userfriendly text file and manual page viewer.
+"lookat" (or "bekijk" in Dutch) is a program to view text files and manual pages. It is designed to be more user-friendly than more conventional text viewers such as less. And supports colored manpages.
+
+Lookat 2.0.1 is the latest stable release of Lookat/Bekijk.
 
 ### ChangeLog
  * BUGFIX: corrected screen refresh code.  To handle non-utf8 terminals
