@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Setup a certificate authority with SmartCardHSM"
-date: 2020-04-24 19:48:50 +0100
+date: 2020-04-29 19:48:50 +0100
 comments: true
 categories: [ security, ca, smartcard, hsm, smartcard-hsm ] 
 excerpt_separator: <!--more-->
