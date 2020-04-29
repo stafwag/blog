@@ -481,7 +481,7 @@ Verifying - Enter pass phrase for private/client001.key:
 ### Create the certificate signing request
 
 ```
-bash-4.4$ openssl req -config ./openssl.cnf -key ca/private/client001.key -out csr/client001.csr -new -nodes
+bash-4.4$ openssl req -config ./openssl.cnf -key private/client001.key -out csr/client001.csr -new -nodes
 Enter pass phrase for ca/private/client001.key:
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
