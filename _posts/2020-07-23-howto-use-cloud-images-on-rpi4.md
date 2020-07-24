@@ -3,7 +3,7 @@ layout: post
 title: "Howto use cloud images on the Raspberry PI 4"
 date: 2020-07-23 06:45:50 +0200
 comments: true
-categories: [ rpi4, manjaro, raspnerrypi, cloud-init, cloud ] 
+categories: [ rpi4, manjaro, raspberrypi, cloud-init, cloud ] 
 excerpt_separator: <!--more-->
 ---
 
