@@ -9,7 +9,7 @@ excerpt_separator: <!--more-->
 
 I got a Raspberry PI 4 to play with and [installed Manjaro GNU/Linux on it](https://stafwag.github.io/blog/blog/2020/07/12/manjaro-on-rpi4-full-disk-encryption/).
 
-I use [OpenZFS](https://openzfs.org) on my PI. The latest kernel update broken zfs on PI due to a License conflict, the solution is to disable ```PREEMPT``` in the kernel config. This BUG was already resolved with OpenZFS with the main Linux kernel tree at least on [X86_64/AMD64](https://en.wikipedia.org/wiki/X86-64#AMD64), not sure why the kernel on the raspberry pi is still affected.
+I use [OpenZFS](https://openzfs.org) on my PI. The latest kernel update broke zfs on my PI due to a License conflict, the solution is to disable ```PREEMPT``` in the kernel config. This BUG was already resolved with OpenZFS with the main Linux kernel tree at least on [X86_64/AMD64](https://en.wikipedia.org/wiki/X86-64#AMD64), not sure why the kernel on the raspberry pi is still affected.
 
 I was looking for an excuse to build a custom kernel for my Pi anyway :-). I cloned the default manjaro RPI4 kernel and disabled ```PREEMPT``` in the kernel ```config```.
 
