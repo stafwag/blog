@@ -5,19 +5,122 @@ permalink: /docs/history/
 excerpt: "Change log of enhancements and bug fixes made to the theme."
 sidebar:
   nav: docs
-last_modified_at: 2020-02-17T15:30:05-05:00
+last_modified_at: 2020-09-07T10:03:41-04:00
 toc: false
 ---
 
 ## Unreleased
 
+### Bug Fixes
+
+- Fix dead link to CI services in documentation. [#2635](https://github.com/mmistakes/minimal-mistakes/issues/2635) [#2692](https://github.com/mmistakes/minimal-mistakes/pull/2692)
+
+## [4.20.2](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.20.2)
+
+### Bug Fixes
+
+- Fix broken link in documentation. [#2677](https://github.com/mmistakes/minimal-mistakes/issues/2677)
+- Fix typo in documentation. [#2678](https://github.com/mmistakes/minimal-mistakes/issues/2678)
+- Remove duplicate CSS definitions. [#2666](https://github.com/mmistakes/minimal-mistakes/pull/2666)
+- Fix `entries_layout: grid` in various layouts. [#2639](https://github.com/mmistakes/minimal-mistakes/issues/2639)
+- Change `fa` to `fas` for Font Awesome 5. [#2649](https://github.com/mmistakes/minimal-mistakes/pull/2649)
+
 ### Enhancements
 
+- Refactor page meta include. [#2641](https://github.com/mmistakes/minimal-mistakes/pull/2641)
+- Add `article:author` Open Graph markup. [#2670](https://github.com/mmistakes/minimal-mistakes/pull/2670)
+
+## [4.20.1](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.20.1)
+
+### Bug Fixes
+
+- Fix grid `entries_layout` in home.html. [#2616](https://github.com/mmistakes/minimal-mistakes/pull/2616)
+
+## [4.20.0](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.20.0)
+
+### Bug Fixes
+
+- Add `relative_url` filter to author home link [#2575](https://github.com/mmistakes/minimal-mistakes/pull/2575)
+- Fix `analytics.provider` config comment to list all analytics providers. [#2607](https://github.com/mmistakes/minimal-mistakes/pull/2607)
+- Fix typo in installation documentation. [#2570](https://github.com/mmistakes/minimal-mistakes/pull/2570)
+- Fix broken Lunr search with Jekyll v4.1.0. [#2617](https://github.com/mmistakes/minimal-mistakes/pull/2617)
+
+### Enhancements
+
+- Add an optional date alongside the reading time. To enable set `show_date: true` similar to how reading time is. [#2526](https://github.com/mmistakes/minimal-mistakes/pull/2526)
+- Remove hidden posts from posts.html layout. [#2625](https://github.com/mmistakes/minimal-mistakes/pull/2625)
+- Add entry layout configuration for `list` (default) or `grid` views on `layout: home`. [#2616](https://github.com/mmistakes/minimal-mistakes/pull/2616)
+- Add missing Chinese translations. [#2576](https://github.com/mmistakes/minimal-mistakes/pull/2576)
+- Improve Chinese translations. [#2626](https://github.com/mmistakes/minimal-mistakes/pull/2626)
+- Add `line-height` to `h4` element in notice helper. [#2602](https://github.com/mmistakes/minimal-mistakes/pull/2602)
+- Improve Algolia search. [#2572](https://github.com/mmistakes/minimal-mistakes/pull/2572)
+- Update link to wtfpl license in README. [#2571](https://github.com/mmistakes/minimal-mistakes/pull/2571)
+- Ignore teaser headline in table of contents when including posts list in another page. [#2558](https://github.com/mmistakes/minimal-mistakes/pull/2558)
+- Replace Font Awesome Kits with CSS from jsDelivr CDN. [#2583](https://github.com/mmistakes/minimal-mistakes/pull/2583)
+- Add `danmaku` option to Bilibili video provider and add corresponding documentation/ [#2599](https://github.com/mmistakes/minimal-mistakes/pull/2599)
+- Update documentation about loading l10n data file from the theme-gem. [#2621](https://github.com/mmistakes/minimal-mistakes/issues/2621) [#2624](https://github.com/mmistakes/minimal-mistakes/pull/2624)
+
+## [4.19.3](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.19.3)
+
+### Enhancements
+
+- Update GreedyNav.js to reduce masthead link overflow/shifting on mobile devices. [#2551](https://github.com/mmistakes/minimal-mistakes/issues/2551)
+- Replace `<section id="custom-comments"></section>` in `comments.html` include and add `custom_scripts.html` include for loading custom comment provider JavaScript in the footer. [#2549](https://github.com/mmistakes/minimal-mistakes/issues/2549)
+- Move page date Liquid to include. [#2544](https://github.com/mmistakes/minimal-mistakes/pull/2544)
+- Strip trailing whitespace in `seo_description`. [#2542](https://github.com/mmistakes/minimal-mistakes/pull/2542)
+- Improve sticky sidebar's appearance with short content. [#2514](https://github.com/mmistakes/minimal-mistakes/pull/2514)
+
+## [4.19.2](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.19.3)
+
+### Enhancements
+
+- Add support for bilibili videos in [responsive video helper](https://mmistakes.github.io/minimal-mistakes/docs/helpers/#responsive-video-embed). [#2512](https://github.com/mmistakes/minimal-mistakes/pull/2512)
+- Add Myanmar (Burmese) localized UI text strings. [#2500](https://github.com/mmistakes/minimal-mistakes/pull/2500)
+- Improve author links underline on hover. [#2472](https://github.com/mmistakes/minimal-mistakes/pull/2472)
+- Add documentation for applying Front Matter defaults to jekyll-archives pages. [#2466](https://github.com/mmistakes/minimal-mistakes/pull/2466)
+- Add missing Vietnamese translations. [#2459](https://github.com/mmistakes/minimal-mistakes/pull/2459) [#2486](https://github.com/mmistakes/minimal-mistakes/pull/2486)
+- Fix Finnish localized UI text strings. [#2455](https://github.com/mmistakes/minimal-mistakes/pull/2455)
+- Clarify documentation that Lunr only searches documents in collections. [#2450](https://github.com/mmistakes/minimal-mistakes/pull/2450)
+- Add guide on applying Front Matter defaults to jekyll-archives pages [#2466](https://github.com/mmistakes/minimal-mistakes/pull/2466)
+
+### Bug Fixes
+
+- Fix typo in configuration documentation. [#2497](https://github.com/mmistakes/minimal-mistakes/pull/2497)
+- Fix "Follow menu falls under post links" on small screens. [#2479](https://github.com/mmistakes/minimal-mistakes/issues/2479)
+- Hide index page from page-archive. [#2482](https://github.com/mmistakes/minimal-mistakes/pull/2482)
+
+## [4.19.1](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.19.1)
+
+### Enhancements
+
+- Add [Dracula](https://draculatheme.com/) Base16 syntax highlighting theme Sass variables to [stylesheets documentation](https://mmistakes.github.io/minimal-mistakes/docs/stylesheets/#syntax-highlighting). [#2438](https://github.com/mmistakes/minimal-mistakes/pull/2438)
+- Update links to `HTTPS` and remove Google+ from configuration documentation. [#2432](https://github.com/mmistakes/minimal-mistakes/pull/2432)
+- Use `first_page_path` from jekyll-paginate-v2 if available. [#2431](https://github.com/mmistakes/minimal-mistakes/pull/2431)
+- Update onchange and uglify-js dependencies.
+- Update smooth-scroll.js to `v16.1.2`. [#2430](https://github.com/mmistakes/minimal-mistakes/issues/2430)
+
+### Bug Fixes
+
+- Fix author profile links `z-index` order on small screens. [#2440](https://github.com/mmistakes/minimal-mistakes/issues/2440)
+
+## [4.19.0](https://github.com/mmistakes/minimal-mistakes/releases/tag/4.19.0)
+
+### Enhancements
+
+- Add "click" overlay to close masthead and follow button menus when open. [#1168](https://github.com/mmistakes/minimal-mistakes/issues/1168)
+- Remove deprecated Staticman v1 configurations from `_config.yml`. [#2386](https://github.com/mmistakes/minimal-mistakes/issues/2386)
+- Use `relative_url` and `absolute_url` filters where possible. [#2387](https://github.com/mmistakes/minimal-mistakes/pull/2387)
+- Improve headline hierarchy and add Sass specific variables `$h-size-x`. [#2423](https://github.com/mmistakes/minimal-mistakes/issues/2423)
+- Improve accessibility of `default` skin by increasing color contrast of text and links.
+- Hide posts with `hidden: true` YAML front matter from appearing in listings. [#2345](https://github.com/mmistakes/minimal-mistakes/pull/2345)
+- Add Irish (Gaeilge) localized UI text strings. [#2422](https://github.com/mmistakes/minimal-mistakes/pull/2422)
 - Remove `box-shadow` on radio and checkbox inputs. [#2398](https://github.com/mmistakes/minimal-mistakes/pull/2398)
 - Bump Jekyll gem dependency to `v3.7`.
 
 ### Bug Fixes
 
+- Fix documentation around using `bundle info` command. [#2425](https://github.com/mmistakes/minimal-mistakes/pull/2425)
+- Fix rake vulnerability in `.gemspec` file.
 - Fix Staticman v2 comment submission. [#2402](https://github.com/mmistakes/minimal-mistakes/pull/2402)
 - Fix repeated site base path for masthead logo. [#2385](https://github.com/mmistakes/minimal-mistakes/pull/2385)
 
