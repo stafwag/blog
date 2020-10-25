@@ -3,7 +3,7 @@ layout: post
 title: "Use a raspberry-pi 2 as a firewall with FreeBSD" 
 date: 2020-10-25 06:45:50 +0200
 comments: true
-categories: [ freebsd, fp, raspberrypi, rpi, arm, alix, pcengines ] 
+categories: [ freebsd, pf, raspberrypi, rpi, arm, alix, pcengines ] 
 excerpt_separator: <!--more-->
 ---
 
@@ -12,7 +12,7 @@ excerpt_separator: <!--more-->
 I was using [OPNsense](https://opnense.org/) on my [pcengines](https://pcengines.ch) [alix](https://pcengines.ch/alix2d13.htm) firewall and was quite happy with it.
 
 The [alix 2d13 ](https://pcengines.ch/alix2d13.htm) is a nice motherboard with a 
-[Geode CPU](https://en.wikipedia.org/wiki/Geode_(processor)), it has a 32 bits [x86 instruction set](https://en.wikipedia.org/wiki/X86). I [migrated](https://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/) to opensense from [pfSense](https://www.pfsense.org/) when pfSense dropped 32 bits support.
+[Geode CPU](https://en.wikipedia.org/wiki/Geode_(processor)), it has a 32 bits [x86 instruction set](https://en.wikipedia.org/wiki/X86). I [migrated](https://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/) to OPNsense from [pfSense](https://www.pfsense.org/) when pfSense dropped 32 bits support.
 
 Unfortunately, OPNsense also dropped support  for 32 bits CPU's in the [19.1.7 release](https://opnsense.org/opnsense-19-1-7-released/).  I decided to install FreeBSD on the alix to use it as my firewall. But I need a temporary firewall solution so I can install FreeBSD on my alix board. I have a [Raspberry PI 2](https://www.raspberrypi.org/products/raspberry-pi-2-model-b/) that I wasn't using.
 
