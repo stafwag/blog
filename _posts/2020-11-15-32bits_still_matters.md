@@ -3,9 +3,11 @@ layout: post
 title: "32 bits (still) matters!"
 date: 2020-11-15 07:52:00 +0200
 comments: true
-categories: [ freebsd, raspberrypi, 32bits, alix, pcengines ] 
+categories: [ freebsd, raspberrypi, 32bits, alix, pcengines, opnsense ] 
 excerpt_separator: <!--more-->
 ---
+
+*updated @ Mon Nov 16 08:16:30 PM CET 2020: Corrected the version when OPNsense dropped 32 bits support.*
 
 <a href="{{ '/images/freebsd_on_alix/freebsd_on_alix_scalled.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/freebsd_on_alix/freebsd_on_alix_scalled.png' | remove_first:'/' | absolute_url }}" class="left" width="680" height="385" alt="FreeBSD on alix" /> </a>
 
@@ -14,7 +16,7 @@ I used [OPNsense](https://opnense.org/) on my [pcengines](https://pcengines.ch) 
 The [Alix 2d13 ](https://pcengines.ch/alix2d13.htm) is a nice motherboard with a 
 [Geode CPU](https://en.wikipedia.org/wiki/Geode_(processor)) 32 bits [x86](https://en.wikipedia.org/wiki/X86) CPU.
 
-I [migrated to OPNsense](https://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/) after  [pfSense](https://www.pfsense.org/)  dropped support for 32 bits. Unfortunately, OPNsense also dropped support  for 32 bits CPUs in the [19.1.7 release](https://opnsense.org/opnsense-19-1-7-released/). I decided to install FreeBSD on my Alix to use it as my firewall.
+I [migrated to OPNsense](https://stafwag.github.io/blog/blog/2018/05/11/32-bits-matters/) after  [pfSense](https://www.pfsense.org/)  dropped support for 32 bits. Unfortunately, OPNsense also dropped support  for 32 bits CPUs in the ~~[19.1.7 release](https://opnsense.org/opnsense-19-1-7-released/)~~ 20.7 release. I decided to install FreeBSD on my Alix to use it as my firewall.
 
 To make it possible to reinstall my Alix firewall, I [installed FreeBSD on my Raspberry Pi 2](https://stafwag.github.io/blog/blog/2020/10/25/rpi2_freebsd_firewall/) to use it as my firewall during the installation of FreeBSD on my Alix.
 
