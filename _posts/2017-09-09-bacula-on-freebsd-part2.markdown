@@ -7,7 +7,7 @@ categories:  [ bacula, freebsd, backup, postgresql, ssl ]
 ---
 <img src="{{ '/images/postgressl.png'  | remove_first:'/' | absolute_url }}" class="right" width="300" height="300" alt="PostgreSSL" /> 
 
-In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.
+In my previous <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd-w_part1/">post</a>, I setup on my <a href="https://www.postgresql.org/">PostgresSQL</a> <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jail</a>, In this post we continue with the bacaula server.
 
 In this post we will continue with the database connection (Catalog) we'll go the extra ~~mile~~ 1,609344 km and encrypt the catalog connection with ssl. Why? ***We encrypt.. because we can!***
 
