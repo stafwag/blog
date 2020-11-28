@@ -12,7 +12,7 @@ So decided give <a href="http://www.bacula.org/">bacula</a> a try
 
 I use <a href="http://erdgeist.org/arts/software/ezjail/">ezjail</a> to manage my <a href="https://en.wikipedia.org/wiki/FreeBSD_jail">FreeBSD jails</a>. <a href="https://www.postgresql.org/">PostgresSQL</a> is my favorite database and will use this database as the backend for bacula  and will use this database as the backend for bacula. I want to move all my databases to 1 FreeBSD jail this should make the easier to create reliable database backup in the further. For this reason we'll setup 2 FreeBSD jails 1 for the database and 1 for bacula.
 
-You'll find my journey of installing PostgreSQL on a FreeBSD jail. In another blog post we will continue with the installation of baccula.
+You'll find my journey of installing PostgreSQL on a FreeBSD jail. In another blog post we will continue with the installation of bacula.
 
 
 ## PostgreSQL
