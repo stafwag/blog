@@ -11,8 +11,8 @@ categories: [ bacula, freebsd, backup ]
 
 I finally got the time to continue with my <a href="https://blog.bacula.org/">bacula</a> backup setup. See my previous posts about the start of my bacula setup.
 
-* <a href="http://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd:w_part1/">bacula on freebsd_part 1</a>
-* <a href="http://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a>
+* <a href="https://stafwag.github.io/blog/blog/2017/08/06/bacula-on-freebsd-w_part1/">bacula on freebsd_part 1</a>
+* <a href="https://stafwag.github.io/blog/blog/2017/09/09/bacula-on-freebsd-part2/">bacula on freebsd part 2</a>
 
 # Storage setup
 
