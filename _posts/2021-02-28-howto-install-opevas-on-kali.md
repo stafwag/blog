@@ -3,7 +3,7 @@ layout: post
 title: "OpenVAS on Kali GNU/Linux Part 1: How to install OpenVAS"
 date: 2021-02-28 18:52:00 +0200
 comments: true
-categories: [ kali, openvas, security, greenbone ] 
+categories: [ kalilinux, openvas, security, greenbone ] 
 excerpt_separator: <!--more-->
 ---
 
