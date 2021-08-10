@@ -631,7 +631,7 @@ root@vicky ~]# kill 29568 46057
 Umount the chroot filesystems.
 
 ```
-[root@vicky ~]# umount /mnt/chroot
+[root@vicky ~]# umount -R /mnt/chroot
 [root@vicky ~]# 
 ```
 
