@@ -549,7 +549,8 @@ The Raspberry PI uses ```cmdline.txt``` to specify the boot options.
 [root@vicky boot]# 
 ```
 
-Remove ```splash``` and add ```plymouth.enable=0```
+Remove ```splash``` and add ```plymouth.enable=0```.
+Set ```console=tty1```.
 
 ```
 cryptdevice=/dev/disk/by-uuid/43c2d714-9af6-4d60-91d2-49d61e93bf3e:cryptroot root=/dev/mapper/cryptroot rw rootwait console=s
@@ -714,22 +715,10 @@ dropbear_rsa_host_key : sha1!! 2a:a4:d5:a0:00:ce:1e:9f:88:84:72:f2:03:ce:ac:4a:2
 Update ```/boot/cmdline``` with your ip configuration.
 
 ```
-cryptdevice=/dev/disk/by-uuid/43c2d714-9af6-4d60-91d2-49d61e93bf3e:cryptroot root=/dev/mapper /cryptroot rw rootwait console=serial0,115200 console=tty1 selinux=0 plymouth.enable=0 quiet plymouth.ignore-serial-consoles smsc95xx.turbo_mode=N dwc_otg.lpm_enable=0 kgdboc=serial0,115 200 elevator=noop usbhid.mousepoll=8 snd-bcm2835.enable_compat_alsa=0 audit=0 p=192.168.1.30::192.168.1.254:255.255.255.0:staf-pi002:eth0:none
+cryptdevice=/dev/disk/by-uuid/43c2d714-9af6-4d60-91d2-49d61e93bf3e:cryptroot root=/dev/mapper /cryptroot rw rootwait console=serial0,115200 console=tty1 selinux=0 plymouth.enable=0 quiet plymouth.ignore-serial-consoles smsc95xx.turbo_mode=N dwc_otg.lpm_enable=0 kgdboc=serial0,115 200 elevator=noop usbhid.mousepoll=8 snd-bcm2835.enable_compat_alsa=0 audit=0 ip=xxx.xxx.xxx.xxx::yyy.yyy.yyy.254:255.255.255.0:staf-pi002:eth0:none
 ```
 
 Reboot and test.
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ***Have fun!***
@@ -740,4 +729,4 @@ Reboot and test.
 * [https://jamesachambers.com/raspberry-pi-4-usb-boot-config-guide-for-ssd-flash-drives/](https://jamesachambers.com/raspberry-pi-4-usb-boot-config-guide-for-ssd-flash-drives/)
 * [https://archived.forum.manjaro.org/t/how-to-solve-keyring-issues-in-manjaro/4020](https://archived.forum.manjaro.org/t/how-to-solve-keyring-issues-in-manjaro/4020)
 * [https://unix.stackexchange.com/questions/120827/recursive-umount-after-rbind-mount](https://unix.stackexchange.com/questions/120827/recursive-umount-after-rbind-mount)
-* [https://wiki.archlinux.org/title/Dm-crypt/Specialties#Remote_unlocking_(hooks:_netconf,_dropbear,_tinyssh,_ppp)](https://wiki.archlinux.org/title/Dm-crypt/Specialties#Remote_unlocking_(hooks:_netconf,_dropbear,_tinyssh,_ppp))
+* https://wiki.archlinux.org/title/Dm-crypt/Specialties#Remote_unlocking_(hooks:_netconf,_dropbear,_tinyssh,_ppp)
