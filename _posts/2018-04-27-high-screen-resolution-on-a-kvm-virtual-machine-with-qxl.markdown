@@ -183,7 +183,7 @@ Virtual-3 disconnected
 staf@debian:~$ 
 ```
 
-###### get the modeline
+##### get the modeline
 
 ```
 staf@debian:~$ cvt 2560 1440 
@@ -192,27 +192,27 @@ Modeline "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hs
 staf@debian:~$ 
 ```
 
-####### create the new mode line
+###### create the new mode line
 
 ```
 staf@debian:~$ xrandr --newmode "2560x1440_60.00"  312.25  2560 2752 3024 3488  1440 1443 1448 1493 -hsync +vsync
 staf@debian:~$ 
 ```
 
-####### add the mode to your screen
+###### add the mode to your screen
 
 ```
 staf@debian:~$ xrandr --addmode Virtual-0 2560x1440_60.00
 staf@debian:~$ 
 ```
-####### use the new mode
+###### use the new mode
 
 ```
 staf@debian:~$ xrandr --output Virtual-0 --mode 2560x1440_60.00
 staf@debian:~$ 
 ```
 
-######## 4k
+###### 4k
 
 To use a 4k resolution you can use the commands
 
@@ -236,7 +236,7 @@ Create a monitor configuration file in /usr/share/X11/xorg.conf.d
 root@mydevolo:/usr/share/X11/xorg.conf.d# vi 10-monitor.conf
 ```
 
-And add the modeline fgor your screen resolution. 
+And add the modeline for your screen resolution. 
 With the Option "PreferredMode" you can set the prferred resolution. 
 
 
@@ -253,7 +253,7 @@ EndSection
 
 Most other GNU/Linux distribution use /etc/X11/xorg.conf.d/
 
-*** Have fun ***
+***Have fun!***
 
 # Links
 

@@ -119,7 +119,7 @@ cloud_localds:
         name: ansible
         passwd: "{{ ansible_become_hash }}"
         ssh_authorized_keys:
-          - "{{lookup('file', '~/.ssh/ansible_ssh_key.pub') }}"
+          - "{{ lookup('file', '~/.ssh/ansible_ssh_key.pub') }}"
     network:
       dns_nameservers:
         9.9.9.9
