@@ -1,0 +1,10 @@
+---
+layout: post
+title: "Best wishes 2022!"
+date: 2022-01-02 08:33:01 +0100
+comments: true
+categories: [ "2022", "raspberry-pi" , "freebsd", "linux", "k3s", "newyear2022", "newyear" ] 
+excerpt_separator: <!--more-->
+---
+
+<a href="{{ '/images/2022/newyear2022.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/2022/newyear2022.jpg' | remove_first:'/' | absolute_url }}" class="left" width="1000" height="666" alt="Unbound" /> </a>
