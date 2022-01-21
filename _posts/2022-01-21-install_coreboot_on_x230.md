@@ -9,7 +9,7 @@ excerpt_separator: <!--more-->
 
 <a href="{{ '/images/coreboot/skulls/x230/clip_on_x230.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/coreboot/skulls/x230/clip_on_x230.jpg' | remove_first:'/' | absolute_url }}" class="right" width="500" height="333" alt="x230" /> </a>
 
-I already use [coreboot on my Lenovo W500](https://stafwag.github.io/blog/blog/2019/10/17/switch-libreboot-to-coreboot/) with [FreeBSD](https://www.freebsd.org/). I bought a Lenovo x230 for a nice price so I decide to install coreboot on it. After reading a lot of online documentation. I decided to install the [skulls coreboot](https://github.com/merge/skulls) distribution on it. The skulls project has nice documentation on how to install it.
+I already use [coreboot on my Lenovo W500](https://stafwag.github.io/blog/blog/2019/10/17/switch-libreboot-to-coreboot/) with [FreeBSD](https://www.freebsd.org/). I bought a Lenovo x230 for a nice price I decide to install coreboot on it. After reading a lot of online documentation. I decided to install the [skulls coreboot](https://github.com/merge/skulls) distribution on it. The skulls project has nice documentation on how to install it.
 
 To replace the BIOS with coreboot you will need to disassemble the laptop and use a clip on the BIOS chip to
 install it.
