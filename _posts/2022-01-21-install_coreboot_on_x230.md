@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Install coreboot on a Lenovo x230"
+title: "How to install coreboot on a Lenovo x230"
 date: 2022-01-21 19:33:01 +0100
 comments: true
 categories: [ "coreboot", "raspberry-pi" , "skulls", "linux", "x230", "lenovo" ] 
