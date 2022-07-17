@@ -7,6 +7,13 @@ categories: [  "raspberry-pi", "rpi" , "linux", "debian", "security", "kubernete
 excerpt_separator: <!--more-->
 ---
 
+
+---
+
+***Updated @ Sun Jul 17 07:51:58 PM CEST 2022: Added blkid section UUID cryptroot. Changed dropbear port to 2222.***
+
+---
+
 <a href="{{ '/images/debian/debian-logo-534x576.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/debian/debian-logo-534x576.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="323" alt="debian" /> </a>
 
 I use a few [Raspberry PI's 4](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) to run [virtual machines](https://stafwag.github.io/blog/blog/2020/07/23/howto-use-cloud-images-on-rpi4/) and [k3s](https://k3s.io/).
@@ -244,7 +251,7 @@ root@debian11:~# umount /mnt/chroot
 Partition your harddisk delete all partitions if there are partition on the harddisk.
 
 ***Make sure that you execute the commands below on the correct harddisk.
-I executed my commands on Virtual Machine.***
+I executed my commands on a Virtual Machine.***
 
 I’ll create 3 partitions on my harddisk
 
@@ -738,13 +745,21 @@ LABEL=RASPIFIRM /boot/firmware vfat rw 0 2
 
 Update ```/etc/cryptab``` to include the crypted root.
 
-Find the ```UUID``` for the ```cryptroot```` filesystem.
+Find the ```UUID``` for the ```cryptroot``` filesystem.
 I open a second session to the x86 host that is used during the installation.
 
 ```
 root@debian11:/etc# ls -l /dev/disk/by-uuid/ | grep -i sda2
 lrwxrwxrwx 1 root root 10 Jul  2 06:19 xxxxxxxx-xxxx-xxxx-xxxxxxxxxxxxxxxxx -> ../../sda2
 root@debian11:/etc# 
+```
+
+If the partition is not list in ```/dev/disk/by-uuid/```, you can also use the ```blkid``` utility to get the ```UUID```
+
+```
+root@debian11:/dev/mapper# blkid /dev/sda2
+/dev/sda2: UUID="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" TYPE="crypto_LUKS" PARTUUID="xxxxxxxx-xx"
+root@debian11:/dev/mapper# 
 ```
 
 Edit ```/etc/crypttab```.
@@ -855,9 +870,34 @@ root@debian11:/etc/default# vi /etc/initramfs-tools/initramfs.conf
 root@debian11:/etc/default# 
 ```
 
+The syntax is ```IP=<ip_address>::<gateway>:<subnet>:<hostname>```
+
 ```bash
-IP=192.168.1.33::192.168.1.1:255.255.255.0:staf-pi004
+IP=192.168.66.2::192.168.66.1:255.255.255.0:mypi
 ```
+
+#### Port
+
+The SSHD server (dropbear) in the Initramfs has a different host-key as the system hos-keypair.
+
+It's possible to convert the system (OpenSSH) host-key to an initramfs (Dropbear) host-keypair.
+
+The system host-keypair has a private key and a public key. When they're on the initramfs image they are 
+encrypted on the boot filesystem. For security reasons, it's probably better to use different key pairs.
+
+But this will change the host-key depending if you are booting in boot initramfs or system.
+We'd use a different IP address or use a different port.
+
+To change the port edit ```/etc/dropbear-initramfs/config```.
+
+```
+root@debian11:/etc# vi /etc/dropbear-initramfs/config
+```
+
+```
+DROPBEAR_OPTIONS="-I 180 -j -k -p 2222 -s"
+```
+
 
 #### Recreate boot iniramfs
 
@@ -1036,5 +1076,6 @@ Connection to minerva closed.
 * [https://codeberg.org/keks24/raspberry-pi-luks](https://codeberg.org/keks24/raspberry-pi-luks)
 * [https://raspberrypi.stackexchange.com/questions/136595/debian-11-luks-mod-hang-freeze-when-init-is-supposed-to-start](https://raspberrypi.stackexchange.com/questions/136595/debian-11-luks-mod-hang-freeze-when-init-is-supposed-to-start)
 * [https://www.dwarmstrong.org/remote-unlock-dropbear/](https://www.dwarmstrong.org/remote-unlock-dropbear/)
+* [https://www.cyberciti.biz/security/how-to-unlock-luks-using-dropbear-ssh-keys-remotely-in-linux/](https://www.cyberciti.biz/security/how-to-unlock-luks-using-dropbear-ssh-keys-remotely-in-linux/)
 
 ***Have fun!***
