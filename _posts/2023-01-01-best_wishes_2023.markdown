@@ -3,7 +3,7 @@ layout: post
 title: "Best wishes 2023!"
 date: 2023-01-01 20:33:01 +0100
 comments: true
-categories: [ "2022", "raspberry-pi" , "freebsd", "linux", "k3s", "newyear2022", "newyear" ] 
+categories: [ "2023", "coreboot" , "freebsd", "linux", "solaris", "cde", "newyear2023", "newyear" ] 
 excerpt_separator: <!--more-->
 ---
 
