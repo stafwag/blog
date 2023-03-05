@@ -17,7 +17,7 @@ wasn't compatible with [arm64](https://en.wikipedia.org/wiki/AArch64) (at least 
 
 So I started to create a few [ansible roles](https://galaxy.ansible.com/stafwag) to provision the virtual machines.
 
-**[delegated_vm_install](https://github.com/stafwag/ansible-role-delegated_vm_install)** is a wrapper around these roles to provission the virtual machine in a delegated way. 
+**[delegated_vm_install](https://github.com/stafwag/ansible-role-delegated_vm_install)** is a wrapper around these roles to provision the virtual machine in a delegated way.
 It allows you to specify the Linux/libvirt KVM host as part of the virtual machine definition.
 
 
