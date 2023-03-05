@@ -57,6 +57,8 @@ reCaptcha:
   secret                 :
 atom_feed:
   path                   : /blog/atom.xml # blank (default) uses feed.xml
+feed:
+  path                   : atom.xml
 search                   : true # true, false (default)
 search_full_content      : true # true, false (default)
 search_provider          : # lunr (default), algolia, google
