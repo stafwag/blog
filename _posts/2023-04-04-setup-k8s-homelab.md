@@ -22,7 +22,7 @@ Another reason is that I also run [FreeBSD](https://www.freebsd.org/) virtual ma
 I use [Debian](https://www.debian.org/) GNU/Linux as the Operating system with [KVM](https://www.linux-kvm.org/)/[libvirt](https://libvirt.org/) as
 the hypervisor.
 
-I use [Ansible](https://www.ansible.com/) to set up the cluster in an utomated way.
+I use [Ansible](https://www.ansible.com/) to set up the cluster in an automated way.
 Got finality the time to clean up the code a bit and release it on Github: 
 [https://github.com/stafwag/ansible-k3s-on-vms](https://github.com/stafwag/ansible-k3s-on-vms)
 
