@@ -27,6 +27,7 @@ Got finality the time to clean up the code a bit and release it on Github:
 [https://github.com/stafwag/ansible-k3s-on-vms](https://github.com/stafwag/ansible-k3s-on-vms)
 
 <!--more-->
+The code can also - and will by default - be used on x86 systems.
 
 The playbook is a wrapper around the roles:
 
