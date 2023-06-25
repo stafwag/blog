@@ -7,7 +7,7 @@ categories: [ ansible ]
 excerpt_separator: <!--more-->
 ---
 
-Time again to make some releases of 2 the ansible roles I maintain.
+Time again to make some releases of 2 of the ansible roles I maintain.
 
 This time none of the commits are created by me :-)
 
