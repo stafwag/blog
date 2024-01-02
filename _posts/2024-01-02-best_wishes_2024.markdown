@@ -7,4 +7,4 @@ categories: [ "2024", "coreboot" , "freebsd", "linux",  "newyear2024", "newyear"
 excerpt_separator: <!--more-->
 ---
 
-<a href="{{ '/images/2023/2023.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/2024/2024.jpg' | remove_first:'/' | absolute_url }}" class="left" width="1000" height="666" alt="2023" /> </a>
+<a href="{{ '/images/2024/2024.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/2024/2024.jpg' | remove_first:'/' | absolute_url }}" class="left" width="1000" height="666" alt="2023" /> </a>
