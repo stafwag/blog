@@ -14,7 +14,7 @@ excerpt_separator: <!--more-->
 
 I've finally found the time to give my homepage a complete makeover. Yes, HTTPS is enabled now ;-)
 
-The content has been migrated from [WebGUI](https://en.wikipedia.org/wiki/WebGUI) to [Hugo]([https://gohugo.io/).
+The content has been migrated from [WebGUI](https://en.wikipedia.org/wiki/WebGUI) to [Hugo](https://gohugo.io/).
 
 It still contains the same old content, but I'll update it in the coming weeks or when some of the projects are updated.
 
