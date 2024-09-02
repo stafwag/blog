@@ -7,6 +7,11 @@ categories: security thunderbird gpg pgp email linux freebsd
 excerpt_separator: <!--more-->
 ---
 
+---
+
+*Updated @ Mon Sep  2 07:55:20 PM CEST 2024: Added devfs section*
+
+---
 
 I use [FreeBSD](https://www.freebsd.org) and [GNU](https://www.gnu.org)/[Linux](https://www.kernel.org).
 <a href="{{ '/images/gpg/freebsd_with_smartcard.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/freebsd_with_smartcard_s.jpg' | remove_first:'/' | absolute_url }}" class="left" width="500" height="333" alt="freebsd with smartcard" /> </a>
@@ -230,15 +235,134 @@ To use the smartcard reader we will need access to the USB devices as the user w
 
 ## permissions
 
+### verify
+
 Execute the ```usbconfig``` command to verify that you can access the USB devices.
 
 ```
-staf@freebsd-gpg:~ $ usbconfig
+[staf@snuffel ~]$ usbconfig
 No device match or lack of permissions.
-staf@freebsd-gpg:~ $ 
+[staf@snuffel ~]$ 
 ```
 
 If you don't have access, verify the permissions of the USB devices.
+
+```
+[staf@snuffel ~]$ ls -l /dev/usbctl
+crw-r--r--  1 root operator 0x5b Sep  2 19:17 /dev/usbctl
+```
+
+```
+[staf@snuffel ~]$  ls -l /dev/usb/
+total 0
+crw-------  1 root operator 0x34 Sep  2 19:17 0.1.0
+crw-------  1 root operator 0x4f Sep  2 19:17 0.1.1
+crw-------  1 root operator 0x36 Sep  2 19:17 1.1.0
+crw-------  1 root operator 0x53 Sep  2 19:17 1.1.1
+crw-------  1 root operator 0x7e Sep  2 19:17 1.2.0
+crw-------  1 root operator 0x82 Sep  2 19:17 1.2.1
+crw-------  1 root operator 0x83 Sep  2 19:17 1.2.2
+crw-------  1 root operator 0x76 Sep  2 19:17 1.3.0
+crw-------  1 root operator 0x8a Sep  2 19:17 1.3.1
+crw-------  1 root operator 0x8b Sep  2 19:17 1.3.2
+crw-------  1 root operator 0x8c Sep  2 19:17 1.3.3
+crw-------  1 root operator 0x8d Sep  2 19:17 1.3.4
+crw-------  1 root operator 0x38 Sep  2 19:17 2.1.0
+crw-------  1 root operator 0x56 Sep  2 19:17 2.1.1
+crw-------  1 root operator 0x3a Sep  2 19:17 3.1.0
+crw-------  1 root operator 0x51 Sep  2 19:17 3.1.1
+crw-------  1 root operator 0x3c Sep  2 19:17 4.1.0
+crw-------  1 root operator 0x55 Sep  2 19:17 4.1.1
+crw-------  1 root operator 0x3e Sep  2 19:17 5.1.0
+crw-------  1 root operator 0x54 Sep  2 19:17 5.1.1
+crw-------  1 root operator 0x80 Sep  2 19:17 5.2.0
+crw-------  1 root operator 0x85 Sep  2 19:17 5.2.1
+crw-------  1 root operator 0x86 Sep  2 19:17 5.2.2
+crw-------  1 root operator 0x87 Sep  2 19:17 5.2.3
+crw-------  1 root operator 0x40 Sep  2 19:17 6.1.0
+crw-------  1 root operator 0x52 Sep  2 19:17 6.1.1
+crw-------  1 root operator 0x42 Sep  2 19:17 7.1.0
+crw-------  1 root operator 0x50 Sep  2 19:17 7.1.1
+```
+
+### devfs
+
+When the ```/dev/usb*``` are only accessible by the ```root``` user. You probably want to create ```devfs.rules``` that to grant permissions to the ```operator``` or another group.
+
+See [https://man.freebsd.org/cgi/man.cgi?devfs.rules](https://man.freebsd.org/cgi/man.cgi?devfs.rules) for more details.
+
+#### ```/etc/rc.conf```
+
+Update the ```/etc/rc.conf``` to apply custom ```devfs``` permissions.
+
+```
+[staf@snuffel /etc]$ sudo vi rc.conf
+```
+```
+devfs_system_ruleset="localrules"
+```
+
+#### ```/etc/devfs.rules```
+
+Create or update the ```/dev/devfs.rules``` with the update permissions to grant read/write access to the ```operator``` group.
+
+```
+[staf@snuffel /etc]$ sudo vi devfs.rules
+```
+
+```
+[localrules=10]
+add path 'usbctl*' mode 0660 group operator
+add path 'usb/*' mode 0660 group operator
+```
+
+Restart the ```devfs``` service to apply the custom ```devfs``` ruleset.
+
+```
+[staf@snuffel /etc]$ sudo -i
+root@snuffel:~ #
+```
+```
+root@snuffel:~ # service devfs restart
+```
+
+The operator group should have read/write permissions now.
+
+```
+root@snuffel:~ # ls -l /dev/usb/
+total 0
+crw-rw----  1 root operator 0x34 Sep  2 19:17 0.1.0
+crw-rw----  1 root operator 0x4f Sep  2 19:17 0.1.1
+crw-rw----  1 root operator 0x36 Sep  2 19:17 1.1.0
+crw-rw----  1 root operator 0x53 Sep  2 19:17 1.1.1
+crw-rw----  1 root operator 0x7e Sep  2 19:17 1.2.0
+crw-rw----  1 root operator 0x82 Sep  2 19:17 1.2.1
+crw-rw----  1 root operator 0x83 Sep  2 19:17 1.2.2
+crw-rw----  1 root operator 0x76 Sep  2 19:17 1.3.0
+crw-rw----  1 root operator 0x8a Sep  2 19:17 1.3.1
+crw-rw----  1 root operator 0x8b Sep  2 19:17 1.3.2
+crw-rw----  1 root operator 0x8c Sep  2 19:17 1.3.3
+crw-rw----  1 root operator 0x8d Sep  2 19:17 1.3.4
+crw-rw----  1 root operator 0x38 Sep  2 19:17 2.1.0
+crw-rw----  1 root operator 0x56 Sep  2 19:17 2.1.1
+crw-rw----  1 root operator 0x3a Sep  2 19:17 3.1.0
+crw-rw----  1 root operator 0x51 Sep  2 19:17 3.1.1
+crw-rw----  1 root operator 0x3c Sep  2 19:17 4.1.0
+crw-rw----  1 root operator 0x55 Sep  2 19:17 4.1.1
+crw-rw----  1 root operator 0x3e Sep  2 19:17 5.1.0
+crw-rw----  1 root operator 0x54 Sep  2 19:17 5.1.1
+crw-rw----  1 root operator 0x80 Sep  2 19:17 5.2.0
+crw-rw----  1 root operator 0x85 Sep  2 19:17 5.2.1
+crw-rw----  1 root operator 0x86 Sep  2 19:17 5.2.2
+crw-rw----  1 root operator 0x87 Sep  2 19:17 5.2.3
+crw-rw----  1 root operator 0x40 Sep  2 19:17 6.1.0
+crw-rw----  1 root operator 0x52 Sep  2 19:17 6.1.1
+crw-rw----  1 root operator 0x42 Sep  2 19:17 7.1.0
+crw-rw----  1 root operator 0x50 Sep  2 19:17 7.1.1
+root@snuffel:~ # 
+```
+
+### Make sure that you're part of the operator group
 
 ```
 staf@freebsd-gpg:~ $ ls -l /dev/usbctl 
