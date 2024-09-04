@@ -9,7 +9,8 @@ excerpt_separator: <!--more-->
 
 ---
 
-*Updated @ Mon Sep  2 07:55:20 PM CEST 2024: Added devfs section*
+*Updated @ Mon Sep  2 07:55:20 PM CEST 2024: Added devfs section*<br />
+*Updated @ Wed Sep  4 07:48:56 PM CEST 2024 : Corrected gpg-agent.conf*
 
 ---
 
@@ -755,8 +756,6 @@ Enable debug logging for the ```gpg-agent```.
 ```
 
 ```
-verbose
-debug-level expert
 debug-level expert
 verbose
 verbose
@@ -813,9 +812,9 @@ After you executed ```gpg --card-status```, GnuPG created "shadow private keys".
 ```
 [staf@monty ~/.gnupg]$ ls -l private-keys-v1.d/
 total 14
--rw-------  1 staf staf 976 Mar 24 11:35 0585C7A36806D0BA8F5AA0F397917E3E7FD3D41A.key
--rw-------  1 staf staf 976 Mar 24 11:35 506CDB58B562D27CFD719CE98653964BE7366E1D.key
--rw-------  1 staf staf 976 Mar 24 11:35 C9897DFB8BF416CFD0D812828B06D82AFF2E1701.key
+-rw-------  1 staf staf 976 Mar 24 11:35 <snip>.key
+-rw-------  1 staf staf 976 Mar 24 11:35 <snip>.key
+-rw-------  1 staf staf 976 Mar 24 11:35 <snip>.key
 [staf@monty ~/.gnupg]$ 
 ```
 
