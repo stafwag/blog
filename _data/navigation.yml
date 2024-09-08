@@ -4,8 +4,11 @@ main:
     description: "Posts by year"
     url: "/archives"
   - title: "Homepage"
-    description: "My homepage"
-    url: "http://www.wagemakers.be"
+    description: "My Homepage"
+    url: "https://www.wagemakers.be"
+  - title: "My Company"
+    description: "My Company"
+    url: "https://mask27.dev"
   # - title: "About"
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   # - title: "Sample Posts"
