@@ -12,7 +12,7 @@ In previous blog posts, we discussed setting up a GPG smartcard on [GNU](https:/
 
 In this blog post, we will configure [Thunderbird](https://www.thunderbird.net) to work with an external smartcard reader and our [GPG](https://gnupg.org/)-compatible smartcard.
 
-<a href="{{ '/images/gpg/thundebird/beastie_gnu_tux.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/beastie_gnu_tux_s.jpg' | remove_first:'/' | absolute_url }}" class="left" width="400" height="267" alt="beastie gnu tux" /> </a>
+<a href="{{ '/images/gpg/thunderbird/beastie_gnu_tux.jpg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/beastie_gnu_tux_s.jpg' | remove_first:'/' | absolute_url }}" class="left" width="400" height="267" alt="beastie gnu tux" /> </a>
 
 Before Thunderbird 78, if you wanted to use OpenPGP email encryption, you had to use a third-party add-on such as [https://enigmail.net/](Enigmail).
 
@@ -160,7 +160,7 @@ Try to sign it.
 
 If everything works fine, the ```pinentry``` program will ask for the pincode to sign it.
 
-![image info]({{ '/images/gpg/thundebird/pin-entry_a.png' | remove_first:'/' | absolute_url }})
+![image info]({{ '/images/gpg/thunderbird/pin-entry_a.png' | remove_first:'/' | absolute_url }})
 
 
 # Thunderbird
@@ -171,7 +171,7 @@ In this section we'll (finally) configure Thunderbird to use GPG with a smartcar
 
 <div style="clear: both;">
 
-<a href="{{ '/images/gpg/thundebird/tb0000.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0000.png' | remove_first:'/' | absolute_url }}" class="right" width="100" height="157" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0000.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0000.png' | remove_first:'/' | absolute_url }}" class="right" width="100" height="157" alt="open settings" /> </a>
 
 <p>
 Open the global settings, click on the "Hamburger" icon and select <b>settings</b>.
@@ -184,7 +184,7 @@ Or press <b>[F10]</b> to bring-up the "Menu bar" in Thunderbird and select <b>[E
 </div>
 
 <div style="clear: both;padding-top: 20px;">
-<a href="{{ '/images/gpg/thundebird/tb0001.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0001.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0001.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0001.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 
@@ -197,7 +197,7 @@ In the settings window click on <b>[Config Editor]</b>.
 </div>
 
 <div style="clear: both;padding-top: 20px;">
-<a href="{{ '/images/gpg/thundebird/tb0002.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0002.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="allow external gpg" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0002.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0002.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="allow external gpg" /> </a>
 
 <p>
 In the <i>Advanced Preferences</i> window search for "external_gnupg" settings and set <b><i>mail.indenity.allow_external_gnupg</i></b> to <b><i>true</i></b>.
@@ -214,7 +214,7 @@ The next step is to configure the GPG keypair that we'll use for our user accoun
 
 <div style="clear: both;padding-top: 20px;">
 
-<a href="{{ '/images/gpg/thundebird/tb0003.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0003.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0003.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0003.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 Open the account setting by pressing on the "Hamburger" icon and select <b>Account Settings</b> or press <b>[F10]</b> to open the menu bar and select <b>Edit</b>, <b>Account Settings</b>.
@@ -227,7 +227,7 @@ Select <b>End-to-End Encryption</b> at <b>OpenPG</b> section select <b>[ Add Key
 </div>
 
 <div style="clear: both;padding-top: 20px;">
-<a href="{{ '/images/gpg/thundebird/tb0004.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0004.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0004.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0004.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
 <p>
 Select the <b>( * ) Use your external key though GnuPG (e.g. from a smartcard)</b>
 </p>
@@ -239,7 +239,7 @@ The next window will ask you for the <i>Secret Key ID</i>.
 </p>
 </div>
 <div style="clear: both;padding-top: 20px;">
-<a href="{{ '/images/gpg/thundebird/tb0004b.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0004b.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0004b.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0004b.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 Execute <code>gpg --list-keys</code> to get your secret key id.
@@ -260,7 +260,7 @@ So restart Thunderbird or restart it fails to find your key id  in the keyring.
 
 <div style="clear: both;">
 
-<a href="{{ '/images/gpg/thundebird/tb0005.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0005.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0005.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0005.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 As a test we send an email to our own email address.
@@ -277,7 +277,7 @@ Click on <b>[OpenPGP]</b> and <b>Encrypt</b>.
 
 <div style="clear: both;padding-top: 20px; ">
 
-<a href="{{ '/images/gpg/thundebird/tb0006.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0006.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0006.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0006.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 Thunderbird will show a warning message that it doesn't know the public key to set up the encryption.
@@ -290,21 +290,21 @@ Click on <b>[Resolve]</b>.
 </div>
 
 <div style="clear: both;padding-top: 20px; ">
-<a href="{{ '/images/gpg/thundebird/tb0007.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0007.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="discover keys" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0007.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0007.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="discover keys" /> </a>
 
 In the next window Thunderbird will ask to <i>Discover Public Keys online</i> or to import the <i>Public Keys From File</i>, we'll import our public key from a file.
 
 </div>
 
 <div style="clear: both;padding-top: 20px; ">
-<a href="{{ '/images/gpg/thundebird/tb0008.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0008.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open key file" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0008.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0008.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open key file" /> </a>
 
 In the <i>Import OpenPGP key File</i> window select your public key file, and click on <b>[ Open ]</b>.
 
 </div>
 
 <div style="clear: both;padding-top: 20px; ">
-<a href="{{ '/images/gpg/thundebird/tb0009.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0009.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0009.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0009.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 Thunderbird will show a window with the key fingerprint. Select <i>( * ) Accepted</i>.
@@ -317,7 +317,7 @@ Click on <b>[ Import ]</b> to import the public key.
 
 <div style="clear: both;padding-top: 20px; ">
 
-<a href="{{ '/images/gpg/thundebird/tb0010.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0010.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0010.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0010.png' | remove_first:'/' | absolute_url }}" class="right" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 With our public key imported, the warning about the <i>End-to-end encryption requires resolving key</i> issue should be resolved.
@@ -331,7 +331,7 @@ Click on the <b>[ Send ]</b> button to send the email.
 
 <div style="clear: both;padding-top: 20px; ">
 
-<a href="{{ '/images/gpg/thundebird/tb0011.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thundebird/tb0011.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
+<a href="{{ '/images/gpg/thunderbird/tb0011.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/gpg/thunderbird/tb0011.png' | remove_first:'/' | absolute_url }}" class="left" width="300" height="225" alt="open settings" /> </a>
 
 <p>
 To encrypt the message, Thunderbird will start a <code>gpg</code> session that invokes the <code>pinentry</code> command type in your pincode. gpg will encrypt the message file and if everything works fine the email is sent.
