@@ -9,13 +9,13 @@ excerpt_separator: <!--more-->
 
 <a href="{{ '/images/cloud-init/cloud-init-primary.svg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/cloud-init/cloud-init-primary.svg' | remove_first:'/' | absolute_url }}" class="right" width="600" height="121" alt="cloud-init" /> </a>
 
-I prepared a few update releases of some ansible roles related to provisoin virtual machines with [libvirt](https://libvirt.org/) over the last weeks.
+I prepared a few update releases of some ansible roles related to provision virtual machines with [libvirt](https://libvirt.org/) over the last weeks.
 
 Mainly clean up releases and makes sure that everything works on 
 different GNU/Linux distributions out of the box.
 
 One "big" change is the removal of the dependency on the ```cloud-localds```
-utility to provision virtual machines with [cloud-init](https://cloud-init.io/). This enables to us usage of the roles on Linux distributions that don't provide this utility.
+utility to provision virtual machines with [cloud-init](https://cloud-init.io/). This enables the usage of the roles on Linux distributions that don't provide this utility.
 
 ---
 # Ansible-k3s-on-vms v1.2.0
