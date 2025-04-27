@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "docker-stafwag-hello_nginx v1.0.0"
+title: "docker-stafwag-hello_nginx v1.0.0 released"
 date: 2025-04-27 08:08 +0100
 comments: true
 categories: [ "docker", "podman", "linux", "kubernetes", "helm", "redhat", "openshift" ] 
