@@ -10,7 +10,7 @@ excerpt_separator: <!--more-->
 <a href="{{ '/images/openshift/OpenShift-LogoType.svg' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/openshift/OpenShift-LogoType.svg' | remove_first:'/' | absolute_url }}" class="right" width="400" height="427" alt="2025" /> </a>
 
 While the code ( if you call [YAML](https://en.wikipedia.org/wiki/YAML) "code" ) is already more than 5 years old.
-I finaly took the take the make a proper release of my test "hello" [OCI](https://opencontainers.org) container.
+I finally took the take the make a proper release of my test "hello" [OCI](https://opencontainers.org) container.
 
 I use this container to demo a container build and how to deploy it with helm on a Kubernetes cluster. Some test tools (ping, DNS, curl, wget) are included to execute some tests on the deployed pod.
 
