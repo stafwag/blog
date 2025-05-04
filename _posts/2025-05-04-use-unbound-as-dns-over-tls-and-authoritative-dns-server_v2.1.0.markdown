@@ -39,7 +39,7 @@ I recently updated the container, the latest version (2.1.0) is available at: [h
 * Updated BASE_IMAGE to debian:bookworm
 * Add ARG DEBIAN_FRONTEND=noninteractive
 * Run unbound-control-setup to generate the default certificate
-* ocumentation updated
+* Documentation updated
 
 <!--more-->
 
