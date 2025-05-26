@@ -81,13 +81,13 @@ baidu_site_verification  :
 
 # Social Sharing
 share_buttons:
-   twitter               : true
+   twitter               : false
    facebook              : true
    linkedin              : true
    reddit                : true
    mastodon              : true
 twitter:
-  username               : stafwag
+  username               :
 facebook:
   username               :
   app_id                 :
@@ -132,9 +132,9 @@ author:
     - label: "Mastodon"
       icon: "fab fa-fw fa-mastodon"
       url: "https://mastodon.social/@stafwag"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/stafwag"
+#    - label: "Twitter"
+#      icon: "fab fa-fw fa-twitter-square"
+#      url: "https://twitter.com/stafwag"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
