@@ -11,7 +11,7 @@ excerpt_separator: <!--more-->
 
 Lookat 2.1.0rc1 is the latest development release of Lookat/Bekijk, a user-friendly Unix file browser/viewer that supports colored man pages.
 
-The focus of 2.1.0 release is to add ANSI Color support.
+The focus of the 2.1.0 release is to add ANSI Color support.
 
 <br />&nbsp;<br />
 
