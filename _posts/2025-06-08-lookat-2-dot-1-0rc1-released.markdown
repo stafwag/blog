@@ -3,7 +3,7 @@ layout: post
 title: "Lookat 2.1.0rc1 released"
 date: 2025-06-08 10:48:50 +0100
 comments: true
-categories: [ lookat, linux, bsd. freebsd, netbsd, openbsd, ncurses, manpage ]
+categories: [ lookat, linux, bsd, freebsd, netbsd, openbsd, ncurses, manpage ]
 excerpt_separator: <!--more-->
 ---
 
