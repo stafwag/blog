@@ -32,6 +32,6 @@ Lookat 2.1.0rc1 is the first release candicate of Lookat 2.1.0
 
 * [https://www.wagemakers.be/english/programs/lookat/](https://www.wagemakers.be/english/programs/lookat/)
 * Download it directly from [https://download-mirror.savannah.gnu.org/releases/lookat/](https://download-mirror.savannah.gnu.org/releases/lookat/)
-* Or at the Git repository at GNU savannah [http://git.savannah.gnu.org/cgit/lookat.git/](https://cgit.git.savannah.gnu.org/cgit/lookat.git/)
+* Or at the Git repository at GNU savannah [https://git.savannah.gnu.org/cgit/lookat.git/](https://cgit.git.savannah.gnu.org/cgit/lookat.git/)
 
 ***Have fun!***
