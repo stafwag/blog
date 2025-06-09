@@ -17,7 +17,7 @@ The focus of the 2.1.0 release is to add ANSI Color support.
 
 ## News
 
-### **Jun  8 2025** Lookat 2.1.0rc1 Released
+### **8 Jun 2025** Lookat 2.1.0rc1 Released
 
 Lookat 2.1.0rc1 is the first release candicate of Lookat 2.1.0
 
