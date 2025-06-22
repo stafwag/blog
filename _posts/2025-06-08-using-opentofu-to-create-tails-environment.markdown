@@ -3,24 +3,24 @@ layout: post
 title: "Using OpenTofu/Terraform to create a disposable Tails virtual machine"
 date: 2025-06-22 07:37:00 +0100
 comments: true
-categories: [ tails, tor, linux, libvirt, opentufo, terraform, fosdem ]
+categories: [ tails, tor, linux, libvirt, opentofu, terraform, fosdem ]
 excerpt_separator: <!--more-->
 ---
 
-<a href="{{ '/images/opentufo/opentofu_square.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/opentufo/opentofu_square.png' | remove_first:'/' | absolute_url }}" class="left" width="264" height="191" alt="OpenTofu" /> </a>
+<a href="{{ '/images/opentofu/opentofu_square.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/opentofu/opentofu_square.png' | remove_first:'/' | absolute_url }}" class="left" width="264" height="191" alt="OpenTofu" /> </a>
 
 ## OpenTofu
 
-[Terraform](https://developer.hashicorp.com/terraform) or [OpenTufo](https://opentofu.org/) ( the open-source fork [supported by the Linux Foundation](https://www.linuxfoundation.org/press/announcing-opentofu) ) is a nice tool to setup the infrastructure
+[Terraform](https://developer.hashicorp.com/terraform) or [OpenTofu](https://opentofu.org/) ( the open-source fork [supported by the Linux Foundation](https://www.linuxfoundation.org/press/announcing-opentofu) ) is a nice tool to setup the infrastructure
 on different cloud environments. There is also a provider that supports [libvirt](https://libvirt.org/).
 
 * [https://github.com/dmacvicar/terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
 
-If you want to get started with OpenTufo there is a free training available from the Linux foundation:
+If you want to get started with OpenTofu there is a free training available from the Linux foundation:
 
 * [https://training.linuxfoundation.org/express-learning/getting-started-with-opentofu-lfel1009/](https://training.linuxfoundation.org/express-learning/getting-started-with-opentofu-lfel1009/)
 
-I also joined the talk about OpenTufo and [Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code), in general, this year in the [Virtualization and Cloud Infrastructure](https://fosdem.org/2025/schedule/track/virtualization/) DEV Room at [FOSDEM](https://fosdem.org) this year:
+I also joined the talk about OpenTofu and [Infrastructure As Code](https://en.wikipedia.org/wiki/Infrastructure_as_code), in general, this year in the [Virtualization and Cloud Infrastructure](https://fosdem.org/2025/schedule/track/virtualization/) DEV Room at [FOSDEM](https://fosdem.org) this year:
 
 * [https://fosdem.org/2025/schedule/event/fosdem-2025-6057-the-iac-tooling-multiverse-and-the-future-of-iac/](https://fosdem.org/2025/schedule/event/fosdem-2025-6057-the-iac-tooling-multiverse-and-the-future-of-iac/)
 
@@ -40,7 +40,7 @@ Personally, I'm less into the "privacy" aspect of the Tor network (although bein
 
 For people who are less lucky (People who live in a country where freedom of speech isn't valued) or journalists for example, there're good reasons to use the Tor network and hide their internet traffic.
 
-## tails/libvirt Terraform/OpenTufo module
+## tails/libvirt Terraform/OpenTofu module
 
 <a href="{{ '/images/tails/terraform-libvirt-tails.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/tails/terraform-libvirt-tails.png' | remove_first:'/' | absolute_url }}" class="right" width="484" height="142" alt="OpenTofu" /> </a>
 
