@@ -11,7 +11,7 @@ excerpt_separator: <!--more-->
 
 ## OpenTofu
 
-[Terraform](https://developer.hashicorp.com/terraform) or [OpenTofu](https://opentofu.org/) ( the open-source fork [supported by the Linux Foundation](https://www.linuxfoundation.org/press/announcing-opentofu) ) is a nice tool to setup the infrastructure
+[Terraform](https://developer.hashicorp.com/terraform) or [OpenTofu](https://opentofu.org/) (the open-source fork [supported by the Linux Foundation](https://www.linuxfoundation.org/press/announcing-opentofu)) is a nice tool to setup the infrastructure
 on different cloud environments. There is also a provider that supports [libvirt](https://libvirt.org/).
 
 * [https://github.com/dmacvicar/terraform-provider-libvirt](https://github.com/dmacvicar/terraform-provider-libvirt)
@@ -26,7 +26,7 @@ I also joined the talk about OpenTofu and [Infrastructure As Code](https://en.wi
 
 <!--more-->
 
-I'll not start to explain "Declarative" vs "Imperative" in this blog post, there're already enough blog posts or websites that're (trying) to explain this in more detail ( the links above are a good start).
+I'll not start to explain "Declarative" vs "Imperative" in this blog post, there're already enough blog posts or websites that're (trying) to explain this in more detail (the links above are a good start).
 
 The default behaviour of OpenTofu is not to try to update an existing environment. This makes it usable to create disposable environments.
 
