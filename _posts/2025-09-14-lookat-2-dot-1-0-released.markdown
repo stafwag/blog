@@ -7,7 +7,7 @@ categories: [ lookat, linux, bsd, freebsd, netbsd, openbsd, ncurses, manpage ]
 excerpt_separator: <!--more-->
 ---
 
-<a href="{{ '/images/lookat/lookat_2_1_0.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/lookat/lookat_2_1_0rc2.png' | remove_first:'/' | absolute_url }}" class="right" width="600" height="320" alt="lookat 2.1.0" /> </a>
+<a href="{{ '/images/lookat/lookat_2_1_0.png' | remove_first:'/' | absolute_url }}"><img src="{{ '/images/lookat/lookat_2_1_0.png' | remove_first:'/' | absolute_url }}" class="right" width="600" height="320" alt="lookat 2.1.0" /> </a>
 
 Lookat 2.1.0 is the latest stable release of Lookat/Bekijk, a user-friendly Unix file browser/viewer that supports colored man pages.
 
