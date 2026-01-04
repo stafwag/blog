@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Best wishes 2025!"
+title: "Best wishes 2026!"
 date: 2026-01-04 10:26 +0100
 comments: true
 categories: [ "2026", "freebsd", "linux", "raspberrypi", "newyear2026", "newyear", "thinkpad", "w500", "w541", "mastodon", "plushtodon","coreboot" ]
