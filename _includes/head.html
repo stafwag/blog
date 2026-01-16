@@ -1,8 +1,9 @@
 <meta charset="utf-8">
 <meta name="path" content="{{ page.path }}">
-<meta name="redirect" content="https://blog.wagemakers.be/{{ page.path }}">
+<meta name="url" content="{{ page.url }}">
+<meta name="redirect" content="https://blog.wagemakers.be/{{ page.url }}">
 
-<meta http-equiv="norefresh" content="0; url=https://blog.wagemakers.be/{{ page.path }}" />
+<meta http-equiv="refresh" content="0; url=https://blog.wagemakers.be{{ page.url }}" />
 
 {% include seo.html %}
 
