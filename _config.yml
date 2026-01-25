@@ -58,7 +58,8 @@ reCaptcha:
 atom_feed:
   path                   : https://blog.wagemakers.be/atom.xml  # blank (default) uses feed.xml
 feed:
-  path                   : atom.xml
+#  path                   : atom.xml
+  url			 : https://blog.wagemakers.be/atom.xml
 search                   : true # true, false (default)
 search_full_content      : true # true, false (default)
 search_provider          : # lunr (default), algolia, google
