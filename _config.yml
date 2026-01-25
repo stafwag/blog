@@ -56,7 +56,7 @@ reCaptcha:
   siteKey                :
   secret                 :
 atom_feed:
-  path                   : /blog/atom.xml # blank (default) uses feed.xml
+  path                   : https://blog.wagemakers.be/atom.xml  # blank (default) uses feed.xml
 feed:
   path                   : atom.xml
 search                   : true # true, false (default)
